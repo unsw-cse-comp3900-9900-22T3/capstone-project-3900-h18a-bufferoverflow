@@ -10,13 +10,27 @@ import Menu from '@mui/material/Menu';
 import { useState } from 'react';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
-import { Button, Divider, Drawer, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Button, Divider, Drawer, ListItem, ListItemIcon, ListItemText, SvgIconTypeMap } from '@mui/material';
 import { Header } from './Header';
 import AdbIcon from '@mui/icons-material/Adb';
 import Link from 'next/link';
 import List from '@mui/material/List';
+import { OverridableComponent } from '@mui/material/OverridableComponent';
+
+type Icon = OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
+  muiName: string;
+}
 
 const textColor = '#6b6b6b'
+const sideBarTop: { title: string, icon: Icon }[] = [
+  { title: 'asfsadf', icon: InboxIcon },
+  { title: 'asfsadf', icon: InboxIcon },
+  { title: 'asfsadf', icon: InboxIcon },
+]
+const sideBarBottom: { title: string, icon: Icon }[] = [
+  { title: 'asfsadf', icon: InboxIcon },
+  { title: 'asfsadf', icon: InboxIcon },
+]
 
 export const Template = (props: {
   title: string;
@@ -127,25 +141,33 @@ const SideBar = (props: {
         onClick={() => setDrawer(false)}
       >
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
+          {
+            sideBarTop.map(item => {
+              return (
+                <ListItem button key={item.title}>
+                  <ListItemIcon>
+                    <item.icon />
+                  </ListItemIcon>
+                  <ListItemText primary={item.title} />
+                </ListItem>
+              )
+            })
+          }
         </List>
         <Divider />
         <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>∏
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
+          {
+            sideBarBottom.map(item => {
+              return (
+                <ListItem button key={item.title}>
+                  <ListItemIcon>
+                    <item.icon />
+                  </ListItemIcon>
+                  <ListItemText primary={item.title} />
+                </ListItem>
+              )
+            })
+          }
         </List>
       </Box>
     </Drawer>
