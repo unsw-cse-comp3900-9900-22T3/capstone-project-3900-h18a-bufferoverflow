@@ -1,4 +1,4 @@
-import { Box, Button, Card, Divider, TextField, Typography } from "@mui/material"
+import { Box, Button, Card, Divider, Link, TextField, Typography } from "@mui/material"
 import { useState } from "react"
 import { Template } from "../components/Template"
 
@@ -60,6 +60,7 @@ const Login = () => {
           >
             Login
           </Button>
+          <Link href="/reset-password">Reset Password</Link>
         </Card>
       </Box>
     </Template >
