@@ -9,8 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import { useState } from 'react';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-import { Button, Divider, Drawer, ListItem, ListItemIcon, ListItemText, SvgIconTypeMap } from '@mui/material';
+import { Button, createTheme, Divider, Drawer, ListItem, ListItemIcon, ListItemText, SvgIconTypeMap, ThemeProvider } from '@mui/material';
 import { Header } from './Header';
 import AdbIcon from '@mui/icons-material/Adb';
 import Link from 'next/link';
@@ -31,6 +30,17 @@ const sideBarBottom: { title: string, icon: Icon }[] = [
   { title: 'asfsadf', icon: InboxIcon },
   { title: 'asfsadf', icon: InboxIcon },
 ]
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#616161',
+    },
+    secondary: {
+      main: '#4f00b0',
+    },
+  },
+});
 
 export const Template = (props: {
   title: string;
@@ -69,7 +79,9 @@ export const Template = (props: {
         </Toolbar>
       </AppBar>
       <SideBar drawer={drawer} setDrawer={setDrawer} />
-      {props.children}
+      <ThemeProvider theme={theme}>
+        {props.children}
+      </ThemeProvider>
     </Box>
   );
 }
