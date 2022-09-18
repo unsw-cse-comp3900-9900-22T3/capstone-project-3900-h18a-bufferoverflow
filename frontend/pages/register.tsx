@@ -1,11 +1,10 @@
-import { Header } from "../components/Header"
+import { Template } from "../components/Template"
 
 export const Register = () => {
   return (
-    <>
-      <Header header='Register' />
+    <Template title="Register">
       {/** ADD YOUR CODE FROM HERE */}
-    </>
+    </Template>
   )
 }
 

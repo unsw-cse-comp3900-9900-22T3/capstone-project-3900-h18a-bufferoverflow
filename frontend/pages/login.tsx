@@ -1,11 +1,11 @@
 import { Header } from "../components/Header"
+import { Template } from "../components/Template"
 
 const Login = () => {
   return (
-    <>
-      <Header header='Login' />
+    <Template title="Login">
       {/** ADD YOUR CODE FROM HERE */}
-    </>
+    </Template>
   )
 }
 

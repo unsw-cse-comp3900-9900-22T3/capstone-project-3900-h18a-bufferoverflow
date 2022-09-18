@@ -10,6 +10,8 @@ import Menu from '@mui/material/Menu';
 import { useState } from 'react';
 import { Button } from '@mui/material';
 import { Header } from './Header';
+import AdbIcon from '@mui/icons-material/Adb';
+import Link from 'next/link';
 
 const textColor = '#6b6b6b'
 
@@ -33,6 +35,10 @@ export const Template = (props: {
           >
             <MenuIcon />
           </IconButton>
+
+          <Link href='/'>
+            <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, color: textColor, mr: 1.5 }} />
+          </Link>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: textColor }}>
             {props.title}
           </Typography>

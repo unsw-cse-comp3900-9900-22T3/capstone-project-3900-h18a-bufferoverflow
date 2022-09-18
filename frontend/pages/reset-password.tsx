@@ -1,11 +1,11 @@
 import { Header } from "../components/Header"
+import { Template } from "../components/Template"
 
 export const ResetPassword = () => {
   return (
-    <>
-      <Header header='Reset Password' />
+    <Template title="Register">
       {/** ADD YOUR CODE FROM HERE */}
-    </>
+    </Template>
   )
 }
 
