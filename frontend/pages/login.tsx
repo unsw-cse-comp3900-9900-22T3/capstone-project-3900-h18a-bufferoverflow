@@ -1,5 +1,6 @@
 import { Box, Button, Card, Divider, Link, TextField, Typography } from "@mui/material"
 import { useState } from "react"
+import { AuthCard } from "../components/AuthCard"
 import { Template } from "../components/Template"
 
 const Login = () => {
@@ -16,23 +17,7 @@ const Login = () => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-        <Card
-          variant="outlined"
-          sx={{
-            width: 420,
-            minHeight: 450,
-            padding: 1,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 3,
-            flexDirection: 'column'
-          }}
-        >
-          <Typography variant="h5" color='primary' component="h2">
-            Login
-          </Typography>
-          <Divider sx={{ mb: 5, mt: 2, width: 200 }} />
+        <AuthCard title="Login">
           <TextField
             id="outlined-basic"
             value={email}
@@ -78,7 +63,7 @@ const Login = () => {
               Reset Password
             </Button>
           </Box>
-        </Card>
+        </AuthCard>
       </Box>
     </Template >
   )
