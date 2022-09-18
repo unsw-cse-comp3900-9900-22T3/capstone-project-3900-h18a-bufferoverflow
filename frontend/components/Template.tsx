@@ -8,10 +8,13 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import { useState } from 'react';
-import { Button } from '@mui/material';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
+import { Button, Divider, Drawer, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import { Header } from './Header';
 import AdbIcon from '@mui/icons-material/Adb';
 import Link from 'next/link';
+import List from '@mui/material/List';
 
 const textColor = '#6b6b6b'
 
@@ -20,6 +23,7 @@ export const Template = (props: {
   children?: (JSX.Element | string)[] | JSX.Element | string;
 }) => {
   const [auth, setAuth] = useState<boolean>(false);
+  const [drawer, setDrawer] = useState<boolean>(false);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -32,6 +36,7 @@ export const Template = (props: {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2, color: textColor }}
+            onClick={() => setDrawer(true)}
           >
             <MenuIcon />
           </IconButton>
@@ -49,6 +54,7 @@ export const Template = (props: {
           }
         </Toolbar>
       </AppBar>
+      <SideBar drawer={drawer} setDrawer={setDrawer} />
       {props.children}
     </Box>
   );
@@ -101,5 +107,47 @@ const LoggedIn = () => {
 const LoggedOut = () => {
   return (
     <Button sx={{ color: textColor }} href='/login'>Login</Button>
+  )
+}
+
+const SideBar = (props: {
+  drawer: boolean;
+  setDrawer: (arg: boolean) => void;
+}) => {
+  const { drawer, setDrawer } = props
+  return (
+    <Drawer
+      anchor={'left'}
+      open={drawer}
+      onClose={() => setDrawer(false)}
+    >
+      <Box
+        sx={{ width: 250 }}
+        role="presentation"
+        onClick={() => setDrawer(false)}
+      >
+        <List>
+          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+            <ListItem button key={text}>
+              <ListItemIcon>
+                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+        <List>
+          {['All mail', 'Trash', 'Spam'].map((text, index) => (
+            <ListItem button key={text}>
+              <ListItemIcon>
+                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              </ListItemIcon>∏
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
+      </Box>
+    </Drawer>
   )
 }
