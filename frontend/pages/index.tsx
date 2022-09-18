@@ -9,9 +9,7 @@ const Home: NextPage = () => {
         saklf hsalkjfh lksadjfh 
       </Template>
 
-      <main className={styles.main}>
-
-      </main>
+      {/** STUFF GOES HERE */}
     </div>
   )
 }
