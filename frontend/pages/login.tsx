@@ -20,7 +20,7 @@ const Login = () => {
           variant="outlined"
           sx={{
             width: 420,
-            minHeight: 400,
+            minHeight: 450,
             padding: 1,
             display: 'flex',
             justifyContent: 'center',
@@ -39,7 +39,7 @@ const Login = () => {
             onChange={change => setEmail(change.target.value)}
             label="Email"
             variant="outlined"
-            sx={{ marginBottom: 1, width: 250 }}
+            sx={{ marginBottom: 1, width: 270 }}
           />
           <TextField
             value={password}
@@ -48,11 +48,11 @@ const Login = () => {
             label="Password"
             variant="outlined"
             type='password'
-            sx={{ marginBottom: 3, width: 250 }}
+            sx={{ marginBottom: 3, width: 270 }}
           />
           <Button
             variant="outlined"
-            sx={{ width: 250, mb: 2 }}
+            sx={{ width: 270, mb: 2 }}
             onClick={() => {
               setEmail('')
               setPassword('')
@@ -60,6 +60,23 @@ const Login = () => {
           >
             Login
           </Button>
+          <Divider sx={{ mb: 3.5, mt: 2, width: 200 }} />
+          <Box sx={{
+
+          }}>
+            <Button
+              variant="outlined"
+              sx={{ width: 100, mr: 1 }}
+            >
+              Sign Up
+            </Button>
+            <Button
+              variant="outlined"
+              sx={{ width: 170 }}
+            >
+              Reset Password
+            </Button>
+          </Box>
         </Card>
       </Box>
     </Template >
