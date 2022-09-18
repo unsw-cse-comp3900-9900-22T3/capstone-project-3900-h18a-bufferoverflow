@@ -1,6 +1,6 @@
 import { Header } from "../components/Header"
 
-export const Login = () => {
+const Login = () => {
   return (
     <>
       <Header header='Login' />
@@ -8,3 +8,5 @@ export const Login = () => {
     </>
   )
 }
+
+export default Login
