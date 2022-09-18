@@ -19,7 +19,7 @@ const Login = () => {
         <Card
           variant="outlined"
           sx={{
-            width: 450,
+            width: 420,
             minHeight: 400,
             padding: 1,
             display: 'flex',
