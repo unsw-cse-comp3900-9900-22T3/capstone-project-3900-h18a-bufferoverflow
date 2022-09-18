@@ -8,13 +8,15 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import { useState } from 'react';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import { Button, createTheme, Divider, Drawer, ListItem, ListItemIcon, ListItemText, SvgIconTypeMap, ThemeProvider } from '@mui/material';
 import { Header } from './Header';
 import AdbIcon from '@mui/icons-material/Adb';
 import Link from 'next/link';
 import List from '@mui/material/List';
+import PersonIcon from '@mui/icons-material/Person';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import CardTravelIcon from '@mui/icons-material/CardTravel';
 
 type Icon = OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
   muiName: string;
@@ -22,13 +24,11 @@ type Icon = OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
 
 const textColor = '#6b6b6b'
 const sideBarTop: { title: string, icon: Icon }[] = [
-  { title: 'asfsadf', icon: InboxIcon },
-  { title: 'asfsadf', icon: InboxIcon },
-  { title: 'asfsadf', icon: InboxIcon },
+  { title: 'Trade', icon: CardTravelIcon },
+  { title: 'Want To Buy', icon: LocalOfferIcon },
 ]
 const sideBarBottom: { title: string, icon: Icon }[] = [
-  { title: 'asfsadf', icon: InboxIcon },
-  { title: 'asfsadf', icon: InboxIcon },
+  { title: 'Account', icon: PersonIcon },
 ]
 
 const theme = createTheme({
