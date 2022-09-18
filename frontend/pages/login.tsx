@@ -73,6 +73,7 @@ const Login = () => {
             <Button
               variant="outlined"
               sx={{ width: 170 }}
+              href="/reset-password"
             >
               Reset Password
             </Button>
