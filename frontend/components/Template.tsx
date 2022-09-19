@@ -7,7 +7,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, createTheme, Divider, Drawer, ListItem, ListItemIcon, ListItemText, SvgIconTypeMap, ThemeProvider } from '@mui/material';
 import { Header } from './Header';
 import AdbIcon from '@mui/icons-material/Adb';
@@ -17,6 +17,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import CardTravelIcon from '@mui/icons-material/CardTravel';
+import { getAuth } from '@firebase/auth';
+import { Toast } from './Toast';
 
 type Icon = OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
   muiName: string;
@@ -48,10 +50,25 @@ export const Template = (props: {
 }) => {
   const [auth, setAuth] = useState<boolean>(false);
   const [drawer, setDrawer] = useState<boolean>(false);
+  const [toast, setToast] = useState<string>('');
+
+  useEffect(() => {
+    try {
+      getAuth().onAuthStateChanged(user => {
+        if (user) {
+          setAuth(true)
+        } else {
+          if (auth) setToast('Logged out successfully')
+          setAuth(false)
+        }
+      });
+    } catch { }
+  }, [auth])
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Header header={props.title} />
+      <Toast toast={toast} setToast={setToast} type='success' />
       <AppBar position="static" style={{ background: '#e6e6e6' }} elevation={0}>
         <Toolbar>
           <IconButton
@@ -96,6 +113,7 @@ const LoggedIn = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   return (
     <div>
       <IconButton
@@ -123,8 +141,13 @@ const LoggedIn = () => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
+        <MenuItem onClick={() => {
+          handleClose()
+        }}>Profile</MenuItem>
+        <MenuItem onClick={() => {
+          handleClose()
+          getAuth().signOut()
+        }}>Log out</MenuItem>
       </Menu>
     </div>
   )

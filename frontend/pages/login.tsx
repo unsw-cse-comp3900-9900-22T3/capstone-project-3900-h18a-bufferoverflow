@@ -9,11 +9,13 @@ import { AuthCard } from "../components/AuthCard";
 import { Template } from "../components/Template";
 import { getAuth, signInWithEmailAndPassword } from '@firebase/auth';
 import { Toast } from "../components/Toast";
+import { useRouter } from 'next/router';
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [toast, setToast] = useState<string>('');
+  const router = useRouter();
 
   return (
     <Template title="Login">
@@ -43,6 +45,7 @@ const Login = () => {
             signInWithEmailAndPassword(getAuth(), email, password)
               .then(res => {
                 console.log(res)
+                router.push('/')
               })
               .catch(err => {
                 setToast('Email or password is not valid')
