@@ -44,13 +44,13 @@ const Login = () => {
           onClick={() => {
             signInWithEmailAndPassword(getAuth(), email, password)
               .then(res => {
-                router.push('/')
+                setEmail("");
+                setPassword("");
+                router.push('/');
               })
               .catch(err => {
                 setErrorToast('Email or password is not valid')
               })
-            setEmail("");
-            setPassword("");
           }}
         >
           Login

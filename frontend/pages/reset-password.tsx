@@ -32,11 +32,11 @@ export const ResetPassword = () => {
             sendPasswordResetEmail(getAuth(), email)
               .then(res => {
                 setSuccessToast('Reset password email sent')
+                setEmail("");
               })
               .catch(err => {
                 setErrorToast('Email is not valid')
               })
-            setEmail("");
           }}
         >
           Reset
