@@ -2,15 +2,20 @@ import { AuthCard } from "../components/AuthCard";
 import { Template } from "../components/Template";
 import { useState } from "react";
 import { Box, Button, Divider, TextField } from "@mui/material";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+import { Toast } from "../components/Toast";
 
 const title = "Reset Password"
 
 export const ResetPassword = () => {
   const [email, setEmail] = useState<string>("");
+  const [errorToast, setErrorToast] = useState<string>('');
+  const [successToast, setSuccessToast] = useState<string>('');
 
   return (
     <Template title={title}>
-      {/* TODO: can you avoid duplication here? */}
+      <Toast toast={errorToast} setToast={setErrorToast} type='warning' />
+      <Toast toast={successToast} setToast={setSuccessToast} type='success' />
       <AuthCard title={title}>
         <TextField
           id="outlined-basic"
@@ -23,6 +28,16 @@ export const ResetPassword = () => {
         <Button
           variant="outlined"
           sx={{ width: 280, mb: 2 }}
+          onClick={() => {
+            sendPasswordResetEmail(getAuth(), email)
+              .then(res => {
+                setSuccessToast('Reset password email sent')
+              })
+              .catch(err => {
+                setErrorToast('Email is not valid')
+              })
+            setEmail("");
+          }}
         >
           Reset
         </Button>
