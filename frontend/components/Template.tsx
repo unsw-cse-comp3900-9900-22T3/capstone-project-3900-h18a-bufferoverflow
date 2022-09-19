@@ -72,6 +72,10 @@ export const Template = (props: {
             {props.title}
           </Typography>
           {
+            !auth &&
+            <RegisterLoggedOut />
+          }
+          {
             auth
               ? <LoggedIn />
               : <LoggedOut />
@@ -133,6 +137,12 @@ const LoggedIn = () => {
 const LoggedOut = () => {
   return (
     <Button sx={{ color: textColor }} href='/login'>Login</Button>
+  )
+}
+
+const RegisterLoggedOut = () => {
+  return (
+    <Button sx={{ color: textColor }} href='/register'>Register</Button>
   )
 }
 
