@@ -14,12 +14,12 @@ import { useRouter } from 'next/router';
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [toast, setToast] = useState<string>('');
+  const [errorToast, setErrorToast] = useState<string>('');
   const router = useRouter();
 
   return (
     <Template title="Login">
-      <Toast toast={toast} setToast={setToast} />
+      <Toast toast={errorToast} setToast={setErrorToast} type='warning' />
       <AuthCard title="Login">
         <TextField
           id="outlined-basic"
@@ -44,11 +44,10 @@ const Login = () => {
           onClick={() => {
             signInWithEmailAndPassword(getAuth(), email, password)
               .then(res => {
-                console.log(res)
                 router.push('/')
               })
               .catch(err => {
-                setToast('Email or password is not valid')
+                setErrorToast('Email or password is not valid')
               })
             setEmail("");
             setPassword("");
