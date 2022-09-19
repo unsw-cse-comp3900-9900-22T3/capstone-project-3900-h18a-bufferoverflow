@@ -27,7 +27,7 @@ const Login = () => {
           onChange={(change) => setEmail(change.target.value)}
           label="Email"
           variant="outlined"
-          sx={{ marginBottom: 1, width: 270 }}
+          sx={{ marginBottom: 1, width: 280 }}
         />
         <TextField
           value={password}
@@ -36,11 +36,11 @@ const Login = () => {
           label="Password"
           variant="outlined"
           type="password"
-          sx={{ marginBottom: 3, width: 270 }}
+          sx={{ marginBottom: 3, width: 280 }}
         />
         <Button
           variant="outlined"
-          sx={{ width: 270, mb: 2 }}
+          sx={{ width: 280, mb: 2 }}
           onClick={() => {
             signInWithEmailAndPassword(getAuth(), email, password)
               .then(res => {
@@ -58,10 +58,10 @@ const Login = () => {
         </Button>
         <Divider sx={{ mb: 3.5, mt: 2, width: 200 }} />
         <Box sx={{}}>
-          <Button variant="outlined" sx={{ width: 100, mr: 1 }}>
-            Sign Up
+          <Button variant="outlined" sx={{ width: 95, mr: 1 }} href="/register">
+            Register
           </Button>
-          <Button variant="outlined" sx={{ width: 170 }} href="/reset-password">
+          <Button variant="outlined" sx={{ width: 175 }} href="/reset-password">
             Reset Password
           </Button>
         </Box>
