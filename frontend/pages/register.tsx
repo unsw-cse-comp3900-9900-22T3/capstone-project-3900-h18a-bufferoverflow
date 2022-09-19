@@ -2,6 +2,7 @@ import { Box, Button, Card, Divider, Link, TextField, Typography } from "@mui/ma
 import { useState } from "react"
 import { AuthCard } from "../components/AuthCard"
 import { Template } from "../components/Template"
+import loginTextFieldStyles from "../styles/style"
 
 export const Register = () => {
   const [username, setUsername] = useState<string>('')
@@ -19,19 +20,19 @@ export const Register = () => {
         <AuthCard title="Register">
           <TextField
             id="outlined-basic"
-            value={email}
+            value={username}
             onChange={change => setUsername(change.target.value)}
             label="Username"
             variant="outlined"
-            sx={{ marginBottom: 1, width: 270 }}
-          />
+            sx={ loginTextFieldStyles }>
+          </TextField>
           <TextField
             id="outlined-basic"
             value={email}
             onChange={change => setEmail(change.target.value)}
             label="Email"
             variant="outlined"
-            sx={{ marginBottom: 1, width: 270 }}
+            sx={ loginTextFieldStyles }
           />
           <TextField
             value={password}
@@ -40,11 +41,11 @@ export const Register = () => {
             label="Password"
             variant="outlined"
             type='password'
-            sx={{ marginBottom: 3, width: 270 }}
+            sx={ loginTextFieldStyles }
           />
           <Button
             variant="outlined"
-            sx={{ width: 270, mb: 2 }}
+            sx={{ width: 270, mb: 2, mt: 2 }}
             onClick={() => {
               setEmail('')
               setPassword('')

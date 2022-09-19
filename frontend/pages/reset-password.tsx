@@ -2,6 +2,7 @@ import { AuthCard } from "../components/AuthCard";
 import { Template } from "../components/Template";
 import { useState } from "react";
 import { Button, TextField } from "@mui/material";
+import loginTextFieldStyles from "../styles/style"
 
 const title = "Reset Password"
 
@@ -18,11 +19,11 @@ export const ResetPassword = () => {
           onChange={(change) => setEmail(change.target.value)}
           label="Email"
           variant="outlined"
-          sx={{ marginBottom: 1, width: 270 }}
+          sx={ loginTextFieldStyles }
         />
         <Button
             variant="outlined"
-            sx={{ width: 270, mb: 2 }}
+            sx={{ width: 270, mb: 2 , mt: 2}}
           >
             Reset
           </Button>
