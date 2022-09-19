@@ -5,9 +5,8 @@ import { Template } from "../components/Template"
 import loginTextFieldStyles from "../styles/style"
 
 const Login = () => {
-
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   return (
     <Template title="Login">
@@ -71,4 +70,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Login;
