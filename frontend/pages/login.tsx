@@ -52,8 +52,9 @@ const Login = () => {
             <Button
               variant="outlined"
               sx={{ width: 100, mr: 1 }}
+              href="/register"
             >
-              Sign Up
+              Register
             </Button>
             <Button
               variant="outlined"
