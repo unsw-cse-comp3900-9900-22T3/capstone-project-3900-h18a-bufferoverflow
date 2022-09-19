@@ -1,4 +1,11 @@
-import { Box, Button, Card, Divider, TextField, Typography } from "@mui/material"
+import {
+  Box,
+  Button,
+  Card,
+  Divider,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 export const AuthCard = (props: {
   title: string;
