@@ -7,13 +7,17 @@ import {
 import { useState } from "react";
 import { AuthCard } from "../components/AuthCard";
 import { Template } from "../components/Template";
+import { getAuth, signInWithEmailAndPassword } from '@firebase/auth';
+import { Toast } from "../components/Toast";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [toast, setToast] = useState<string>('');
 
   return (
     <Template title="Login">
+      <Toast toast={toast} setToast={setToast} />
       <AuthCard title="Login">
         <TextField
           id="outlined-basic"
@@ -36,6 +40,13 @@ const Login = () => {
           variant="outlined"
           sx={{ width: 270, mb: 2 }}
           onClick={() => {
+            signInWithEmailAndPassword(getAuth(), email, password)
+              .then(res => {
+                console.log(res)
+              })
+              .catch(err => {
+                setToast('Email or password is not valid')
+              })
             setEmail("");
             setPassword("");
           }}
