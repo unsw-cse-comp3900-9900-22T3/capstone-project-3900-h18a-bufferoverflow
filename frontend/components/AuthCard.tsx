@@ -1,9 +1,7 @@
 import {
   Box,
-  Button,
   Card,
   Divider,
-  TextField,
   Typography,
 } from "@mui/material";
 
@@ -32,9 +30,10 @@ export const AuthCard = (props: {
           alignItems: "center",
           borderRadius: 3,
           flexDirection: "column",
+          paddingBottom: 6
         }}
       >
-        <Typography variant="h5" color="primary" component="h2">
+        <Typography variant="h5" color="primary" component="h2" sx={{mt: 4}}>
           {props.title}
         </Typography>
         <Divider sx={{ mb: 5, mt: 2, width: 200 }} />
