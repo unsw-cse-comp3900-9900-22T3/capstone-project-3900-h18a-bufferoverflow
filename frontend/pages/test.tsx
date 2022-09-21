@@ -24,8 +24,14 @@ const Test = () => {
             refreshToken: auth?.currentUser?.refreshToken
           }
         })
-          .then(r => setMsg(JSON.stringify(r)))
-          .catch(r => setMsg(JSON.stringify(r)))
+          .then(r => {
+            console.log(r)
+            setMsg(JSON.stringify(r))
+          })
+          .catch(r => {
+            console.log(r)
+            setMsg(JSON.stringify(r))
+          })
         setUrl('')
       }}>
         POST REQUEST
