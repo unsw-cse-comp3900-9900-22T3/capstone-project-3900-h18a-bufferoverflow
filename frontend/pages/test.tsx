@@ -1,26 +1,34 @@
 
 import { Template } from "../components/Template";
 import { getAuth } from '@firebase/auth';
-import { Button, Typography } from "@mui/material";
+import { Button, TextField, Typography } from "@mui/material";
 import { useState } from "react";
+import axios from "axios";
 
 const Test = () => {
   const [msg, setMsg] = useState<string>('');
+  const [url, setUrl] = useState<string>('');
   return (
     <Template title="Test Env">
+      <TextField id="standard-basic" label="Standard" variant="standard" onChange={e => setUrl(e.target.value)} value={url} />
       <Button onClick={async () => {
         const auth = getAuth()
-        postData('https://httpbin.org/post', { 
-          idToken: await auth?.currentUser?.getIdToken(),
-          email: auth?.currentUser?.email,
-          username: auth?.currentUser?.displayName,
-          uid: auth?.currentUser?.uid,
-          refreshToken: auth?.currentUser?.refreshToken
+        axios({
+          method: 'post',
+          url: url,
+          data: {
+            idToken: await auth?.currentUser?.getIdToken(),
+            email: auth?.currentUser?.email,
+            username: auth?.currentUser?.displayName,
+            uid: auth?.currentUser?.uid,
+            refreshToken: auth?.currentUser?.refreshToken
+          }
         })
-          .then((data) => setMsg(data))
-          .catch((e) => setMsg(e + ''))
+          .then(r => setMsg(JSON.stringify(r)))
+          .catch(r => setMsg(JSON.stringify(r)))
+        setUrl('')
       }}>
-        PRESS
+        POST REQUEST
       </Button>
       <Typography>
         {msg}
@@ -29,19 +37,4 @@ const Test = () => {
   );
 };
 
-export default Test;
-
-async function postData(url = '', data = {}) {
-  console.log(data)
-  const response = await fetch(url, {
-    method: 'POST',
-    mode: 'no-cors',
-    cache: 'no-cache',
-    credentials: 'same-origin',
-    headers: { 'Content-Type': 'application/json' },
-    redirect: 'follow',
-    referrerPolicy: 'no-referrer',
-    body: JSON.stringify(data)
-  });
-  return JSON.stringify(response)
-}
+export default Test
