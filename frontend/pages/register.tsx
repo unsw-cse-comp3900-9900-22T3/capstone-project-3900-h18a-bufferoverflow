@@ -56,6 +56,7 @@ export const Register = () => {
             onClick={() => {
               createUserWithEmailAndPassword(getAuth(), email, password)
                 .then(async (res) => {
+                  await updateProfile(res.user, { displayName: username })
                   setUsername('')
                   setEmail('')
                   setPassword('')
