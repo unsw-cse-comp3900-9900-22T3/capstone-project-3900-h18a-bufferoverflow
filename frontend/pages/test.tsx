@@ -1,20 +1,15 @@
 
 import { Template } from "../components/Template";
-import { getAuth, Auth } from '@firebase/auth';
+import { getAuth } from '@firebase/auth';
 import { Button, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const Test = () => {
-  const [auth, setAuth] = useState<Auth | undefined>();
   const [msg, setMsg] = useState<string>('');
-  useEffect(() => {
-    try {
-      setAuth(getAuth())
-    } catch { }
-  }, [auth])
   return (
     <Template title="Test Env">
       <Button onClick={async () => {
+        const auth = getAuth()
         let id = await auth?.currentUser?.getIdToken()
         postData('https://httpbin.org/post', { 
           idToken: id,
