@@ -10,9 +10,8 @@ const Test = () => {
     <Template title="Test Env">
       <Button onClick={async () => {
         const auth = getAuth()
-        let id = await auth?.currentUser?.getIdToken()
         postData('https://httpbin.org/post', { 
-          idToken: id,
+          idToken: await auth?.currentUser?.getIdToken(),
           email: auth?.currentUser?.email,
           username: auth?.currentUser?.displayName,
           uid: auth?.currentUser?.uid,
