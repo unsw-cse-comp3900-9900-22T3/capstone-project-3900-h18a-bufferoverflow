@@ -7,7 +7,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button, createTheme, Divider, Drawer, ListItem, ListItemIcon, ListItemText, SvgIconTypeMap, ThemeProvider } from '@mui/material';
 import { Header } from './Header';
 import AdbIcon from '@mui/icons-material/Adb';
@@ -19,8 +19,9 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import CardTravelIcon from '@mui/icons-material/CardTravel';
 import { getAuth } from '@firebase/auth';
 import { Toast } from './Toast';
-import { useSelector } from 'react-redux';
-import { AuthReducerProps } from '../store/auth/reducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { StoreStateProps } from '../store/store';
+import { setAuth } from '../store/auth/action';
 
 type Icon = OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
   muiName: string;
@@ -50,10 +51,10 @@ export const Template = (props: {
   title: string;
   children?: (JSX.Element | string)[] | JSX.Element | string;
 }) => {
-  const auth = useSelector((state: AuthReducerProps) => state.authStatus)
+  const auth = useSelector((state: StoreStateProps) => state.authReducer.authStatus)
   const [drawer, setDrawer] = useState<boolean>(false);
   const [toast, setToast] = useState<string>('');
-
+  
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Header header={props.title} />
@@ -98,6 +99,7 @@ export const Template = (props: {
 
 const LoggedIn = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const dispatch = useDispatch();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -140,6 +142,7 @@ const LoggedIn = () => {
         <MenuItem onClick={() => {
           handleClose()
           getAuth().signOut()
+          dispatch(setAuth(null))
         }}>Log out</MenuItem>
       </Menu>
     </div>
