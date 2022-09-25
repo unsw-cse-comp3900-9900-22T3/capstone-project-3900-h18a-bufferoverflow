@@ -1,6 +1,6 @@
 import { AuthActionProps, authActionTypes, AuthProps } from "./action";
 
-interface AuthReducerProps {
+export interface AuthReducerProps {
   authStatus: AuthProps | null;
 }
 
