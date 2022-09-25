@@ -1,6 +1,7 @@
 import { BlobServiceClient } from '@azure/storage-blob'
 import { Button, Typography } from '@mui/material'
 import type { NextPage } from 'next'
+import Image from 'next/image'
 import { createRef, useState } from 'react'
 import { Template } from '../components/Template'
 
@@ -14,11 +15,13 @@ const uploadFile = async (file: File) => {
   // Create new blob
   const blob = container.getBlockBlobClient(file.name)
   blob.uploadData(file, { blobHTTPHeaders: { blobContentType: file.type } })
+  return blob.url
 }
 
 const Upload: NextPage = () => {
   const ref = createRef<any>()
   const [file, setFile] = useState<File>()
+  const [imageURL, setImageURL] = useState<string>('')
   return (
     <Template title='Upload'>
       <Button component="label">
@@ -28,14 +31,19 @@ const Upload: NextPage = () => {
       <Typography>Selected File: {file?.name}</Typography>
       <Button onClick={async () => {
         if (file) {
-          uploadFile(file)
-            .then(() => console.log("SUCCESS"))
-            .catch(() => console.log("FAIL"))
+          setImageURL(await uploadFile(file))
         }
         setFile(undefined)
       }}>
         Upload
       </Button>
+      <Typography>Image URL: {imageURL}</Typography>
+      <Typography>Example image from url (1:1 ratio)</Typography>
+      {
+        imageURL
+          ? <Image loader={() => imageURL} src={imageURL} alt='test image' width={200} height={200} />
+          : <></>
+      }
     </Template>
   )
 }
