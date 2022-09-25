@@ -5,9 +5,7 @@ import styles from '../styles/Home.module.scss'
 const Home: NextPage = () => {
   return (
     <div>
-      <Template title='Home'>
-        saklf hsalkjfh lksadjfh 
-      </Template>
+      <Template title='Home'>saklf hsalkjfh lksadjfh</Template>
 
       {/** STUFF GOES HERE */}
     </div>

@@ -1,35 +1,31 @@
-import { AuthCard } from "../components/AuthCard";
-import { Template } from "../components/Template";
-import { useState } from "react";
-import { Button, TextField } from "@mui/material";
-import loginTextFieldStyles from "../styles/style"
+import { AuthCard } from '../components/AuthCard'
+import { Template } from '../components/Template'
+import { Button, TextField } from '@mui/material'
+import loginTextFieldStyles from '../styles/style'
+import { useState } from 'react'
 
-const title = "Reset Password"
+const title = 'Reset Password'
 
 export const ResetPassword = () => {
-  const [email, setEmail] = useState<string>("");
+  const [email, setEmail] = useState<string>('')
 
   return (
     <Template title={title}>
-      {/* TODO: can you avoid duplication here? */}
       <AuthCard title={title}>
         <TextField
-          id="outlined-basic"
+          id='outlined-basic'
           value={email}
           onChange={(change) => setEmail(change.target.value)}
-          label="Email"
-          variant="outlined"
-          sx={ loginTextFieldStyles }
+          label='Email'
+          variant='outlined'
+          sx={loginTextFieldStyles}
         />
-        <Button
-            variant="outlined"
-            sx={{ width: 270, mb: 2 , mt: 2}}
-          >
-            Reset
-          </Button>
+        <Button variant='outlined' sx={{ width: 270, mb: 2, mt: 2 }}>
+          Reset
+        </Button>
       </AuthCard>
     </Template>
-  );
-};
+  )
+}
 
-export default ResetPassword;
+export default ResetPassword
