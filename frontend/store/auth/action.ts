@@ -1,14 +1,19 @@
-import { Auth } from "firebase/auth"
-
 export const authActionTypes = {
   SET_AUTH: "SET_AUTH"
 } as const
 
-export interface AuthActionProps {
-  type: typeof authActionTypes[keyof typeof authActionTypes];
-  auth: Auth | null;
+export interface AuthProps {
+  email: string;
+  username: string;
+  uid: string;
+  token: string;
 }
 
-export const setAuth = (auth: Auth | null): AuthActionProps => {
-  return { type: authActionTypes.SET_AUTH, auth: auth }
+export interface AuthActionProps {
+  type: typeof authActionTypes[keyof typeof authActionTypes];
+  auth: AuthProps | null;
+}
+
+export const setAuth = (auth: AuthProps | null): AuthActionProps => {
+  return { type: authActionTypes.SET_AUTH, auth }
 }

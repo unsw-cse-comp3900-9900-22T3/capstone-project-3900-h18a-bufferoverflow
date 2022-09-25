@@ -1,8 +1,7 @@
-import { Auth } from "firebase/auth";
-import { AuthActionProps, authActionTypes } from "./action";
+import { AuthActionProps, authActionTypes, AuthProps } from "./action";
 
-interface AuthReducerProps {
-  authStatus: Auth | null;
+export interface AuthReducerProps {
+  authStatus: AuthProps | null;
 }
 
 const authInitialState: AuthReducerProps = {
