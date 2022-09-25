@@ -1,10 +1,12 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { createWrapper } from "next-redux-wrapper";
-import { authReducer } from "./auth/reducer";
+import { authReducer, AuthReducerProps } from "./auth/reducer";
 
+export interface StoreStateProps {
+  authReducer: AuthReducerProps;
+}
 
 const combineReducer = combineReducers({
-  // add more reducers here if needed
   authReducer
 })
 

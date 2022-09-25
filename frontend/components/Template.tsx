@@ -19,6 +19,8 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import CardTravelIcon from '@mui/icons-material/CardTravel';
 import { getAuth } from '@firebase/auth';
 import { Toast } from './Toast';
+import { useSelector } from 'react-redux';
+import { AuthReducerProps } from '../store/auth/reducer';
 
 type Icon = OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
   muiName: string;
@@ -48,22 +50,9 @@ export const Template = (props: {
   title: string;
   children?: (JSX.Element | string)[] | JSX.Element | string;
 }) => {
-  const [auth, setAuth] = useState<boolean>(false);
+  const auth = useSelector((state: AuthReducerProps) => state.authStatus)
   const [drawer, setDrawer] = useState<boolean>(false);
   const [toast, setToast] = useState<string>('');
-
-  useEffect(() => {
-    try {
-      getAuth().onAuthStateChanged(user => {
-        if (user) {
-          setAuth(true)
-        } else {
-          if (auth) setToast('Logged out successfully')
-          setAuth(false)
-        }
-      });
-    } catch { }
-  }, [auth])
 
   return (
     <Box sx={{ flexGrow: 1 }}>
