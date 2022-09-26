@@ -8,8 +8,11 @@ const Home: NextPage = () => {
   return (
     <Template title='Home'>
       saklf hsalkjfh lksadjfh
-      <Button onClick={() => router.push('/test')}>
+      <Button href='/test'>
         GO TO TEST PAGE
+      </Button>
+      <Button href='/upload'>
+        GO TO UPLOAD
       </Button>
     </Template>
   )

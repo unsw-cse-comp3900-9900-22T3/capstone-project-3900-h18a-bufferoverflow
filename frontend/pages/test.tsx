@@ -5,6 +5,7 @@ import { Button, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";;
 import { NextPage } from "next";
+import { wrapper } from "../store/store";
 
 const Test: NextPage = () => {
   const [msg, setMsg] = useState<string>('');
@@ -43,5 +44,9 @@ const Test: NextPage = () => {
     </Template>
   );
 };
+
+Test.getInitialProps = wrapper.getInitialPageProps(store => () => {
+  console.log('2. Page.getInitialProps uses the store to dispatch things');
+});
 
 export default Test

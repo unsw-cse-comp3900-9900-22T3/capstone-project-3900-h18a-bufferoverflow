@@ -11,6 +11,8 @@ const combineReducer = combineReducers({
 })
 
 const mainReducer = (state: StoreStateProps | undefined, action: PayloadAction<any>) => {
+  console.log(state)
+  console.log(action)
   switch (action.type) {
     case HYDRATE:
       return {
