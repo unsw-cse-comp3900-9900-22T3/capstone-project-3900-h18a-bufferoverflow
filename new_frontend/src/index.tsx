@@ -4,6 +4,12 @@ import './styles/index.scss';
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { Main } from './pages/main';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Test } from './pages/test';
+import { Login } from './pages/login';
+import { Register } from './pages/register';
+import { ResetPassword } from './pages/reset-password';
+import { Upload } from './pages/upload';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCb1VDjfWT3SjzvLXYr1cPIY-9LmiPtgNw",
@@ -17,11 +23,21 @@ const firebaseConfig = {
 
 getAnalytics(initializeApp(firebaseConfig))
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+
 root.render(
   <React.StrictMode>
-    <Main />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/">
+          <Route path="login" element={<Login />} />
+          <Route index element={<Main />} />
+          <Route path="register" element={<Register />} />
+          <Route path="reset-password" element={<ResetPassword />} />
+          <Route path="test" element={<Test />} />
+          <Route path="upload" element={<Upload />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
 );
