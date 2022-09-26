@@ -13,8 +13,9 @@ import { useRouter } from 'next/router';
 import { useDispatch } from "react-redux";
 import { setAuth } from "../store/auth/action";
 import { convertUserToAuthProps } from "../store/auth/utils";
+import { NextPage } from "next";
 
-const Login = () => {
+const Login: NextPage = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorToast, setErrorToast] = useState<string>('');

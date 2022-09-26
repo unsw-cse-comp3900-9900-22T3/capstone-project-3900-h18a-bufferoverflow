@@ -3,9 +3,10 @@ import { Template } from "../components/Template";
 import { getAuth } from '@firebase/auth';
 import { Button, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import axios from "axios";
+import axios from "axios";;
+import { NextPage } from "next";
 
-const Test = () => {
+const Test: NextPage = () => {
   const [msg, setMsg] = useState<string>('');
   const [url, setUrl] = useState<string>('');
   return (

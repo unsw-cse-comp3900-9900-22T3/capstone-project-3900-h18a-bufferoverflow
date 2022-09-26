@@ -1,3 +1,4 @@
+import { PayloadAction } from "@reduxjs/toolkit";
 import { AuthActionProps, authActionTypes, AuthProps } from "./action";
 
 export interface AuthReducerProps {
@@ -8,10 +9,10 @@ const authInitialState: AuthReducerProps = {
   authStatus: null
 }
 
-export const authReducer = (state = authInitialState, action: AuthActionProps): AuthReducerProps => {
+export const authReducer = (state = authInitialState, action: PayloadAction<AuthActionProps>): AuthReducerProps => {
   switch (action.type) {
     case authActionTypes.SET_AUTH:
-      return { ...state, authStatus: action.auth };
+      return { ...state, authStatus: action.payload.auth };
     default:
       return state;
   }

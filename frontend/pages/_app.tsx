@@ -20,4 +20,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />
 }
 
+wrapper.getInitialPageProps(store => () => { });
+
 export default wrapper.withRedux(MyApp)

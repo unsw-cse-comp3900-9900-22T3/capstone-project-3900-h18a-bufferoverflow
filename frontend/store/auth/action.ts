@@ -1,3 +1,5 @@
+import { PayloadAction } from "@reduxjs/toolkit";
+
 export const authActionTypes = {
   SET_AUTH: "SET_AUTH"
 } as const
@@ -10,10 +12,9 @@ export interface AuthProps {
 }
 
 export interface AuthActionProps {
-  type: typeof authActionTypes[keyof typeof authActionTypes];
   auth: AuthProps | null;
 }
 
-export const setAuth = (auth: AuthProps | null): AuthActionProps => {
-  return { type: authActionTypes.SET_AUTH, auth }
+export const setAuth = (auth: AuthProps | null): PayloadAction<AuthActionProps> => {
+  return { type: authActionTypes.SET_AUTH, payload: { auth } }
 }
