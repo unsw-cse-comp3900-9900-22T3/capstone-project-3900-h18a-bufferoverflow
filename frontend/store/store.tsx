@@ -1,4 +1,4 @@
-import { createContext, Dispatch, SetStateAction, useContext, useState } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 import { initialStore, StoreProps } from "./schema"
 
 const StoreContext = createContext<StoreProps>(initialStore)
@@ -19,8 +19,15 @@ export const StoreProvider = (props: {
   const [state, setState] = useState<StoreProps>(initialStore)
 
   const update = (newStore: Partial<StoreProps>) => {
-    setState({ ...state, ...newStore })
+    const newState = { ...state, ...newStore }
+    setState(newState)
+    localStorage.setItem('store', JSON.stringify(newState))
   }
+
+  useEffect(() => {
+    let stored = localStorage.getItem('store')
+    if (stored) setState(JSON.parse(stored))
+  }, [])
 
   return (
     <StoreContext.Provider value={state}>
