@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app'
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { useEffect } from 'react';
+import { StoreProvider } from '../store/store';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCb1VDjfWT3SjzvLXYr1cPIY-9LmiPtgNw",
@@ -16,7 +17,11 @@ const firebaseConfig = {
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => { getAnalytics(initializeApp(firebaseConfig)) }, [])
-  return <Component {...pageProps} />
+  return (
+    <StoreProvider>
+      <Component {...pageProps} />
+    </StoreProvider>
+  )
 }
 
 export default MyApp
