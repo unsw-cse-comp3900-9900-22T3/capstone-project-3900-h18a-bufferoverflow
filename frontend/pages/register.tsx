@@ -6,6 +6,7 @@ import { AuthCard } from "../components/AuthCard"
 import { Template } from "../components/Template"
 import { Toast } from "../components/Toast"
 import { useStoreUpdate } from "../store/store"
+import { convertUserToAuthProps } from "../store/utils"
 import loginTextFieldStyles from "../styles/style"
 
 export const Register = () => {
@@ -59,7 +60,7 @@ export const Register = () => {
               createUserWithEmailAndPassword(getAuth(), email, password)
                 .then(async (res) => {
                   await updateProfile(res.user, { displayName: username })
-                  setStore({ auth: res.user })
+                  setStore({ auth: await convertUserToAuthProps(res.user) })
                   router.push('/');
                 })
                 .catch(() => {

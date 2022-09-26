@@ -12,6 +12,7 @@ import { Toast } from "../components/Toast";
 import { useRouter } from 'next/router';
 import { NextPage } from "next";
 import { useStoreUpdate } from "../store/store";
+import { convertUserToAuthProps } from "../store/utils";
 
 const Login: NextPage = () => {
   const [email, setEmail] = useState<string>("");
@@ -47,7 +48,7 @@ const Login: NextPage = () => {
           onClick={() => {
             signInWithEmailAndPassword(getAuth(), email, password)
               .then(async (res) => {
-                setStore({ auth: res.user })
+                setStore({ auth: await convertUserToAuthProps(res.user) })
                 router.push('/');
               })
               .catch(err => {
