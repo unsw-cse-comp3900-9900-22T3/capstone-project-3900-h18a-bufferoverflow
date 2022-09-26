@@ -48,7 +48,9 @@ export const Login = () => {
           onClick={() => {
             signInWithEmailAndPassword(getAuth(), email, password)
               .then(async (res) => {
-                dispatch(setAuth(await convertUserToAuthProps(res.user)))
+                const user = await convertUserToAuthProps(res.user)
+                localStorage.setItem('auth', JSON.stringify(user))
+                dispatch(setAuth(user))
                 navigate("/"); 
               })
               .catch(err => {

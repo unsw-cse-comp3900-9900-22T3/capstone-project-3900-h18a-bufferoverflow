@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Button,
   createTheme,
@@ -63,6 +63,15 @@ export const Template = (props: {
   const auth = useSelector((state: StoreStateProps) => state.authReducer.authStatus)
   const [drawer, setDrawer] = useState<boolean>(false);
   const [toast, setToast] = useState<string>('');
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    let storedAuth = localStorage.getItem('auth')
+    if (storedAuth) {
+      dispatch(setAuth(JSON.parse(storedAuth)))
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -151,6 +160,7 @@ const LoggedIn = () => {
           handleClose()
           getAuth().signOut()
           dispatch(setAuth(null))
+          localStorage.removeItem('auth')
         }}>Log out</MenuItem>
       </Menu>
     </div>
