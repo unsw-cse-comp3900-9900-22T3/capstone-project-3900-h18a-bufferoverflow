@@ -5,7 +5,7 @@ import { Box, Button, Divider, TextField } from "@mui/material";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { Toast } from "../components/Toast";
 
-const title = "Reset Password"
+const title = 'Reset Password'
 
 export const ResetPassword = () => {
   const [email, setEmail] = useState<string>("");
@@ -18,7 +18,7 @@ export const ResetPassword = () => {
       <Toast toast={successToast} setToast={setSuccessToast} type='success' />
       <AuthCard title={title}>
         <TextField
-          id="outlined-basic"
+          id='outlined-basic'
           value={email}
           onChange={(change) => setEmail(change.target.value)}
           label="Email"
@@ -51,7 +51,7 @@ export const ResetPassword = () => {
         </Box>
       </AuthCard>
     </Template>
-  );
-};
+  )
+}
 
-export default ResetPassword;
+export default ResetPassword

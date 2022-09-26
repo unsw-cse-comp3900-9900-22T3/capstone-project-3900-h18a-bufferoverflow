@@ -6,28 +6,28 @@ import {
 } from "@mui/material";
 
 export const AuthCard = (props: {
-  title: string;
-  children?: (JSX.Element | string)[] | JSX.Element | string;
+  title: string
+  children?: (JSX.Element | string)[] | JSX.Element | string
 }) => {
   return (
     <Box
       sx={{
-        width: "100%",
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+        width: '100%',
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
     >
       <Card
-        variant="outlined"
+        variant='outlined'
         sx={{
           width: 420,
           minHeight: 450,
           padding: 1,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
           borderRadius: 3,
           flexDirection: "column",
           paddingBottom: 6
@@ -40,5 +40,5 @@ export const AuthCard = (props: {
         {props.children}
       </Card>
     </Box>
-  );
-};
+  )
+}

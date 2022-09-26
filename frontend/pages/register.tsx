@@ -29,7 +29,7 @@ export const Register = () => {
         <AuthCard title="Register">
           <Toast toast={errorToast} setToast={setErrorToast} type='warning' />
           <TextField
-            id="outlined-basic"
+            id='outlined-basic'
             value={username}
             onChange={change => setUsername(change.target.value)}
             label="Username"
@@ -37,7 +37,7 @@ export const Register = () => {
             sx={loginTextFieldStyles}>
           </TextField>
           <TextField
-            id="outlined-basic"
+            id='outlined-basic'
             value={email}
             onChange={change => setEmail(change.target.value)}
             label="Email"
@@ -46,10 +46,10 @@ export const Register = () => {
           />
           <TextField
             value={password}
-            onChange={change => setPassword(change.target.value)}
-            id="outlined-basic"
-            label="Password"
-            variant="outlined"
+            onChange={(change) => setPassword(change.target.value)}
+            id='outlined-basic'
+            label='Password'
+            variant='outlined'
             type='password'
             sx={loginTextFieldStyles}
           />
@@ -81,18 +81,13 @@ export const Register = () => {
             >
               Login
             </Button>
-            <Button
-              variant="outlined"
-              sx={{ width: 170 }}
-              href="/reset-password"
-            >
+            <Button variant='outlined' sx={{ width: 170 }} href='/reset-password'>
               Reset Password
             </Button>
           </Box>
         </AuthCard>
       </Box>
-    </Template >
-
+    </Template>
   )
 }
 

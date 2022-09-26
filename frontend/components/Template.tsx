@@ -31,18 +31,16 @@ import { getAuth } from '@firebase/auth';
 import { Toast } from './Toast';
 import { useStore, useStoreUpdate } from '../store/store';
 
-type Icon = OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
-  muiName: string;
+type Icon = OverridableComponent<SvgIconTypeMap<{}, 'svg'>> & {
+  muiName: string
 }
 
 const textColor = '#6b6b6b'
-const sideBarTop: { title: string, icon: Icon }[] = [
+const sideBarTop: { title: string; icon: Icon }[] = [
   { title: 'Trade', icon: CardTravelIcon },
   { title: 'Want To Buy', icon: LocalOfferIcon },
 ]
-const sideBarBottom: { title: string, icon: Icon }[] = [
-  { title: 'Account', icon: PersonIcon },
-]
+const sideBarBottom: { title: string; icon: Icon }[] = [{ title: 'Account', icon: PersonIcon }]
 
 const theme = createTheme({
   palette: {
@@ -53,11 +51,11 @@ const theme = createTheme({
       main: '#4f00b0',
     },
   },
-});
+})
 
 export const Template = (props: {
-  title: string;
-  children?: (JSX.Element | string)[] | JSX.Element | string;
+  title: string
+  children?: (JSX.Element | string)[] | JSX.Element | string
 }) => {
   const { auth } = useStore()
   const [drawer, setDrawer] = useState<boolean>(false);
@@ -70,10 +68,10 @@ export const Template = (props: {
       <AppBar position="static" style={{ background: '#e6e6e6' }} elevation={0}>
         <Toolbar>
           <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
+            size='large'
+            edge='start'
+            color='inherit'
+            aria-label='menu'
             sx={{ mr: 2, color: textColor }}
             onClick={() => setDrawer(true)}
           >
@@ -83,26 +81,17 @@ export const Template = (props: {
           <Link href='/'>
             <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, color: textColor, mr: 1.5 }} />
           </Link>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: textColor }}>
+          <Typography variant='h6' component='div' sx={{ flexGrow: 1, color: textColor }}>
             {props.title}
           </Typography>
-          {
-            !auth &&
-            <RegisterLoggedOut />
-          }
-          {
-            auth
-              ? <LoggedIn />
-              : <LoggedOut />
-          }
+          {!auth && <RegisterLoggedOut />}
+          {auth ? <LoggedIn /> : <LoggedOut />}
         </Toolbar>
       </AppBar>
       <SideBar drawer={drawer} setDrawer={setDrawer} />
-      <ThemeProvider theme={theme}>
-        {props.children}
-      </ThemeProvider>
+      <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
     </Box>
-  );
+  )
 }
 
 const LoggedIn = () => {
@@ -110,8 +99,8 @@ const LoggedIn = () => {
   const setStore = useStoreUpdate()
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+    setAnchorEl(event.currentTarget)
+  }
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -120,17 +109,17 @@ const LoggedIn = () => {
   return (
     <div>
       <IconButton
-        size="large"
-        aria-label="account of current user"
-        aria-controls="menu-appbar"
-        aria-haspopup="true"
+        size='large'
+        aria-label='account of current user'
+        aria-controls='menu-appbar'
+        aria-haspopup='true'
         onClick={handleMenu}
         sx={{ color: textColor }}
       >
         <AccountCircle />
       </IconButton>
       <Menu
-        id="menu-appbar"
+        id='menu-appbar'
         anchorEl={anchorEl}
         anchorOrigin={{
           vertical: 'top',
@@ -159,60 +148,49 @@ const LoggedIn = () => {
 
 const LoggedOut = () => {
   return (
-    <Button sx={{ color: textColor }} href='/login'>Login</Button>
+    <Button sx={{ color: textColor }} href='/login'>
+      Login
+    </Button>
   )
 }
 
 const RegisterLoggedOut = () => {
   return (
-    <Button sx={{ color: textColor }} href='/register'>Register</Button>
+    <Button sx={{ color: textColor }} href='/register'>
+      Register
+    </Button>
   )
 }
 
-const SideBar = (props: {
-  drawer: boolean;
-  setDrawer: (arg: boolean) => void;
-}) => {
+const SideBar = (props: { drawer: boolean; setDrawer: (arg: boolean) => void }) => {
   const { drawer, setDrawer } = props
   return (
-    <Drawer
-      anchor={'left'}
-      open={drawer}
-      onClose={() => setDrawer(false)}
-    >
-      <Box
-        sx={{ width: 250 }}
-        role="presentation"
-        onClick={() => setDrawer(false)}
-      >
+    <Drawer anchor={'left'} open={drawer} onClose={() => setDrawer(false)}>
+      <Box sx={{ width: 250 }} role='presentation' onClick={() => setDrawer(false)}>
         <List>
-          {
-            sideBarTop.map(item => {
-              return (
-                <ListItem button key={item.title}>
-                  <ListItemIcon>
-                    <item.icon />
-                  </ListItemIcon>
-                  <ListItemText primary={item.title} />
-                </ListItem>
-              )
-            })
-          }
+          {sideBarTop.map((item) => {
+            return (
+              <ListItem button key={item.title}>
+                <ListItemIcon>
+                  <item.icon />
+                </ListItemIcon>
+                <ListItemText primary={item.title} />
+              </ListItem>
+            )
+          })}
         </List>
         <Divider />
         <List>
-          {
-            sideBarBottom.map(item => {
-              return (
-                <ListItem button key={item.title}>
-                  <ListItemIcon>
-                    <item.icon />
-                  </ListItemIcon>
-                  <ListItemText primary={item.title} />
-                </ListItem>
-              )
-            })
-          }
+          {sideBarBottom.map((item) => {
+            return (
+              <ListItem button key={item.title}>
+                <ListItemIcon>
+                  <item.icon />
+                </ListItemIcon>
+                <ListItemText primary={item.title} />
+              </ListItem>
+            )
+          })}
         </List>
       </Box>
     </Drawer>
