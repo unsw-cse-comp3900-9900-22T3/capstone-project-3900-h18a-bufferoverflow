@@ -5,6 +5,7 @@ import { useState } from "react"
 import { AuthCard } from "../components/AuthCard"
 import { Template } from "../components/Template"
 import { Toast } from "../components/Toast"
+import { useStoreUpdate } from "../store/store"
 import loginTextFieldStyles from "../styles/style"
 
 export const Register = () => {
@@ -13,6 +14,7 @@ export const Register = () => {
   const [password, setPassword] = useState<string>('')
   const [errorToast, setErrorToast] = useState<string>('');
   const router = useRouter();
+  const setStore = useStoreUpdate()
 
   return (
     <Template title="Register">
@@ -57,6 +59,7 @@ export const Register = () => {
               createUserWithEmailAndPassword(getAuth(), email, password)
                 .then(async (res) => {
                   await updateProfile(res.user, { displayName: username })
+                  setStore({ auth: res.user })
                   router.push('/');
                 })
                 .catch(() => {
