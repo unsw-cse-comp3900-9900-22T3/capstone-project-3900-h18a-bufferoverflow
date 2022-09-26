@@ -22,7 +22,7 @@ const Test: NextPage = () => {
         })
           .then(r => {
             console.log(r)
-            setMsg(JSON.stringify(r))
+            setMsg(JSON.stringify(r.config.data))
           })
           .catch(r => {
             console.log(r)
