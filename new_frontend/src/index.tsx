@@ -10,6 +10,8 @@ import { Login } from './pages/login';
 import { Register } from './pages/register';
 import { ResetPassword } from './pages/reset-password';
 import { Upload } from './pages/upload';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCb1VDjfWT3SjzvLXYr1cPIY-9LmiPtgNw",
@@ -26,18 +28,20 @@ getAnalytics(initializeApp(firebaseConfig))
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/">
-          <Route path="login" element={<Login />} />
-          <Route index element={<Main />} />
-          <Route path="register" element={<Register />} />
-          <Route path="reset-password" element={<ResetPassword />} />
-          <Route path="test" element={<Test />} />
-          <Route path="upload" element={<Upload />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  </React.StrictMode>
+  <Provider store={store}>
+    <React.StrictMode>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/">
+            <Route path="login" element={<Login />} />
+            <Route index element={<Main />} />
+            <Route path="register" element={<Register />} />
+            <Route path="reset-password" element={<ResetPassword />} />
+            <Route path="test" element={<Test />} />
+            <Route path="upload" element={<Upload />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </React.StrictMode>
+  </Provider>
 );

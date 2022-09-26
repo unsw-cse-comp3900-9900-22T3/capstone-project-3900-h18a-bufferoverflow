@@ -28,6 +28,9 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import CardTravelIcon from '@mui/icons-material/CardTravel';
 import { getAuth } from '@firebase/auth';
 import { Toast } from './Toast';
+import { StoreStateProps } from '../store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAuth } from '../store/auth/action';
 
 type Icon = OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
   muiName: string;
@@ -57,7 +60,7 @@ export const Template = (props: {
   title: string;
   children?: (JSX.Element | string)[] | JSX.Element | string;
 }) => {
-  const auth = false; // change this
+  const auth = useSelector((state: StoreStateProps) => state.authReducer.authStatus)
   const [drawer, setDrawer] = useState<boolean>(false);
   const [toast, setToast] = useState<string>('');
 
@@ -104,6 +107,7 @@ export const Template = (props: {
 
 const LoggedIn = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const dispatch = useDispatch()
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -146,6 +150,7 @@ const LoggedIn = () => {
         <MenuItem onClick={() => {
           handleClose()
           getAuth().signOut()
+          dispatch(setAuth(null))
         }}>Log out</MenuItem>
       </Menu>
     </div>

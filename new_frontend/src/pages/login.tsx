@@ -9,11 +9,17 @@ import { Template } from "../components/Template";
 import { getAuth, signInWithEmailAndPassword } from '@firebase/auth';
 import { Toast } from "../components/Toast";
 import AuthCard from "../components/AuthCard";
+import { useDispatch } from "react-redux";
+import { setAuth } from "../store/auth/action";
+import { convertUserToAuthProps } from "../store/auth/utils";
+import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorToast, setErrorToast] = useState<string>('');
+  const dispatch = useDispatch()
+  const navigate = useNavigate();
 
   return (
     <Template title="Login">
@@ -42,7 +48,8 @@ export const Login = () => {
           onClick={() => {
             signInWithEmailAndPassword(getAuth(), email, password)
               .then(async (res) => {
-                // do stuff
+                dispatch(setAuth(await convertUserToAuthProps(res.user)))
+                navigate("/"); 
               })
               .catch(err => {
                 setErrorToast('Email or password is not valid')
