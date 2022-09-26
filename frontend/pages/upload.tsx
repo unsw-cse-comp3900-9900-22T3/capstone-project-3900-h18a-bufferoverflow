@@ -4,7 +4,6 @@ import type { NextPage } from 'next'
 import Image from 'next/image'
 import { createRef, useState } from 'react'
 import { Template } from '../components/Template'
-import { wrapper } from '../store/store'
 
 const uploadFile = async (file: File) => {
   const service = new BlobServiceClient(
@@ -48,9 +47,5 @@ const Upload: NextPage = () => {
     </Template>
   )
 }
-
-Upload.getInitialProps = wrapper.getInitialPageProps(store => () => {
-  console.log('2. Page.getInitialProps uses the store to dispatch things');
-});
 
 export default Upload
