@@ -10,9 +10,6 @@ import { Template } from "../components/Template";
 import { getAuth, signInWithEmailAndPassword } from '@firebase/auth';
 import { Toast } from "../components/Toast";
 import { useRouter } from 'next/router';
-import { useDispatch } from "react-redux";
-import { setAuth } from "../store/auth/action";
-import { convertUserToAuthProps } from "../store/auth/utils";
 import { NextPage } from "next";
 
 const Login: NextPage = () => {
@@ -20,7 +17,6 @@ const Login: NextPage = () => {
   const [password, setPassword] = useState<string>("");
   const [errorToast, setErrorToast] = useState<string>('');
   const router = useRouter();
-  const dispatch = useDispatch()
 
   return (
     <Template title="Login">
@@ -49,7 +45,6 @@ const Login: NextPage = () => {
           onClick={() => {
             signInWithEmailAndPassword(getAuth(), email, password)
               .then(async (res) => {
-                dispatch(setAuth(await convertUserToAuthProps(res.user)))
                 router.push('/');
               })
               .catch(err => {

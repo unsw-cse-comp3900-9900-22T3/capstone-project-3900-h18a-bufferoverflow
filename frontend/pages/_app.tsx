@@ -3,7 +3,6 @@ import type { AppProps } from 'next/app'
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { useEffect } from 'react';
-import { wrapper } from '../store/store';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCb1VDjfWT3SjzvLXYr1cPIY-9LmiPtgNw",
@@ -20,4 +19,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />
 }
 
-export default wrapper.withRedux(MyApp)
+export default MyApp

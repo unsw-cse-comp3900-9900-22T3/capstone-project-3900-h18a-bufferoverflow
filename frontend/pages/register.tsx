@@ -2,12 +2,9 @@ import { Box, Button, Divider, TextField, Typography } from "@mui/material"
 import { createUserWithEmailAndPassword, getAuth, updateProfile } from "firebase/auth"
 import { useRouter } from "next/router"
 import { useState } from "react"
-import { useDispatch } from "react-redux"
 import { AuthCard } from "../components/AuthCard"
 import { Template } from "../components/Template"
 import { Toast } from "../components/Toast"
-import { setAuth } from "../store/auth/action"
-import { convertUserToAuthProps } from "../store/auth/utils"
 import loginTextFieldStyles from "../styles/style"
 
 export const Register = () => {
@@ -16,7 +13,6 @@ export const Register = () => {
   const [password, setPassword] = useState<string>('')
   const [errorToast, setErrorToast] = useState<string>('');
   const router = useRouter();
-  const dispatch = useDispatch();
 
   return (
     <Template title="Register">
@@ -61,7 +57,6 @@ export const Register = () => {
               createUserWithEmailAndPassword(getAuth(), email, password)
                 .then(async (res) => {
                   await updateProfile(res.user, { displayName: username })
-                  dispatch(setAuth(await convertUserToAuthProps(res.user)))
                   router.push('/');
                 })
                 .catch(() => {
