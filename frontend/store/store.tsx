@@ -1,8 +1,8 @@
 import { createContext, Dispatch, SetStateAction, useContext, useState } from "react"
-import { StoreProps } from "./schema"
+import { initialStore, StoreProps } from "./schema"
 
-const StoreContext = createContext<StoreProps>(null)
-const StoreUpdateContext = createContext<Dispatch<SetStateAction<StoreProps>>>(() => null)
+const StoreContext = createContext<StoreProps>(initialStore)
+const StoreUpdateContext = createContext<(arg: StoreProps) => void>(() => null)
 
 export const useStore = () => {
   return useContext(StoreContext)
@@ -16,11 +16,15 @@ export const StoreProvider = (props: {
   children: JSX.Element | JSX.Element[]
 }) => {
 
-  const [state, setState] = useState<StoreProps>(null)
+  const [state, setState] = useState<StoreProps>(initialStore)
+
+  const update = (newStore: Partial<StoreProps>) => {
+    setState({ ...state, ...newStore })
+  }
 
   return (
     <StoreContext.Provider value={state}>
-      <StoreUpdateContext.Provider value={setState}>
+      <StoreUpdateContext.Provider value={update}>
         {props.children}
       </StoreUpdateContext.Provider>
     </StoreContext.Provider>
