@@ -1,7 +1,6 @@
 import { BlobServiceClient } from '@azure/storage-blob'
 import { Button, Typography } from '@mui/material'
 import type { NextPage } from 'next'
-import Image from 'next/image'
 import { createRef, useState } from 'react'
 import { Template } from '../components/Template'
 
@@ -41,7 +40,7 @@ const Upload: NextPage = () => {
       <Typography>Example image from url (1:1 ratio)</Typography>
       {
         imageURL
-          ? <Image loader={() => imageURL} src={imageURL} alt='test image' width={200} height={200} />
+          ? <img src={imageURL} alt='test' />
           : <></>
       }
     </Template>
