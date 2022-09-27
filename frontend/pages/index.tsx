@@ -1,14 +1,20 @@
+import { Button } from '@mui/material'
 import type { NextPage } from 'next'
+import { useRouter } from 'next/router'
 import { Template } from '../components/Template'
-import styles from '../styles/Home.module.scss'
 
 const Home: NextPage = () => {
+  const router = useRouter()
   return (
-    <div>
-      <Template title='Home'>saklf hsalkjfh lksadjfh</Template>
-
-      {/** STUFF GOES HERE */}
-    </div>
+    <Template title='Home'>
+      saklf hsalkjfh lksadjfh
+      <Button href='/test'>
+        GO TO TEST PAGE
+      </Button>
+      <Button href='/upload'>
+        GO TO UPLOAD
+      </Button>
+    </Template>
   )
 }
 

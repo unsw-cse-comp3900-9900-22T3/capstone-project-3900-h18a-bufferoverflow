@@ -1,13 +1,3 @@
-import AppBar from '@mui/material/AppBar'
-import Box from '@mui/material/Box'
-import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
-import MenuIcon from '@mui/icons-material/Menu'
-import AccountCircle from '@mui/icons-material/AccountCircle'
-import MenuItem from '@mui/material/MenuItem'
-import Menu from '@mui/material/Menu'
-import { useState } from 'react'
 import {
   Button,
   createTheme,
@@ -17,16 +7,29 @@ import {
   ListItemIcon,
   ListItemText,
   SvgIconTypeMap,
-  ThemeProvider,
-} from '@mui/material'
-import { Header } from './Header'
-import AdbIcon from '@mui/icons-material/Adb'
-import Link from 'next/link'
-import List from '@mui/material/List'
-import PersonIcon from '@mui/icons-material/Person'
-import { OverridableComponent } from '@mui/material/OverridableComponent'
-import LocalOfferIcon from '@mui/icons-material/LocalOffer'
-import CardTravelIcon from '@mui/icons-material/CardTravel'
+  ThemeProvider
+} from '@mui/material';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
+import { useState } from 'react';
+import { Header } from './Header';
+import AdbIcon from '@mui/icons-material/Adb';
+import Link from 'next/link';
+import List from '@mui/material/List';
+import PersonIcon from '@mui/icons-material/Person';
+import { OverridableComponent } from '@mui/material/OverridableComponent';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import CardTravelIcon from '@mui/icons-material/CardTravel';
+import { getAuth } from '@firebase/auth';
+import { Toast } from './Toast';
+import { useStore, useStoreUpdate } from '../store/store';
 
 type Icon = OverridableComponent<SvgIconTypeMap<{}, 'svg'>> & {
   muiName: string
@@ -54,13 +57,15 @@ export const Template = (props: {
   title: string
   children?: (JSX.Element | string)[] | JSX.Element | string
 }) => {
-  const [auth, setAuth] = useState<boolean>(false)
-  const [drawer, setDrawer] = useState<boolean>(false)
+  const { auth } = useStore()
+  const [drawer, setDrawer] = useState<boolean>(false);
+  const [toast, setToast] = useState<string>('');
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Header header={props.title} />
-      <AppBar position='static' style={{ background: '#e6e6e6' }} elevation={0}>
+      <Toast toast={toast} setToast={setToast} type='success' />
+      <AppBar position="static" style={{ background: '#e6e6e6' }} elevation={0}>
         <Toolbar>
           <IconButton
             size='large'
@@ -90,15 +95,17 @@ export const Template = (props: {
 }
 
 const LoggedIn = () => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const setStore = useStoreUpdate()
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
 
   const handleClose = () => {
-    setAnchorEl(null)
-  }
+    setAnchorEl(null);
+  };
+
   return (
     <div>
       <IconButton
@@ -126,8 +133,14 @@ const LoggedIn = () => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
+        <MenuItem onClick={() => {
+          handleClose()
+        }}>Profile</MenuItem>
+        <MenuItem onClick={() => {
+          handleClose()
+          getAuth().signOut()
+          setStore({ auth: null })
+        }}>Log out</MenuItem>
       </Menu>
     </div>
   )
