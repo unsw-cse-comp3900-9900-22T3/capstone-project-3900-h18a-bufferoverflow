@@ -30,6 +30,7 @@ import CardTravelIcon from '@mui/icons-material/CardTravel';
 import { getAuth } from '@firebase/auth';
 import { Toast } from './Toast';
 import { useStore, useStoreUpdate } from '../store/store';
+import Image from 'next/image';
 
 type Icon = OverridableComponent<SvgIconTypeMap<{}, 'svg'>> & {
   muiName: string
@@ -79,9 +80,9 @@ export const Template = (props: {
           </IconButton>
 
           <Link href='/'>
-            <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, color: textColor, mr: 1.5 }} />
+            <Image src='/logo.png' alt='logo' width={35} height={35} />
           </Link>
-          <Typography variant='h6' component='div' sx={{ flexGrow: 1, color: textColor }}>
+          <Typography variant='h6' component='div' sx={{ flexGrow: 1, color: textColor, ml: 1.5, letterSpacing: 4 }}>
             {props.title}
           </Typography>
           {!auth && <RegisterLoggedOut />}
