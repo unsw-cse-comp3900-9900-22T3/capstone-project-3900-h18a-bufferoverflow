@@ -6,7 +6,7 @@ import { Template } from '../components/Template'
 const Home: NextPage = () => {
   const router = useRouter()
   return (
-    <Template title='Home'>
+    <Template title='Swapr'>
       saklf hsalkjfh lksadjfh
       <Button href='/test'>
         GO TO TEST PAGE
