@@ -28,7 +28,7 @@ import { OverridableComponent } from '@mui/material/OverridableComponent';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import CardTravelIcon from '@mui/icons-material/CardTravel';
 import { getAuth } from '@firebase/auth';
-import { Toast } from './Toast';
+import { Toast } from './generic/Toast';
 import { useStore, useStoreUpdate } from '../store/store';
 import Image from 'next/image';
 

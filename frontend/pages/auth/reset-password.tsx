@@ -3,7 +3,7 @@ import { Template } from "../../components/Template";
 import { useState } from "react";
 import { Box, Button, Divider, TextField } from "@mui/material";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
-import { Toast } from "../../components/Toast";
+import { Toast } from "../../components/generic/Toast";
 
 const title = 'Reset Password'
 
