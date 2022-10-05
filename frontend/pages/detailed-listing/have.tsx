@@ -2,7 +2,7 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 
-const HaveListing: NextPage = () => {
+const DetailedHaveListing: NextPage = () => {
   return (
     <Template title="Have Listing">
 
@@ -10,4 +10,4 @@ const HaveListing: NextPage = () => {
   );
 };
 
-export default HaveListing
+export default DetailedHaveListing

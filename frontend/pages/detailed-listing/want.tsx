@@ -2,7 +2,7 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 
-const WantListing: NextPage = () => {
+const DetailedWantListing: NextPage = () => {
   return (
     <Template title="Want Listing">
 
@@ -10,4 +10,4 @@ const WantListing: NextPage = () => {
   );
 };
 
-export default WantListing
+export default DetailedWantListing
