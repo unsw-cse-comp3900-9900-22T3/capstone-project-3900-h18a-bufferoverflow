@@ -8,12 +8,8 @@ const Home: NextPage = () => {
   return (
     <Template title='Swapr'>
       saklf hsalkjfh lksadjfh
-      <Button href='/test'>
-        GO TO TEST PAGE
-      </Button>
-      <Button href='/upload'>
-        GO TO UPLOAD
-      </Button>
+      <Button href='/test/request'>GO TO TEST PAGE</Button>
+      <Button href='/test/upload'>GO TO UPLOAD</Button>
     </Template>
   )
 }

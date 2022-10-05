@@ -83,7 +83,7 @@ export const Template = (props: {
             <Image src='/logo.png' alt='logo' width={35} height={35} />
           </Link>
           <Typography variant='h6' component='div' sx={{ flexGrow: 1, color: textColor, ml: 1.5, letterSpacing: 4 }}>
-            {props.title}
+            Swapr
           </Typography>
           {!auth && <RegisterLoggedOut />}
           {auth ? <LoggedIn /> : <LoggedOut />}
