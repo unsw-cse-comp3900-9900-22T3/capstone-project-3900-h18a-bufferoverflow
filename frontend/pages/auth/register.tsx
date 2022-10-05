@@ -2,12 +2,12 @@ import { Box, Button, Divider, TextField, Typography } from "@mui/material"
 import { createUserWithEmailAndPassword, getAuth, updateProfile } from "firebase/auth"
 import { useRouter } from "next/router"
 import { useState } from "react"
-import { AuthCard } from "../components/AuthCard"
-import { Template } from "../components/Template"
-import { Toast } from "../components/Toast"
-import { useStoreUpdate } from "../store/store"
-import { convertUserToAuthProps } from "../store/utils"
-import loginTextFieldStyles from "../styles/style"
+import { AuthCard } from "../../components/AuthCard"
+import { Template } from "../../components/Template"
+import { Toast } from "../../components/Toast"
+import { useStoreUpdate } from "../../store/store"
+import { convertUserToAuthProps } from "../../store/utils"
+import loginTextFieldStyles from "../../styles/style"
 
 export const Register = () => {
   const [username, setUsername] = useState<string>('')

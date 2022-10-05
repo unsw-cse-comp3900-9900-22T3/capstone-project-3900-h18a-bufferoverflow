@@ -5,14 +5,14 @@ import {
   TextField,
 } from "@mui/material";
 import { useState } from "react";
-import { AuthCard } from "../components/AuthCard";
-import { Template } from "../components/Template";
+import { AuthCard } from "../../components/AuthCard";
+import { Template } from "../../components/Template";
 import { getAuth, signInWithEmailAndPassword } from '@firebase/auth';
-import { Toast } from "../components/Toast";
+import { Toast } from "../../components/Toast";
 import { useRouter } from 'next/router';
 import { NextPage } from "next";
-import { useStoreUpdate } from "../store/store";
-import { convertUserToAuthProps } from "../store/utils";
+import { useStoreUpdate } from "../../store/store";
+import { convertUserToAuthProps } from "../../store/utils";
 
 const Login: NextPage = () => {
   const [email, setEmail] = useState<string>("");

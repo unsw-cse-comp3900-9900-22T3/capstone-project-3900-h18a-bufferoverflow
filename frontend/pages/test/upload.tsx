@@ -2,7 +2,7 @@ import { BlobServiceClient } from '@azure/storage-blob'
 import { Button, Typography } from '@mui/material'
 import type { NextPage } from 'next'
 import { createRef, useState } from 'react'
-import { Template } from '../components/Template'
+import { Template } from '../../components/Template'
 
 const uploadFile = async (file: File) => {
   const service = new BlobServiceClient(

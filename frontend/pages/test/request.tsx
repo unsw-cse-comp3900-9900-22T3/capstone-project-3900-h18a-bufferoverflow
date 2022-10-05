@@ -1,13 +1,13 @@
 
-import { Template } from "../components/Template";
+import { Template } from "../../components/Template";
 import { getAuth } from '@firebase/auth';
 import { Button, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";;
 import { NextPage } from "next";
-import { useStore } from "../store/store";
+import { useStore } from "../../store/store";
 
-const Test: NextPage = () => {
+const Request: NextPage = () => {
   const [msg, setMsg] = useState<string>('');
   const [url, setUrl] = useState<string>('');
   const { auth } = useStore()
@@ -39,4 +39,4 @@ const Test: NextPage = () => {
   );
 };
 
-export default Test
+export default Request
