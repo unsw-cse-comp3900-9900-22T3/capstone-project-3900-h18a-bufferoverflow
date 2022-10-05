@@ -3,7 +3,7 @@ import { createUserWithEmailAndPassword, getAuth, updateProfile } from "firebase
 import { useRouter } from "next/router"
 import { useState } from "react"
 import { AuthCard } from "../../components/auth/AuthCard"
-import { Template } from "../../components/Template"
+import { Template } from "../../components/generic/Template"
 import { Toast } from "../../components/generic/Toast"
 import { useStoreUpdate } from "../../store/store"
 import { convertUserToAuthProps } from "../../store/utils"

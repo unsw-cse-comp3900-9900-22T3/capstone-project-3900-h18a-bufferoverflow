@@ -1,5 +1,5 @@
 
-import { Template } from "../../components/Template";
+import { Template } from "../../components/generic/Template";
 import { Button, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";;

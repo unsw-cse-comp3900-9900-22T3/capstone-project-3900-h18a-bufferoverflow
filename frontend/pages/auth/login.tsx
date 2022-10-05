@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { AuthCard } from "../../components/auth/AuthCard";
-import { Template } from "../../components/Template";
+import { Template } from "../../components/generic/Template";
 import { getAuth, signInWithEmailAndPassword } from '@firebase/auth';
 import { Toast } from "../../components/generic/Toast";
 import { useRouter } from 'next/router';

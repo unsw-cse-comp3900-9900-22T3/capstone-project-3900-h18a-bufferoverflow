@@ -1,5 +1,5 @@
 import { AuthCard } from "../../components/auth/AuthCard";
-import { Template } from "../../components/Template";
+import { Template } from "../../components/generic/Template";
 import { useState } from "react";
 import { Box, Button, Divider, TextField } from "@mui/material";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
