@@ -1,4 +1,4 @@
-import { AuthCard } from "../../components/AuthCard";
+import { AuthCard } from "../../components/auth/AuthCard";
 import { Template } from "../../components/Template";
 import { useState } from "react";
 import { Box, Button, Divider, TextField } from "@mui/material";

@@ -1,6 +1,5 @@
 
 import { Template } from "../../components/Template";
-import { getAuth } from '@firebase/auth';
 import { Button, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";;
