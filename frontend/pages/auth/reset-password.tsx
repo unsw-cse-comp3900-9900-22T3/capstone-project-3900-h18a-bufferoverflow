@@ -42,10 +42,10 @@ export const ResetPassword = () => {
         </Button>
         <Divider sx={{ mb: 3.5, mt: 2, width: 220 }} />
         <Box>
-          <Button variant="outlined" sx={{ width: 135, mr: 1 }} href="/login">
+          <Button variant="outlined" sx={{ width: 135, mr: 1 }} href="/auth/login">
             Login
           </Button>
-          <Button variant="outlined" sx={{ width: 135 }} href="/register">
+          <Button variant="outlined" sx={{ width: 135 }} href="/auth/register">
             Register
           </Button>
         </Box>

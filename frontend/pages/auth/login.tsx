@@ -60,10 +60,10 @@ const Login: NextPage = () => {
         </Button>
         <Divider sx={{ mb: 3.5, mt: 2, width: 200 }} />
         <Box sx={{}}>
-          <Button variant="outlined" sx={{ width: 95, mr: 1 }} href="/register">
+          <Button variant="outlined" sx={{ width: 95, mr: 1 }} href="/auth/register">
             Register
           </Button>
-          <Button variant="outlined" sx={{ width: 175 }} href="/reset-password">
+          <Button variant="outlined" sx={{ width: 175 }} href="/auth/reset-password">
             Reset Password
           </Button>
         </Box>

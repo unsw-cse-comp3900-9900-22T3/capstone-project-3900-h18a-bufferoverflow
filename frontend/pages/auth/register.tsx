@@ -77,11 +77,11 @@ export const Register = () => {
             <Button
               variant="outlined"
               sx={{ width: 100, mr: 1 }}
-              href="/login"
+              href="/auth/login"
             >
               Login
             </Button>
-            <Button variant='outlined' sx={{ width: 170 }} href='/reset-password'>
+            <Button variant='outlined' sx={{ width: 170 }} href='/auth/reset-password'>
               Reset Password
             </Button>
           </Box>

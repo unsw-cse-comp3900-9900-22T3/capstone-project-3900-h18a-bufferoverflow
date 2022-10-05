@@ -149,7 +149,7 @@ const LoggedIn = () => {
 
 const LoggedOut = () => {
   return (
-    <Button sx={{ color: textColor }} href='/login'>
+    <Button sx={{ color: textColor }} href='/auth/login'>
       Login
     </Button>
   )
@@ -157,7 +157,7 @@ const LoggedOut = () => {
 
 const RegisterLoggedOut = () => {
   return (
-    <Button sx={{ color: textColor }} href='/register'>
+    <Button sx={{ color: textColor }} href='/auth/register'>
       Register
     </Button>
   )
