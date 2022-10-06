@@ -5,14 +5,14 @@ import {
   TextField,
 } from "@mui/material";
 import { useState } from "react";
-import { AuthCard } from "../components/AuthCard";
-import { Template } from "../components/Template";
+import { AuthCard } from "../../components/auth/AuthCard";
+import { Template } from "../../components/generic/Template";
 import { getAuth, signInWithEmailAndPassword } from '@firebase/auth';
-import { Toast } from "../components/Toast";
+import { Toast } from "../../components/generic/Toast";
 import { useRouter } from 'next/router';
 import { NextPage } from "next";
-import { useStoreUpdate } from "../store/store";
-import { convertUserToAuthProps } from "../store/utils";
+import { useStoreUpdate } from "../../store/store";
+import { convertUserToAuthProps } from "../../store/utils";
 
 const Login: NextPage = () => {
   const [email, setEmail] = useState<string>("");
@@ -60,10 +60,10 @@ const Login: NextPage = () => {
         </Button>
         <Divider sx={{ mb: 3.5, mt: 2, width: 200 }} />
         <Box sx={{}}>
-          <Button variant="outlined" sx={{ width: 95, mr: 1 }} href="/register">
+          <Button variant="outlined" sx={{ width: 95, mr: 1 }} href="/auth/register">
             Register
           </Button>
-          <Button variant="outlined" sx={{ width: 175 }} href="/reset-password">
+          <Button variant="outlined" sx={{ width: 175 }} href="/auth/reset-password">
             Reset Password
           </Button>
         </Box>

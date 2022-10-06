@@ -1,19 +1,15 @@
 import { Button } from '@mui/material'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { Template } from '../components/Template'
+import { Template } from '../components/generic/Template'
 
 const Home: NextPage = () => {
   const router = useRouter()
   return (
     <Template title='Swapr'>
       saklf hsalkjfh lksadjfh
-      <Button href='/test'>
-        GO TO TEST PAGE
-      </Button>
-      <Button href='/upload'>
-        GO TO UPLOAD
-      </Button>
+      <Button href='/test/request'>GO TO TEST PAGE</Button>
+      <Button href='/test/upload'>GO TO UPLOAD</Button>
     </Template>
   )
 }
