@@ -16,5 +16,6 @@ This is the backend for the [frontend](https://github.com/sschreyer/3900_private
 
 ## Setup
 
-1. Install [Docker](https://www.docker.com/products/docker-desktop)
+1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop)
 2. Run `docker-compose up -d --build` in the root directory
+  - The first time you run this command, you might be waiting for a while for the image to install everything. Subsequent runs will use a cached image and the container will start almost immediately
