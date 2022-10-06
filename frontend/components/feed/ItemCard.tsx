@@ -21,7 +21,7 @@ const data = {
 export default function RecipeReviewCard() {
   return (
     <Link href={detailedItemListingRoute}>
-      <Card sx={{ maxWidth: 345 }}>
+      <Card sx={{ maxWidth: 345, margin: '8px' }}>
         <CardMedia component='img' height='194' image={data.image} alt={data.title} />
         <CardHeader title={data.title} />
         <CardContent>
@@ -29,7 +29,15 @@ export default function RecipeReviewCard() {
             Price ${data.price}
           </Typography>
         </CardContent>
-        <CardActions disableSpacing sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <CardActions
+          disableSpacing
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            paddingLeft: '15px',
+            paddingRight: '15px',
+          }}
+        >
           <Typography variant='body2' color='text.secondary'>
             {data.location}
           </Typography>

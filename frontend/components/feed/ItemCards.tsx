@@ -15,6 +15,9 @@ export default function ItemCards() {
       <ItemCard />
       <ItemCard />
       <ItemCard />
+      <ItemCard />
+      <ItemCard />
+      <ItemCard />
     </Box>
   )
 }
