@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  web:
+  backend:
     build: ./backend
     command: python3 manage.py run -h 0.0.0.0
     volumes:
