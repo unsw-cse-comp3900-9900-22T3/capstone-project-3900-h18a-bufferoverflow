@@ -5,7 +5,7 @@ This is the backend for the [frontend](https://github.com/sschreyer/3900_private
 
 ## Dependencies
 
-- [PostgreSQL](https://www.postgresql.org/)
+- [PostgreSQL](https://www.postgresql.org/) version 13.8
 - [Python](https://www.python.org/)
 - [Flask](https://flask.palletsprojects.com/en/2.0.x/)
 - [Flask-SQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/en/2.x/)
