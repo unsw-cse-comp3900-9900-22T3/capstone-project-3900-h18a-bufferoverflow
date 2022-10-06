@@ -18,6 +18,13 @@ def seed_db():
     db.session.add(User(email="lukebanicevic@gmail.com"))
     db.session.commit()
 
+@cli.command("query_db")
+def query_db():
+    print(User.query.all())
+
+@cli.command("show_db")
+def show_db():
+    print(db)
 
 if __name__ == "__main__":
     cli()
