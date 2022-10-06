@@ -2,12 +2,12 @@ import { Box, Button, Divider, TextField, Typography } from "@mui/material"
 import { createUserWithEmailAndPassword, getAuth, updateProfile } from "firebase/auth"
 import { useRouter } from "next/router"
 import { useState } from "react"
-import { AuthCard } from "../components/AuthCard"
-import { Template } from "../components/Template"
-import { Toast } from "../components/Toast"
-import { useStoreUpdate } from "../store/store"
-import { convertUserToAuthProps } from "../store/utils"
-import loginTextFieldStyles from "../styles/style"
+import { AuthCard } from "../../components/auth/AuthCard"
+import { Template } from "../../components/generic/Template"
+import { Toast } from "../../components/generic/Toast"
+import { useStoreUpdate } from "../../store/store"
+import { convertUserToAuthProps } from "../../store/utils"
+import loginTextFieldStyles from "../../styles/style"
 
 export const Register = () => {
   const [username, setUsername] = useState<string>('')
@@ -77,11 +77,11 @@ export const Register = () => {
             <Button
               variant="outlined"
               sx={{ width: 100, mr: 1 }}
-              href="/login"
+              href="/auth/login"
             >
               Login
             </Button>
-            <Button variant='outlined' sx={{ width: 170 }} href='/reset-password'>
+            <Button variant='outlined' sx={{ width: 170 }} href='/auth/reset-password'>
               Reset Password
             </Button>
           </Box>

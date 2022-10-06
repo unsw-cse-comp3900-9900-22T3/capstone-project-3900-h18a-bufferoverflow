@@ -1,7 +1,7 @@
 import { Button } from '@mui/material'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { Template } from '../components/Template'
+import { Template } from '../components/generic/Template'
 import ItemCard from '../components/ItemCard'
 
 const Home: NextPage = () => {

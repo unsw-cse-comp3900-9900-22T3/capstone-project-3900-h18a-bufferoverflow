@@ -1,9 +1,9 @@
-import { AuthCard } from "../components/AuthCard";
-import { Template } from "../components/Template";
+import { AuthCard } from "../../components/auth/AuthCard";
+import { Template } from "../../components/generic/Template";
 import { useState } from "react";
 import { Box, Button, Divider, TextField } from "@mui/material";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
-import { Toast } from "../components/Toast";
+import { Toast } from "../../components/generic/Toast";
 
 const title = 'Reset Password'
 
@@ -42,10 +42,10 @@ export const ResetPassword = () => {
         </Button>
         <Divider sx={{ mb: 3.5, mt: 2, width: 220 }} />
         <Box>
-          <Button variant="outlined" sx={{ width: 135, mr: 1 }} href="/login">
+          <Button variant="outlined" sx={{ width: 135, mr: 1 }} href="/auth/login">
             Login
           </Button>
-          <Button variant="outlined" sx={{ width: 135 }} href="/register">
+          <Button variant="outlined" sx={{ width: 135 }} href="/auth/register">
             Register
           </Button>
         </Box>
