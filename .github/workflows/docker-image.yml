@@ -13,6 +13,4 @@ jobs:
     - name: Login to Docker
       run: docker login bufferoverflowregistry.azurecr.io -u bufferOverflowRegistry -p +GOAy5TG0OpJG3/uVC3RR3O7TdDTDi=p
     - name: Build Docker Image
-      run: docker build -t bufferoverflowregistry.azurecr.io/services:latest backend
-    - name: Push Docker Image
-      run: docker push bufferoverflowregistry.azurecr.io/services:latest
+      run: docker-compose up -d --build
