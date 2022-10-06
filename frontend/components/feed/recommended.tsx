@@ -1,9 +1,9 @@
-import { Template } from './generic/Template'
+import { Template } from '../generic/Template'
 import { NextPage } from 'next'
-import ItemCard from './ItemCard'
+import ItemCards from './ItemCards'
 
 const RecommendedFeed: NextPage = () => {
-  return <ItemCard />
+  return <ItemCards />
 }
 
 export default RecommendedFeed
