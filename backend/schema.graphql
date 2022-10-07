@@ -1,0 +1,17 @@
+schema {
+  query: Query
+}
+
+type Address {
+  id: ID!
+}
+
+type User {
+  id: ID!
+  email: String!
+  active: Boolean!
+  preferredDistance: Int!
+  bio: String!
+  displayImg: String
+  address: Address!
+}
