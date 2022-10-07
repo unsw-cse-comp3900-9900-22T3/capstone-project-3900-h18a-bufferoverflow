@@ -1,6 +1,7 @@
 from flask.cli import FlaskGroup
 
-from app import app, db, User
+from app import app, db
+from app.models import User
 
 
 cli = FlaskGroup(app)
@@ -21,6 +22,8 @@ def seed_db():
 @cli.command("query_db")
 def query_db():
     print(User.query.all())
+    print(User.query.all()[0].id)
+    print(User.query.all()[0].email)
 
 @cli.command("show_db")
 def show_db():

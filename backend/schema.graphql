@@ -8,10 +8,27 @@ type Address {
 
 type User {
   id: ID!
-  email: String!
-  active: Boolean!
-  preferredDistance: Int!
-  bio: String!
-  displayImg: String
-  address: Address!
+  #   email: String!
+  #   active: Boolean!
+  #   preferredDistance: Int!
+  #   bio: String!
+  #   displayImg: String
+  #   address: Address!
+}
+
+type UserResult {
+  success: Boolean!
+  errors: [String]
+  user: User
+}
+
+type UsersResult {
+  success: Boolean!
+  errors: [String]
+  users: [User]
+}
+
+type Query {
+  listUsers: UsersResult!
+  getUser(id: ID!): UserResult!
 }
