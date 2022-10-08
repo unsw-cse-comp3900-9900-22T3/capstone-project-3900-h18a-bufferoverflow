@@ -132,7 +132,12 @@ const LoggedIn = (props: {
   return (
     <div>
       <ThemeProvider theme={theme}>
-        <Button variant="outlined" endIcon={<AddIcon />} onClick={() => router.push('/listing/selection')}>
+        <Button
+          variant="outlined"
+          endIcon={<AddIcon />}
+          onClick={() => router.push('/listing/selection')}
+          sx={{ mr: 1.5 }}
+        >
           New Listing
         </Button>
       </ThemeProvider>
