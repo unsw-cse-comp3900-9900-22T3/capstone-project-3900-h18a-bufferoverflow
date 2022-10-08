@@ -9,6 +9,6 @@ export const uploadFile = async (file: File) => {
   await container.createIfNotExists({ access: 'container' })
   // Create new blob
   const blob = container.getBlockBlobClient(file.name)
-  blob.uploadData(file, { blobHTTPHeaders: { blobContentType: file.type } })
+  await blob.uploadData(file, { blobHTTPHeaders: { blobContentType: file.type } })
   return blob.url
 }

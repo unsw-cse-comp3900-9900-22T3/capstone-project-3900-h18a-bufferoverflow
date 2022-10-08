@@ -5,7 +5,8 @@ import TextField from '@mui/material/TextField/TextField'
 import { Avatar, Button, Card, Typography } from '@mui/material'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { createRef, useState } from 'react'
+import { uploadFile } from '../../utils/imageUtils'
 
 /////////////////////////////////////////////////////////////////////////////
 // Secondary Components
@@ -15,9 +16,19 @@ const ImageSection = (props: {
   image: string;
   setImage: (arg: string) => void;
 }) => {
+  const ref = createRef<any>()
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <Button sx={{ mb: 2 }}>Edit Profile Photo</Button>
+      <Button component="label" sx={{ mb: 2.5 }}>
+        Edit Profile Photo
+        <input id='bob' ref={ref} type="file" hidden accept='image/png, image/jpeg' onChange={async () => {
+          if (ref.current.files[0]) {
+            console.log("UPLOADING")
+            props.setImage('')
+            // props.setImage(await uploadFile(ref.current.files[0]))
+          }
+        }} />
+      </Button>
       <Card variant="outlined" sx={{ height: 300, width: 300, borderRadius: 100 }}>
         {
           props.image
