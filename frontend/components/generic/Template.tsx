@@ -87,6 +87,7 @@ const theme = createTheme({
 export const Template = (props: {
   title: string
   children?: (JSX.Element | string)[] | JSX.Element | string
+  center?: boolean
 }) => {
   const { auth } = useStore()
   const [drawer, setDrawer] = useState<boolean>(false);
@@ -120,7 +121,20 @@ export const Template = (props: {
         </Toolbar>
       </AppBar>
       <SideBar drawer={drawer} setDrawer={setDrawer} />
-      <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
+      <ThemeProvider theme={theme}>
+        {
+          props.center
+            ? <Box sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: 'calc(100vh - 64px)'
+            }}>
+              {props.children}
+            </Box>
+            : props.children
+        }
+      </ThemeProvider>
     </Box>
   )
 }

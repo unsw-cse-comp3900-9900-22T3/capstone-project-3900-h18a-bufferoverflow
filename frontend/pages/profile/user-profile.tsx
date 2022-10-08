@@ -8,7 +8,7 @@ import { Button } from '@mui/material'
 
 const UserProfile: NextPage = () => {
   return (
-    <Template title='User Profile'>
+    <Template title='User Profile' center>
       <Box
         sx={{
           display: 'flex',
