@@ -16,7 +16,8 @@ const ImageSection = (props: {
   setImage: (arg: string) => void;
 }) => {
   return (
-    <>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Button sx={{ mb: 2 }}>Edit Profile Photo</Button>
       <Card variant="outlined" sx={{ height: 300, width: 300, borderRadius: 100 }}>
         {
           props.image
@@ -24,7 +25,8 @@ const ImageSection = (props: {
             : <></>
         }
       </Card>
-    </>
+      <Typography sx={{ fontSize: 20, mt: 4, textAlign: 'center' }}>Username</Typography>
+    </Box>
   )
 }
 
@@ -70,7 +72,7 @@ const UserProfile: NextPage = () => {
           flexDirection: 'row',
           justifyContent: 'center',
           alignItems: 'center',
-          gap: '60px',
+          gap: 20,
         }}
       >
         <ImageSection image={image} setImage={setImage} />
