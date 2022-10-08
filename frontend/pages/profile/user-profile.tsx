@@ -23,54 +23,26 @@ interface DataProps {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// Secondary Components
-/////////////////////////////////////////////////////////////////////////////
-
-const InputSection = () => {
-  return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', width: 300 }}>
-      <Typography sx={{ mb: 2 }}>Public Information</Typography>
-      <TextField id='outlined-basic' label='Username' variant='outlined' sx={{ mb: 1 }} />
-      <TextField id='outlined-basic' label='Community' variant='outlined' sx={{ mb: 3 }} />
-      <Typography sx={{ mb: 2 }}>Private Information</Typography>
-      <TextField placeholder='Bio' multiline rows={4} maxRows={6} sx={{ mb: 1 }} />
-      <TextField placeholder='Address' multiline rows={4} maxRows={6} sx={{ mb: 3 }} />
-      <Button variant="outlined" sx={{ borderRadius: 30 }}>Update Profile</Button>
-    </Box>
-  )
-}
-
-const MyListingsRedirectSection = () => {
-  const router = useRouter()
-  return (
-    <Box
-      onClick={() => router.push('/listing/my-listings')}
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}
-    >
-      <Avatar>
-        <ArrowForwardIcon />
-      </Avatar>
-      <Typography sx={{ mt: 2 }}>
-        View My Listings
-      </Typography>
-    </Box >
-  )
-}
-
-/////////////////////////////////////////////////////////////////////////////
 // Primary Components
 /////////////////////////////////////////////////////////////////////////////
 
 const UserProfile: NextPage = () => {
+
+  // Information Hooks
   const [image, setImage] = useState<string>('')
+  const [username, setUsername] = useState<string>('')
+  const [community, setCommunity] = useState<string>('')
+  const [bio, setBio] = useState<string>('')
+  const [address, setAddress] = useState<string>('')
+
+  // Utility Hooks
   const ref = createRef<any>()
+  const router = useRouter()
+
   return (
     <Template title='User Profile' center>
+
+      {/** Image Upload Section */}
       <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 20 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Button component="label" sx={{ mb: 2.5 }}>
@@ -88,8 +60,36 @@ const UserProfile: NextPage = () => {
           </Card>
           <Typography sx={{ fontSize: 20, mt: 4, textAlign: 'center' }}>Username</Typography>
         </Box>
-        <InputSection />
-        <MyListingsRedirectSection />
+
+        {/** Information Section */}
+        <Box sx={{ display: 'flex', flexDirection: 'column', width: 300 }}>
+          <Typography sx={{ mb: 2 }}>Public Information</Typography>
+          <TextField id='outlined-basic' label='Username' variant='outlined' sx={{ mb: 1 }} />
+          <TextField id='outlined-basic' label='Community' variant='outlined' sx={{ mb: 3 }} />
+          <Typography sx={{ mb: 2 }}>Private Information</Typography>
+          <TextField placeholder='Bio' multiline rows={4} maxRows={6} sx={{ mb: 1 }} />
+          <TextField placeholder='Address' multiline rows={4} maxRows={6} sx={{ mb: 3 }} />
+          <Button variant="outlined" sx={{ borderRadius: 30 }}>Update Profile</Button>
+        </Box>
+
+        {/** My Listings Redirect Section */}
+        <Box
+          onClick={() => router.push('/listing/my-listings')}
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <Avatar>
+            <ArrowForwardIcon />
+          </Avatar>
+          <Typography sx={{ mt: 2 }}>
+            View My Listings
+          </Typography>
+        </Box >
+
       </Box>
     </Template>
   )
