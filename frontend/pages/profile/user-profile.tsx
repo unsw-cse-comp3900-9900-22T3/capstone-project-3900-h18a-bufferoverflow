@@ -64,12 +64,18 @@ const UserProfile: NextPage = () => {
         {/** Information Section */}
         <Box sx={{ display: 'flex', flexDirection: 'column', width: 300 }}>
           <Typography sx={{ mb: 2 }}>Public Information</Typography>
-          <TextField id='outlined-basic' label='Username' variant='outlined' sx={{ mb: 1 }} />
-          <TextField id='outlined-basic' label='Community' variant='outlined' sx={{ mb: 3 }} />
+          <TextField id='outlined-basic' label='Username' variant='outlined' sx={{ mb: 1 }} value={username} onChange={e => setUsername(e.target.value)} />
+          <TextField id='outlined-basic' label='Community' variant='outlined' sx={{ mb: 3 }} value={community} onChange={e => setCommunity(e.target.value)} />
           <Typography sx={{ mb: 2 }}>Private Information</Typography>
-          <TextField placeholder='Bio' multiline rows={4} maxRows={6} sx={{ mb: 1 }} />
-          <TextField placeholder='Address' multiline rows={4} maxRows={6} sx={{ mb: 3 }} />
-          <Button variant="outlined" sx={{ borderRadius: 30 }}>Update Profile</Button>
+          <TextField placeholder='Bio' multiline rows={4} maxRows={6} sx={{ mb: 1 }} value={bio} onChange={e => setBio(e.target.value)} />
+          <TextField placeholder='Address' multiline rows={4} maxRows={6} sx={{ mb: 3 }} value={address} onChange={e => setAddress(e.target.value)} />
+          <Button variant="outlined" sx={{ borderRadius: 30 }} onClick={() => {
+            // We need to post request with modified data later
+            let data = { image, username, community, bio, address }
+            console.log(data)
+          }}>
+            Update Profile
+          </Button>
         </Box>
 
         {/** My Listings Redirect Section */}
