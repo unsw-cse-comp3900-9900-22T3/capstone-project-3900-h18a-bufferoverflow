@@ -14,14 +14,14 @@ import { uploadFile } from '../../utils/imageUtils'
 
 const InputSection = () => {
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      Public Information
-      <TextField id='outlined-basic' label='Username' variant='outlined' />
-      <TextField id='outlined-basic' label='Community' variant='outlined' />
-      Private Information
-      <TextField placeholder='Bio' multiline rows={4} maxRows={6} />
-      <TextField placeholder='Address' multiline rows={4} maxRows={6} />
-      <Button>Update Profile</Button>
+    <Box sx={{ display: 'flex', flexDirection: 'column', width: 300 }}>
+      <Typography sx={{ mb: 2 }}>Public Information</Typography>
+      <TextField id='outlined-basic' label='Username' variant='outlined' sx={{ mb: 1 }} />
+      <TextField id='outlined-basic' label='Community' variant='outlined' sx={{ mb: 3 }} />
+      <Typography sx={{ mb: 2 }}>Private Information</Typography>
+      <TextField placeholder='Bio' multiline rows={4} maxRows={6} sx={{ mb: 1 }} />
+      <TextField placeholder='Address' multiline rows={4} maxRows={6} sx={{ mb: 3 }} />
+      <Button variant="outlined" sx={{ borderRadius: 30 }}>Update Profile</Button>
     </Box>
   )
 }
@@ -77,6 +77,7 @@ const UserProfile: NextPage = () => {
           </Card>
           <Typography sx={{ fontSize: 20, mt: 4, textAlign: 'center' }}>Username</Typography>
         </Box>
+        <InputSection />
         <MyListingsRedirectSection />
       </Box>
     </Template>
