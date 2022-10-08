@@ -32,16 +32,35 @@ import { Toast } from './Toast';
 import { useStore, useStoreUpdate } from '../../store/store';
 import Image from 'next/image';
 
+/**************** LOGGED IN *****************/
+
+const sideBarTopLoggedIn: { title: string; icon: Icon }[] = [
+  { title: 'Trade', icon: CardTravelIcon },
+  { title: 'Want To Buy', icon: LocalOfferIcon },
+]
+
+const sideBarBottomLoggedIn: { title: string; icon: Icon }[] = [
+  { title: 'Account', icon: PersonIcon }
+]
+
+/*************** LOGGED OUT *****************/
+
+const sideBarTopLoggedOut: { title: string; icon: Icon }[] = [
+  { title: 'Trade', icon: CardTravelIcon },
+  { title: 'Want To Buy', icon: LocalOfferIcon },
+]
+
+const sideBarBottomLoggedOut: { title: string; icon: Icon }[] = [
+  { title: 'Account', icon: PersonIcon }
+]
+
+/****************** OTHER *******************/
+
 type Icon = OverridableComponent<SvgIconTypeMap<{}, 'svg'>> & {
   muiName: string
 }
 
 const textColor = '#6b6b6b'
-const sideBarTop: { title: string; icon: Icon }[] = [
-  { title: 'Trade', icon: CardTravelIcon },
-  { title: 'Want To Buy', icon: LocalOfferIcon },
-]
-const sideBarBottom: { title: string; icon: Icon }[] = [{ title: 'Account', icon: PersonIcon }]
 
 const theme = createTheme({
   palette: {
@@ -53,6 +72,10 @@ const theme = createTheme({
     },
   },
 })
+
+//////////////////////////////////////////////////////////////////
+// Main Component
+//////////////////////////////////////////////////////////////////
 
 export const Template = (props: {
   title: string
@@ -165,6 +188,10 @@ const RegisterLoggedOut = () => {
 
 const SideBar = (props: { drawer: boolean; setDrawer: (arg: boolean) => void }) => {
   const { drawer, setDrawer } = props
+  const { auth } = useStore()
+
+  const sideBarTop = auth ? sideBarTopLoggedIn : sideBarTopLoggedOut
+  const sideBarBottom = auth ? sideBarBottomLoggedIn : sideBarBottomLoggedOut
   return (
     <Drawer anchor={'left'} open={drawer} onClose={() => setDrawer(false)}>
       <Box sx={{ width: 250 }} role='presentation' onClick={() => setDrawer(false)}>
