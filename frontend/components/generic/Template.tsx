@@ -16,8 +16,6 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
 import { useState } from 'react';
 import { Header } from './Header';
 import Link from 'next/link';
@@ -115,7 +113,7 @@ export const Template = (props: {
             Swapr
           </Typography>
           {!auth && <RegisterLoggedOut />}
-          {auth ? <LoggedIn /> : <LoggedOut />}
+          {auth ? <LoggedIn setDrawer={() => setDrawer(true)} /> : <LoggedOut />}
         </Toolbar>
       </AppBar>
       <SideBar drawer={drawer} setDrawer={setDrawer} />
@@ -124,18 +122,9 @@ export const Template = (props: {
   )
 }
 
-const LoggedIn = () => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const setStore = useStoreUpdate()
-
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
+const LoggedIn = (props: {
+  setDrawer: () => void;
+}) => {
   return (
     <div>
       <IconButton
@@ -143,35 +132,11 @@ const LoggedIn = () => {
         aria-label='account of current user'
         aria-controls='menu-appbar'
         aria-haspopup='true'
-        onClick={handleMenu}
+        onClick={props.setDrawer}
         sx={{ color: textColor }}
       >
         <AccountCircle />
       </IconButton>
-      <Menu
-        id='menu-appbar'
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        keepMounted
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={() => {
-          handleClose()
-        }}>Profile</MenuItem>
-        <MenuItem onClick={() => {
-          handleClose()
-          getAuth().signOut()
-          setStore({ auth: null })
-        }}>Log out</MenuItem>
-      </Menu>
     </div>
   )
 }
