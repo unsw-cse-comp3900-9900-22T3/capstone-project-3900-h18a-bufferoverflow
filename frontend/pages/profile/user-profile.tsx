@@ -2,9 +2,51 @@ import { Template } from '../../components/generic/Template'
 import { NextPage } from 'next'
 import { Box } from '@mui/system'
 import TextField from '@mui/material/TextField/TextField'
-import { Button } from '@mui/material'
+import { Avatar, Button, Typography } from '@mui/material'
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { useRouter } from 'next/router'
 
-// To preview, visit http://localhost:3000/profile/user-profile
+/////////////////////////////////////////////////////////////////////////////
+// Secondary Components
+/////////////////////////////////////////////////////////////////////////////
+
+const ImageSection = () => {
+  return (
+    <></>
+  )
+}
+
+const InputSection = () => {
+  return (
+    <></>
+  )
+}
+
+const MyListingsRedirectSection = () => {
+  const router = useRouter()
+  return (
+    <Box
+      onClick={() => router.push('/listing/my-listings')}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
+      <Avatar>
+        <ArrowForwardIcon />
+      </Avatar>
+      <Typography sx={{ mt: 2 }}>
+        View My Listings
+      </Typography>
+    </Box >
+  )
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// Primary Components
+/////////////////////////////////////////////////////////////////////////////
 
 const UserProfile: NextPage = () => {
   return (
@@ -18,8 +60,8 @@ const UserProfile: NextPage = () => {
           gap: '60px',
         }}
       >
-        <Box sx={{ backgroundColor: 'blue' }}>left side</Box>
-        <Box sx={{ backgroundColor: 'green', display: 'flex', flexDirection: 'column' }}>
+        <Box>left side</Box>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           Public Information
           <TextField id='outlined-basic' label='Username' variant='outlined' />
           <TextField id='outlined-basic' label='Community' variant='outlined' />
@@ -28,7 +70,7 @@ const UserProfile: NextPage = () => {
           <TextField placeholder='Address' multiline rows={4} maxRows={6} />
           <Button>Update Profile</Button>
         </Box>
-        <Box sx={{ backgroundColor: 'grey' }}>direct to My Listings</Box>
+        <MyListingsRedirectSection />
       </Box>
     </Template>
   )
