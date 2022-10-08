@@ -58,7 +58,7 @@ const UserProfile: NextPage = () => {
                 : <></>
             }
           </Card>
-          <Typography sx={{ fontSize: 20, mt: 4, textAlign: 'center' }}>Username</Typography>
+          <Typography sx={{ fontSize: 20, mt: 4, textAlign: 'center' }}>{username}</Typography>
         </Box>
 
         {/** Information Section */}
