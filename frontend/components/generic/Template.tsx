@@ -31,7 +31,10 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import PersonIcon from '@mui/icons-material/Person';
 import DescriptionIcon from '@mui/icons-material/Description';
 import LockIcon from '@mui/icons-material/Lock';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import StorefrontIcon from '@mui/icons-material/Storefront';
 import { useRouter } from 'next/router';
 
 type SideBarProps = { title: string; icon: Icon, href: string }[]
@@ -44,6 +47,10 @@ const sideBarTop: SideBarProps = [
 /**************** LOGGED IN *****************/
 
 const sideBarBottomLoggedIn: SideBarProps = [
+  { title: 'Profile', icon: PersonIcon, href: '/profile/user-profile' },
+  { title: 'Dashboard', icon: QueryStatsIcon, href: '/environment/dashboard' },
+  { title: 'My Offers', icon: AssignmentTurnedInIcon, href: '/trade/offers-list' },
+  { title: 'My Listings', icon: StorefrontIcon, href: '/listing/my-listings' },
   { title: 'Logout', icon: LockOpenIcon, href: '/' }
 ]
 
@@ -188,6 +195,7 @@ const RegisterLoggedOut = () => {
 const SideBar = (props: { drawer: boolean; setDrawer: (arg: boolean) => void }) => {
   const { drawer, setDrawer } = props
   const { auth } = useStore()
+  const setStore = useStoreUpdate()
   const router = useRouter()
   const sideBarBottom = auth ? sideBarBottomLoggedIn : sideBarBottomLoggedOut
 
@@ -210,7 +218,15 @@ const SideBar = (props: { drawer: boolean; setDrawer: (arg: boolean) => void }) 
         <List>
           {sideBarBottom.map((item) => {
             return (
-              <ListItem button key={item.title} onClick={() => router.push(item.href)}>
+              <ListItem button key={item.title} onClick={() => {
+                if (item.title === 'Logout') {
+                  getAuth().signOut()
+                  setStore({ auth: null })
+                }
+                else {
+                  router.push(item.href)
+                }
+              }}>
                 <ListItemIcon>
                   <item.icon />
                 </ListItemIcon>
