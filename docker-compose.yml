@@ -12,6 +12,13 @@ services:
       - ./.env.dev
     depends_on:
       - db
+  frontend:
+    build: ./frontend
+    command: npm run dev
+    volumes:
+      - ./frontend/:/app/
+    ports:
+      - 5000:3000
   db:
     image: postgres:13-alpine
     volumes:
