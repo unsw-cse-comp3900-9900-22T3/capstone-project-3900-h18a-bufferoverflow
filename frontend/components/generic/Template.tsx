@@ -236,6 +236,7 @@ const SideBar = (props: { drawer: boolean; setDrawer: (arg: boolean) => void }) 
                 if (item.title === 'Logout') {
                   getAuth().signOut()
                   setStore({ auth: null })
+                  router.push('/')
                 }
                 else {
                   router.push(item.href)
