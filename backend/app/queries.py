@@ -1,6 +1,7 @@
-from app.models import User
+from .models import User
 
 def listUsers_resolver(obj, info):
+    print("test, test")
     try:
         users = [user.to_dict() for user in User.query.all()]
         print(users)
