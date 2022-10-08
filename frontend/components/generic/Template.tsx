@@ -16,32 +16,58 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
 import { useState } from 'react';
 import { Header } from './Header';
-import AdbIcon from '@mui/icons-material/Adb';
 import Link from 'next/link';
 import List from '@mui/material/List';
-import PersonIcon from '@mui/icons-material/Person';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
-import CardTravelIcon from '@mui/icons-material/CardTravel';
 import { getAuth } from '@firebase/auth';
 import { Toast } from './Toast';
 import { useStore, useStoreUpdate } from '../../store/store';
 import Image from 'next/image';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import PersonIcon from '@mui/icons-material/Person';
+import DescriptionIcon from '@mui/icons-material/Description';
+import LockIcon from '@mui/icons-material/Lock';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import StorefrontIcon from '@mui/icons-material/Storefront';
+import MessageIcon from '@mui/icons-material/Message';
+import StarIcon from '@mui/icons-material/Star';
+import AddIcon from '@mui/icons-material/Add';
+import { useRouter } from 'next/router';
+
+type SideBarProps = { title: string; icon: Icon, href: string }[]
+
+const sideBarTop: SideBarProps = [
+  { title: 'All Listings', icon: LocalOfferIcon, href: '/' },
+  { title: 'Methodology', icon: DescriptionIcon, href: '/environment/methodology' },
+]
+
+/**************** LOGGED IN *****************/
+
+const sideBarBottomLoggedIn: SideBarProps = [
+  { title: 'Profile', icon: PersonIcon, href: '/profile/user-profile' },
+  { title: 'Dashboard', icon: QueryStatsIcon, href: '/environment/dashboard' },
+  { title: 'My Offers', icon: AssignmentTurnedInIcon, href: '/trade/offers-list' },
+  { title: 'My Listings', icon: StorefrontIcon, href: '/listing/my-listings' },
+  { title: 'Logout', icon: LockOpenIcon, href: '/' }
+]
+
+/*************** LOGGED OUT *****************/
+
+const sideBarBottomLoggedOut: SideBarProps = [
+  { title: 'Login', icon: LockIcon, href: '/auth/login' }
+]
+
+/****************** OTHER *******************/
 
 type Icon = OverridableComponent<SvgIconTypeMap<{}, 'svg'>> & {
   muiName: string
 }
 
 const textColor = '#6b6b6b'
-const sideBarTop: { title: string; icon: Icon }[] = [
-  { title: 'Trade', icon: CardTravelIcon },
-  { title: 'Want To Buy', icon: LocalOfferIcon },
-]
-const sideBarBottom: { title: string; icon: Icon }[] = [{ title: 'Account', icon: PersonIcon }]
 
 const theme = createTheme({
   palette: {
@@ -53,6 +79,10 @@ const theme = createTheme({
     },
   },
 })
+
+//////////////////////////////////////////////////////////////////
+// Main Component
+//////////////////////////////////////////////////////////////////
 
 export const Template = (props: {
   title: string
@@ -86,7 +116,7 @@ export const Template = (props: {
             Swapr
           </Typography>
           {!auth && <RegisterLoggedOut />}
-          {auth ? <LoggedIn /> : <LoggedOut />}
+          {auth ? <LoggedIn setDrawer={() => setDrawer(true)} /> : <LoggedOut />}
         </Toolbar>
       </AppBar>
       <SideBar drawer={drawer} setDrawer={setDrawer} />
@@ -95,54 +125,53 @@ export const Template = (props: {
   )
 }
 
-const LoggedIn = () => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const setStore = useStoreUpdate()
-
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
+const LoggedIn = (props: {
+  setDrawer: () => void;
+}) => {
+  const router = useRouter()
   return (
     <div>
+      <ThemeProvider theme={theme}>
+        <Button
+          variant="outlined"
+          endIcon={<AddIcon />}
+          onClick={() => router.push('/listing/selection')}
+          sx={{ mr: 1.5 }}
+        >
+          New Listing
+        </Button>
+      </ThemeProvider>
       <IconButton
         size='large'
         aria-label='account of current user'
         aria-controls='menu-appbar'
         aria-haspopup='true'
-        onClick={handleMenu}
+        onClick={() => router.push('/profile/following-traders')}
+        sx={{ color: textColor }}
+      >
+        <StarIcon />
+      </IconButton>
+      <IconButton
+        size='large'
+        aria-label='account of current user'
+        aria-controls='menu-appbar'
+        aria-haspopup='true'
+        onClick={() => router.push('/chat/chat')}
+        sx={{ color: textColor }}
+      >
+        <MessageIcon />
+      </IconButton>
+      <IconButton
+        size='large'
+        aria-label='account of current user'
+        aria-controls='menu-appbar'
+        aria-haspopup='true'
+        onClick={props.setDrawer}
         sx={{ color: textColor }}
       >
         <AccountCircle />
       </IconButton>
-      <Menu
-        id='menu-appbar'
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        keepMounted
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={() => {
-          handleClose()
-        }}>Profile</MenuItem>
-        <MenuItem onClick={() => {
-          handleClose()
-          getAuth().signOut()
-          setStore({ auth: null })
-        }}>Log out</MenuItem>
-      </Menu>
+
     </div>
   )
 }
@@ -165,13 +194,18 @@ const RegisterLoggedOut = () => {
 
 const SideBar = (props: { drawer: boolean; setDrawer: (arg: boolean) => void }) => {
   const { drawer, setDrawer } = props
+  const { auth } = useStore()
+  const setStore = useStoreUpdate()
+  const router = useRouter()
+  const sideBarBottom = auth ? sideBarBottomLoggedIn : sideBarBottomLoggedOut
+
   return (
     <Drawer anchor={'left'} open={drawer} onClose={() => setDrawer(false)}>
       <Box sx={{ width: 250 }} role='presentation' onClick={() => setDrawer(false)}>
         <List>
           {sideBarTop.map((item) => {
             return (
-              <ListItem button key={item.title}>
+              <ListItem button key={item.title} onClick={() => router.push(item.href)}>
                 <ListItemIcon>
                   <item.icon />
                 </ListItemIcon>
@@ -184,7 +218,15 @@ const SideBar = (props: { drawer: boolean; setDrawer: (arg: boolean) => void }) 
         <List>
           {sideBarBottom.map((item) => {
             return (
-              <ListItem button key={item.title}>
+              <ListItem button key={item.title} onClick={() => {
+                if (item.title === 'Logout') {
+                  getAuth().signOut()
+                  setStore({ auth: null })
+                }
+                else {
+                  router.push(item.href)
+                }
+              }}>
                 <ListItemIcon>
                   <item.icon />
                 </ListItemIcon>
