@@ -1,5 +1,6 @@
 schema {
   query: Query
+  mutation: Mutation
 }
 
 type Address {
@@ -31,4 +32,16 @@ type UsersResult {
 type Query {
   listUsers: UsersResult!
   getUser(id: ID!): UserResult!
+}
+
+type Mutation {
+  createUser(email: String!): UserResult!
+  updateUser(
+    id: ID!
+    email: String!
+    active: Boolean!
+    preferredDistance: Int!
+    bio: String!
+    displayImg: String # TODO: somehow add this: (address: Address)
+  ): UserResult!
 }
