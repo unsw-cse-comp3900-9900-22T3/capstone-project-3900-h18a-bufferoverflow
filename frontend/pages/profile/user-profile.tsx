@@ -5,8 +5,9 @@ import TextField from '@mui/material/TextField/TextField'
 import { Avatar, Button, Card, Typography } from '@mui/material'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useRouter } from 'next/router'
-import { createRef, useState } from 'react'
+import { createRef, useEffect, useState } from 'react'
 import { uploadFile } from '../../utils/imageUtils'
+import axios from 'axios'
 
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
@@ -20,6 +21,18 @@ interface DataProps {
   community: string;
   bio: string;
   address: string;
+}
+
+// This is a function that mimics a post request - returns data after 2 seconds delay
+const fakePostRequest = async (): Promise<DataProps> => {
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  return {
+    image: 'https://images.unsplash.com/photo-1499720565725-bd574541a3ee?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+    username: 'Random username',
+    community: 'Random community',
+    bio: 'random bio',
+    address: 'random address'
+  }
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -38,6 +51,18 @@ const UserProfile: NextPage = () => {
   // Utility Hooks
   const ref = createRef<any>()
   const router = useRouter()
+
+  // Pre-fill data once POST request is complete
+  useEffect(() => {
+    fakePostRequest()
+      .then(data => {
+        setImage(data.image)
+        setUsername(data.username)
+        setCommunity(data.community)
+        setBio(data.bio)
+        setAddress(data.address)
+      })
+  }, [])
 
   return (
     <Template title='User Profile' center>
