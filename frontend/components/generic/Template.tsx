@@ -33,6 +33,9 @@ import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import StorefrontIcon from '@mui/icons-material/Storefront';
+import MessageIcon from '@mui/icons-material/Message';
+import StarIcon from '@mui/icons-material/Star';
+import AddIcon from '@mui/icons-material/Add';
 import { useRouter } from 'next/router';
 
 type SideBarProps = { title: string; icon: Icon, href: string }[]
@@ -125,8 +128,34 @@ export const Template = (props: {
 const LoggedIn = (props: {
   setDrawer: () => void;
 }) => {
+  const router = useRouter()
   return (
     <div>
+      <ThemeProvider theme={theme}>
+        <Button variant="outlined" endIcon={<AddIcon />} onClick={() => router.push('/listing/selection')}>
+          New Listing
+        </Button>
+      </ThemeProvider>
+      <IconButton
+        size='large'
+        aria-label='account of current user'
+        aria-controls='menu-appbar'
+        aria-haspopup='true'
+        onClick={() => router.push('/profile/following-traders')}
+        sx={{ color: textColor }}
+      >
+        <StarIcon />
+      </IconButton>
+      <IconButton
+        size='large'
+        aria-label='account of current user'
+        aria-controls='menu-appbar'
+        aria-haspopup='true'
+        onClick={() => router.push('/chat/chat')}
+        sx={{ color: textColor }}
+      >
+        <MessageIcon />
+      </IconButton>
       <IconButton
         size='large'
         aria-label='account of current user'
@@ -137,6 +166,7 @@ const LoggedIn = (props: {
       >
         <AccountCircle />
       </IconButton>
+
     </div>
   )
 }
