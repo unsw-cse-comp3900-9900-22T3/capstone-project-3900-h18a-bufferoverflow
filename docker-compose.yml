@@ -13,10 +13,9 @@ services:
     depends_on:
       - db
   frontend:
-    build: ./frontend
-    command: npm run dev
-    volumes:
-      - ./frontend/:/app/
+    build:
+      context: ./frontend
+      dockerfile: dockerfile
     ports:
       - 5000:3000
   db:
