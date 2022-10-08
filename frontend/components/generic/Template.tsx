@@ -20,38 +20,37 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import { useState } from 'react';
 import { Header } from './Header';
-import AdbIcon from '@mui/icons-material/Adb';
 import Link from 'next/link';
 import List from '@mui/material/List';
-import PersonIcon from '@mui/icons-material/Person';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
-import CardTravelIcon from '@mui/icons-material/CardTravel';
 import { getAuth } from '@firebase/auth';
 import { Toast } from './Toast';
 import { useStore, useStoreUpdate } from '../../store/store';
 import Image from 'next/image';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import PersonIcon from '@mui/icons-material/Person';
+import DescriptionIcon from '@mui/icons-material/Description';
+import LockIcon from '@mui/icons-material/Lock';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import { useRouter } from 'next/router';
+
+type SideBarProps = { title: string; icon: Icon, href: string }[]
+
+const sideBarTop: SideBarProps = [
+  { title: 'All Listings', icon: LocalOfferIcon, href: '/' },
+  { title: 'Methodology', icon: DescriptionIcon, href: '/environment/methodology' },
+]
 
 /**************** LOGGED IN *****************/
 
-const sideBarTopLoggedIn: { title: string; icon: Icon }[] = [
-  { title: 'Trade', icon: CardTravelIcon },
-  { title: 'Want To Buy', icon: LocalOfferIcon },
-]
-
-const sideBarBottomLoggedIn: { title: string; icon: Icon }[] = [
-  { title: 'Account', icon: PersonIcon }
+const sideBarBottomLoggedIn: SideBarProps = [
+  { title: 'Logout', icon: LockOpenIcon, href: '/' }
 ]
 
 /*************** LOGGED OUT *****************/
 
-const sideBarTopLoggedOut: { title: string; icon: Icon }[] = [
-  { title: 'Trade', icon: CardTravelIcon },
-  { title: 'Want To Buy', icon: LocalOfferIcon },
-]
-
-const sideBarBottomLoggedOut: { title: string; icon: Icon }[] = [
-  { title: 'Account', icon: PersonIcon }
+const sideBarBottomLoggedOut: SideBarProps = [
+  { title: 'Login', icon: LockIcon, href: '/auth/login' }
 ]
 
 /****************** OTHER *******************/
@@ -189,16 +188,16 @@ const RegisterLoggedOut = () => {
 const SideBar = (props: { drawer: boolean; setDrawer: (arg: boolean) => void }) => {
   const { drawer, setDrawer } = props
   const { auth } = useStore()
-
-  const sideBarTop = auth ? sideBarTopLoggedIn : sideBarTopLoggedOut
+  const router = useRouter()
   const sideBarBottom = auth ? sideBarBottomLoggedIn : sideBarBottomLoggedOut
+
   return (
     <Drawer anchor={'left'} open={drawer} onClose={() => setDrawer(false)}>
       <Box sx={{ width: 250 }} role='presentation' onClick={() => setDrawer(false)}>
         <List>
           {sideBarTop.map((item) => {
             return (
-              <ListItem button key={item.title}>
+              <ListItem button key={item.title} onClick={() => router.push(item.href)}>
                 <ListItemIcon>
                   <item.icon />
                 </ListItemIcon>
@@ -211,7 +210,7 @@ const SideBar = (props: { drawer: boolean; setDrawer: (arg: boolean) => void }) 
         <List>
           {sideBarBottom.map((item) => {
             return (
-              <ListItem button key={item.title}>
+              <ListItem button key={item.title} onClick={() => router.push(item.href)}>
                 <ListItemIcon>
                   <item.icon />
                 </ListItemIcon>
