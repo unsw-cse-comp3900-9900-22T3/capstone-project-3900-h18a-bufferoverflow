@@ -12,38 +12,17 @@ import { uploadFile } from '../../utils/imageUtils'
 // Secondary Components
 /////////////////////////////////////////////////////////////////////////////
 
-const ImageSection = (props: {
-  image: string;
-  setImage: (arg: string) => void;
-}) => {
-  const ref = createRef<any>()
-  return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <Button component="label" sx={{ mb: 2.5 }}>
-        Edit Profile Photo
-        <input id='bob' ref={ref} type="file" hidden accept='image/png, image/jpeg' onChange={async () => {
-          if (ref.current.files[0]) {
-            console.log("UPLOADING")
-            props.setImage('')
-            // props.setImage(await uploadFile(ref.current.files[0]))
-          }
-        }} />
-      </Button>
-      <Card variant="outlined" sx={{ height: 300, width: 300, borderRadius: 100 }}>
-        {
-          props.image
-            ? <img src={props.image} alt='profile' style={{ height: 300, width: 300 }} />
-            : <></>
-        }
-      </Card>
-      <Typography sx={{ fontSize: 20, mt: 4, textAlign: 'center' }}>Username</Typography>
-    </Box>
-  )
-}
-
 const InputSection = () => {
   return (
-    <></>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      Public Information
+      <TextField id='outlined-basic' label='Username' variant='outlined' />
+      <TextField id='outlined-basic' label='Community' variant='outlined' />
+      Private Information
+      <TextField placeholder='Bio' multiline rows={4} maxRows={6} />
+      <TextField placeholder='Address' multiline rows={4} maxRows={6} />
+      <Button>Update Profile</Button>
+    </Box>
   )
 }
 
@@ -75,26 +54,28 @@ const MyListingsRedirectSection = () => {
 
 const UserProfile: NextPage = () => {
   const [image, setImage] = useState<string>('https://comp3900storage.blob.core.windows.net/files/Screen%20Shot%202022-09-23%20at%209.22.46%20pm.png?sv=2021-06-08&ss=bf&srt=sco&sp=rwdlaciytfx&se=2022-12-01T09:33:16Z&st=2022-09-25T02:33:16Z&spr=https&sig=uni0ZKrnnzcEsYL%2BF9Skp%2F%2B3MZmxeko1GZmM87NlA2w%3D')
+  const ref = createRef<any>()
   return (
     <Template title='User Profile' center>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: 20,
-        }}
-      >
-        <ImageSection image={image} setImage={setImage} />
+      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 20 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-          Public Information
-          <TextField id='outlined-basic' label='Username' variant='outlined' />
-          <TextField id='outlined-basic' label='Community' variant='outlined' />
-          Private Information
-          <TextField placeholder='Bio' multiline rows={4} maxRows={6} />
-          <TextField placeholder='Address' multiline rows={4} maxRows={6} />
-          <Button>Update Profile</Button>
+          <Button component="label" sx={{ mb: 2.5 }}>
+            Edit Profile Photo
+            <input id='bob' ref={ref} type="file" hidden accept='image/png, image/jpeg' onChange={async () => {
+              if (ref.current.files[0]) {
+                console.log("UPLOADING")
+                setImage(await uploadFile(ref.current.files[0]))
+              }
+            }} />
+          </Button>
+          <Card variant="outlined" sx={{ height: 300, width: 300, borderRadius: 100 }}>
+            {
+              image
+                ? <img src={image} alt='profile' style={{ height: 300, width: 300 }} />
+                : <></>
+            }
+          </Card>
+          <Typography sx={{ fontSize: 20, mt: 4, textAlign: 'center' }}>Username</Typography>
         </Box>
         <MyListingsRedirectSection />
       </Box>
