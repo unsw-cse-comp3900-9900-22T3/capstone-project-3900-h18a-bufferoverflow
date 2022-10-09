@@ -1,9 +1,9 @@
-import { Template } from '../../components/generic/Template'
+import { Box } from '@mui/material'
 import { NextPage } from 'next'
 import { ItemCard } from '../../components/feed/ItemCard'
-import { Box } from '@mui/material'
+import { Template } from '../../components/generic/Template'
 
-const DefaultFeed: NextPage = () => {
+const RecommendedFeed: NextPage = () => {
   return (
     <Template title='Swapr'>
       <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -22,4 +22,4 @@ const DefaultFeed: NextPage = () => {
   )
 }
 
-export default DefaultFeed
+export default RecommendedFeed
