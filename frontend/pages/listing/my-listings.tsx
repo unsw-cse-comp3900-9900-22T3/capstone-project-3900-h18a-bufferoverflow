@@ -69,7 +69,7 @@ const MyListings: NextPage = () => {
           {
             data.map(item => {
               if (!item.want) {
-                return <ItemCard {...item} href='/detailed-listing/want' />
+                return <ItemCard {...item} href='/detailed-listing/have' />
               }
             })
           }
