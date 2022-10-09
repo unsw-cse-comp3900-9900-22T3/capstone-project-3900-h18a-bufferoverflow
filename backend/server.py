@@ -41,3 +41,79 @@ def graphql_server():
     )
     status_code = 200 if success else 400
     return jsonify(result), status_code
+
+@app.route("/")
+def hello():
+    return "Hello World from Flask"
+
+@app.route("/allUsers")
+def getAllUsers():
+    return json.dumps([user.email for user in User.query.all()])
+
+@app.route("/addAddress", methods=["POST"])
+def addAddress():
+    data = request.get_json()
+    country = data["country"]
+    state = data["state"]
+    city = data["city"]
+    postCode = data["postCode"]
+    street = data["street"]
+
+    try:
+        # add new country
+        db.session.add(Country(country))
+        # get id
+        countryId = Country.query.filter_by(name=country).first().id
+
+        # add new state
+        db.session.add(State(state))
+        # get id
+        stateId = State.query.filter_by(name=state).first().id
+
+        # add new city
+        db.session.add(City(city))
+        # get id
+        cityId = City.query.filter_by(name=city).first().id
+
+        # add new address
+        db.session.add(Address(street, cityId, stateId, countryId, postCode))
+
+        db.session.commit()
+        return {"status" : "success"}
+    except Exception as e:
+        return {"status" : "failure", "error" : str(e)}
+
+
+@app.route("/addUser", methods=["POST"])
+def addUser():
+    email = request.json["userEmail"]
+    username = request.json["username"]
+    try:
+        db.session.add(User(username, email, 100, "", None, 1))
+        db.session.commit()
+        return jsonify({"status" : "success"})
+    except Exception as e:
+        return jsonify({"status" : "failure", "error" : str(e)})
+
+@app.route("/updateUserImage", methods=["POST"])
+def updateUserImage():
+    imageUrl = request.json["imageUrl"]
+    userEmail = request.json["userEmail"]
+    try:
+        db.session.query(User).filter_by(email=userEmail).update({"displayImg" : imageUrl})
+        db.session.commit()
+        return {"status" : "success"}
+    except Exception as e:
+        return {"status" : "failure", "error" : str(e)}
+
+@app.route("/query")
+def query():
+    result = db.session.execute('select * from users')
+    emails = [row[1] for row in result]
+    print(1)
+    return jsonify({"emails": emails})
+
+@app.route("/getToken", methods=["POST"])
+def getToken():
+    username = request.json["username"]
+    return {"username": username}
