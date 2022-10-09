@@ -41,7 +41,7 @@ import { useRouter } from 'next/router';
 type SideBarProps = { title: string; icon: Icon, href: string }[]
 
 const sideBarTop: SideBarProps = [
-  { title: 'All Listings', icon: LocalOfferIcon, href: '/' },
+  { title: 'All Listings', icon: LocalOfferIcon, href: '/feed/default' },
   { title: 'Methodology', icon: DescriptionIcon, href: '/environment/methodology' },
 ]
 

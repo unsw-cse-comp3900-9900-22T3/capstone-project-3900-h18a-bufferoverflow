@@ -7,26 +7,31 @@ import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
 import Link from 'next/link'
 
-const detailedItemListingRoute = '/register'
-
-const data = {
-  title: 'Used Kayak',
-  price: 9999,
-  location: 'Kensingston, NSW',
-  image:
-    'https://images.unsplash.com/photo-1499720565725-bd574541a3ee?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-  avatar: 'https://mui.com/static/images/avatar/3.jpg',
+export interface ItemCardProps {
+  title: string;
+  price: number;
+  location: string;
+  image: string;
+  avatar: string;
+  want: boolean;
 }
 
-export default function RecipeReviewCard() {
+export const ItemCard = (props: {
+  title: string;
+  price: number;
+  location: string;
+  image: string;
+  avatar: string;
+  href: string;
+}) => {
   return (
-    <Link href={detailedItemListingRoute}>
+    <Link href={props.href}>
       <Card sx={{ maxWidth: 345, margin: '8px' }}>
-        <CardMedia component='img' height='194' image={data.image} alt={data.title} />
-        <CardHeader title={data.title} />
+        <CardMedia component='img' height='194' image={props.image} alt={props.title} />
+        <CardHeader title={props.title} />
         <CardContent>
           <Typography variant='body2' color='text.secondary'>
-            Price ${data.price}
+            Price ${props.price}
           </Typography>
         </CardContent>
         <CardActions
@@ -39,9 +44,9 @@ export default function RecipeReviewCard() {
           }}
         >
           <Typography variant='body2' color='text.secondary'>
-            {data.location}
+            {props.location}
           </Typography>
-          <Avatar src={data.avatar}></Avatar>
+          <Avatar src={props.avatar}></Avatar>
         </CardActions>
       </Card>
     </Link>
