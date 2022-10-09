@@ -58,6 +58,7 @@ def update_user_resolver(
         info, 
         id,
         email,
+        username,
         active,
         preferred_distance,
         bio,
@@ -71,6 +72,8 @@ def update_user_resolver(
             user.preferred_distance = preferred_distance
             user.bio = bio 
             user.display_img = display_img
+            user.username = username
+
         db.session.add(user)
         db.session.commit()
         payload = {

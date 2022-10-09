@@ -46,42 +46,42 @@ def graphql_server():
 def hello():
     return "Hello World from Flask"
 
-@app.route("/allUsers")
-def getAllUsers():
-    return json.dumps([user.email for user in User.query.all()])
+# @app.route("/allUsers")
+# def getAllUsers():
+#     return json.dumps([user.email for user in User.query.all()])
 
-@app.route("/addAddress", methods=["POST"])
-def addAddress():
-    data = request.get_json()
-    country = data["country"]
-    state = data["state"]
-    city = data["city"]
-    postCode = data["postCode"]
-    street = data["street"]
+# @app.route("/addAddress", methods=["POST"])
+# def addAddress():
+#     data = request.get_json()
+#     country = data["country"]
+#     state = data["state"]
+#     city = data["city"]
+#     postCode = data["postCode"]
+#     street = data["street"]
 
-    try:
-        # add new country
-        db.session.add(Country(country))
-        # get id
-        countryId = Country.query.filter_by(name=country).first().id
+#     try:
+#         # add new country
+#         db.session.add(Country(country))
+#         # get id
+#         countryId = Country.query.filter_by(name=country).first().id
 
-        # add new state
-        db.session.add(State(state))
-        # get id
-        stateId = State.query.filter_by(name=state).first().id
+#         # add new state
+#         db.session.add(State(state))
+#         # get id
+#         stateId = State.query.filter_by(name=state).first().id
 
-        # add new city
-        db.session.add(City(city))
-        # get id
-        cityId = City.query.filter_by(name=city).first().id
+#         # add new city
+#         db.session.add(City(city))
+#         # get id
+#         cityId = City.query.filter_by(name=city).first().id
 
-        # add new address
-        db.session.add(Address(street, cityId, stateId, countryId, postCode))
+#         # add new address
+#         db.session.add(Address(street, cityId, stateId, countryId, postCode))
 
-        db.session.commit()
-        return {"status" : "success"}
-    except Exception as e:
-        return {"status" : "failure", "error" : str(e)}
+#         db.session.commit()
+#         return {"status" : "success"}
+#     except Exception as e:
+#         return {"status" : "failure", "error" : str(e)}
 
 
 @app.route("/addUser", methods=["POST"])

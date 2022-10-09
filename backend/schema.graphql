@@ -13,7 +13,7 @@ type User {
   active: Boolean!
   preferredDistance: Int!
   bio: String!
-  displayImg: String
+  displayImg: String!
   address: Address
 }
 

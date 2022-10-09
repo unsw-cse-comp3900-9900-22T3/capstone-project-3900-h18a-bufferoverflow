@@ -1,48 +1,64 @@
 from app import db
 
+# class Address(db.Model):
+#     __tablename__ = "addresses"
+
+#     id = db.Column(db.Integer, primary_key=True)
+#     street = db.Column(db.String(80), nullable=False)
+#     cityId = db.Column(db.Integer, db.ForeignKey('cities.id'), nullable=False)
+#     stateId = db.Column(db.Integer, db.ForeignKey('states.id'), nullable=False)
+#     countryId = db.Column(db.Integer, db.ForeignKey('countries.id'), nullable=False)
+#     postCode = db.Column(db.String(80), nullable=False)
+
+#     def __init__(self, street, cityId, stateId, countryId, postCode):
+#         self.cityId = cityId
+#         self.street = street
+#         self.stateId = stateId
+#         self.countryId = countryId
+#         self.postCode = postCode
+
+# class State(db.Model):
+#     __tablename__ = "states"
+
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String(80), nullable=False)
+
+#     def __init__(self, name):
+#         self.name = name
+
+# class City(db.Model):
+#     __tablename__ = "cities"
+
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String(80), nullable=False)
+
+#     def __init__(self, name):
+#         self.name = name
+
+# class Country(db.Model):
+#     __tablename__ = "countries"
+
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String(80), nullable=False)
+
+#     def __init__(self, name):
+#         self.name = name
+
 class Address(db.Model):
     __tablename__ = "addresses"
 
     id = db.Column(db.Integer, primary_key=True)
-    street = db.Column(db.String(80), nullable=False)
-    cityId = db.Column(db.Integer, db.ForeignKey('cities.id'), nullable=False)
-    stateId = db.Column(db.Integer, db.ForeignKey('states.id'), nullable=False)
-    countryId = db.Column(db.Integer, db.ForeignKey('countries.id'), nullable=False)
-    postCode = db.Column(db.String(80), nullable=False)
+    place = db.Column(db.String(128), unique=True, nullable=False)
+    users = db.relationship("User")
 
-    def __init__(self, street, cityId, stateId, countryId, postCode):
-        self.cityId = cityId
-        self.street = street
-        self.stateId = stateId
-        self.countryId = countryId
-        self.postCode = postCode
+    def __init__(self, place):
+        self.place = place
 
-class State(db.Model):
-    __tablename__ = "states"
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False)
-
-    def __init__(self, name):
-        self.name = name
-
-class City(db.Model):
-    __tablename__ = "cities"
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False)
-
-    def __init__(self, name):
-        self.name = name
-
-class Country(db.Model):
-    __tablename__ = "countries"
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False)
-
-    def __init__(self, name):
-        self.name = name
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "place": self.place
+        }
 
 
 class User(db.Model):
@@ -53,21 +69,18 @@ class User(db.Model):
     email = db.Column(db.String(128), unique=True, nullable=False)
     preferredDistance = db.Column(db.Integer, default=100, nullable=False)
     bio = db.Column(db.String(500), default="", nullable=False)
-    displayImg = db.Column(db.String(128), default="", nullable=True)
+    displayImg = db.Column(db.String(128), default="", nullable=False)
     addressId = db.Column(db.Integer, db.ForeignKey("addresses.id"), nullable=True)
 
-    def __init__(self, username, email, preferredDistance, bio, displayImg, addressId):
+    def __init__(self, email, username):
         self.username = username
         self.email = email
-        self.preferredDistance = preferredDistance
-        self.bio = bio
-        self.displayImgId = displayImg
-        self.addressId = addressId
 
     def to_dict(self):
         return {
             "id": self.id,
             "email": self.email,
+            "username": self.username,
             "active": self.active,
             "preferred_distance": self.preferred_distance,
             "bio": self.bio,
@@ -83,3 +96,10 @@ class Images(db.Model):
 
     def __init__(self, url):
         self.url = url
+
+
+
+
+
+
+
