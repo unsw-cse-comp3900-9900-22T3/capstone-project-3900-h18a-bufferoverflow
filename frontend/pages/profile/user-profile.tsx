@@ -7,6 +7,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useRouter } from 'next/router'
 import { createRef, useEffect, useState } from 'react'
 import { uploadFile } from '../../utils/imageUtils'
+import { gql, useQuery } from '@apollo/client'
 
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
@@ -14,7 +15,7 @@ import { uploadFile } from '../../utils/imageUtils'
 
 // We should define the structure of the response from API as a type @frontend team
 
-interface DataProps {
+interface ProfileProps {
   image: string;
   username: string;
   community: string;
@@ -22,17 +23,16 @@ interface DataProps {
   address: string;
 }
 
-// This is a function that mimics a post request - returns data after 2 seconds delay
-const fakePostRequest = async (): Promise<DataProps> => {
-  await new Promise(resolve => setTimeout(resolve, 2000));
-  return {
-    image: 'https://images.unsplash.com/photo-1499720565725-bd574541a3ee?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-    username: 'Random username',
-    community: 'Random community',
-    bio: 'random bio',
-    address: 'random address'
+const GET_PROFILE = gql`
+  query GetLocations {
+    locations {
+      id
+      name
+      description
+      photo
+    }
   }
-}
+`;
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
@@ -51,17 +51,19 @@ const UserProfile: NextPage = () => {
   const ref = createRef<any>()
   const router = useRouter()
 
-  // Pre-fill data once POST request is complete
+  // Graphql Query
+  const { data } = useQuery<ProfileProps>(GET_PROFILE);
+
   useEffect(() => {
-    fakePostRequest()
-      .then(data => {
-        setImage(data.image)
-        setUsername(data.username)
-        setCommunity(data.community)
-        setBio(data.bio)
-        setAddress(data.address)
-      })
-  }, [])
+    // Once data is loaded from graphql query, use useState hook to set the state
+    if (data) {
+      setImage(data.image)
+      setUsername(data.username)
+      setCommunity(data.community)
+      setBio(data.bio)
+      setAddress(data.address)
+    }
+  }, [data])
 
   return (
     <Template title='User Profile' center>
