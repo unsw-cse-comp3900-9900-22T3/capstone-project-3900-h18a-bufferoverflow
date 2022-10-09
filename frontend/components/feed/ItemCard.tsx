@@ -18,7 +18,7 @@ const data = {
   avatar: 'https://mui.com/static/images/avatar/3.jpg',
 }
 
-export default function RecipeReviewCard() {
+export const ItemCard = () => {
   return (
     <Link href={detailedItemListingRoute}>
       <Card sx={{ maxWidth: 345, margin: '8px' }}>
