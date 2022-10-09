@@ -62,15 +62,15 @@ class User(db.Model):
     email = db.Column(db.String(128), unique=True, nullable=False)
     preferredDistance = db.Column(db.Integer, default=100, nullable=False)
     bio = db.Column(db.String(500), default="", nullable=False)
-    displayImgId = db.Column(db.Integer, db.ForeignKey('images.id'), default=None, nullable=True)
-    addressId = db.Column(db.Integer, db.ForeignKey("addresses.id"), nullable=False)
+    displayImg = db.Column(db.String(128), default="", nullable=True)
+    addressId = db.Column(db.Integer, db.ForeignKey("addresses.id"), nullable=True)
 
-    def __init__(self, username, email, preferredDistance, bio, displayImgId, addressId):
+    def __init__(self, username, email, preferredDistance, bio, displayImg, addressId):
         self.username = username
         self.email = email
         self.preferredDistance = preferredDistance
         self.bio = bio
-        self.displayImgId = displayImgId
+        self.displayImgId = displayImg
         self.addressId = addressId
 
 class Images(db.Model):
@@ -96,6 +96,9 @@ def addAddress():
     country = data["country"]
     state = data["state"]
     city = data["city"]
+    postCode = data["postCode"]
+    street = data["street"]
+
     try:
         # add new country
         db.session.add(Country(country))
@@ -113,7 +116,7 @@ def addAddress():
         cityId = City.query.filter_by(name=city).first().id
 
         # add new address
-        db.session.add(Address(data["street"], cityId, stateId, countryId, data["postCode"]))
+        db.session.add(Address(street, cityId, stateId, countryId, postCode))
 
         db.session.commit()
         return {"status" : "success"}
@@ -136,20 +139,12 @@ def addUser():
 def updateUserImage():
     imageUrl = request.json["imageUrl"]
     userEmail = request.json["userEmail"]
-
     try:
-        db.session.add(Images(imageUrl))
-        imageId = Images.query.filter_by(url=imageUrl).first().id
+        db.session.query(User).filter_by(email=userEmail).update({"displayImg" : imageUrl})
         db.session.commit()
-    except:
-        return {"status": "error", "message": "Error adding image, check logs"}
-    try:
-        db.session.query(User).filter(User.email == userEmail).update({User.displayImgId: imageId})
-        db.session.commit()
-    except:
-        return {"status" : "error", "message": "Error updating user image, check logs"}
-
-    return {"status": "success"}
+        return {"status" : "success"}
+    except Exception as e:
+        return {"status" : "failure", "error" : str(e)}
 
 @app.route("/query")
 def query():
