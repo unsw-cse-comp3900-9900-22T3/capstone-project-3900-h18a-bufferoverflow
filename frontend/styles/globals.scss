@@ -24,3 +24,15 @@ a {
     background: black;
   }
 }
+
+#landing-box {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  h1 {
+    font-size: 7em;
+  }
+  p, a {
+    font-size: 2em;
+  }
+}
