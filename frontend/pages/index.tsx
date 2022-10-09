@@ -5,7 +5,7 @@ import { Landing } from '../components/landing/Landing'
 import RecommendedFeed from '../components/feed/recommended'
 
 const Home: NextPage = () => {
-  const auth = useStore()
+  const { auth } = useStore();
   return <Template title='Swapr'> {auth ? <RecommendedFeed /> : <Landing />}</Template> 
 }
 
