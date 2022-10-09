@@ -7,7 +7,6 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useRouter } from 'next/router'
 import { createRef, useEffect, useState } from 'react'
 import { uploadFile } from '../../utils/imageUtils'
-import axios from 'axios'
 
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
