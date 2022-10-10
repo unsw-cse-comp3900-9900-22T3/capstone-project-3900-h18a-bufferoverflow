@@ -56,6 +56,7 @@ const DetailedHaveListing: NextPage = () => {
     "asdfsa",
     "asdfsa",
   ]
+  const trader = 'sean'
 
   return (
     <Template title="Have Listing" center>
@@ -97,14 +98,14 @@ const DetailedHaveListing: NextPage = () => {
               lfjksahd lfjkhsa kfjh lsadkjf hl lsjdf hklsaj hflkjsadh flkajsh f
             </Typography>
           </LabelBox>
-          <Button variant="outlined" sx={{ borderRadius: 30, mt: 4, height: 45 }} onClick={() => { }}>
+          <Button variant="outlined" sx={{ borderRadius: 30, mt: 4, height: 45 }} href={`/trade/propose?user=${trader}`}>
             Propose Trade
           </Button>
           <Box sx={{ display: 'flex', mt: 1.5, width: '100%' }}>
-            <Button variant="outlined" sx={{ borderRadius: 30, mr: 0.5, width: '50%', height: 45 }} onClick={() => { }}>
+            <Button variant="outlined" sx={{ borderRadius: 30, mr: 0.5, width: '50%', height: 45 }} href={`/chat/chat?user=${trader}`}>
               Message User
             </Button>
-            <Button variant="outlined" sx={{ borderRadius: 30, ml: 0.5, width: '50%', height: 45 }} onClick={() => { }}>
+            <Button variant="outlined" sx={{ borderRadius: 30, ml: 0.5, width: '50%', height: 45 }} href={`/profile/visitor-profile?user=${trader}`}>
               View Trader Profile
             </Button>
           </Box>
