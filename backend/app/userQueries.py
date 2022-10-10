@@ -56,6 +56,7 @@ def update_user_resolver(
         obj, 
         info, 
         email,
+        username,
         active,
         preferred_distance,
         bio,

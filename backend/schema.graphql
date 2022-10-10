@@ -27,7 +27,7 @@ type User {
   email: String!
   preferredDistance: Int!
   bio: String!
-  displayImg: String
+  displayImg: String!
   address: Address
 }
 
