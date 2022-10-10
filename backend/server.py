@@ -3,24 +3,31 @@ from ariadne import load_schema_from_path, make_executable_schema, \
     graphql_sync, snake_case_fallback_resolvers, ObjectType
 from ariadne.constants import PLAYGROUND_HTML
 from flask import request, jsonify
-
 from app.userQueries import listUsers_resolver, getUser_resolver, \
-    create_user_resolver, update_user_resolver
+    create_user_resolver, update_user_resolver, delete_user_resolver
 from app.models import User
 
 
+# Create queries
 query = ObjectType("Query")
 query.set_field("listUsers", listUsers_resolver)
 query.set_field("getUser", getUser_resolver)
 
+# Create mutations
 mutation = ObjectType("Mutation")
 mutation.set_field("createUser", create_user_resolver)
 mutation.set_field("updateUser", update_user_resolver)
+mutation.set_field("deleteUser", delete_user_resolver)
 
+
+# Create schema
 type_defs = load_schema_from_path("schema.graphql")
 schema = make_executable_schema(
     type_defs, query, mutation, snake_case_fallback_resolvers
 )
+
+
+# Create routes
 
 @app.route("/test", methods=["GET"])
 def test():
@@ -49,39 +56,6 @@ def hello():
 @app.route("/allUsers")
 def getAllUsers():
     return json.dumps([user.email for user in User.query.all()])
-
-@app.route("/addAddress", methods=["POST"])
-def addAddress():
-    data = request.get_json()
-    country = data["country"]
-    state = data["state"]
-    city = data["city"]
-    postCode = data["postCode"]
-    street = data["street"]
-
-    try:
-        # add new country
-        db.session.add(Country(country))
-        # get id
-        countryId = Country.query.filter_by(name=country).first().id
-
-        # add new state
-        db.session.add(State(state))
-        # get id
-        stateId = State.query.filter_by(name=state).first().id
-
-        # add new city
-        db.session.add(City(city))
-        # get id
-        cityId = City.query.filter_by(name=city).first().id
-
-        # add new address
-        db.session.add(Address(street, cityId, stateId, countryId, postCode))
-
-        db.session.commit()
-        return {"status" : "success"}
-    except Exception as e:
-        return {"status" : "failure", "error" : str(e)}
 
 
 @app.route("/addUser", methods=["POST"])

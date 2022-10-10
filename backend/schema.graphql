@@ -3,14 +3,28 @@ schema {
   mutation: Mutation
 }
 
+type State {
+  name: String!
+}
+
+type City {
+  name: String!
+}
+
+type Country {
+  name: String!
+}
+
 type Address {
-  id: ID!
+  street: String!
+  city: City!
+  state: State!
+  post_code: String!
 }
 
 type User {
-  id: ID!
+  username: String!
   email: String!
-  active: Boolean!
   preferredDistance: Int!
   bio: String!
   displayImg: String
@@ -34,14 +48,22 @@ type Query {
   getUser(id: ID!): UserResult!
 }
 
+input AddressInput {
+  street: String!
+  city: String!
+  state: String!
+  post_code: String!
+}
+
 type Mutation {
   createUser(email: String!): UserResult!
   updateUser(
-    id: ID!
+    username: String!
     email: String!
-    active: Boolean!
     preferredDistance: Int!
     bio: String!
-    displayImg: String # TODO: somehow add this: (address: Address)
+    displayImg: String
+    address: AddressInput
   ): UserResult!
+  deleteUser(email: String!): UserResult!
 }

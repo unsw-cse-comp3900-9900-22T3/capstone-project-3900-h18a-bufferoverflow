@@ -17,6 +17,20 @@ class Address(db.Model):
         self.countryId = countryId
         self.postCode = postCode
 
+    def to_json(self):
+        return {
+            "id": self.id,
+            "street": self.street,
+            "cityId": self.cityId,
+            "stateId": self.stateId,
+            "countryId": self.countryId,
+            "postCode": self.postCode
+        }
+
+    def save():
+        db.session.add(self)
+        db.session.commit()
+
 class State(db.Model):
     __tablename__ = "states"
 
@@ -25,6 +39,10 @@ class State(db.Model):
 
     def __init__(self, name):
         self.name = name
+
+    def save():
+        db.session.add(self)
+        db.session.commit()
 
 class City(db.Model):
     __tablename__ = "cities"
@@ -35,6 +53,10 @@ class City(db.Model):
     def __init__(self, name):
         self.name = name
 
+    def save():
+        db.session.add(self)
+        db.session.commit()
+
 class Country(db.Model):
     __tablename__ = "countries"
 
@@ -43,6 +65,10 @@ class Country(db.Model):
 
     def __init__(self, name):
         self.name = name
+
+    def save():
+        db.session.add(self)
+        db.session.commit()
 
 
 class User(db.Model):
@@ -64,7 +90,7 @@ class User(db.Model):
         self.displayImgId = displayImg
         self.addressId = addressId
 
-    def to_dict(self):
+    def to_json(self):
         return {
             "id": self.id,
             "email": self.email,
@@ -74,6 +100,10 @@ class User(db.Model):
             "display_img": self.display_img,
             "address": self.address
         }
+
+    def save():
+        db.session.add(self)
+        db.session.commit()
 
 class Images(db.Model):
     __tablename__ = "images"
