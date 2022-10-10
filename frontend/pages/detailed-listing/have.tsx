@@ -23,6 +23,26 @@ interface HaveListingProps {
 }
 
 /////////////////////////////////////////////////////////////////////////////
+// Secondary Components
+/////////////////////////////////////////////////////////////////////////////
+
+const LabelBox = (props: {
+  title: string;
+  children?: JSX.Element | JSX.Element[];
+}) => {
+  return (
+    <Box sx={{ mb: 2, display: 'flex' }}>
+      <Box sx={{ width: 350 }}>
+        <Typography sx={{ fontWeight: 'bold' }}>{props.title}</Typography>
+      </Box>
+      <Box sx={{ width: 600 }}>
+        {props.children}
+      </Box>
+    </Box>
+  )
+}
+
+/////////////////////////////////////////////////////////////////////////////
 // Primary Components
 /////////////////////////////////////////////////////////////////////////////
 
@@ -43,16 +63,36 @@ const DetailedHaveListing: NextPage = () => {
                 : <></>
             }
           </Card>
-          <Typography sx={{ p: 3, pl: 4, fontWeight: 'bold' }}>Item Name</Typography>
+          <Typography sx={{ p: 3, pl: 4, fontSize: 20, fontWeight: 'bold' }}>Item Name</Typography>
         </Box>
 
         {/** Information Section */}
-        <Box sx={{ display: 'flex', flexDirection: 'column', width: 300 }}>
-          <Typography sx={{ mb: 2 }}>Public Information</Typography>
-          <Typography sx={{ mb: 2 }}>Private Information</Typography>
-          <Button variant="outlined" sx={{ borderRadius: 30 }} onClick={() => { }}>
-            Update Profile
+        <Box sx={{ display: 'flex', flexDirection: 'column', width: 450 }}>
+          <LabelBox title="Location">
+            <Typography>
+              The University of New South Wales High St Kensington NSW 2033
+            </Typography>
+          </LabelBox>
+          <LabelBox title="Categories">
+
+          </LabelBox>
+          <LabelBox title="Description">
+            <Typography>
+              Location askdjfh lkasjdfh lksajdhf lkajsdh flkjsdh fljkash fljkahsd
+              lfjksahd lfjkhsa kfjh lsadkjf hl lsjdf hklsaj hflkjsadh flkajsh f
+            </Typography>
+          </LabelBox>
+          <Button variant="outlined" sx={{ borderRadius: 30, mt: 4, height: 40 }} onClick={() => { }}>
+            Propose Trade
           </Button>
+          <Box sx={{ display: 'flex', mt: 1.5, width: 450 }}>
+            <Button variant="outlined" sx={{ borderRadius: 30, mr: 0.5, width: '50%', height: 40 }} onClick={() => { }}>
+              Message User
+            </Button>
+            <Button variant="outlined" sx={{ borderRadius: 30, ml: 0.5, width: '50%', height: 40 }} onClick={() => { }}>
+              View Trader Profile
+            </Button>
+          </Box>
         </Box>
 
       </Box>
