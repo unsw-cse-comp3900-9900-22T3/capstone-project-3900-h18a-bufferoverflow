@@ -42,7 +42,7 @@ const DefaultFeed: NextPage = () => {
     <Template title='Swapr'>
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Typography sx={{ width: '85vw', fontWeight: 'bold', mt: 2, mb: 1 }}>
-          4323 Items for Sale
+          {data ? data.length : 0} Items for Sale
         </Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '90vw' }}>
           {
