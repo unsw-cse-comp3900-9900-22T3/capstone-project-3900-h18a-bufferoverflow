@@ -1,6 +1,9 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
-import { Box, Button, Card, Typography } from "@mui/material";
+import { Avatar, Box, Button, Card, Typography } from "@mui/material";
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import PersonIcon from '@mui/icons-material/Person';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
@@ -42,6 +45,20 @@ const LabelBox = (props: {
   )
 }
 
+const DescriptionBox = (props: {
+  icon: any;
+  description: string;
+}) => {
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+      <Avatar sx={{ ml: 2, mr: 2 }}>
+        {props.icon}
+      </Avatar>
+      <Typography>{props.description}</Typography>
+    </Box>
+  )
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
 /////////////////////////////////////////////////////////////////////////////
@@ -56,7 +73,7 @@ const DetailedHaveListing: NextPage = () => {
     "asdfsa",
     "asdfsa",
   ]
-  const trader = 'sean'
+  const trader = 'Sean'
 
   return (
     <Template title="Have Listing" center>
@@ -72,6 +89,18 @@ const DetailedHaveListing: NextPage = () => {
             }
           </Card>
           <Typography sx={{ p: 3, pl: 4, fontSize: 20, fontWeight: 'bold' }}>Item Name</Typography>
+          <DescriptionBox
+            icon={<AttachMoneyIcon />}
+            description='purchase for $123 or by mutual trade'
+          />
+          <DescriptionBox
+            icon={<PersonIcon />}
+            description={`${trader} has this item`}
+          />
+          <DescriptionBox
+            icon={<LocalShippingIcon />}
+            description='cash on pickup or delivery'
+          />
         </Box>
 
         {/** Information Section */}
