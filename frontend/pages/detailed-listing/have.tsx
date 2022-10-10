@@ -14,11 +14,10 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 interface HaveListingProps {
   location: string;
   title: string;
-  image: string
+  image: string;
   categories: string[];
   description: string;
   trader: string;
-  avatar: string;
   cash: boolean;
   trade: boolean;
   bank: boolean;
@@ -74,6 +73,25 @@ const DetailedHaveListing: NextPage = () => {
     "asdfsa",
   ]
   const trader = 'Sean'
+  const cash = true;
+  const trade = true;
+  const bank = true;
+  const price = 453;
+
+  // Create description field given boolean parameters
+  let purchaseOptions = ''
+  if ((cash || bank) && !trade) purchaseOptions = `purchase for $${price}`
+  else if ((cash || bank) && trade) purchaseOptions = `purchase for $${price} or by mutual trade`
+  else if (!(cash || bank) && trade) purchaseOptions = `acquire by mutual trade`
+  else purchaseOptions = `not available`
+
+  let itemPosessor = `${trader} has this item`
+
+  let shippingOptions = ''
+  if (cash && bank) shippingOptions = 'cash or bank transfer on pickup or delivery'
+  else if (cash && !bank) shippingOptions = 'cash on pickup or delivery'
+  else if (!cash && bank) shippingOptions = 'bank transfer on pickup or delivery'
+  else shippingOptions = 'not applicable'
 
   return (
     <Template title="Have Listing" center>
@@ -89,18 +107,9 @@ const DetailedHaveListing: NextPage = () => {
             }
           </Card>
           <Typography sx={{ p: 3, pl: 4, fontSize: 20, fontWeight: 'bold' }}>Item Name</Typography>
-          <DescriptionBox
-            icon={<AttachMoneyIcon />}
-            description='purchase for $123 or by mutual trade'
-          />
-          <DescriptionBox
-            icon={<PersonIcon />}
-            description={`${trader} has this item`}
-          />
-          <DescriptionBox
-            icon={<LocalShippingIcon />}
-            description='cash on pickup or delivery'
-          />
+          <DescriptionBox icon={<AttachMoneyIcon />} description={purchaseOptions} />
+          <DescriptionBox icon={<PersonIcon />} description={itemPosessor} />
+          <DescriptionBox icon={<LocalShippingIcon />} description={shippingOptions} />
         </Box>
 
         {/** Information Section */}
