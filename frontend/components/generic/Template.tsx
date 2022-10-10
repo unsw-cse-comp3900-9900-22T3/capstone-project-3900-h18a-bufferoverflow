@@ -70,6 +70,11 @@ type Icon = OverridableComponent<SvgIconTypeMap<{}, 'svg'>> & {
 const textColor = '#6b6b6b'
 
 const theme = createTheme({
+  typography: {
+    body2: {
+      color: '#616161'
+    },
+  },
   palette: {
     primary: {
       main: '#616161',
