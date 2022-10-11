@@ -77,12 +77,7 @@ const theme = createTheme({
     secondary: {
       main: '#4f00b0',
     },
-  },
-  typography: {
-    body1: {
-      color: textColor,
-    }
-  },
+  }
 })
 
 //////////////////////////////////////////////////////////////////
