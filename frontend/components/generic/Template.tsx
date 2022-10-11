@@ -78,6 +78,11 @@ const theme = createTheme({
       main: '#4f00b0',
     },
   },
+  typography: {
+    body1: {
+      color: textColor,
+    }
+  },
 })
 
 //////////////////////////////////////////////////////////////////
