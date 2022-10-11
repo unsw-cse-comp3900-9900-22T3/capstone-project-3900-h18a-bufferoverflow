@@ -1,9 +1,10 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
-import { Avatar, Box, Button, Card, Typography } from "@mui/material";
+import { Avatar, Box, Button, Card, Dialog, IconButton, Stack, Typography } from "@mui/material";
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import PersonIcon from '@mui/icons-material/Person';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
@@ -77,6 +78,7 @@ const DetailedHaveListing: NextPage = () => {
   const trade = true;
   const bank = true;
   const price = 453;
+  const location = "The University of New South Wales High St Kensington NSW 2033"
 
   // Create description field given boolean parameters
   let purchaseOptions = ''
@@ -115,9 +117,14 @@ const DetailedHaveListing: NextPage = () => {
         {/** Information Section */}
         <Box sx={{ display: 'flex', flexDirection: 'column', width: 500 }}>
           <LabelBox title="Location">
-            <Typography fontSize={16} variant="body2">
-              The University of New South Wales High St Kensington NSW 2033
-            </Typography>
+            <Stack direction="row">
+              <IconButton href='/feed/default'>
+                <LocationOnIcon />
+              </IconButton>
+              <Typography fontSize={16} variant="body2">
+                {location}
+              </Typography>
+            </Stack>
           </LabelBox>
           <LabelBox title="Categories">
             <Box sx={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row' }}>
