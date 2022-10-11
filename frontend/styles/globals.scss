@@ -24,3 +24,17 @@ a {
     background: black;
   }
 }
+
+#landing-box {
+  text-align: center;
+  h1 {
+    font-size: 7em;
+  }
+  p, a {
+    font-size: 2em;
+  }
+}
+
+.lowercase-button {
+  text-transform: 'none';
+}
