@@ -45,23 +45,20 @@ type UsersResult {
 
 type Query {
   listUsers: UsersResult!
-  getUser(id: ID!): UserResult!
+  getUser(email: String!): UserResult!
 }
 
 input AddressInput {
-  street: String!
-  city: String!
-  state: String!
-  post_code: String!
+  place: String!
 }
 
 type Mutation {
-  createUser(email: String!): UserResult!
+  createUser(username: String!, email: String!): UserResult!
   updateUser(
-    username: String!
+    username: String
     email: String!
-    preferredDistance: Int!
-    bio: String!
+    preferredDistance: Int
+    bio: String
     displayImg: String
     address: AddressInput
   ): UserResult!
