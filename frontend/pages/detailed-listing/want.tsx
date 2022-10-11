@@ -11,7 +11,7 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 
 // We should define the structure of the response from API as a type @frontend team
 
-interface HaveListingProps {
+interface WantListingProps {
   location: string;
   title: string;
   image: string;
@@ -85,7 +85,7 @@ const DetailedWantListing: NextPage = () => {
   else shippingOptions = "not applicable";
 
   return (
-    <Template title="Have Listing" center>
+    <Template title="Want Listing" center>
       <Box
         sx={{
           display: "flex",
