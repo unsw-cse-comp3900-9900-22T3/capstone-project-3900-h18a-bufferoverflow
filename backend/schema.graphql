@@ -3,23 +3,20 @@ schema {
   mutation: Mutation
 }
 
-type State {
-  name: String!
-}
+# type State {
+#   name: String!
+# }
 
-type City {
-  name: String!
-}
+# type City {
+#   name: String!
+# }
 
-type Country {
-  name: String!
-}
+# type Country {
+#   name: String!
+# }
 
 type Address {
-  street: String!
-  city: City!
-  state: State!
-  post_code: String!
+  place: String!
 }
 
 type User {

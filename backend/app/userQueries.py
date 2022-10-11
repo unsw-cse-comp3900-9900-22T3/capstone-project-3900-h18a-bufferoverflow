@@ -70,7 +70,17 @@ def update_user_resolver(
             user.preferred_distance = preferred_distance if preferred_distance is not None else user.preferred_distance
             user.bio = bio if bio is not None else user.bio
             user.display_img = display_img if display_img is not None else user.display_img
-            user.addressId = address if address is not None else user.addressId
+
+            if address is not None:
+                address_info = Address.query.filter_by(place=address["place"]).first()
+                # check if address already exists
+                if address_info is not None:
+                    user.addressId = address_info.id
+                else:
+                    # add it to db 
+                    new_address = Address(address["place"])
+                    new_address.save()
+                    user.addressId = new_address.id
             user.save()
 
             payload = {

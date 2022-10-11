@@ -81,6 +81,12 @@ class User(db.Model):
         self.email = email
 
     def to_json(self):
+        # fetch address.place 
+        address = Address.query.get(self.addressId)
+        place = ""
+        if address is not None:
+            place = address.place
+
         return {
             "id": self.id,
             "email": self.email,
@@ -88,7 +94,9 @@ class User(db.Model):
             "preferred_distance": self.preferred_distance,
             "bio": self.bio,
             "display_img": self.display_img,
-            "address": self.addressId
+            "address": {
+                "place": place
+            }
         }
 
     def save(self):
