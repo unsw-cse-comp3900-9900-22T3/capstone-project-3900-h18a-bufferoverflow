@@ -1,3 +1,5 @@
+$grey: #727272;
+
 html,
 body {
   padding: 0;
@@ -26,8 +28,6 @@ a {
 }
 
 #landing-box {
-  display: flex;
-  justify-content: center;
   text-align: center;
   h1 {
     font-size: 7em;
@@ -35,4 +35,12 @@ a {
   p, a {
     font-size: 2em;
   }
+}
+
+.lowercase-button {
+  text-transform: 'none';
+}
+
+.grey-body {
+  color: $grey;
 }
