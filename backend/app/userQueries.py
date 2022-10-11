@@ -3,9 +3,7 @@ from app.models import User, Address
 
 from ariadne import convert_kwargs_to_snake_case
 
-
 def listUsers_resolver(obj, info):
-    print("test, test")
     try:
         users = [user.to_json() for user in User.query.all()]
         print(users)
@@ -55,12 +53,11 @@ def update_user_resolver(
         obj, 
         info, 
         email,
-        username,
-        active,
-        preferred_distance,
-        bio,
-        display_img,
-        address
+        username=None,
+        preferred_distance=None,
+        bio=None,
+        display_img=None,
+        address=None
     ):
     try:
         try:
@@ -68,19 +65,24 @@ def update_user_resolver(
         except:
             user = User.query.filter_by(username=username).first()
         if user:
-            user.username = username
             user.email = email 
-            user.active = active 
-            user.preferred_distance = preferred_distance
-            user.bio = bio 
-            user.display_img = display_img
-            user.address = build_address(address)
+            user.username = username if username is not None else user.username
+            user.preferred_distance = preferred_distance if preferred_distance is not None else user.preferred_distance
+            user.bio = bio if bio is not None else user.bio
+            user.display_img = display_img if display_img is not None else user.display_img
+            user.addressId = address if address is not None else user.addressId
             user.save()
 
-    except AttributeError:
+            payload = {
+                "success": True,
+                "user": user.to_json()
+            }
+        
+
+    except Exception as e:
         payload = {
             "success": False,
-            "errors": ["User matching id {id} not found"]
+            "errors": [str(e)]
         }
     return payload
 

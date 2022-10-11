@@ -55,10 +55,10 @@ input AddressInput {
 type Mutation {
   createUser(username: String!, email: String!): UserResult!
   updateUser(
-    username: String!
+    username: String
     email: String!
-    preferredDistance: Int!
-    bio: String!
+    preferredDistance: Int
+    bio: String
     displayImg: String
     address: AddressInput
   ): UserResult!
