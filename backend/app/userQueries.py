@@ -1,7 +1,5 @@
-from .models import User
-
 from app import db
-from app.models import User, Address, State, City, Country
+from app.models import User, Address
 
 from ariadne import convert_kwargs_to_snake_case
 
@@ -24,21 +22,22 @@ def listUsers_resolver(obj, info):
 
 def getUser_resolver(obj, info, email):
     try:
+        # TODO: None checks (on ALL resolves...)
         user = User.query.filter_by(email=email).first()
         payload = {
             "success": True,
             "user": user.to_json()
         }
-    except AttributeError:  # todo not found
+    except Exception as e:
         payload = {
             "success": False,
-            "errors": ["User matching {id} not found"]
+            "errors": [str(e)]
         }
     return payload
 
 def create_user_resolver(obj, info, username, email):
     try:
-        user = User(username, email)
+        user = User(email, username)
         user.save()
         payload = {
             "success": True,
