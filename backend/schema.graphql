@@ -1,17 +1,69 @@
 schema {
   query: Query
+  mutation: Mutation
+}
+
+type State {
+  name: String!
+}
+
+type City {
+  name: String!
+}
+
+type Country {
+  name: String!
 }
 
 type Address {
-  id: ID!
+  street: String!
+  city: City!
+  state: State!
+  post_code: String!
 }
 
 type User {
-  id: ID!
+  username: String!
   email: String!
-  active: Boolean!
   preferredDistance: Int!
   bio: String!
-  displayImg: String
-  address: Address!
+  displayImg: String!
+  address: Address
+}
+
+type UserResult {
+  success: Boolean!
+  errors: [String]
+  user: User
+}
+
+type UsersResult {
+  success: Boolean!
+  errors: [String]
+  users: [User]
+}
+
+type Query {
+  listUsers: UsersResult!
+  getUser(id: ID!): UserResult!
+}
+
+input AddressInput {
+  street: String!
+  city: String!
+  state: String!
+  post_code: String!
+}
+
+type Mutation {
+  createUser(email: String!): UserResult!
+  updateUser(
+    username: String!
+    email: String!
+    preferredDistance: Int!
+    bio: String!
+    displayImg: String
+    address: AddressInput
+  ): UserResult!
+  deleteUser(email: String!): UserResult!
 }
