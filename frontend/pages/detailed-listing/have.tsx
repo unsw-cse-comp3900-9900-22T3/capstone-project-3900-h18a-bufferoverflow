@@ -5,6 +5,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import PersonIcon from '@mui/icons-material/Person';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { useState } from 'react';
 
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
@@ -95,6 +96,9 @@ const DetailedHaveListing: NextPage = () => {
   else if (!cash && bank) shippingOptions = 'bank transfer on pickup or delivery'
   else shippingOptions = 'not applicable'
 
+  const [open, setOpen] = useState<boolean>(false);;
+
+
   return (
     <Template title="Have Listing" center>
       <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 40 }}>
@@ -118,7 +122,7 @@ const DetailedHaveListing: NextPage = () => {
         <Box sx={{ display: 'flex', flexDirection: 'column', width: 500 }}>
           <LabelBox title="Location">
             <Stack direction="row">
-              <IconButton href='/feed/default'>
+              <IconButton onClick={() => setOpen(true)}>
                 <LocationOnIcon />
               </IconButton>
               <Typography fontSize={16} variant="body2">
@@ -157,8 +161,13 @@ const DetailedHaveListing: NextPage = () => {
         </Box>
 
       </Box>
+      <Dialog open={open} onClose={() => {setOpen(false)}}>
+        <Typography>test</Typography>
+      </Dialog>
     </Template>
   );
 };
+
+
 
 export default DetailedHaveListing
