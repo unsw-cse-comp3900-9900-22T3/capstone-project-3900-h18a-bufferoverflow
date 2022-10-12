@@ -2,19 +2,8 @@ import { Template } from '../../components/generic/Template'
 import { NextPage } from 'next'
 import { ItemCard, ItemCardProps } from '../../components/feed/ItemCard'
 import { Box, Typography } from '@mui/material'
-import { gql, useQuery } from '@apollo/client'
-
-/////////////////////////////////////////////////////////////////////////////
-// Data
-/////////////////////////////////////////////////////////////////////////////
-
-const GET_FEED = gql`
-  query ExampleQuery {
-    locations {
-      id
-    }
-  }
-`;
+import { useEffect, useState } from 'react'
+import { mockRequest } from '../../utils/mockdata'
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
@@ -22,7 +11,14 @@ const GET_FEED = gql`
 
 const DefaultFeed: NextPage = () => {
 
-  const { data } = useQuery<ItemCardProps[]>(GET_FEED);
+  // const { data } = useQuery<ItemCardProps[]>(GET_FEED);
+
+  const [data, setData] = useState<ItemCardProps[]>([])
+
+  useEffect(() => {
+    mockRequest()
+      .then(data => setData(data))
+  }, [])
 
   return (
     <Template title='Swapr'>
