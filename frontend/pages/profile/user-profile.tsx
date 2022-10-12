@@ -21,7 +21,7 @@ interface ProfileGraphqlProps {
     success: boolean | null;
     erorrs: string[] | null;
     user: {
-      image: string;
+      displayImg: string;
       username: string;
       community: string;
       bio: string;
@@ -37,6 +37,7 @@ const getUserQuery = (email: string): DocumentNode => {
         errors
         success
         user {
+          displayImg
           username
           email
           bio
@@ -74,7 +75,7 @@ const UserProfile: NextPage = () => {
     // Once data is loaded from graphql query, use useState hook to set the state
     if (data?.getUser.user) {
       const user = data.getUser.user
-      if (user.image) setImage(user.image)
+      if (user.displayImg) setImage(user.displayImg)
       if (user.username) setUsername(user.username)
       if (user.community) setCommunity(user.community)
       if (user.bio) setBio(user.bio)
