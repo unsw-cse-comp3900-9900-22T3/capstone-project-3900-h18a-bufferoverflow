@@ -30,25 +30,23 @@ interface ProfileGraphqlProps {
   }
 }
 
-const getUserQuery = (email: string): DocumentNode => {
-  return gql`
-    query {
-      getUser(email: "${email}") {
-        errors
-        success
-        user {
-          displayImg
-          username
-          email
-          bio
-          address {
-            post_code
-          }
+const GET_USER_QUERY = gql`
+  query getUserQuery($email: String!) {
+    getUser(email: $email) {
+      errors
+      success
+      user {
+        displayImg
+        username
+        email
+        bio
+        address {
+          post_code
         }
       }
     }
-  `
-}
+  }
+`
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
@@ -69,7 +67,7 @@ const UserProfile: NextPage = () => {
   const { auth } = useStore()
 
   // Graphql Query
-  const { data } = useQuery<ProfileGraphqlProps>(getUserQuery(auth?.email || ''))
+  const { data } = useQuery<ProfileGraphqlProps>(GET_USER_QUERY, { variables: { email: auth?.email || '' } })
 
   useEffect(() => {
     // Once data is loaded from graphql query, use useState hook to set the state
