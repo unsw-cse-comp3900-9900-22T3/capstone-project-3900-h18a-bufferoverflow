@@ -29,7 +29,7 @@ const DefaultFeed: NextPage = () => {
         <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '90vw' }}>
           {
             data?.map(item => {
-              const href = item.want ? '/detailed-listing/want' : '/detailed-listing/have'
+              const href = item.want ? `/detailed-listing/want?title=${item.title}` : `/detailed-listing/have?title=${item.title}`
               return <ItemCard {...item} href={href} />
             })
           }
