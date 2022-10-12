@@ -76,13 +76,13 @@ const DetailedWantListing: NextPage = () => {
 
   let buyer = `${trader} wants this item`;
 
-  let shippingOptions = "";
+  let paymentOptions = "";
   if (cash && bank)
-    shippingOptions = "cash or bank transfer on pickup or delivery";
-  else if (cash && !bank) shippingOptions = "cash on pickup or delivery";
+    paymentOptions = "cash on pickup or bank transfer";
+  else if (cash && !bank) paymentOptions = "cash on pickup only";
   else if (!cash && bank)
-    shippingOptions = "bank transfer on pickup or delivery";
-  else shippingOptions = "not applicable";
+    paymentOptions = "bank transfer only";
+  else paymentOptions = "not applicable";
 
   return (
     <Template title="Want Listing" center>
@@ -121,7 +121,7 @@ const DetailedWantListing: NextPage = () => {
           <DescriptionBox icon={<PersonIcon />} description={buyer} />
           <DescriptionBox
             icon={<LocalShippingIcon />}
-            description={shippingOptions}
+            description={paymentOptions}
           />
         </Box>
 
