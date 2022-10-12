@@ -22,7 +22,7 @@ const Landing: NextPage = () => {
         </Grey>
         <Box>
           <Button
-            sx={{ textTransform: "none", borderRadius: 10 }}
+            sx={{ textTransform: "none", borderRadius: 10, mt: 4, p: 1, pl: 5, pr: 5 }}
             href="/feed/default"
             variant="outlined"
             endIcon={<ArrowForwardIosIcon />}
