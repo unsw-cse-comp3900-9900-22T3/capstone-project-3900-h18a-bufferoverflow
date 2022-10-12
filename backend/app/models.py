@@ -73,7 +73,7 @@ class User(db.Model):
     email = db.Column(db.String(128), unique=True, nullable=False)
     preferred_distance = db.Column(db.Integer, default=100, nullable=False)
     bio = db.Column(db.String(500), default="", nullable=False)
-    display_img = db.Column(db.String(128), default="", nullable=False)
+    display_img = db.Column(db.String(500), default="", nullable=False)
     addressId = db.Column(db.Integer, db.ForeignKey("addresses.id"), nullable=True)
 
     def __init__(self, email, username):

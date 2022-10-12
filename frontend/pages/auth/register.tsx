@@ -1,4 +1,5 @@
-import { Box, Button, Divider, TextField, Typography } from "@mui/material"
+import { DocumentNode, gql, useLazyQuery, useMutation, useQuery } from "@apollo/client"
+import { Box, Button, Divider, TextField } from "@mui/material"
 import { createUserWithEmailAndPassword, getAuth, updateProfile } from "firebase/auth"
 import { useRouter } from "next/router"
 import { useState } from "react"
@@ -9,11 +10,37 @@ import { useStoreUpdate } from "../../store/store"
 import { convertUserToAuthProps } from "../../store/utils"
 import loginTextFieldStyles from "../../styles/style"
 
+/////////////////////////////////////////////////////////////////////////////
+// Query
+/////////////////////////////////////////////////////////////////////////////
+
+const REGISTER_QUERY = gql`
+  mutation Register($email: String!, $username: String!) {
+    createUser(
+      email: $email
+      username: $username
+    ) {
+      success
+      errors
+      user {
+        email
+        username
+      }
+    }
+  }
+`
+
+/////////////////////////////////////////////////////////////////////////////
+// Primary Components
+/////////////////////////////////////////////////////////////////////////////
+
 export const Register = () => {
   const [username, setUsername] = useState<string>('')
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [errorToast, setErrorToast] = useState<string>('');
+
+  const [register, _] = useMutation(REGISTER_QUERY)
   const router = useRouter();
   const setStore = useStoreUpdate()
 
@@ -56,16 +83,17 @@ export const Register = () => {
           <Button
             variant="outlined"
             sx={{ width: 280, mb: 2, mt: 2 }}
-            onClick={() => {
-              createUserWithEmailAndPassword(getAuth(), email, password)
-                .then(async (res) => {
-                  await updateProfile(res.user, { displayName: username })
-                  setStore({ auth: await convertUserToAuthProps(res.user) })
-                  router.push('/');
-                })
-                .catch(() => {
-                  setErrorToast('Username, email or password is not valid')
-                })
+            onClick={async () => {
+              try {
+                let { data } = await register({ variables: { email, username } })
+                if (!data.createUser.success) throw 'Error'
+                let res = await createUserWithEmailAndPassword(getAuth(), email, password)
+                await updateProfile(res.user, { displayName: username })
+                setStore({ auth: await convertUserToAuthProps(res.user) })
+                router.push('/');
+              } catch (e) {
+                setErrorToast('Username, email or password is not valid')
+              }
             }}
           >
             Sign up

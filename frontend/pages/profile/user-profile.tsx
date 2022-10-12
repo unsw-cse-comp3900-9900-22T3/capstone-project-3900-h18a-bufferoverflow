@@ -7,7 +7,9 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useRouter } from 'next/router'
 import { createRef, useEffect, useState } from 'react'
 import { uploadFile } from '../../utils/imageUtils'
-import axios from 'axios'
+import { gql, useMutation, useQuery } from '@apollo/client'
+import { useStore } from '../../store/store'
+import { Toast } from '../../components/generic/Toast'
 
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
@@ -15,25 +17,56 @@ import axios from 'axios'
 
 // We should define the structure of the response from API as a type @frontend team
 
-interface DataProps {
-  image: string;
-  username: string;
-  community: string;
-  bio: string;
-  address: string;
-}
-
-// This is a function that mimics a post request - returns data after 2 seconds delay
-const fakePostRequest = async (): Promise<DataProps> => {
-  await new Promise(resolve => setTimeout(resolve, 2000));
-  return {
-    image: 'https://images.unsplash.com/photo-1499720565725-bd574541a3ee?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-    username: 'Random username',
-    community: 'Random community',
-    bio: 'random bio',
-    address: 'random address'
+interface ProfileGraphqlProps {
+  getUser: {
+    success: boolean | null;
+    erorrs: string[] | null;
+    user: {
+      displayImg: string;
+      username: string;
+      community: string;
+      bio: string;
+      address: string;
+    } | null;
   }
 }
+
+const GET_USER_QUERY = gql`
+  query getUserQuery($email: String!) {
+    getUser(email: $email) {
+      errors
+      success
+      user {
+        displayImg
+        username
+        email
+        bio
+        address {
+          post_code
+        }
+      }
+    }
+  }
+`
+
+const UPDATE_USER_MUTATION = gql`
+  mutation updateUserQuery(
+    $email: String!
+    $username: String
+    $bio: String
+    $displayImg: String
+  ) {
+    updateUser(
+      username: $username
+      bio: $bio
+      displayImg: $displayImg
+      email: $email
+    ) {
+      errors
+      success
+    }
+  }
+`
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
@@ -47,25 +80,34 @@ const UserProfile: NextPage = () => {
   const [community, setCommunity] = useState<string>('')
   const [bio, setBio] = useState<string>('')
   const [address, setAddress] = useState<string>('')
+  const [errorToast, setErrorToast] = useState<string>('');
+  const [successToast, setSuccessToast] = useState<string>('');
 
   // Utility Hooks
   const ref = createRef<any>()
   const router = useRouter()
+  const { auth } = useStore()
 
-  // Pre-fill data once POST request is complete
+  // Graphql Query
+  const { data } = useQuery<ProfileGraphqlProps>(GET_USER_QUERY, { variables: { email: auth?.email || '' } })
+  const [updateProfile, _] = useMutation(UPDATE_USER_MUTATION)
+
   useEffect(() => {
-    fakePostRequest()
-      .then(data => {
-        setImage(data.image)
-        setUsername(data.username)
-        setCommunity(data.community)
-        setBio(data.bio)
-        setAddress(data.address)
-      })
-  }, [])
+    // Once data is loaded from graphql query, use useState hook to set the state
+    if (data?.getUser.user) {
+      const user = data.getUser.user
+      if (user.displayImg) setImage(user.displayImg)
+      if (user.username) setUsername(user.username)
+      if (user.community) setCommunity(user.community)
+      if (user.bio) setBio(user.bio)
+      if (user.address) setAddress(user.address)
+    }
+  }, [data])
 
   return (
     <Template title='User Profile' center>
+      <Toast toast={errorToast} setToast={setErrorToast} type='warning' />
+      <Toast toast={successToast} setToast={setSuccessToast} type='success' />
 
       {/** Image Upload Section */}
       <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 20 }}>
@@ -94,10 +136,15 @@ const UserProfile: NextPage = () => {
           <Typography sx={{ mb: 2 }}>Private Information</Typography>
           <TextField placeholder='Bio' multiline rows={4} sx={{ mb: 1 }} value={bio} onChange={e => setBio(e.target.value)} />
           <TextField placeholder='Address' multiline rows={4} sx={{ mb: 3 }} value={address} onChange={e => setAddress(e.target.value)} />
-          <Button variant="outlined" sx={{ borderRadius: 30 }} onClick={() => {
+          <Button variant="outlined" sx={{ borderRadius: 30 }} onClick={async () => {
             // We need to post request with modified data later
-            let data = { image, username, community, bio, address }
-            console.log(data)
+            let data = { displayImg: image, username, bio, email: auth?.email || '' }
+            try {
+              await updateProfile({ variables: data })
+              setSuccessToast("Updated profile successfully!")
+            } catch (e) {
+              setErrorToast("Failed to update profile")
+            }
           }}>
             Update Profile
           </Button>
