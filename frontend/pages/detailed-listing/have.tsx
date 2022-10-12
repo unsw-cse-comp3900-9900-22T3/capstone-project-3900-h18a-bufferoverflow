@@ -8,6 +8,7 @@ import {
   Dialog,
   IconButton,
   Stack,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
@@ -145,9 +146,11 @@ const DetailedHaveListing: NextPage = () => {
         <Box sx={{ display: "flex", flexDirection: "column", width: 500 }}>
           <LabelBox title="Location">
             <Stack direction="row">
-              <IconButton onClick={() => setOpen(true)}>
-                <LocationOnIcon />
-              </IconButton>
+              <Tooltip title="Show on Map">
+                <IconButton onClick={() => setOpen(true)}>
+                  <LocationOnIcon />
+                </IconButton>
+              </Tooltip>
               <Typography fontSize={16} variant="body2">
                 {location}
               </Typography>
@@ -212,14 +215,14 @@ const DetailedHaveListing: NextPage = () => {
           setOpen(false);
         }}
       >
-        <MapContainer center={[51.505, -0.09]} zoom={20}>
+        {/* <MapContainer center={[51.505, -0.09]} zoom={20}>
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           <Marker position={[51.505, -0.09]}>
             <Popup>
               A pretty CSS3 popup. <br /> Easily customizable.
             </Popup>
           </Marker>
-        </MapContainer>
+        </MapContainer> */}
       </Dialog>
     </Template>
   );
