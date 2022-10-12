@@ -66,13 +66,13 @@ const DetailedWantListing: NextPage = () => {
   const price = 453;
 
   // Create description field given boolean parameters
-  let purchaseOptions = "";
-  if ((cash || bank) && !trade) purchaseOptions = `purchase for $${price}`;
+  let rewardOptions = "";
+  if ((cash || bank) && !trade) rewardOptions = `reward of $${price}`;
   else if ((cash || bank) && trade)
-    purchaseOptions = `purchase for $${price} or by mutual trade`;
+    rewardOptions = `reward of $${price} or a mutual trade`;
   else if (!(cash || bank) && trade)
-    purchaseOptions = `acquire by mutual trade`;
-  else purchaseOptions = `not available`;
+    rewardOptions = `mutual trade only`;
+  else rewardOptions = `not available`;
 
   let buyer = `${trader} wants this item`;
 
@@ -116,7 +116,7 @@ const DetailedWantListing: NextPage = () => {
           </Typography>
           <DescriptionBox
             icon={<AttachMoneyIcon />}
-            description={purchaseOptions}
+            description={rewardOptions}
           />
           <DescriptionBox icon={<PersonIcon />} description={buyer} />
           <DescriptionBox
