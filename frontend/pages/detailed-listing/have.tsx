@@ -4,6 +4,7 @@ import { Avatar, Box, Button, Card, Typography } from "@mui/material";
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import PersonIcon from '@mui/icons-material/Person';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import { useRouter } from "next/router";
 
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
@@ -64,6 +65,10 @@ const DescriptionBox = (props: {
 
 const DetailedHaveListing: NextPage = () => {
 
+  // Get item name from query params
+  const router = useRouter()
+  const { title } = router.query
+
   const image = 'https://images.unsplash.com/photo-1499720565725-bd574541a3ee?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'
   const categories = [
     "asdfsadf",
@@ -106,7 +111,7 @@ const DetailedHaveListing: NextPage = () => {
                 : <></>
             }
           </Card>
-          <Typography sx={{ p: 3, pl: 4, fontSize: 20, fontWeight: 'bold' }}>Item Name</Typography>
+          <Typography sx={{ p: 3, pl: 4, fontSize: 20, fontWeight: 'bold' }}>{title}</Typography>
           <DescriptionBox icon={<AttachMoneyIcon />} description={purchaseOptions} />
           <DescriptionBox icon={<PersonIcon />} description={itemPosessor} />
           <DescriptionBox icon={<LocalShippingIcon />} description={shippingOptions} />
