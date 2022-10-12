@@ -1,4 +1,5 @@
-import { Box, Button, Divider, TextField, Typography } from "@mui/material"
+import { DocumentNode, gql, useQuery } from "@apollo/client"
+import { Box, Button, Divider, TextField } from "@mui/material"
 import { createUserWithEmailAndPassword, getAuth, updateProfile } from "firebase/auth"
 import { useRouter } from "next/router"
 import { useState } from "react"
@@ -8,6 +9,32 @@ import { Toast } from "../../components/generic/Toast"
 import { useStoreUpdate } from "../../store/store"
 import { convertUserToAuthProps } from "../../store/utils"
 import loginTextFieldStyles from "../../styles/style"
+
+/////////////////////////////////////////////////////////////////////////////
+// Query
+/////////////////////////////////////////////////////////////////////////////
+
+const makeGraphqlQuery = (email: string, username: string): DocumentNode => {
+  return gql`
+    mutation {
+      createUser(
+        email: ${email}
+        username: ${username}
+      ) {
+        success
+        errors
+        user {
+          email
+          username
+        }
+      }
+    }
+  `
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// Primary Components
+/////////////////////////////////////////////////////////////////////////////
 
 export const Register = () => {
   const [username, setUsername] = useState<string>('')
@@ -61,6 +88,7 @@ export const Register = () => {
                 .then(async (res) => {
                   await updateProfile(res.user, { displayName: username })
                   setStore({ auth: await convertUserToAuthProps(res.user) })
+                  useQuery(makeGraphqlQuery(email, username));
                   router.push('/');
                 })
                 .catch(() => {
