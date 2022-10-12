@@ -17,7 +17,7 @@ const firebaseConfig = {
 };
 
 const client = new ApolloClient({
-  uri: 'https://flyby-gateway.herokuapp.com/',
+  uri: 'http://localhost:8000/graphql',
   cache: new InMemoryCache(),
 });
 

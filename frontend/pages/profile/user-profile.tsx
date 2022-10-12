@@ -7,7 +7,8 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useRouter } from 'next/router'
 import { createRef, useEffect, useState } from 'react'
 import { uploadFile } from '../../utils/imageUtils'
-import { gql, useQuery } from '@apollo/client'
+import { DocumentNode, gql, useQuery } from '@apollo/client'
+import { useStore } from '../../store/store'
 
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
@@ -15,24 +16,38 @@ import { gql, useQuery } from '@apollo/client'
 
 // We should define the structure of the response from API as a type @frontend team
 
-interface ProfileProps {
-  image: string;
-  username: string;
-  community: string;
-  bio: string;
-  address: string;
+interface ProfileGraphqlProps {
+  getUser: {
+    success: boolean | null;
+    erorrs: string[] | null;
+    user: {
+      image: string;
+      username: string;
+      community: string;
+      bio: string;
+      address: string;
+    } | null;
+  }
 }
 
-const GET_PROFILE = gql`
-  query GetLocations {
-    locations {
-      id
-      name
-      description
-      photo
+const getUserQuery = (email: string): DocumentNode => {
+  return gql`
+    query {
+      getUser(email: "${email}") {
+        errors
+        success
+        user {
+          username
+          email
+          bio
+          address {
+            post_code
+          }
+        }
+      }
     }
-  }
-`;
+  `
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
@@ -50,18 +65,20 @@ const UserProfile: NextPage = () => {
   // Utility Hooks
   const ref = createRef<any>()
   const router = useRouter()
+  const { auth } = useStore()
 
   // Graphql Query
-  const { data } = useQuery<ProfileProps>(GET_PROFILE);
+  const { data } = useQuery<ProfileGraphqlProps>(getUserQuery(auth?.email || ''))
 
   useEffect(() => {
     // Once data is loaded from graphql query, use useState hook to set the state
-    if (data) {
-      setImage(data.image)
-      setUsername(data.username)
-      setCommunity(data.community)
-      setBio(data.bio)
-      setAddress(data.address)
+    if (data?.getUser.user) {
+      const user = data.getUser.user
+      if (user.image) setImage(user.image)
+      if (user.username) setUsername(user.username)
+      if (user.community) setCommunity(user.community)
+      if (user.bio) setBio(user.bio)
+      if (user.address) setAddress(user.address)
     }
   }, [data])
 

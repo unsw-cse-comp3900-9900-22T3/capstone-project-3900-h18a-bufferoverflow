@@ -14,7 +14,7 @@ import loginTextFieldStyles from "../../styles/style"
 // Query
 /////////////////////////////////////////////////////////////////////////////
 
-const makeGraphqlQuery = (email: string, username: string): DocumentNode => {
+const registerQuery = (email: string, username: string): DocumentNode => {
   return gql`
     mutation {
       createUser(
@@ -88,7 +88,7 @@ export const Register = () => {
                 .then(async (res) => {
                   await updateProfile(res.user, { displayName: username })
                   setStore({ auth: await convertUserToAuthProps(res.user) })
-                  useQuery(makeGraphqlQuery(email, username));
+                  useQuery(registerQuery(email, username));
                   router.push('/');
                 })
                 .catch(() => {
