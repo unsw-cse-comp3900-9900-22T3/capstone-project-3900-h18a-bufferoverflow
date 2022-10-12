@@ -7,8 +7,9 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useRouter } from 'next/router'
 import { createRef, useEffect, useState } from 'react'
 import { uploadFile } from '../../utils/imageUtils'
-import { DocumentNode, gql, useQuery } from '@apollo/client'
+import { gql, useMutation, useQuery } from '@apollo/client'
 import { useStore } from '../../store/store'
+import { Toast } from '../../components/generic/Toast'
 
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
@@ -48,6 +49,25 @@ const GET_USER_QUERY = gql`
   }
 `
 
+const UPDATE_USER_MUTATION = gql`
+  mutation updateUserQuery(
+    $email: String!
+    $username: String
+    $bio: String
+    $displayImg: String
+  ) {
+    updateUser(
+      username: $username
+      bio: $bio
+      displayImg: $displayImg
+      email: $email
+    ) {
+      errors
+      success
+    }
+  }
+`
+
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
 /////////////////////////////////////////////////////////////////////////////
@@ -60,6 +80,7 @@ const UserProfile: NextPage = () => {
   const [community, setCommunity] = useState<string>('')
   const [bio, setBio] = useState<string>('')
   const [address, setAddress] = useState<string>('')
+  const [errorToast, setErrorToast] = useState<string>('');
 
   // Utility Hooks
   const ref = createRef<any>()
@@ -68,6 +89,7 @@ const UserProfile: NextPage = () => {
 
   // Graphql Query
   const { data } = useQuery<ProfileGraphqlProps>(GET_USER_QUERY, { variables: { email: auth?.email || '' } })
+  const [updateProfile, _] = useMutation(UPDATE_USER_MUTATION)
 
   useEffect(() => {
     // Once data is loaded from graphql query, use useState hook to set the state
@@ -83,6 +105,7 @@ const UserProfile: NextPage = () => {
 
   return (
     <Template title='User Profile' center>
+      <Toast toast={errorToast} setToast={setErrorToast} type='warning' />
 
       {/** Image Upload Section */}
       <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 20 }}>
@@ -111,10 +134,14 @@ const UserProfile: NextPage = () => {
           <Typography sx={{ mb: 2 }}>Private Information</Typography>
           <TextField placeholder='Bio' multiline rows={4} sx={{ mb: 1 }} value={bio} onChange={e => setBio(e.target.value)} />
           <TextField placeholder='Address' multiline rows={4} sx={{ mb: 3 }} value={address} onChange={e => setAddress(e.target.value)} />
-          <Button variant="outlined" sx={{ borderRadius: 30 }} onClick={() => {
+          <Button variant="outlined" sx={{ borderRadius: 30 }} onClick={async () => {
             // We need to post request with modified data later
-            let data = { image, username, community, bio, address }
-            console.log(data)
+            let data = { displayImg: image, username, bio, email: auth?.email || '' }
+            try {
+              await updateProfile({ variables: data })
+            } catch (e) {
+              setErrorToast("Failed to update profile")
+            }
           }}>
             Update Profile
           </Button>
