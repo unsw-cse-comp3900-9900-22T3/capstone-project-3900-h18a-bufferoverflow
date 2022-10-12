@@ -81,6 +81,7 @@ const UserProfile: NextPage = () => {
   const [bio, setBio] = useState<string>('')
   const [address, setAddress] = useState<string>('')
   const [errorToast, setErrorToast] = useState<string>('');
+  const [successToast, setSuccessToast] = useState<string>('');
 
   // Utility Hooks
   const ref = createRef<any>()
@@ -106,6 +107,7 @@ const UserProfile: NextPage = () => {
   return (
     <Template title='User Profile' center>
       <Toast toast={errorToast} setToast={setErrorToast} type='warning' />
+      <Toast toast={successToast} setToast={setSuccessToast} type='success' />
 
       {/** Image Upload Section */}
       <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 20 }}>
@@ -139,6 +141,7 @@ const UserProfile: NextPage = () => {
             let data = { displayImg: image, username, bio, email: auth?.email || '' }
             try {
               await updateProfile({ variables: data })
+              setSuccessToast("Updated profile successfully!")
             } catch (e) {
               setErrorToast("Failed to update profile")
             }
