@@ -41,9 +41,6 @@ const GET_USER_QUERY = gql`
         username
         email
         bio
-        address {
-          post_code
-        }
       }
     }
   }
