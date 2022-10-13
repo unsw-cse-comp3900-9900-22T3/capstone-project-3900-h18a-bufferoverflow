@@ -60,6 +60,7 @@ def update_user_resolver(
         address=None
     ):
     try:
+        user = None
         try:
             user = User.query.filter_by(email=email).first()
         except:
@@ -74,10 +75,10 @@ def update_user_resolver(
             user.addressId = determine_address_id(address)
             user.save()
 
-            payload = {
-                "success": True,
-                "user": user.to_json()
-            }
+        payload = {
+            "success": True,
+            "user": user.to_json()
+        }
         
 
     except Exception as e:
