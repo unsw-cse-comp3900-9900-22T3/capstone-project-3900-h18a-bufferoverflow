@@ -85,6 +85,7 @@ export const Register = () => {
             sx={{ width: 280, mb: 2, mt: 2 }}
             onClick={async () => {
               try {
+                if (password.length < 6) throw 'Error'
                 let { data } = await register({ variables: { email, username } })
                 if (!data.createUser.success) throw 'Error'
                 let res = await createUserWithEmailAndPassword(getAuth(), email, password)
