@@ -4,6 +4,7 @@ import { ItemCard, ItemCardProps } from '../../components/feed/ItemCard'
 import { Box, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { mockRequest } from '../../utils/mockdata'
+import { CategorySearch } from '../../components/feed/CategorySearch'
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
@@ -22,6 +23,7 @@ const DefaultFeed: NextPage = () => {
 
   return (
     <Template title='Swapr'>
+      <CategorySearch />
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Typography sx={{ width: '85vw', fontWeight: 'bold', mt: 2, mb: 1 }}>
           {data ? data.length : 0} Items for Sale
