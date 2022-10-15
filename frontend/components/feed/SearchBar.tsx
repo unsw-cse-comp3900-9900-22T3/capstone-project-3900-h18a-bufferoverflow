@@ -1,15 +1,25 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { CategorySearch } from "./CategorySearch";
 
+/////////////////////////////////////////////////////////////////////////////
+// Types
+/////////////////////////////////////////////////////////////////////////////
+
+type ListingType = 'have' | 'want'
+
 export interface SearchBarProps {
   categories: string[];
   distance: number;
-  listing: 'have' | 'want';
+  listing: ListingType;
   price: {
     min: number;
     max: number;
   }
 }
+
+/////////////////////////////////////////////////////////////////////////////
+// Secondary Components
+/////////////////////////////////////////////////////////////////////////////
 
 const DistanceDropdown = (props: {
   distance: number;
@@ -23,11 +33,7 @@ const DistanceDropdown = (props: {
         id="demo-simple-select"
         value={props.distance}
         label="Distance"
-        onChange={e => props.setDistance(
-          typeof e.target.value === 'number'
-            ? e.target.value
-            : parseInt(e.target.value)
-        )}
+        onChange={e => props.setDistance(e.target.value as number)}
       >
         <MenuItem value={10}>Within 10 km</MenuItem>
         <MenuItem value={25}>Within 20 km</MenuItem>
@@ -38,6 +44,31 @@ const DistanceDropdown = (props: {
     </FormControl>
   )
 }
+
+const ListingDropdown = (props: {
+  listing: ListingType;
+  setListing: (arg: ListingType) => void;
+}) => {
+  return (
+    <FormControl fullWidth>
+      <InputLabel id="demo-simple-select-label">Age</InputLabel>
+      <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        value={props.listing}
+        label="Listing Type"
+        onChange={e => props.setListing(e.target.value as ListingType)}
+      >
+        <MenuItem value={'want'}>Want</MenuItem>
+        <MenuItem value={'have'}>Have</MenuItem>
+      </Select>
+    </FormControl>
+  )
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// Primary Components
+/////////////////////////////////////////////////////////////////////////////
 
 export const SearchBar = (props: {
   data: SearchBarProps
@@ -50,10 +81,14 @@ export const SearchBar = (props: {
   const setDistance = (distance: number) => {
     props.setData({ ...props.data, distance })
   }
+  const setListing = (listing: ListingType) => {
+    props.setData({ ...props.data, listing })
+  }
   return (
     <>
       <CategorySearch categories={props.data.categories} setCategories={setCategories} onSearch={props.onSearch} />
       <DistanceDropdown distance={props.data.distance} setDistance={setDistance} />
+      <ListingDropdown listing={props.data.listing} setListing={setListing} />
     </>
   )
 }
