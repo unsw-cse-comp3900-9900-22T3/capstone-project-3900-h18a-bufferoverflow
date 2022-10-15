@@ -15,6 +15,7 @@ const DefaultFeed: NextPage = () => {
   // const { data } = useQuery<ItemCardProps[]>(GET_FEED);
 
   const [data, setData] = useState<ItemCardProps[]>([])
+  const [categories, setCategories] = useState<string[]>([])
 
   useEffect(() => {
     mockRequest()
@@ -23,7 +24,7 @@ const DefaultFeed: NextPage = () => {
 
   return (
     <Template title='Swapr'>
-      <CategorySearch />
+      <CategorySearch categories={categories} setCategories={setCategories} onSearch={() => console.log(categories)} />
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Typography sx={{ width: '85vw', fontWeight: 'bold', mt: 2, mb: 1 }}>
           {data ? data.length : 0} Items for Sale

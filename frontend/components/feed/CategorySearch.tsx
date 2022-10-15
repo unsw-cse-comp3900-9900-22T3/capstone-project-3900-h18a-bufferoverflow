@@ -1,11 +1,16 @@
-import { Box, Button, InputAdornment, TextField } from "@mui/material"
+import { Button, InputAdornment, TextField } from "@mui/material"
 import CloseIcon from '@mui/icons-material/Close';
 import { useState } from "react"
 import { Toast } from "../generic/Toast";
+import SearchIcon from '@mui/icons-material/Search';
 
-export const CategorySearch = () => {
+export const CategorySearch = (props: {
+  categories: string[];
+  setCategories: (arg: string[]) => void;
+  onSearch: () => void;
+}) => {
 
-  const [categories, setCategories] = useState<string[]>([])
+  const { categories, setCategories } = props
   const [input, setInput] = useState<string>('')
   const [errorToast, setErrorToast] = useState<string>('');
 
@@ -22,6 +27,9 @@ export const CategorySearch = () => {
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
+              <Button sx={{ minWidth: 40, borderRadius: 30, mr: 1 }} onClick={props.onSearch}>
+                <SearchIcon />
+              </Button>
               {
                 categories.map((category, index) => (
                   <Button
@@ -41,7 +49,6 @@ export const CategorySearch = () => {
           ),
         }}
         onKeyUp={e => {
-          console.log(e.key)
           if (e.key == 'Enter') {
             if (categories.length > 4) setErrorToast('Cannot specify more than 5 categories')
             else if (input && !categories.includes(input.toUpperCase())) {
