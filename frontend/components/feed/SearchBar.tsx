@@ -27,7 +27,7 @@ const DistanceDropdown = (props: {
 }) => {
   return (
     <FormControl fullWidth>
-      <InputLabel id="demo-simple-select-label">Age</InputLabel>
+      <InputLabel id="demo-simple-select-label">Distance</InputLabel>
       <Select
         labelId="demo-simple-select-label"
         id="demo-simple-select"
@@ -51,7 +51,7 @@ const ListingDropdown = (props: {
 }) => {
   return (
     <FormControl fullWidth>
-      <InputLabel id="demo-simple-select-label">Age</InputLabel>
+      <InputLabel id="demo-simple-select-label">Listing Type</InputLabel>
       <Select
         labelId="demo-simple-select-label"
         id="demo-simple-select"
