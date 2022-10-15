@@ -48,14 +48,14 @@ export const CategorySearch = (props: {
             </InputAdornment>
           ),
         }}
-        onKeyUp={e => {
+        onKeyDown={e => {
           if (e.key == 'Enter') {
             if (categories.length > 4) setErrorToast('Cannot specify more than 5 categories')
             else if (input && !categories.includes(input.toUpperCase())) {
               setCategories([...categories, input.toUpperCase()])
             }
             setInput('')
-          } else if (e.key == 'Backspace') {
+          } else if (e.key == 'Backspace' && !input) {
             categories.pop()
             setCategories([...categories])
           }
