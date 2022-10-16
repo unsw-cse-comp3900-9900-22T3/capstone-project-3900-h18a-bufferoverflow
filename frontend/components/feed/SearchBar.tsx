@@ -114,7 +114,7 @@ const PriceDropdown = (props: {
             <Button variant="outlined" sx={{ borderRadius: 30 }} onClick={() => {
               if (min > max) setErrorToast('Min price cannot be greater than max price')
               else if (max > MAX_PRICE) setErrorToast('Max price cannot be greater than ' + MAX_PRICE)
-              else if (!min || !max) setErrorToast('Min and max prices must be non-empty')
+              else if (isNaN(min) || isNaN(max)) setErrorToast('Min and max prices must be non-empty')
               else props.setPrice({ min, max })
             }}>
               Select
