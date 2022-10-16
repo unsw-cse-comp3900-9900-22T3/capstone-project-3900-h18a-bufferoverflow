@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Box, Button, Divider, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { CategorySearch } from "./CategorySearch";
 
 /////////////////////////////////////////////////////////////////////////////
@@ -7,14 +7,16 @@ import { CategorySearch } from "./CategorySearch";
 
 type ListingType = 'have' | 'want'
 
+type PriceType = {
+  min: number;
+  max: number;
+}
+
 export interface SearchBarProps {
   categories: string[];
   distance: number;
   listing: ListingType;
-  price: {
-    min: number;
-    max: number;
-  }
+  price: PriceType;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -26,7 +28,7 @@ const DistanceDropdown = (props: {
   setDistance: (arg: number) => void;
 }) => {
   return (
-    <FormControl fullWidth>
+    <FormControl fullWidth sx={{ width: 200 }}>
       <InputLabel id="demo-simple-select-label">Distance</InputLabel>
       <Select
         labelId="demo-simple-select-label"
@@ -50,7 +52,7 @@ const ListingDropdown = (props: {
   setListing: (arg: ListingType) => void;
 }) => {
   return (
-    <FormControl fullWidth>
+    <FormControl fullWidth sx={{ width: 200 }}>
       <InputLabel id="demo-simple-select-label">Listing Type</InputLabel>
       <Select
         labelId="demo-simple-select-label"
@@ -61,6 +63,24 @@ const ListingDropdown = (props: {
       >
         <MenuItem value={'want'}>Want</MenuItem>
         <MenuItem value={'have'}>Have</MenuItem>
+      </Select>
+    </FormControl>
+  )
+}
+
+const PriceDropdown = (props: {
+  price: PriceType;
+  setPrice: (arg: PriceType) => void;
+}) => {
+  return (
+    <FormControl fullWidth sx={{ width: 200 }}>
+      <InputLabel id="demo-simple-select-label">Price</InputLabel>
+      <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        label="Listing Type"
+      >
+        <Button>asldfksadf</Button>
       </Select>
     </FormControl>
   )
@@ -84,11 +104,18 @@ export const SearchBar = (props: {
   const setListing = (listing: ListingType) => {
     props.setData({ ...props.data, listing })
   }
+  const setPrice = (price: PriceType) => {
+    props.setData({ ...props.data, price })
+  }
   return (
-    <>
-      <CategorySearch categories={props.data.categories} setCategories={setCategories} onSearch={props.onSearch} />
-      <DistanceDropdown distance={props.data.distance} setDistance={setDistance} />
-      <ListingDropdown listing={props.data.listing} setListing={setListing} />
-    </>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', mt: 5 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', width: 1900 }}>
+        <CategorySearch categories={props.data.categories} setCategories={setCategories} onSearch={props.onSearch} width={1200} />
+        <DistanceDropdown distance={props.data.distance} setDistance={setDistance} />
+        <ListingDropdown listing={props.data.listing} setListing={setListing} />
+        <PriceDropdown price={props.data.price} setPrice={setPrice} />
+      </Box>
+      <Divider sx={{ width: 2000, mt: 5 }} />
+    </Box>
   )
 }

@@ -34,10 +34,10 @@ const DefaultFeed: NextPage = () => {
     <Template title='Swapr'>
       <SearchBar data={search} setData={setSearch} onSearch={() => console.log(search)} />
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography sx={{ width: '85vw', fontWeight: 'bold', mt: 2, mb: 1 }}>
+        <Typography sx={{ width: '80vw', fontWeight: 'bold', mt: 3.5, mb: 2.5 }}>
           {data ? data.length : 0} Items for Sale
         </Typography>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '90vw' }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '90vw', justifyContent: 'center' }}>
           {
             data?.map(item => {
               const href = item.want ? `/detailed-listing/want?title=${item.title}` : `/detailed-listing/have?title=${item.title}`
