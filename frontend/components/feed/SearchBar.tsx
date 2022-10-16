@@ -31,7 +31,7 @@ const DistanceDropdown = (props: {
   setDistance: (arg: number) => void;
 }) => {
   return (
-    <FormControl fullWidth sx={{ width: 200 }}>
+    <FormControl fullWidth sx={{ width: 200, ml: 2 }}>
       <InputLabel id="demo-simple-select-label">Distance</InputLabel>
       <Select
         labelId="demo-simple-select-label"
@@ -55,7 +55,7 @@ const ListingDropdown = (props: {
   setListing: (arg: ListingType) => void;
 }) => {
   return (
-    <FormControl fullWidth sx={{ width: 200 }}>
+    <FormControl fullWidth sx={{ width: 200, ml: 2 }}>
       <InputLabel id="demo-simple-select-label">Listing Type</InputLabel>
       <Select
         labelId="demo-simple-select-label"
@@ -81,7 +81,7 @@ const PriceDropdown = (props: {
   const [max, setMax] = useState<number>(props.price.max);
 
   return (
-    <FormControl fullWidth sx={{ width: 200 }}>
+    <FormControl fullWidth sx={{ width: 200, ml: 2, mr: 2 }}>
       <Toast toast={errorToast} setToast={setErrorToast} type='warning' />
       <InputLabel id="demo-simple-select-label">Price</InputLabel>
       <Select
@@ -149,13 +149,13 @@ export const SearchBar = (props: {
   }
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', mt: 5 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', width: 1900 }}>
-        <CategorySearch categories={props.data.categories} setCategories={setCategories} onSearch={props.onSearch} width={1200} />
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '90vw' }}>
+        <CategorySearch categories={props.data.categories} setCategories={setCategories} onSearch={props.onSearch} width={'60vw'} />
         <DistanceDropdown distance={props.data.distance} setDistance={setDistance} />
         <ListingDropdown listing={props.data.listing} setListing={setListing} />
         <PriceDropdown price={props.data.price} setPrice={setPrice} />
       </Box>
-      <Divider sx={{ width: 2000, mt: 5 }} />
+      <Divider sx={{ width: '95vw', mt: 5 }} />
     </Box>
   )
 }

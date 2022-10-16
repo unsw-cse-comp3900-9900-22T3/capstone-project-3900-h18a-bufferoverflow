@@ -36,7 +36,7 @@ const RecommendedFeed: NextPage = () => {
         <Typography sx={{ width: '80vw', fontWeight: 'bold', mt: 3.5, mb: 2.5 }}>
           Recommended Feed
         </Typography>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '90vw', justifyContent: 'center' }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '90vw', pl: 10, mb: 10 }}>
           {
             data.map(item => {
               const href = item.want ? '/detailed-listing/want' : '/detailed-listing/have'

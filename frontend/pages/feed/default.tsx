@@ -38,7 +38,7 @@ const DefaultFeed: NextPage = () => {
         <Typography sx={{ width: '80vw', fontWeight: 'bold', mt: 3.5, mb: 2.5 }}>
           {data ? data.length : 0} Items for Sale
         </Typography>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '90vw', justifyContent: 'center' }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '90vw', pl: 10, mb: 10 }}>
           {
             data?.map(item => {
               const href = item.want ? `/detailed-listing/want?title=${item.title}` : `/detailed-listing/have?title=${item.title}`

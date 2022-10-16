@@ -8,7 +8,7 @@ export const CategorySearch = (props: {
   categories: string[];
   setCategories: (arg: string[]) => void;
   onSearch: () => void;
-  width?: number;
+  width?: number | string;
 }) => {
 
   const { categories, setCategories } = props
