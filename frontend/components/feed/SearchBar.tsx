@@ -1,4 +1,4 @@
-import { Box, Button, Divider, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Box, Button, Divider, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { MAX_DISTANCE } from "../../utils/globals";
 import { CategorySearch } from "./CategorySearch";
 
@@ -83,7 +83,13 @@ const PriceDropdown = (props: {
         value="price"
       >
         <MenuItem value={'price'}>{props.price.min} - {props.price.max}</MenuItem>
-        <Button>asldfksadf</Button>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', width: 180 }}>
+            <TextField id="outlined-basic" label="Min" variant="outlined" sx={{ mb: 1 }} />
+            <TextField id="outlined-basic" label="Max" variant="outlined" sx={{ mb: 1 }} />
+            <Button variant="outlined" sx={{ borderRadius: 30 }}>Select</Button>
+          </Box>
+        </Box>
       </Select>
     </FormControl>
   )
