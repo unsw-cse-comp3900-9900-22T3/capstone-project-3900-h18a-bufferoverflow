@@ -41,7 +41,7 @@ const DistanceDropdown = (props: {
         onChange={e => props.setDistance(e.target.value as number)}
       >
         <MenuItem value={10}>Within 10 km</MenuItem>
-        <MenuItem value={25}>Within 20 km</MenuItem>
+        <MenuItem value={25}>Within 25 km</MenuItem>
         <MenuItem value={50}>Within 50 km</MenuItem>
         <MenuItem value={100}>Within 100 km</MenuItem>
         <MenuItem value={MAX_DISTANCE}>No Limit</MenuItem>
@@ -99,7 +99,7 @@ const PriceDropdown = (props: {
               variant="outlined"
               type="number"
               value={min}
-              sx={{ mb: 1 }}
+              sx={{ m: 0.5 }}
               onChange={e => setMin(parseInt(e.target.value))}
             />
             <TextField
@@ -108,10 +108,10 @@ const PriceDropdown = (props: {
               variant="outlined"
               type="number"
               value={max}
-              sx={{ mb: 1 }}
+              sx={{ m: 0.5 }}
               onChange={e => setMax(parseInt(e.target.value))}
             />
-            <Button variant="outlined" sx={{ borderRadius: 30 }} onClick={() => {
+            <Button variant="outlined" sx={{ borderRadius: 30, m: 0.5 }} onClick={() => {
               if (min > max) setErrorToast('Min price cannot be greater than max price')
               else if (max > MAX_PRICE) setErrorToast('Max price cannot be greater than ' + MAX_PRICE)
               else if (isNaN(min) || isNaN(max)) setErrorToast('Min and max prices must be non-empty')
