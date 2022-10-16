@@ -8,6 +8,7 @@ export const CategorySearch = (props: {
   categories: string[];
   setCategories: (arg: string[]) => void;
   onSearch: () => void;
+  width?: number;
 }) => {
 
   const { categories, setCategories } = props
@@ -21,7 +22,7 @@ export const CategorySearch = (props: {
         id="standard-basic"
         label="Search"
         variant="outlined"
-        sx={{ width: 800 }}
+        sx={{ width: props.width ? props.width : 800 }}
         value={input}
         onChange={e => setInput(e.target.value)}
         InputProps={{
