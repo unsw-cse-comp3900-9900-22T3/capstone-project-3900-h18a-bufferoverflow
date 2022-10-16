@@ -1,5 +1,7 @@
 import { Box, Button, Divider, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
-import { MAX_DISTANCE } from "../../utils/globals";
+import { useState } from "react";
+import { MAX_DISTANCE, MAX_PRICE } from "../../utils/globals";
+import { Toast } from "../generic/Toast";
 import { CategorySearch } from "./CategorySearch";
 
 /////////////////////////////////////////////////////////////////////////////
@@ -73,8 +75,14 @@ const PriceDropdown = (props: {
   price: PriceType;
   setPrice: (arg: PriceType) => void;
 }) => {
+
+  const [errorToast, setErrorToast] = useState<string>('');
+  const [min, setMin] = useState<number>(props.price.min);
+  const [max, setMax] = useState<number>(props.price.max);
+
   return (
     <FormControl fullWidth sx={{ width: 200 }}>
+      <Toast toast={errorToast} setToast={setErrorToast} type='warning' />
       <InputLabel id="demo-simple-select-label">Price</InputLabel>
       <Select
         labelId="demo-simple-select-label"
@@ -82,12 +90,35 @@ const PriceDropdown = (props: {
         label="Listing Type"
         value="price"
       >
-        <MenuItem value={'price'}>{props.price.min} - {props.price.max}</MenuItem>
+        <MenuItem value={'price'}>${props.price.min} - {props.price.max}</MenuItem>
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', width: 180 }}>
-            <TextField id="outlined-basic" label="Min" variant="outlined" sx={{ mb: 1 }} />
-            <TextField id="outlined-basic" label="Max" variant="outlined" sx={{ mb: 1 }} />
-            <Button variant="outlined" sx={{ borderRadius: 30 }}>Select</Button>
+            <TextField
+              id="outlined-basic"
+              label="Min"
+              variant="outlined"
+              type="number"
+              value={min}
+              sx={{ mb: 1 }}
+              onChange={e => setMin(parseInt(e.target.value))}
+            />
+            <TextField
+              id="outlined-basic"
+              label="Max"
+              variant="outlined"
+              type="number"
+              value={max}
+              sx={{ mb: 1 }}
+              onChange={e => setMax(parseInt(e.target.value))}
+            />
+            <Button variant="outlined" sx={{ borderRadius: 30 }} onClick={() => {
+              if (min > max) setErrorToast('Min price cannot be greater than max price')
+              else if (max > MAX_PRICE) setErrorToast('Max price cannot be greater than ' + MAX_PRICE)
+              else if (!min || !max) setErrorToast('Min and max prices must be non-empty')
+              else props.setPrice({ min, max })
+            }}>
+              Select
+            </Button>
           </Box>
         </Box>
       </Select>
