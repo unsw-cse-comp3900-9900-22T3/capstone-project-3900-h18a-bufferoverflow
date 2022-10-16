@@ -52,6 +52,7 @@ export const CategorySearch = (props: {
         onKeyDown={e => {
           if (e.key == 'Enter') {
             if (categories.length > 4) setErrorToast('Cannot specify more than 5 categories')
+            else if (input.length > 20) setErrorToast('Category cannot be greater than 20 characters')
             else if (input && !categories.includes(input.toUpperCase())) {
               setCategories([...categories, input.toUpperCase()])
             }
