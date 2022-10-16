@@ -41,7 +41,7 @@ const DistanceDropdown = (props: {
         <MenuItem value={25}>Within 20 km</MenuItem>
         <MenuItem value={50}>Within 50 km</MenuItem>
         <MenuItem value={100}>Within 100 km</MenuItem>
-        <MenuItem value={100000}>No Limit</MenuItem>
+        <MenuItem value={1000000}>No Limit</MenuItem>
       </Select>
     </FormControl>
   )
