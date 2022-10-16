@@ -5,6 +5,7 @@ import { Box, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { mockRequest } from '../../utils/mockdata'
 import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar'
+import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals'
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
@@ -18,11 +19,11 @@ const DefaultFeed: NextPage = () => {
   const [search, setSearch] = useState<SearchBarProps>({
     categories: [],
     price: {
-      max: 1000000,
-      min: 0
+      max: MAX_PRICE,
+      min: MIN_PRICE,
     },
     listing: 'have',
-    distance: 1000000
+    distance: MAX_DISTANCE
   })
 
   useEffect(() => {

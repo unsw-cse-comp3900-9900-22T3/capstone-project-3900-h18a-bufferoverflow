@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { ItemCard, ItemCardProps } from '../../components/feed/ItemCard'
 import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar';
 import { Template } from '../../components/generic/Template'
+import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals';
 import { mockRequest } from '../../utils/mockdata';
 
 /////////////////////////////////////////////////////////////////////////////
@@ -16,11 +17,11 @@ const RecommendedFeed: NextPage = () => {
   const [search, setSearch] = useState<SearchBarProps>({
     categories: [],
     price: {
-      max: 1000000,
-      min: 0
+      max: MAX_PRICE,
+      min: MIN_PRICE,
     },
     listing: 'have',
-    distance: 1000000
+    distance: MAX_DISTANCE
   })
 
   useEffect(() => {

@@ -1,8 +1,9 @@
 import { Box, Button, Divider, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { MAX_DISTANCE } from "../../utils/globals";
 import { CategorySearch } from "./CategorySearch";
 
 /////////////////////////////////////////////////////////////////////////////
-// Types
+// Constants and Types
 /////////////////////////////////////////////////////////////////////////////
 
 type ListingType = 'have' | 'want'
@@ -41,7 +42,7 @@ const DistanceDropdown = (props: {
         <MenuItem value={25}>Within 20 km</MenuItem>
         <MenuItem value={50}>Within 50 km</MenuItem>
         <MenuItem value={100}>Within 100 km</MenuItem>
-        <MenuItem value={1000000}>No Limit</MenuItem>
+        <MenuItem value={MAX_DISTANCE}>No Limit</MenuItem>
       </Select>
     </FormControl>
   )
@@ -79,7 +80,9 @@ const PriceDropdown = (props: {
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         label="Listing Type"
+        value="price"
       >
+        <MenuItem value={'price'}>{props.price.min} - {props.price.max}</MenuItem>
         <Button>asldfksadf</Button>
       </Select>
     </FormControl>
