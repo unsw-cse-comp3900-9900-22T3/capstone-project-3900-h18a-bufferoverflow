@@ -1,7 +1,8 @@
-import { Avatar , IconButton } from "@mui/material"
+import { Avatar } from "@mui/material"
 import { Box, Stack } from "@mui/system"
-import DeleteForever from "@mui/icons-material/DeleteForever"
+
 import Link from "next/link";
+import { DeleteChat } from "./delete-chat";
 
 export interface SingleChatOverviewProps {
   href: string;
@@ -42,16 +43,7 @@ export const SingleChatOverview = (props: {
           <p>{props.lastMessageTime}</p>
         </Stack>
       </Link>
-      <IconButton
-        size="large"
-        aria-label="go to chat with this user"
-        aria-controls="menu-appbar"
-        aria-haspopup="true"
-        href={props.delHref}
-        sx={{}}
-      >
-        <DeleteForever />
-      </IconButton>
+      <DeleteChat delHref={props.delHref} />   
     </Box>
   );
 };
