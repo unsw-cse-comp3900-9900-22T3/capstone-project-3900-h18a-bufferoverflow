@@ -5,32 +5,11 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import PersonIcon from '@mui/icons-material/Person';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { useRouter } from "next/router";
+import { ListingProps } from "../../components/listing/types";
 
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
 /////////////////////////////////////////////////////////////////////////////
-
-// We should define the structure of the response from API as a type @frontend team
-
-type StatusType = 'available' | 'pending'
-
-type ItemStatsType = 'weight' | 'volume'
-
-interface ListingProps {
-  title: string;
-  image: string;
-  description: string;
-  location: string;
-  categories: string[];
-  status: StatusType;
-  trade: boolean;
-  cash: boolean;
-  bank: boolean;
-  stats: ItemStatsType;
-  material: string[];
-  tradeCategories: string[];
-  price: number;
-}
 
 const mockData: ListingProps = {
   title: "Used Kayak",
