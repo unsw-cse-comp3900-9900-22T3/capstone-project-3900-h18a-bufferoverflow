@@ -1,10 +1,12 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
+const position = [-33.8688, 151.2093];
+
 const Map = () => {
   return (
     <MapContainer
-      center={[40.8054, -74.0241]}
+      center=position
       zoom={14}
       scrollWheelZoom={false}
       style={{ height: "100%", width: "100%" }}
@@ -13,9 +15,9 @@ const Map = () => {
         url={`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`}
         attribution=':)'
       />
-      {/* <Marker position={[40.8054, -74.0241]} draggable={true}>
+      <Marker position=position draggable={true}>
         <Popup>Hey ! I live here</Popup>
-      </Marker> */}
+      </Marker>
     </MapContainer>
   );
 };
