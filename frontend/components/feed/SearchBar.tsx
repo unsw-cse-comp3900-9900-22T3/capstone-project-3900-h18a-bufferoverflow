@@ -154,7 +154,7 @@ export const SearchBar = (props: {
           categories={props.data.categories}
           setCategories={setCategories}
           onSearch={props.onSearch}
-          validCategories={['entertainment', 'vehicles', 'clothing']}
+          validCategories={['Entertainment', 'Vehicles', 'Clothing']}
           width={'60vw'}
         />
         <DistanceDropdown distance={props.data.distance} setDistance={setDistance} />
