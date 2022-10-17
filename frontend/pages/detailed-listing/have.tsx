@@ -1,5 +1,6 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
+import dynamic from "next/dynamic";
 import {
   Avatar,
   Box,
@@ -16,7 +17,7 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { MapContainer, Marker, Popup, TileLayer }  from 'react-leaflet';
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
 /////////////////////////////////////////////////////////////////////////////
@@ -72,6 +73,10 @@ const DetailedHaveListing: NextPage = () => {
   const router = useRouter();
   const { title } = router.query;
 
+  const Map = dynamic(() => import("../../components/generic/Map"), {
+    ssr: false
+  });
+
   const image =
     "https://images.unsplash.com/photo-1499720565725-bd574541a3ee?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80";
   const categories = ["asdfsadf", "asdfdf", "asdfsa", "asdfsa", "asdfsa"];
@@ -106,120 +111,120 @@ const DetailedHaveListing: NextPage = () => {
 
   return (
     <Template title="Have Listing" center>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: 40,
-        }}
-      >
-        {/** Item Image Section */}
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <Card
-            variant="outlined"
-            sx={{ height: 280, width: 400, borderRadius: 4 }}
-          >
-            {image ? (
-              <img
-                src={image}
-                alt="profile"
-                style={{ height: 280, width: 400 }}
-              />
-            ) : (
-              <></>
-            )}
-          </Card>
-          <Typography sx={{ p: 3, pl: 4, fontSize: 20, fontWeight: "bold" }}>
-            {title}
-          </Typography>
-          <DescriptionBox
-            icon={<AttachMoneyIcon />}
-            description={purchaseOptions}
-          />
-          <DescriptionBox icon={<PersonIcon />} description={itemPosessor} />
-          <DescriptionBox
-            icon={<LocalShippingIcon />}
-            description={shippingOptions}
-          />
-        </Box>
-
-        {/** Information Section */}
-        <Box sx={{ display: "flex", flexDirection: "column", width: 500 }}>
-          <LabelBox title="Location">
-            <Stack direction="row">
-              <Tooltip title="Show on Map">
-                <IconButton>
-                  <LocationOnIcon />
-                </IconButton>
-              </Tooltip>
-              <Typography fontSize={16} variant="body2">
-                {location}
-              </Typography>
-            </Stack>
-          </LabelBox>
-          <LabelBox title="Categories">
-            <Box
-              sx={{ display: "flex", flexWrap: "wrap", flexDirection: "row" }}
+      <Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 40,
+          }}
+        >
+          {/** Item Image Section */}
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
+            <Card
+              variant="outlined"
+              sx={{ height: 280, width: 400, borderRadius: 4 }}
             >
-              {categories.map((category) => (
-                <Box
-                  sx={{
-                    border: 1,
-                    width: 140,
-                    p: 1,
-                    borderRadius: 10,
-                    m: 0.5,
-                    textAlign: "center",
-                    color: "#616161",
-                  }}
-                >
-                  {category}
-                </Box>
-              ))}
-            </Box>
-          </LabelBox>
-          <LabelBox title="Description">
-            <Typography fontSize={16} variant="body2">
-              Location askdjfh lkasjdfh lksajdhf lkajsdh flkjsdh fljkash
-              fljkahsd lfjksahd lfjkhsa kfjh lsadkjf hl lsjdf hklsaj hflkjsadh
-              flkajsh f
+              {image ? (
+                <img
+                  src={image}
+                  alt="profile"
+                  style={{ height: 280, width: 400 }}
+                />
+              ) : (
+                <></>
+              )}
+            </Card>
+            <Typography sx={{ p: 3, pl: 4, fontSize: 20, fontWeight: "bold" }}>
+              {title}
             </Typography>
-          </LabelBox>
-          <Button
-            variant="outlined"
-            sx={{ borderRadius: 30, mt: 4, height: 45 }}
-            href={`/trade/propose?user=${trader}`}
-          >
-            Propose Trade
-          </Button>
-          <Box sx={{ display: "flex", mt: 1.5, width: "100%" }}>
+            <DescriptionBox
+              icon={<AttachMoneyIcon />}
+              description={purchaseOptions}
+            />
+            <DescriptionBox icon={<PersonIcon />} description={itemPosessor} />
+            <DescriptionBox
+              icon={<LocalShippingIcon />}
+              description={shippingOptions}
+            />
+          </Box>
+
+          {/** Information Section */}
+          <Box sx={{ display: "flex", flexDirection: "column", width: 500 }}>
+            <LabelBox title="Location">
+              <Stack direction="row">
+                <Tooltip title="Show on Map">
+                  <IconButton>
+                    <LocationOnIcon />
+                  </IconButton>
+                </Tooltip>
+                <Typography fontSize={16} variant="body2">
+                  {location}
+                </Typography>
+              </Stack>
+            </LabelBox>
+            <LabelBox title="Categories">
+              <Box
+                sx={{ display: "flex", flexWrap: "wrap", flexDirection: "row" }}
+              >
+                {categories.map((category) => (
+                  <Box
+                    sx={{
+                      border: 1,
+                      width: 140,
+                      p: 1,
+                      borderRadius: 10,
+                      m: 0.5,
+                      textAlign: "center",
+                      color: "#616161",
+                    }}
+                  >
+                    {category}
+                  </Box>
+                ))}
+              </Box>
+            </LabelBox>
+            <LabelBox title="Description">
+              <Typography fontSize={16} variant="body2">
+                Location askdjfh lkasjdfh lksajdhf lkajsdh flkjsdh fljkash
+                fljkahsd lfjksahd lfjkhsa kfjh lsadkjf hl lsjdf hklsaj hflkjsadh
+                flkajsh f
+              </Typography>
+            </LabelBox>
             <Button
               variant="outlined"
-              sx={{ borderRadius: 30, mr: 0.5, width: "50%", height: 45 }}
-              href={`/chat/chat?user=${trader}`}
+              sx={{ borderRadius: 30, mt: 4, height: 45 }}
+              href={`/trade/propose?user=${trader}`}
             >
-              Message User
+              Propose Trade
             </Button>
-            <Button
-              variant="outlined"
-              sx={{ borderRadius: 30, ml: 0.5, width: "50%", height: 45 }}
-              href={`/profile/visitor-profile?user=${trader}`}
-            >
-              View Trader Profile
-            </Button>
+            <Box sx={{ display: "flex", mt: 1.5, width: "100%" }}>
+              <Button
+                variant="outlined"
+                sx={{ borderRadius: 30, mr: 0.5, width: "50%", height: 45 }}
+                href={`/chat/chat?user=${trader}`}
+              >
+                Message User
+              </Button>
+              <Button
+                variant="outlined"
+                sx={{ borderRadius: 30, ml: 0.5, width: "50%", height: 45 }}
+                href={`/profile/visitor-profile?user=${trader}`}
+              >
+                View Trader Profile
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+        <Box>
+          <Typography>Map</Typography>
+          <Box sx={{width: 1000, height: 600}}>
+            <Map></Map>
           </Box>
         </Box>
       </Box>
-      {/* <MapContainer center={[51.505, -0.09]} zoom={20}>
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        {/* <Marker position={[51.505, -0.09]}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker> */}
-      {/* </MapContainer> */}
     </Template>
   );
 };
