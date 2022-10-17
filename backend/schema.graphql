@@ -40,13 +40,62 @@ type UsersResult {
   users: [User]
 }
 
+input AddressInput {
+  place: String!
+}
+
+type Image {
+  id: ID!
+  fileName: String!
+}
+
+# TODO: category "valid" endpoint?
+type Category {
+  type: String!
+}
+
+type Material {
+  type: String 
+}
+
+type Listing {
+  id: ID!
+  title: String! 
+  description: String!
+  user: User!
+  isSellListing: Boolean!
+  # below should probably be a category list
+  wantToTradeFor: [Category]!
+  priceMin: Float!
+  priceMax: Float!
+  canTrade: Boolean!
+  canPayCash: Boolean!
+  canPayBank: Boolean!
+  weight: Float!
+  volume: Float!
+  status: Int!
+  address: Address!
+  images: [Image]!
+  materials: [Material]!
+}
+
+type ListingResult {
+  success: Boolean!
+  errors: [String]
+  listing: Listing
+}
+
+type ListingsResult {
+  success: Boolean!
+  errors: [String]
+  listings: [Listing]
+}
+
 type Query {
   listUsers: UsersResult!
   getUser(email: String!): UserResult!
-}
-
-input AddressInput {
-  place: String!
+  listListings: ListingsResult!
+  getListing(id: ID!): ListingResult!
 }
 
 type Mutation {
