@@ -1,14 +1,14 @@
-from app.models import Address
+import app.models
 
 def determine_address_id(address):
     if address is not None:
-        address_info = Address.query.filter_by(place=address).first()
+        address_info = app.models.Address.query.filter_by(place=address).first()
         # check if address already exists
         if address_info is not None:
             return address_info.id
         else:
             # add it to db 
-            new_address = Address(address["place"])
+            new_address = app.models.Address(address["place"])
             new_address.save()
             return new_address.id
 
