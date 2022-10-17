@@ -1,13 +1,20 @@
-import { Avatar , IconButton} from "@mui/material"
-import { Box, Stack } from "@mui/system"
+import { Avatar , IconButton } from "@mui/material"
+import { Stack } from "@mui/system"
 import DeleteForever from "@mui/icons-material/DeleteOutline"
+
+export interface SingleChatOverviewProps {
+  href: string;
+  username: string;
+  avatar: string;
+  lastMessageTime: string;
+}
 
 export const SingleChatOverview = (props: { 
         href: string;
         username: string;
         avatar: string;
         lastMessageTime: string; 
-    }) => {
+}) => {
   return (
     <Stack direction="row" spacing={2}>
       <Avatar src={props.avatar}/>
