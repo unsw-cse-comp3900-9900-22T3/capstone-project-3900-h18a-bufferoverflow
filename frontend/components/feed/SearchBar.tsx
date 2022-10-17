@@ -151,7 +151,6 @@ export const SearchBar = (props: {
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', mt: 5 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '90vw' }}>
         <CategorySearch
-          categories={props.data.categories}
           setCategories={setCategories}
           onSearch={props.onSearch}
           validCategories={['Entertainment', 'Vehicles', 'Clothing']}
