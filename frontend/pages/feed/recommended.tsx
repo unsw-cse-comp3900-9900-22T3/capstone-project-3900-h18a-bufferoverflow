@@ -3,7 +3,7 @@ import { NextPage } from 'next'
 import { useEffect, useState } from 'react';
 import { ItemCard, ItemCardProps } from '../../components/feed/ItemCard'
 import { Template } from '../../components/generic/Template'
-import { mockRequest } from '../../utils/mockdata';
+import { mockItemCardRequest } from '../../utils/mockdata';
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
@@ -14,7 +14,7 @@ const RecommendedFeed: NextPage = () => {
   const [data, setData] = useState<ItemCardProps[]>([])
 
   useEffect(() => {
-    mockRequest()
+    mockItemCardRequest()
       .then(data => setData(data))
   }, [])
 

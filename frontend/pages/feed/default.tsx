@@ -3,7 +3,7 @@ import { NextPage } from 'next'
 import { ItemCard, ItemCardProps } from '../../components/feed/ItemCard'
 import { Box, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
-import { mockRequest } from '../../utils/mockdata'
+import { mockItemCardRequest } from '../../utils/mockdata'
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
@@ -16,7 +16,7 @@ const DefaultFeed: NextPage = () => {
   const [data, setData] = useState<ItemCardProps[]>([])
 
   useEffect(() => {
-    mockRequest()
+    mockItemCardRequest()
       .then(data => setData(data))
   }, [])
 

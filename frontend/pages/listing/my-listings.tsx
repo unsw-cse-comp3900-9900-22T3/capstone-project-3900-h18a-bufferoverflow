@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import { Box, Typography } from "@mui/material";
 import { ItemCard, ItemCardProps } from "../../components/feed/ItemCard";
 import { useEffect, useState } from "react";
-import { mockRequest } from "../../utils/mockdata";
+import { mockItemCardRequest } from "../../utils/mockdata";
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
@@ -15,7 +15,7 @@ const MyListings: NextPage = () => {
 
   // Pre-fill data once POST request is complete
   useEffect(() => {
-    mockRequest()
+    mockItemCardRequest()
       .then(data => setData(data))
   }, [])
 
