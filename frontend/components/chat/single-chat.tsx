@@ -1,6 +1,6 @@
 import { Avatar , IconButton } from "@mui/material"
 import { Box, Stack } from "@mui/system"
-import DeleteForever from "@mui/icons-material/DeleteOutline"
+import DeleteForever from "@mui/icons-material/DeleteForever"
 import Link from "next/link";
 
 export interface SingleChatOverviewProps {
