@@ -18,6 +18,9 @@ services:
       dockerfile: dockerfile
     ports:
       - ${FRONTEND_PORT:-5000}:3000
+    volumes:
+      - ./frontend/:/app/
+      - ignore:/app/node_modules/
   db:
     image: postgres:13-alpine
     volumes:
@@ -29,3 +32,4 @@ services:
 
 volumes:
   postgres_data:
+  ignore:
