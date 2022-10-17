@@ -110,8 +110,8 @@ const DetailedHaveListing: NextPage = () => {
   const [open, setOpen] = useState<boolean>(false);
 
   return (
-    <Template title="Have Listing" center>
-      <Box>
+    <Template title="Have Listing" center scrollable>
+      <Stack spacing={4}>
         <Box
           sx={{
             display: "flex",
@@ -217,14 +217,14 @@ const DetailedHaveListing: NextPage = () => {
               </Button>
             </Box>
           </Box>
-        </Box>
+        </Box >
         <Box>
           <Typography>Map</Typography>
           <Box sx={{width: 1000, height: 600}}>
-            <Map></Map>
+            <Map position={[-33.8688, 151.2093]}></Map>
           </Box>
         </Box>
-      </Box>
+      </Stack>
     </Template>
   );
 };

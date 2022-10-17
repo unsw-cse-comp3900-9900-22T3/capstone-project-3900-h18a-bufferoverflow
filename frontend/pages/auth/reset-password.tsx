@@ -13,7 +13,7 @@ export const ResetPassword = () => {
   const [successToast, setSuccessToast] = useState<string>('');
 
   return (
-    <Template title={title}>
+    <Template title={title} center>
       <Toast toast={errorToast} setToast={setErrorToast} type='warning' />
       <Toast toast={successToast} setToast={setSuccessToast} type='success' />
       <AuthCard title={title}>

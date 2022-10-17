@@ -38,6 +38,7 @@ import StarIcon from '@mui/icons-material/Star';
 import AddIcon from '@mui/icons-material/Add';
 import { useRouter } from 'next/router';
 
+
 type SideBarProps = { title: string; icon: Icon, href: string }[]
 
 const sideBarTop: SideBarProps = [
@@ -85,6 +86,7 @@ const theme = createTheme({
   }
 })
 
+
 //////////////////////////////////////////////////////////////////
 // Main Component
 //////////////////////////////////////////////////////////////////
@@ -93,10 +95,31 @@ export const Template = (props: {
   title: string
   children?: (JSX.Element | string)[] | JSX.Element | string
   center?: boolean
+  scrollable?: boolean
 }) => {
   const { auth } = useStore()
   const [drawer, setDrawer] = useState<boolean>(false);
   const [toast, setToast] = useState<string>('');
+
+
+  // scrollable means there's a scrollbar, so needs to disable the height restriction 
+  // I tried doing this with styled components, but couldn't get it to work.
+  const mainBoxStyles = {
+    display: '',
+    justifyContent: '',
+    alignItems: '',
+    height: ''
+  };
+  if (props.center) {
+    mainBoxStyles.display = 'flex';
+    mainBoxStyles.justifyContent = 'center';
+    mainBoxStyles.alignItems = 'center';
+  }
+
+  if (props.center && !props.scrollable) {
+    mainBoxStyles.height = 'calc(100vh - 64px)';
+  }
+  
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -127,18 +150,9 @@ export const Template = (props: {
       </AppBar>
       <SideBar drawer={drawer} setDrawer={setDrawer} />
       <ThemeProvider theme={theme}>
-        {
-          props.center
-            ? <Box sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: 'calc(100vh - 64px)'
-            }}>
-              {props.children}
-            </Box>
-            : props.children
-        }
+        <Box sx={mainBoxStyles}>
+            {props.children}
+        </Box>
       </ThemeProvider>
     </Box>
   )
