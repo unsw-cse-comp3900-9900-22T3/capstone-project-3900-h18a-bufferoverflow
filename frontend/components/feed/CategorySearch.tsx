@@ -1,7 +1,4 @@
-import { Button, InputAdornment, TextField } from "@mui/material"
-import CloseIcon from '@mui/icons-material/Close';
-import { useState } from "react"
-import { Toast } from "../generic/Toast";
+import { Autocomplete, Box, Button, InputAdornment, TextField } from "@mui/material"
 import SearchIcon from '@mui/icons-material/Search';
 
 export const CategorySearch = (props: {
@@ -13,58 +10,29 @@ export const CategorySearch = (props: {
 }) => {
 
   const { categories, setCategories } = props
-  const [input, setInput] = useState<string>('')
-  const [errorToast, setErrorToast] = useState<string>('');
-  const validCategories = props.validCategories ? props.validCategories.map(str => str.toUpperCase()) : []
+  const validCategories = props.validCategories ? props.validCategories : []
+  const width = props.width ? props.width : 500
 
   return (
-    <>
-      <Toast toast={errorToast} setToast={setErrorToast} type='warning' />
-      <TextField
-        id="standard-basic"
-        label="Search"
-        variant="outlined"
-        sx={{ width: props.width ? props.width : 800 }}
-        value={input}
-        onChange={e => setInput(e.target.value)}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Button sx={{ minWidth: 40, borderRadius: 30, mr: 1 }} onClick={props.onSearch}>
-                <SearchIcon />
-              </Button>
-              {
-                categories.map((category, index) => (
-                  <Button
-                    key={category}
-                    sx={{ border: 1, borderRadius: 30, p: 0.2, pl: 1.2, pr: 1.2, m: 0.5 }}
-                    endIcon={<CloseIcon />}
-                    onClick={() => {
-                      categories.splice(index, 1)
-                      setCategories([...categories])
-                    }}
-                  >
-                    {category}
-                  </Button>
-                ))
-              }
-            </InputAdornment>
-          ),
-        }}
-        onKeyDown={e => {
-          if (e.key == 'Enter') {
-            const newCategory = input.toUpperCase()
-            if (categories.length > 4) setErrorToast('Cannot specify more than 5 categories')
-            else if (!validCategories.includes(newCategory)) setErrorToast('Valid categories are: ' + validCategories.join(', '))
-            else if (categories.includes(newCategory)) setErrorToast('Category already present')
-            else setCategories([...categories, newCategory])
-            setInput('')
-          } else if (e.key == 'Backspace' && !input) {
-            categories.pop()
-            setCategories([...categories])
-          }
-        }}
-      />
-    </>
+    <Autocomplete
+      multiple
+      sx={{ width }}
+      id="tags-outlined"
+      options={validCategories}
+      getOptionLabel={(option) => option}
+      filterSelectedOptions
+      renderInput={(params) => (
+        <Box sx={{ display: 'flex' }}>
+          <Button sx={{ minWidth: 40, pr: 3, pl: 3 }} onClick={props.onSearch}>
+            <SearchIcon />
+          </Button>
+          <TextField
+            {...params}
+            label="Category Search"
+            placeholder="Category"
+          />
+        </Box>
+      )}
+    />
   )
 }
