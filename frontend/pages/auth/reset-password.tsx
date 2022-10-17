@@ -34,7 +34,8 @@ export const ResetPassword = () => {
                 setSuccessToast('Reset password email sent')
               })
               .catch(err => {
-                setErrorToast('Email is not valid')
+                const reason = err.code.split('/').at(-1).split('-').join(' ')
+                setErrorToast('Error: ' + reason)
               })
           }}
         >

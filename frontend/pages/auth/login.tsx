@@ -52,7 +52,8 @@ const Login: NextPage = () => {
                 router.push('/');
               })
               .catch(err => {
-                setErrorToast('Email or password is not valid')
+                const reason = err.code.split('/').at(-1).split('-').join(' ')
+                setErrorToast('Error: ' + reason)
               })
           }}
         >
