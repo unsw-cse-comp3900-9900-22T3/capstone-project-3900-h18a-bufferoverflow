@@ -1,8 +1,6 @@
-from unicodedata import category
-
 from itsdangerous import want_bytes
 from app import db
-from backend.app.helpers import determine_address_id
+from app.helpers import determine_address_id
 
 class Address(db.Model):
     __tablename__ = "addresses"
@@ -122,31 +120,28 @@ class Image(db.Model):
         db.session.add(self)
         db.session.commit()
 
+
+listing_material = db.Table('listing_material',
+    db.Column('listing_id', db.Integer, db.ForeignKey('listings.id'), primary_key=True),
+    db.Column('material_id', db.Integer, db.ForeignKey('materials.id'), primary_key=True)
+)
+
+listing_category = db.Table('listing_category',
+    db.Column('listing_id', db.Integer, db.ForeignKey('listings.id'), primary_key=True),
+    db.Column('category_id', db.Integer, db.ForeignKey('categories.id'), primary_key=True)
+)
+
+
 class Category(db.Model):
     __tablename__ = "categories"
 
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(20), unique=True, nullable=False)
 
+    category_to = db.relationship('Listing', secondary=listing_category, backref='categories')
+
     def __init__(self, type):
         self.type = type
-
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
-
-class CategoryToListing(db.Model):
-    __tablename__ = "category_to_listing"
-    
-    id = db.Column(db.Integer, primary_key=True)
-    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
-    listing_id = db.Column(db.Integer, db.ForeignKey('listings.id'), nullable=False)
-    categoryRel = db.relationship('categories', foreign_keys='category_to_listing.material_id')
-    listingRel = db.relationship('listings', foreign_keys='category_to_listing.listing_id')
-
-    def __init__(self, category_id, listing_id):
-        self.category_id = category_id
-        self.listing_id = listing_id
 
     def save(self):
         db.session.add(self)
@@ -158,6 +153,8 @@ class Material(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(20), unique=True, nullable=False)
 
+    material_to = db.relationship('Listing', secondary=listing_material, backref='materials')
+
     def __init__(self, type):
         self.type = type
 
@@ -165,18 +162,6 @@ class Material(db.Model):
         db.session.add(self)
         db.session.commit()
 
-class MaterialToListing(db.Model):
-    __tablename__ = "material_to_listing"
-    
-    id = db.Column(db.Integer, primary_key=True)
-    material_id = db.Column(db.Integer, db.ForeignKey('materials.id'), nullable=False)
-    listing_id = db.Column(db.Integer, db.ForeignKey('listings.id'), nullable=False)
-    materialRel = db.relationship('materials', foreign_keys='material_to_listing.material_id')
-    listingRel = db.relationship('listings', foreign_keys='material_to_listing.listing_id')
-
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
 
 class Listing(db.Model):
     __tablename__ = "listings"
@@ -186,7 +171,7 @@ class Listing(db.Model):
     description = db.Column(db.String(512), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     is_sell_listing = db.Column(db.Boolean, nullable=False)
-    
+
     price_min = db.Column(db.Float,nullable=True)
     price_max = db.Column(db.Float, nullable=True)
     can_trade = db.Column(db.Boolean, nullable=False)
@@ -198,8 +183,8 @@ class Listing(db.Model):
     status = db.Column(db.Integer, nullable=False)
     addressId = db.Column(db.Integer, db.ForeignKey("addresses.id"), nullable=True)
 
-    def __init__(self, 
-        user_email, 
+    def __init__(self,
+        user_email,
         title,
         description,
         is_sell_listing,
@@ -210,13 +195,13 @@ class Listing(db.Model):
         can_pay_bank,
         status,
         want_to_trade_for,
-        weight, 
-        volume, 
+        weight,
+        volume,
         materials,
         address,
         images
     ):
-        self.title = title 
+        self.title = title
         self.description = description
         self.is_sell_listing = is_sell_listing
         self.price_min = price_min
@@ -224,7 +209,7 @@ class Listing(db.Model):
         self.can_trade = can_trade
         self.can_pay_cash = can_pay_cash
         self.can_pay_bank = can_pay_bank
-        # TODO: remove hardcoding 
+        # TODO: remove hardcoding
         self.status = 1
         self.weight = weight
         self.volume = volume
@@ -234,18 +219,18 @@ class Listing(db.Model):
         self.addressId = determine_address_id(address)
 
         #TODO: insert data for categories + materials on startup
-        for category in want_to_trade_for:
-            category_id = Category.query.filter_by(type=category_id).first().type().id
-            categoryToListing = CategoryToListing(id, category_id)
-            categoryToListing.save()
+        for category_name in want_to_trade_for:
+            category = Category.query.filter_by(type=category_name).first()
+            category.category_to.append(self)
+            category.save()
 
-        for material in materials:
-            material_id = Material.query.filter_by(type=material).first().type().id
-            materialToListing = MaterialToListing(id, category_id)
-            materialToListing.save()
+        for material_name in materials:
+            material = Material.query.filter_by(type=material_name).first()
+            material.material_to.append(self)
+            material.save()
 
         for image in images:
-                new_image = Image(image, id)
+            new_image = Image(image, id)
 
     def to_json(self):
         return {
@@ -262,9 +247,3 @@ class Listing(db.Model):
     def save(self):
         db.session.add(self)
         db.session.commit()
-
-
-
-
-
-
