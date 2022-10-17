@@ -104,6 +104,8 @@ export const Template = (props: {
 
   // scrollable means there's a scrollbar, so needs to disable the height restriction 
   // I tried doing this with styled components, but couldn't get it to work.
+
+  // very jank 
   const mainBoxStyles = {
     display: '',
     justifyContent: '',

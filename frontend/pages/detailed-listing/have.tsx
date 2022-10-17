@@ -15,9 +15,8 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import PersonIcon from "@mui/icons-material/Person";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useState, createRef, useRef } from "react";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
 /////////////////////////////////////////////////////////////////////////////
@@ -64,6 +63,7 @@ const DescriptionBox = (props: { icon: any; description: string }) => {
   );
 };
 
+
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
 /////////////////////////////////////////////////////////////////////////////
@@ -72,11 +72,16 @@ const DetailedHaveListing: NextPage = () => {
   // Get item name from query params
   const router = useRouter();
   const { title } = router.query;
-
+  
   const Map = dynamic(() => import("../../components/generic/Map"), {
     ssr: false
   });
+  const mapRef = useRef();
 
+  function scrollMap() {
+    mapRef.current.scrollIntoView({ behavior: "smooth" });
+  }
+  
   const image =
     "https://images.unsplash.com/photo-1499720565725-bd574541a3ee?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80";
   const categories = ["asdfsadf", "asdfdf", "asdfsa", "asdfsa", "asdfsa"];
@@ -107,11 +112,12 @@ const DetailedHaveListing: NextPage = () => {
     shippingOptions = "bank transfer on pickup or delivery";
   else shippingOptions = "not applicable";
 
-  const [open, setOpen] = useState<boolean>(false);
-
   return (
     <Template title="Have Listing" center scrollable>
       <Stack spacing={4}>
+        <Box>
+
+        </Box>
         <Box
           sx={{
             display: "flex",
@@ -156,7 +162,7 @@ const DetailedHaveListing: NextPage = () => {
             <LabelBox title="Location">
               <Stack direction="row">
                 <Tooltip title="Show on Map">
-                  <IconButton>
+                  <IconButton onClick={scrollMap}>
                     <LocationOnIcon />
                   </IconButton>
                 </Tooltip>
@@ -217,13 +223,19 @@ const DetailedHaveListing: NextPage = () => {
               </Button>
             </Box>
           </Box>
-        </Box >
-        <Box>
-          <Typography>Map</Typography>
-          <Box sx={{width: 1000, height: 600}}>
-            <Map position={[-33.8688, 151.2093]}></Map>
-          </Box>
         </Box>
+        <Box sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+        }}>
+          {/* wrap in a div cos forwarding refs to custom components seems cursed */}
+          <div ref={mapRef}>
+            <Map width={1000} height={600} position={[-33.8688, 151.2093]}/>
+          </div>
+        </Box>
+        <Box></Box>
       </Stack>
     </Template>
   );
