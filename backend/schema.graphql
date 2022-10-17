@@ -65,18 +65,18 @@ type Listing {
   user: User!
   isSellListing: Boolean!
   # below should probably be a category list
-  wantToTradeFor: [Category]!
+  # wantToTradeFor: [Category]!
   priceMin: Float!
   priceMax: Float!
   canTrade: Boolean!
   canPayCash: Boolean!
   canPayBank: Boolean!
-  weight: Float!
-  volume: Float!
-  status: Int!
-  address: Address!
-  images: [Image]!
-  materials: [Material]!
+  # weight: Float!
+  # volume: Float!
+  # status: Int!
+  # address: Address!
+  # images: [Image]!
+  # materials: [Material]!
 }
 
 type ListingResult {
@@ -109,4 +109,14 @@ type Mutation {
     address: AddressInput
   ): UserResult!
   deleteUser(email: String!): UserResult!
+  createListing(
+    title: String! 
+    description: String!
+    isSellListing: Boolean!
+    priceMin: Float!
+    priceMax: Float!
+    canTrade: Boolean!
+    canPayCash: Boolean!
+    canPayBank: Boolean!
+  ): ListingResult!
 }

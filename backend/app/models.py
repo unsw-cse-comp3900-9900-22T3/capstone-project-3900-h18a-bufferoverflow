@@ -122,15 +122,6 @@ class Category(db.Model):
     def __init__(self, type):
         self.type = type
 
-class Material(db.Model):
-    __tablename__ = "materials"
-
-    id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.String(20), unique=True, nullable=False)
-
-    def __init__(self, type):
-        self.type = type
-
 class CategoryToListing(db.Model):
     __tablename__ = "category_to_listing"
     
@@ -160,46 +151,55 @@ class Listing(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(20), nullable=False)
     description = db.Column(db.String(512), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    is_sell_listing = db.Column(db.String(500), nullable=False)
+    # user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    is_sell_listing = db.Column(db.Boolean, nullable=False)
 
-    want_to_trade_for_id = db.relationship(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    # want_to_trade_for_id = db.relationship(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     price_min = db.Column(db.Float,nullable=True)
     price_max = db.Column(db.Float, nullable=True)
     can_trade = db.Column(db.Boolean, nullable=False)
     can_pay_cash = db.Column(db.Boolean, nullable=False)
     can_pay_bank = db.Column(db.Boolean, nullable=False)
-    weight = db.Column(db.Float, nullable=True)
-    volume = db.Column(db.Float, nullable=True)
+    # weight = db.Column(db.Float, nullable=True)
+    # volume = db.Column(db.Float, nullable=True)
 
-    material_ids = db.relationship(db.Integer, db.ForeignKey("material_to_listing.id"), nullable=False)
+    # material_ids = db.relationship(db.Integer, db.ForeignKey("material_to_listing.id"), nullable=False)
 
-    status = db.Column(db.Integer, nullable=False)
-    addressId = db.Column(db.Integer, db.ForeignKey("addresses.id"), nullable=True)
+    # status = db.Column(db.Integer, nullable=False)
+    # addressId = db.Column(db.Integer, db.ForeignKey("addresses.id"), nullable=True)
 
-    # def __init__(self, email, username):
-    #     self.username = username
-    #     self.email = email
+    def __init__(self, 
+        title, 
+        description,
+        is_sell_listing,
+        price_min,
+        price_max, 
+        can_trade,
+        can_pay_cash,
+        can_pay_bank
+    ):
+        self.title = title 
+        self.description = description
+        self.is_sell_listing = is_sell_listing
+        self.price_min = price_min
+        self.price_max = price_max
+        self.can_trade = can_trade
+        self.can_pay_cash = can_pay_cash
+        self.can_pay_bank = can_pay_bank
 
-    # def to_json(self):
-    #     # fetch address.place 
-    #     address = Address.query.get(self.addressId)
-    #     place = ""
-    #     if address is not None:
-    #         place = address.place
 
-    #     return {
-    #         "id": self.id,
-    #         "email": self.email,
-    #         "username": self.username,
-    #         "preferred_distance": self.preferred_distance,
-    #         "bio": self.bio,
-    #         "display_img": self.display_img,
-    #         "address": {
-    #             "place": place
-    #         }
-    #     }
+    def to_json(self):
+        return {
+            "id": self.id,
+            "description": self.description,
+            "is_sell_listing": self.is_sell_listing,
+            "price_min": self.price_min,
+            "price_max": self.price_max,
+            "can_trade": self.can_trade,
+            "can_pay_cash": self.can_pay_cash,
+            "can_pay_bank": self.can_pay_bank
+        }
 
     def save(self):
         db.session.add(self)
