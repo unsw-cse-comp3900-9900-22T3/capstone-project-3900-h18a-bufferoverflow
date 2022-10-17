@@ -56,9 +56,8 @@ export const CategorySearch = (props: {
             const newCategory = input.toUpperCase()
             if (categories.length > 4) setErrorToast('Cannot specify more than 5 categories')
             else if (!validCategories.includes(newCategory)) setErrorToast('Valid categories are: ' + validCategories.join(', '))
-            else if (newCategory && !categories.includes(newCategory)) {
-              setCategories([...categories, newCategory])
-            }
+            else if (categories.includes(newCategory)) setErrorToast('Category already present')
+            else setCategories([...categories, newCategory])
             setInput('')
           } else if (e.key == 'Backspace' && !input) {
             categories.pop()
