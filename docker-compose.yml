@@ -7,7 +7,7 @@ services:
     volumes:
       - ./backend/:/app/
     ports:
-      - ${BACKEND_PORT:-8000}:5000
+      - ${BACKEND_PORT:-8000}:${FRONTEND_PORT:-5000}
     env_file:
       - ./.env.dev
     depends_on:
@@ -18,6 +18,9 @@ services:
       dockerfile: dockerfile
     ports:
       - ${FRONTEND_PORT:-5000}:3000
+    volumes:
+      - ./frontend/:/app/
+      - ignore:/app/node_modules/
   db:
     image: postgres:13-alpine
     volumes:
@@ -29,3 +32,4 @@ services:
 
 volumes:
   postgres_data:
+  ignore:

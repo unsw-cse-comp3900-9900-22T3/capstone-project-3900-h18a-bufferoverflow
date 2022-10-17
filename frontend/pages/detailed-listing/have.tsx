@@ -1,11 +1,22 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
-import { Avatar, Box, Button, Card, Typography } from "@mui/material";
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import PersonIcon from '@mui/icons-material/Person';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import PersonIcon from "@mui/icons-material/Person";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { useRouter } from "next/router";
-
+import { useState } from "react";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { MapContainer, Marker, Popup, TileLayer }  from 'react-leaflet';
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
 /////////////////////////////////////////////////////////////////////////////
@@ -57,20 +68,14 @@ const DescriptionBox = (props: { icon: any; description: string }) => {
 /////////////////////////////////////////////////////////////////////////////
 
 const DetailedHaveListing: NextPage = () => {
-
   // Get item name from query params
-  const router = useRouter()
-  const { title } = router.query
+  const router = useRouter();
+  const { title } = router.query;
 
-  const image = 'https://images.unsplash.com/photo-1499720565725-bd574541a3ee?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'
-  const categories = [
-    "asdfsadf",
-    "asdfdf",
-    "asdfsa",
-    "asdfsa",
-    "asdfsa",
-  ]
-  const trader = 'Sean'
+  const image =
+    "https://images.unsplash.com/photo-1499720565725-bd574541a3ee?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80";
+  const categories = ["asdfsadf", "asdfdf", "asdfsa", "asdfsa", "asdfsa"];
+  const trader = "Sean";
   const cash = true;
   const trade = true;
   const bank = true;
@@ -126,8 +131,13 @@ const DetailedHaveListing: NextPage = () => {
               <></>
             )}
           </Card>
-          <Typography sx={{ p: 3, pl: 4, fontSize: 20, fontWeight: 'bold' }}>{title}</Typography>
-          <DescriptionBox icon={<AttachMoneyIcon />} description={purchaseOptions} />
+          <Typography sx={{ p: 3, pl: 4, fontSize: 20, fontWeight: "bold" }}>
+            {title}
+          </Typography>
+          <DescriptionBox
+            icon={<AttachMoneyIcon />}
+            description={purchaseOptions}
+          />
           <DescriptionBox icon={<PersonIcon />} description={itemPosessor} />
           <DescriptionBox
             icon={<LocalShippingIcon />}
@@ -140,7 +150,7 @@ const DetailedHaveListing: NextPage = () => {
           <LabelBox title="Location">
             <Stack direction="row">
               <Tooltip title="Show on Map">
-                <IconButton onClick={() => setOpen(true)}>
+                <IconButton>
                   <LocationOnIcon />
                 </IconButton>
               </Tooltip>
@@ -202,21 +212,14 @@ const DetailedHaveListing: NextPage = () => {
           </Box>
         </Box>
       </Box>
-      <Dialog
-        open={open}
-        onClose={() => {
-          setOpen(false);
-        }}
-      >
-        {/* <MapContainer center={[51.505, -0.09]} zoom={20}>
-          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          <Marker position={[51.505, -0.09]}>
-            <Popup>
-              A pretty CSS3 popup. <br /> Easily customizable.
-            </Popup>
-          </Marker>
-        </MapContainer> */}
-      </Dialog>
+      {/* <MapContainer center={[51.505, -0.09]} zoom={20}>
+        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        {/* <Marker position={[51.505, -0.09]}>
+          <Popup>
+            A pretty CSS3 popup. <br /> Easily customizable.
+          </Popup>
+        </Marker> */}
+      {/* </MapContainer> */}
     </Template>
   );
 };
