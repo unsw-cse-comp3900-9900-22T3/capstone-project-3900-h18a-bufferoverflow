@@ -2,7 +2,7 @@ from app.models import Address
 
 def determine_address_id(address):
     if address is not None:
-        address_info = Address.query.filter_by(place=address["place"]).first()
+        address_info = Address.query.filter_by(place=address).first()
         # check if address already exists
         if address_info is not None:
             return address_info.id
