@@ -1,9 +1,27 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
-import { Box, Button, Card, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, createTheme, Tab, Tabs, TextField, Typography } from "@mui/material";
 import { createRef, useState } from "react";
 import { ItemStatsType, StatusType } from "../../components/listing/types";
 import { uploadFile } from "../../utils/imageUtils";
+
+/////////////////////////////////////////////////////////////////////////////
+// Secondary Components
+/////////////////////////////////////////////////////////////////////////////
+
+const Slider = (props: {
+  status: StatusType;
+  setStatus: (arg: StatusType) => void;
+}) => {
+  return (
+    <>
+      <Tabs value={props.status} onChange={(_, val) => props.setStatus(val)} textColor='secondary' indicatorColor="secondary">
+        <Tab label="available" value={'available'} />
+        <Tab label="pending" value={'pending'} />
+      </Tabs>
+    </>
+  )
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Component
@@ -48,10 +66,11 @@ const CreateHaveListing: NextPage = () => {
               if (ref.current.files[0]) setImage(await uploadFile(ref.current.files[0]))
             }} />
           </Button>
-          <TextField id="outlined-basic" label="Description" variant="outlined" sx={{ mb: 1.5 }} multiline rows={3}/>
+          <TextField id="outlined-basic" label="Description" variant="outlined" sx={{ mb: 1.5 }} multiline rows={3} />
           <Typography sx={{ fontSize: 16, fontWeight: 'bold', mb: 1.5 }}>Location</Typography>
           <TextField id="outlined-basic" label="Location" variant="outlined" sx={{ mb: 1 }} />
           {/** ADD CATEGORY SEARCH HERE */}
+          <Slider status={status} setStatus={setStatus} />
         </Box>
 
         {/** Right Section */}
