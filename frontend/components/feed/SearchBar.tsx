@@ -150,7 +150,13 @@ export const SearchBar = (props: {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', mt: 5 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '90vw' }}>
-        <CategorySearch categories={props.data.categories} setCategories={setCategories} onSearch={props.onSearch} width={'60vw'} />
+        <CategorySearch
+          categories={props.data.categories}
+          setCategories={setCategories}
+          onSearch={props.onSearch}
+          validCategories={['entertainment', 'vehicles', 'clothing']}
+          width={'60vw'}
+        />
         <DistanceDropdown distance={props.data.distance} setDistance={setDistance} />
         <ListingDropdown listing={props.data.listing} setListing={setListing} />
         <PriceDropdown price={props.data.price} setPrice={setPrice} />

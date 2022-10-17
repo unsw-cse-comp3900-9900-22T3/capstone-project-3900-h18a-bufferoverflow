@@ -9,11 +9,13 @@ export const CategorySearch = (props: {
   setCategories: (arg: string[]) => void;
   onSearch: () => void;
   width?: number | string;
+  validCategories?: string[];
 }) => {
 
   const { categories, setCategories } = props
   const [input, setInput] = useState<string>('')
   const [errorToast, setErrorToast] = useState<string>('');
+  const validCategories = props.validCategories ? props.validCategories.map(str => str.toUpperCase()) : []
 
   return (
     <>
@@ -51,10 +53,11 @@ export const CategorySearch = (props: {
         }}
         onKeyDown={e => {
           if (e.key == 'Enter') {
+            const newCategory = input.toUpperCase()
             if (categories.length > 4) setErrorToast('Cannot specify more than 5 categories')
-            else if (input.length > 20) setErrorToast('Category cannot be greater than 20 characters')
-            else if (input && !categories.includes(input.toUpperCase())) {
-              setCategories([...categories, input.toUpperCase()])
+            else if (!validCategories.includes(newCategory)) setErrorToast('Valid categories are: ' + validCategories.join(', '))
+            else if (newCategory && !categories.includes(newCategory)) {
+              setCategories([...categories, newCategory])
             }
             setInput('')
           } else if (e.key == 'Backspace' && !input) {
