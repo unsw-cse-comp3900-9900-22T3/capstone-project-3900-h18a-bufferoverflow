@@ -1,10 +1,6 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
-import { Box, Button, Card, Typography } from "@mui/material";
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import PersonIcon from '@mui/icons-material/Person';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import { useRouter } from "next/router";
+import { Box, Button, Card, TextField, Typography } from "@mui/material";
 import { createRef, useState } from "react";
 import { ItemStatsType, StatusType } from "../../components/listing/types";
 import { uploadFile } from "../../utils/imageUtils";
@@ -37,20 +33,25 @@ const CreateHaveListing: NextPage = () => {
 
         {/** Left Section */}
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-          <Card variant="outlined" sx={{ height: 280, width: 400, borderRadius: 4 }}>
+          <Typography sx={{ fontSize: 20, fontWeight: 'bold', mb: 2 }}>Item Information</Typography>
+          <TextField id="outlined-basic" label="Title" variant="outlined" sx={{ mb: 1 }} />
+          <Card variant="outlined" sx={{ height: 240, width: 400, borderRadius: 4 }}>
             {
               image
                 ? <img src={image} alt='profile' style={{ height: 280, width: 400 }} />
                 : <></>
             }
           </Card>
-          <Button component="label" sx={{ mb: 2.5, mt: 1.5 }}>
+          <Button component="label" sx={{ mb: 1, mt: 1 }}>
             Select Photo
             <input id='bob' ref={ref} type="file" hidden accept='image/png, image/jpeg' onChange={async () => {
               if (ref.current.files[0]) setImage(await uploadFile(ref.current.files[0]))
             }} />
           </Button>
-          <Typography sx={{ p: 3, pl: 4, fontSize: 20, fontWeight: 'bold' }}>{title}</Typography>
+          <TextField id="outlined-basic" label="Description" variant="outlined" sx={{ mb: 1.5 }} multiline rows={3}/>
+          <Typography sx={{ fontSize: 16, fontWeight: 'bold', mb: 1.5 }}>Location</Typography>
+          <TextField id="outlined-basic" label="Location" variant="outlined" sx={{ mb: 1 }} />
+          {/** ADD CATEGORY SEARCH HERE */}
         </Box>
 
         {/** Right Section */}
