@@ -84,17 +84,27 @@ export const Register = () => {
             variant="outlined"
             sx={{ width: 280, mb: 2, mt: 2 }}
             onClick={async () => {
-              try {
-                if (password.length < 6) throw 'Error'
-                let { data } = await register({ variables: { email, username } })
-                if (!data.createUser.success) throw 'Error'
-                let res = await createUserWithEmailAndPassword(getAuth(), email, password)
-                await updateProfile(res.user, { displayName: username })
-                setStore({ auth: await convertUserToAuthProps(res.user) })
-                router.push('/');
-              } catch (e) {
-                setErrorToast('Username, email or password is not valid')
+              if (password.length < 6) {
+                setErrorToast('Password must be greater than 6 characters')
+                return
               }
+              let { data } = await register({ variables: { email, username } })
+              if (!data.createUser.success) {
+                const error = data.createUser.errors
+                if (error.toString().includes('Key (email)')) setErrorToast('Email is already taken')
+                else if (error.toString().includes('Key (username)')) setErrorToast('Username is already taken')
+                else setErrorToast('Server error')
+                return
+              }
+              await createUserWithEmailAndPassword(getAuth(), email, password)
+                .then(async (res) => {
+                  await updateProfile(res.user, { displayName: username })
+                  setStore({ auth: await convertUserToAuthProps(res.user) })
+                })
+                .catch(err => {
+                  const reason = err.code.split('/').at(-1).split('-').join(' ')
+                  setErrorToast('Error: ' + reason)
+                })
             }}
           >
             Sign up
