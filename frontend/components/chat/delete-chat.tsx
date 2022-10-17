@@ -21,11 +21,9 @@ export const DeleteChat = (props: {
     <div>
       <IconButton
         size="large"
-        aria-label="go to chat with this user"
+        aria-label="delete chat history with this user"
         aria-controls="menu-appbar"
         aria-haspopup="true"
-        
-        sx={{}}
         onClick={handleOpen}
       >
         <DeleteForever />
@@ -41,7 +39,7 @@ export const DeleteChat = (props: {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            This action is permanent. You will not be able to view this chat history in the future.
+            This action is irreversible.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
