@@ -1,19 +1,22 @@
 import { Avatar , IconButton } from "@mui/material"
 import { Box, Stack } from "@mui/system"
 import DeleteForever from "@mui/icons-material/DeleteOutline"
+import Link from "next/link";
 
 export interface SingleChatOverviewProps {
   href: string;
+  delHref: string;
   username: string;
   avatar: string;
   lastMessageTime: string;
 }
 
-export const SingleChatOverview = (props: { 
-        href: string;
-        username: string;
-        avatar: string;
-        lastMessageTime: string; 
+export const SingleChatOverview = (props: {
+  href: string;
+  delHref: string;
+  username: string;
+  avatar: string;
+  lastMessageTime: string;
 }) => {
   return (
     <Box
@@ -25,17 +28,26 @@ export const SingleChatOverview = (props: {
         border: "1px solid #e6e6e6",
       }}
     >
-      <Stack direction="row" spacing={2}>
-        <Avatar src={props.avatar} />
-        <text>{props.username}</text>
-        <text>{props.lastMessageTime}</text>
-      </Stack>
+      <Link href={props.href}>
+        <Stack
+          direction="row"
+          spacing={2}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Avatar src={props.avatar} />
+          <h4>{props.username}</h4>
+          <p>{props.lastMessageTime}</p>
+        </Stack>
+      </Link>
       <IconButton
         size="large"
         aria-label="go to chat with this user"
         aria-controls="menu-appbar"
         aria-haspopup="true"
-        href={props.href}
+        href={props.delHref}
         sx={{}}
       >
         <DeleteForever />

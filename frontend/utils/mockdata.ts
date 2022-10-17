@@ -26,6 +26,7 @@ export const mockSingleChatRequest = async (): Promise<SingleChatOverviewProps[]
     data.push(structuredClone({
       // TODO: fix href to be dynamic to be between the logged in user and the other user, here as 'John Doe'
       href: '/chat/yourusername-theirusername',
+      delHref: '/chat/del/yourusername-theirusername',
       username: 'John Doe',
       avatar: 'https://mui.com/static/images/avatar/1.jpg',
       lastMessageTime: '2 hours ago',
