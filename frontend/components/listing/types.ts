@@ -1,6 +1,9 @@
 export type StatusType = 'available' | 'pending'
 
-export type ItemStatsType = 'weight' | 'volume'
+export type ItemStatsType = {
+  type: 'weight' | 'volume',
+  value: number;
+}
 
 export interface ListingProps {
   title: string;
