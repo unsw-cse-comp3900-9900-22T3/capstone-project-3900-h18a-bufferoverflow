@@ -137,6 +137,7 @@ const CreateHaveListing: NextPage = () => {
               label="Price"
               variant="outlined"
               onChange={e => setPrice(parseInt(e.target.value))}
+              sx={{ width: '100%' }}
               InputProps={{
                 startAdornment: <InputAdornment position="start">$</InputAdornment>
               }}
