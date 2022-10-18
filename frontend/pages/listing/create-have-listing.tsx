@@ -92,7 +92,7 @@ const CreateHaveListing: NextPage = () => {
         <Box sx={{ display: 'flex', flexDirection: 'column', width: 450 }}>
           <Typography sx={{ fontSize: 18, fontWeight: 'bold', mb: 2 }}>What I'm Looking For In Return</Typography>
           <Typography sx={{ fontSize: 16, mb: 0.5, ml: 0.5 }}>Accepted Trade / Payment Methods</Typography>
-          <FormControl sx={{ m: 0.5 }} component="fieldset" variant="standard">
+          <FormControl sx={{ m: 0.5, mb: 1.5 }} component="fieldset" variant="standard">
             <FormGroup>
               <FormControlLabel
                 control={<Checkbox checked={trade} onChange={() => setTrade(!trade)} />}
