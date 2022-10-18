@@ -60,7 +60,7 @@ const CreateHaveListing: NextPage = () => {
         {/** Left Section */}
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Typography sx={{ fontSize: 20, fontWeight: 'bold', mb: 2 }}>Item Information</Typography>
-          <TextField id="outlined-basic" label="Title" variant="outlined" sx={{ mb: 1 }} />
+          <TextField id="outlined-basic" label="Title" variant="outlined" sx={{ mb: 1 }} onChange={e => setTitle(e.target.value)} />
           <Card variant="outlined" sx={{ height: 280, width: 450, borderRadius: 4 }}>
             {
               image
@@ -74,9 +74,9 @@ const CreateHaveListing: NextPage = () => {
               if (ref.current.files[0]) setImage(await uploadFile(ref.current.files[0]))
             }} />
           </Button>
-          <TextField id="outlined-basic" label="Description" variant="outlined" sx={{ mb: 1.5 }} multiline rows={3} />
+          <TextField id="outlined-basic" label="Description" variant="outlined" sx={{ mb: 1.5 }} multiline rows={3} onChange={e => setDescription(e.target.value)} />
           <Typography sx={{ fontSize: 16, fontWeight: 'bold', mb: 1.5, ml: 0.5 }}>Location</Typography>
-          <TextField id="outlined-basic" label="Location" variant="outlined" sx={{ mb: 1.5 }} />
+          <TextField id="outlined-basic" label="Location" variant="outlined" sx={{ mb: 1.5 }} onChange={e => setLocation(e.target.value)} />
           <CategorySearch
             setCategories={setCategories}
             validCategories={['Entertainment', 'Vehicles']}
