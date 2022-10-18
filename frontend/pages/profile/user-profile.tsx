@@ -6,7 +6,7 @@ import { Avatar, Button, Card, Typography } from '@mui/material'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useRouter } from 'next/router'
 import { createRef, useEffect, useState } from 'react'
-import { uploadFile } from '../../utils/imageUtils'
+import { uploadFile } from '../../utils/utils'
 import { gql, useMutation, useQuery } from '@apollo/client'
 import { useStore, useStoreUpdate } from '../../store/store'
 import { Toast } from '../../components/generic/Toast'

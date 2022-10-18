@@ -9,6 +9,7 @@ import { Toast } from "../../components/generic/Toast"
 import { useStoreUpdate } from "../../store/store"
 import { convertUserToAuthProps } from "../../store/utils"
 import loginTextFieldStyles from "../../styles/style"
+import { parseFirebaseError } from "../../utils/utils"
 
 /////////////////////////////////////////////////////////////////////////////
 // Query
@@ -102,8 +103,7 @@ export const Register = () => {
                   setStore({ auth: await convertUserToAuthProps(res.user) })
                 })
                 .catch(err => {
-                  const reason = err.code.split('/').at(-1).split('-').join(' ')
-                  setErrorToast('Error: ' + reason)
+                  setErrorToast('Error: ' + parseFirebaseError(err.code))
                 })
             }}
           >

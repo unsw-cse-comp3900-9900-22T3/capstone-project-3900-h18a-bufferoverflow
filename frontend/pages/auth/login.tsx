@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 import { NextPage } from "next";
 import { useStoreUpdate } from "../../store/store";
 import { convertUserToAuthProps } from "../../store/utils";
+import { parseFirebaseError } from "../../utils/utils";
 
 const Login: NextPage = () => {
   const [email, setEmail] = useState<string>("");
@@ -52,8 +53,7 @@ const Login: NextPage = () => {
                 router.push('/');
               })
               .catch(err => {
-                const reason = err.code.split('/').at(-1).split('-').join(' ')
-                setErrorToast('Error: ' + reason)
+                setErrorToast('Error: ' + parseFirebaseError(err.code))
               })
           }}
         >
