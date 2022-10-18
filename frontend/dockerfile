@@ -8,4 +8,8 @@ RUN npm install
 
 COPY . .
 
+ARG REACT_APP_BACKEND_PORT
+
+ENV REACT_APP_BACKEND_PORT $REACT_APP_BACKEND_PORT
+
 CMD ["npm", "run", "dev"]

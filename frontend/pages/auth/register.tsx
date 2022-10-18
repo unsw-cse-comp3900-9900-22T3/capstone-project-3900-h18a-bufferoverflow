@@ -45,6 +45,8 @@ export const Register = () => {
   const router = useRouter();
   const setStore = useStoreUpdate()
 
+  console.log(process.env.REACT_APP_BACKEND_PORT);
+
   return (
     <Template title="Register">
       <Box sx={{
