@@ -217,7 +217,6 @@ class Listing(db.Model):
         self.user_id = User.query.filter_by(email=user_email).first().id
         self.addressId = determine_address_id(address)
 
-        #TODO: insert data for categories + materials on startup
         for category_name in want_to_trade_for:
             category = Category.query.filter_by(type=category_name).first()
             category.category_to.append(self)

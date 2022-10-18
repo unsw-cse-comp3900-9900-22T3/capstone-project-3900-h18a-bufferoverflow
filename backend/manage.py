@@ -2,27 +2,22 @@ from flask.cli import FlaskGroup
 
 from app import app, db
 from app.models import User, Category, Material
+from app.config import material_names, category_names
 
 
 cli = FlaskGroup(app)
 
 # helper functions  
-
-# TODO: stick all this info in a config file...
-# TODO: add more materials/categories
 def create_materials():
-    wood = Material("wood")
-    wood.save()
 
-    metal = Material("metal")
-    metal.save()
+    for material in material_names:
+        new_material = Material(material)
+        new_material.save()
 
 def create_categories():
-    toys = Category("toys")
-    toys.save()
-
-    sports = Category("sports")
-    sports.save()
+    for category in category_names:
+        new_category = Category(category)
+        new_category.save()
 
 @cli.command("create_db")
 def create_db():

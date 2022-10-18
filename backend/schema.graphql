@@ -123,4 +123,23 @@ type Mutation {
     address: String!
     images: [String]!
   ): ListingResult!
+  updateListing(
+    id: ID!
+    title: String
+    description: String
+    isSellListing: Boolean
+    priceMin: Float
+    priceMax: Float
+    canTrade: Boolean
+    canPayCash: Boolean
+    canPayBank: Boolean
+    status: String
+    wantToTradeFor: [String]
+    weight: Float
+    volume: Float
+    materials: [String]
+    address: String
+    images: [String]
+  ): ListingResult!
+  deleteListing(id: ID!): ListingResult!
 }
