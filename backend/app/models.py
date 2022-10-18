@@ -1,5 +1,6 @@
 from app import db
 from app.helpers import determine_address_id
+from app.config import material_names, category_names
 
 class Address(db.Model):
     __tablename__ = "addresses"
@@ -225,6 +226,11 @@ class Listing(db.Model):
 
     def update_want_to_trade_for(self, want_to_trade_for):
         if want_to_trade_for is not None:
+            # to successfully remove all previous want_to_trade_for
+            for category_name in category_names:
+                category = Category.query.filter_by(type=category_name).first()
+                category.category_to.remove(self)
+
             for category_name in want_to_trade_for:
                 category = Category.query.filter_by(type=category_name).first()
                 category.category_to.append(self)
@@ -232,6 +238,11 @@ class Listing(db.Model):
 
     def update_materials(self, materials):
         if materials is not None:
+            # to successfully remove all previous materials
+            for material_name in material_names:
+                material = Material.query.filter_by(type=material_name).first()
+                material.material_to.remove(self)
+
             for material_name in materials:
                 material = Material.query.filter_by(type=material_name).first()
                 material.material_to.append(self)
