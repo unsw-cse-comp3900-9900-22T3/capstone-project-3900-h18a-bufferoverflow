@@ -15,7 +15,8 @@ const Slider = (props: {
   setStatus: (arg: StatusType) => void;
 }) => {
   return (
-    <>
+    <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5, ml: 0.5 }}>
+      <Typography sx={{ fontSize: 16, fontWeight: 'bold', mr: 3, mt: 0.9 }}>Status</Typography>
       <Tabs
         value={props.status}
         onChange={(_, val) => props.setStatus(val)}
@@ -26,7 +27,7 @@ const Slider = (props: {
         <Tab label="available" value={'available'} />
         <Tab label="pending" value={'pending'} />
       </Tabs>
-    </>
+    </Box>
   )
 }
 
@@ -60,7 +61,7 @@ const CreateHaveListing: NextPage = () => {
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Typography sx={{ fontSize: 20, fontWeight: 'bold', mb: 2 }}>Item Information</Typography>
           <TextField id="outlined-basic" label="Title" variant="outlined" sx={{ mb: 1 }} />
-          <Card variant="outlined" sx={{ height: 260, width: 450, borderRadius: 4 }}>
+          <Card variant="outlined" sx={{ height: 280, width: 450, borderRadius: 4 }}>
             {
               image
                 ? <img src={image} alt='profile' style={{ height: '100%', width: '100%' }} />
@@ -74,7 +75,7 @@ const CreateHaveListing: NextPage = () => {
             }} />
           </Button>
           <TextField id="outlined-basic" label="Description" variant="outlined" sx={{ mb: 1.5 }} multiline rows={3} />
-          <Typography sx={{ fontSize: 16, fontWeight: 'bold', mb: 1.5 }}>Location</Typography>
+          <Typography sx={{ fontSize: 16, fontWeight: 'bold', mb: 1.5, ml: 0.5 }}>Location</Typography>
           <TextField id="outlined-basic" label="Location" variant="outlined" sx={{ mb: 1.5 }} />
           <CategorySearch
             setCategories={setCategories}
