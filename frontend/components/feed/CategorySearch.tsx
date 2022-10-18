@@ -2,8 +2,9 @@ import { Autocomplete, Box, Button, InputAdornment, TextField } from "@mui/mater
 import SearchIcon from '@mui/icons-material/Search';
 
 export const CategorySearch = (props: {
+  title: string;
   setCategories: (arg: string[]) => void;
-  onSearch: () => void;
+  onSearch?: () => void;
   width?: number | string;
   validCategories?: string[];
 }) => {
@@ -22,13 +23,17 @@ export const CategorySearch = (props: {
       onChange={(_, newCategories) => props.setCategories([...newCategories])}
       renderInput={(params) => (
         <Box sx={{ display: 'flex' }}>
-          <Button sx={{ minWidth: 40, pr: 3, pl: 3 }} onClick={props.onSearch}>
-            <SearchIcon />
-          </Button>
+          {
+            props.onSearch
+              ? <Button sx={{ minWidth: 40, pr: 3, pl: 3 }} onClick={props.onSearch}>
+                <SearchIcon />
+              </Button>
+              : <></>
+          }
           <TextField
             {...params}
-            label="Category Search"
-            placeholder="Category"
+            label={props.title}
+            placeholder={props.title}
           />
         </Box>
       )}
