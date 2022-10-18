@@ -5,8 +5,11 @@ import { uploadFile } from "../../utils/imageUtils";
 import { CategorySearch } from "../../components/feed/CategorySearch";
 
 /////////////////////////////////////////////////////////////////////////////
-// Secondary Components
+// Secondary Components and Constants
 /////////////////////////////////////////////////////////////////////////////
+
+const HAVE_LISTING_TITLE = 'What I\'m Looking For In Return'
+const WANT_LISTING_TITLE = 'What I Have To Trade'
 
 const Slider = (props: {
   status: StatusType;
@@ -113,7 +116,7 @@ export const ListingTemplate = (props: {
 
       {/** Right Section */}
       <Box sx={{ display: 'flex', flexDirection: 'column', width: 450 }}>
-        <Typography sx={{ fontSize: 18, fontWeight: 'bold', mb: 2 }}>What I'm Looking For In Return</Typography>
+        <Typography sx={{ fontSize: 18, fontWeight: 'bold', mb: 2 }}>{props.have ? HAVE_LISTING_TITLE : WANT_LISTING_TITLE}</Typography>
         <Typography sx={{ fontSize: 16, mb: 0.5, ml: 0.5 }}>Accepted Trade / Payment Methods</Typography>
         <FormControl sx={{ m: 0.5, mb: 1.5 }} component="fieldset" variant="standard">
           <FormGroup>
@@ -167,7 +170,7 @@ export const ListingTemplate = (props: {
           />
         </Box>
         <Button variant="outlined" sx={{ borderRadius: 30, width: '100%', height: 45 }}>
-          Post Have Listing
+          Post {props.have ? 'Have' : 'Want'} Listing
         </Button>
       </Box>
 
