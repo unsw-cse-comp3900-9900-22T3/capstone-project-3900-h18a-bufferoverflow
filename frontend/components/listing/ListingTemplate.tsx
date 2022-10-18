@@ -1,5 +1,5 @@
 import { Box, Button, Card, Checkbox, FormControl, FormControlLabel, FormGroup, InputAdornment, Tab, Tabs, TextField, Typography } from "@mui/material";
-import { createRef, useState } from "react";
+import { createRef, useEffect, useState } from "react";
 import { ListingProps, StatusType } from "../../components/listing/types";
 import { uploadFile } from "../../utils/imageUtils";
 import { CategorySearch } from "../../components/feed/CategorySearch";
@@ -35,6 +35,8 @@ const Slider = (props: {
 
 export const ListingTemplate = (props: {
   data?: ListingProps;
+  edit?: boolean;
+  have?: boolean;
 }) => {
 
   const ref = createRef<any>()
@@ -54,6 +56,28 @@ export const ListingTemplate = (props: {
   const [materials, setMaterials] = useState<string[]>([])
   const [tradeCategories, setTradeCategories] = useState<string[]>([])
   const [price, setPrice] = useState<number>(0)
+
+  const { data } = props
+
+  useEffect(() => {
+    if (data) {
+      setTitle(data.title)
+      setImage(data.image)
+      setDescription(data.description)
+      setLocation(data.location)
+      setCategories(data.categories)
+      setStatus(data.status)
+      setTrade(data.trade)
+      setCash(data.cash)
+      setBank(data.bank)
+      setTradeDescription(data.tradeDescription)
+      setWeight(data.weight)
+      setVolume(data.volume)
+      setMaterials(data.material)
+      setTradeCategories(data.tradeCategories)
+      setPrice(data.price)
+    }
+  }, [data])
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 40 }}>

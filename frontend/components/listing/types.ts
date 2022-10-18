@@ -12,6 +12,7 @@ export interface ListingProps {
   bank: boolean;
   weight: number;
   volume: number;
+  tradeDescription: string;
   material: string[];
   tradeCategories: string[];
   price: number;
