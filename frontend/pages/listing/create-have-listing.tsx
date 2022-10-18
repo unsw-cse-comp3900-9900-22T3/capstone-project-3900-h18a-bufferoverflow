@@ -1,6 +1,6 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
-import { Box, Button, Card, Checkbox, createTheme, FormControl, FormControlLabel, FormGroup, FormLabel, Tab, Tabs, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, Checkbox, createTheme, FormControl, FormControlLabel, FormGroup, FormLabel, InputAdornment, Tab, Tabs, TextField, Typography } from "@mui/material";
 import { createRef, useState } from "react";
 import { ItemStatsType, StatusType } from "../../components/listing/types";
 import { uploadFile } from "../../utils/imageUtils";
@@ -49,7 +49,8 @@ const CreateHaveListing: NextPage = () => {
   const [cash, setCash] = useState<boolean>(false)
   const [bank, setBank] = useState<boolean>(false)
   const [tradeDescription, setTradeDescription] = useState<string>('')
-  const [stats, setStats] = useState<ItemStatsType>({ type: 'weight', value: 0 })
+  const [weight, setWeight] = useState<number>()
+  const [volume, setVolume] = useState<number>()
   const [materials, setMaterials] = useState<string[]>([])
   const [tradeCategories, setTradeCategories] = useState<string[]>([])
   const [price, setPrice] = useState<number>(0)
@@ -110,9 +111,9 @@ const CreateHaveListing: NextPage = () => {
           <TextField value={tradeDescription} label="What I want as a trade" variant="outlined" sx={{ mb: 1.5 }} multiline rows={3} onChange={e => setTradeDescription(e.target.value)} />
           <Typography sx={{ fontSize: 16, fontWeight: 'bold', mb: 1.5, ml: 0.5 }}>Approximate Item Stats</Typography>
           <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
-            <TextField value={stats} label="Weight (kg)" variant="outlined" onChange={e => setStats({ type: 'weight', value: parseInt(e.target.value) })} />
+            <TextField value={weight} type='number' label="Weight (kg)" variant="outlined" onChange={e => setWeight(parseInt(e.target.value))} />
             <Typography sx={{ fontSize: 16 }}>or</Typography>
-            <TextField value={stats} type='number' label="Volume (cubic m)" variant="outlined" onChange={e => setStats({ type: 'volume', value: parseInt(e.target.value) })} />
+            <TextField value={volume} type='number' label="Volume (cubic m)" variant="outlined" onChange={e => setVolume(parseInt(e.target.value))} />
           </Box>
           <Typography sx={{ fontSize: 16, fontWeight: 'bold', mb: 1.5, ml: 0.5 }}>Materials</Typography>
           <CategorySearch
@@ -121,6 +122,26 @@ const CreateHaveListing: NextPage = () => {
             title="Materials"
             width={'100%'}
           />
+          <Typography sx={{ fontSize: 16, fontWeight: 'bold', mb: 1.5, ml: 0.5, mt: 1.5 }}>Willing To Trade For Categories</Typography>
+          <CategorySearch
+            setCategories={setMaterials}
+            validCategories={['Wood', 'Metal']}
+            title="Materials"
+            width={'100%'}
+          />
+          <Box sx={{ display: 'flex', alignItems: 'center', mt: 2.5, mb: 2.5 }}>
+            <Typography sx={{ fontSize: 16, fontWeight: 'bold', mr: 2.5, ml: 0.5 }}>Price</Typography>
+            <TextField
+              value={price}
+              type='number'
+              label="Price"
+              variant="outlined"
+              onChange={e => setPrice(parseInt(e.target.value))}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>
+              }}
+            />
+          </Box>
           <Button variant="outlined" sx={{ borderRadius: 30, width: '100%', height: 45 }}>
             Post Have Listing
           </Button>
