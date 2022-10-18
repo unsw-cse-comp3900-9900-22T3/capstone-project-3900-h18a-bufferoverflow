@@ -169,9 +169,20 @@ export const ListingTemplate = (props: {
             }}
           />
         </Box>
-        <Button variant="outlined" sx={{ borderRadius: 30, width: '100%', height: 45 }}>
-          Post {props.have ? 'Have' : 'Want'} Listing
-        </Button>
+        {
+          props.edit
+            ? <Box sx={{ display: 'flex', mt: 1.5, width: '100%' }}>
+              <Button variant="outlined" sx={{ borderRadius: 30, mr: 0.5, width: '50%', height: 45 }}>
+                Update {props.have ? 'Have' : 'Want'} Listing
+              </Button>
+              <Button variant="outlined" sx={{ borderRadius: 30, ml: 0.5, width: '50%', height: 45 }}>
+                Delete Listing
+              </Button>
+            </Box>
+            : <Button variant="outlined" sx={{ borderRadius: 30, width: '100%', height: 45 }}>
+              Post {props.have ? 'Have' : 'Want'} Listing
+            </Button>
+        }
       </Box>
 
     </Box >

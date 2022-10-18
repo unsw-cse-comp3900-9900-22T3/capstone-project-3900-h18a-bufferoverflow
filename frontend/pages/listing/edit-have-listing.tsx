@@ -8,8 +8,8 @@ import { ListingTemplate } from "../../components/listing/ListingTemplate";
 
 const EditHaveListing: NextPage = () => {
   return (
-    <Template title="Edit Have Listing">
-      <ListingTemplate have />
+    <Template title="Edit Have Listing" center>
+      <ListingTemplate have edit />
     </Template>
   );
 };
