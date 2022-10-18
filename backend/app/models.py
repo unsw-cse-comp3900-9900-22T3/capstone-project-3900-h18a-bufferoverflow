@@ -217,18 +217,25 @@ class Listing(db.Model):
         self.user_id = User.query.filter_by(email=user_email).first().id
         self.addressId = determine_address_id(address)
 
-        for category_name in want_to_trade_for:
-            category = Category.query.filter_by(type=category_name).first()
-            category.category_to.append(self)
-            category.save()
-
-        for material_name in materials:
-            material = Material.query.filter_by(type=material_name).first()
-            material.material_to.append(self)
-            material.save()
+        self.update_want_to_trade_for(want_to_trade_for)
+        self.update_materials(materials)
 
         for image in images:
             new_image = Image(image, id)
+
+    def update_want_to_trade_for(self, want_to_trade_for):
+        if want_to_trade_for is not None:
+            for category_name in want_to_trade_for:
+                category = Category.query.filter_by(type=category_name).first()
+                category.category_to.append(self)
+                category.save()
+
+    def update_materials(self, materials):
+        if materials is not None:
+            for material_name in materials:
+                material = Material.query.filter_by(type=material_name).first()
+                material.material_to.append(self)
+                material.save()
 
     def to_json(self):
         return {

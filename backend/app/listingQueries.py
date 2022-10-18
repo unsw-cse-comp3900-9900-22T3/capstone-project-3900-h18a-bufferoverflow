@@ -98,10 +98,10 @@ def update_listing_resolver(obj, info, user_email,
         listing.can_pay_cash = can_pay_cash if can_pay_cash is not None else listing.can_pay_cash
         listing.can_pay_bank = can_pay_bank if can_pay_bank is not None else listing.can_pay_bank
         listing.status = status if status is not None else listing.status
-        listing.want_to_trade_for = want_to_trade_for if want_to_trade_for is not None else listing.want_to_trade_for
+        listing.update_want_to_trade_for(want_to_trade_for)
         listing.weight = weight if weight is not None else listing.weight
         listing.volume = volume if volume is not None else listing.volume
-        listing.materials = materials if materials is not None else listing.materials
+        listing.update_materials(materials)
         listing.address = determine_address_id(address)
         listing.images = images if images is not None else listing.images
         listing.save()
