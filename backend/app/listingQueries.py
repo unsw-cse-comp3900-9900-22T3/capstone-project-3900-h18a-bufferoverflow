@@ -5,7 +5,7 @@ from app.helpers import determine_address_id
 from ariadne import convert_kwargs_to_snake_case
 
 @convert_kwargs_to_snake_case
-def getListings_resolver(obj, info):
+def listListings_resolver(obj, info):
     try:
         listings = [listing.to_json() for listing in Listing.query.all()]
         payload = {
@@ -21,7 +21,7 @@ def getListings_resolver(obj, info):
 
 @convert_kwargs_to_snake_case
 def create_listing_resolver(obj, info,
-        user_email, 
+        user_email,
         title,
         description,
         is_sell_listing,
@@ -32,15 +32,15 @@ def create_listing_resolver(obj, info,
         can_pay_bank,
         status,
         want_to_trade_for,
-        weight, 
-        volume, 
+        weight,
+        volume,
         materials,
         address,
         images
     ):
     try:
         listing = Listing(
-            user_email, 
+            user_email,
             title,
             description,
             is_sell_listing,
@@ -51,8 +51,8 @@ def create_listing_resolver(obj, info,
             can_pay_bank,
             status,
             want_to_trade_for,
-            weight, 
-            volume, 
+            weight,
+            volume,
             materials,
             address,
             images
