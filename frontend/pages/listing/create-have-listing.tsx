@@ -2,7 +2,7 @@ import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 import { Box, Button, Card, Checkbox, createTheme, FormControl, FormControlLabel, FormGroup, FormLabel, InputAdornment, Tab, Tabs, TextField, Typography } from "@mui/material";
 import { createRef, useState } from "react";
-import { ItemStatsType, StatusType } from "../../components/listing/types";
+import { StatusType } from "../../components/listing/types";
 import { uploadFile } from "../../utils/imageUtils";
 import { CategorySearch } from "../../components/feed/CategorySearch";
 

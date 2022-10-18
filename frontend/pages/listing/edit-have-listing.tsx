@@ -21,7 +21,8 @@ const mockData: ListingProps = {
   trade: true,
   cash: true,
   bank: false,
-  stats: "weight",
+  weight: 100, 
+  volume: 0,
   material: ['wood', 'metal'],
   tradeCategories: ['Vehicles'],
   price: 1273

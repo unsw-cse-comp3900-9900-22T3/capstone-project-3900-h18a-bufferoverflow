@@ -1,10 +1,5 @@
 export type StatusType = 'available' | 'pending'
 
-export type ItemStatsType = {
-  type: 'weight' | 'volume',
-  value: number;
-}
-
 export interface ListingProps {
   title: string;
   image: string;
@@ -15,7 +10,8 @@ export interface ListingProps {
   trade: boolean;
   cash: boolean;
   bank: boolean;
-  stats: ItemStatsType;
+  weight: number;
+  volume: number;
   material: string[];
   tradeCategories: string[];
   price: number;
