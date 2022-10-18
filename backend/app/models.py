@@ -1,4 +1,3 @@
-from itsdangerous import want_bytes
 from app import db
 from app.helpers import determine_address_id
 
