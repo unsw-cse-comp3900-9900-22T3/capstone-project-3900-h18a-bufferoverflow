@@ -8,7 +8,7 @@ def determine_address_id(address):
             return address_info.id
         else:
             # add it to db 
-            new_address = app.models.Address(address["place"])
+            new_address = app.models.Address(address)
             new_address.save()
             return new_address.id
 
