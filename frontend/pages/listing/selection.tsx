@@ -3,13 +3,18 @@ import { NextPage } from 'next'
 import { Avatar, Box, Button, Typography } from '@mui/material'
 import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
 import StoreMallDirectoryIcon from '@mui/icons-material/StoreMallDirectory';
+import { useRouter } from 'next/router';
 
 const Selection: NextPage = () => {
+  const router = useRouter()
   return (
     <Template title='New Listing Selection' center>
       <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 15 }}>
 
-        <Button sx={{ border: 1, height: 320, width: 240, display: 'flex', flexDirection: 'column' }}>
+        <Button
+          sx={{ border: 1, height: 320, width: 240, display: 'flex', flexDirection: 'column' }}
+          onClick={() => router.push('/listing/create-want-listing')}
+        >
           <Avatar sx={{ height: 70, width: 70, color: 'black' }}>
             <LocalGroceryStoreIcon sx={{ height: 40, width: 40 }} />
           </Avatar>
@@ -19,7 +24,10 @@ const Selection: NextPage = () => {
           </Typography>
         </Button>
 
-        <Button sx={{ border: 1, height: 320, width: 240, display: 'flex', flexDirection: 'column' }}>
+        <Button
+          sx={{ border: 1, height: 320, width: 240, display: 'flex', flexDirection: 'column' }}
+          onClick={() => router.push('/listing/create-have-listing')}
+        >
           <Avatar sx={{ height: 70, width: 70, color: 'black' }}>
             <StoreMallDirectoryIcon sx={{ height: 40, width: 40 }} />
           </Avatar>
