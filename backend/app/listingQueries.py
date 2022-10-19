@@ -102,7 +102,7 @@ def update_listing_resolver(obj, info, user_email,
         listing.weight = weight if weight is not None else listing.weight
         listing.volume = volume if volume is not None else listing.volume
         listing.update_materials(materials)
-        listing.address = determine_address_id(address)
+        listing.address = determine_address_id(address) if address is not None else listing.address
         listing.images = images if images is not None else listing.images
         listing.save()
         payload = {

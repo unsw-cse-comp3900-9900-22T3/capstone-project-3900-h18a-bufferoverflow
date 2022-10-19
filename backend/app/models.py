@@ -19,7 +19,6 @@ class Address(db.Model):
 
     def to_json(self):
         return {
-            "id": self.id,
             "place": self.place
         }
 
@@ -86,9 +85,7 @@ class User(db.Model):
     def to_json(self):
         # fetch address.place 
         address = Address.query.get(self.addressId)
-        place = ""
-        if address is not None:
-            place = address.place
+        place = "" if address is None else address.place
 
         return {
             "id": self.id,
@@ -273,12 +270,6 @@ class Listing(db.Model):
                 material.save()
 
     def to_json(self):
-        # TODO: make this an address method?
-        address = Address.query.get(self.addressId)
-        place = ""
-        if address is not None:
-            place = address.place
-
         images = Image.query.filter_by(listing_id=self.id).all()
 
         return {
@@ -296,9 +287,7 @@ class Listing(db.Model):
             "weight": self.weight,
             "volume": self.volume,
             "status": self.status,
-            "address": {
-                "place": place
-            },
+            "address": Address.query.get(self.addressId).to_json(),
             "images": [image.to_json() for image in images],
             "materials": [mat.to_json() for mat in self.materials]
         }
