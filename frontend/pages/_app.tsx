@@ -17,7 +17,7 @@ const firebaseConfig = {
 };
 
 const client = new ApolloClient({
-  uri: 'http://localhost:8000/graphql',
+  uri: `http://localhost:${process.env.NEXT_PUBLIC_BACKEND_PORT}/graphql`,
   cache: new InMemoryCache(),
 });
 
