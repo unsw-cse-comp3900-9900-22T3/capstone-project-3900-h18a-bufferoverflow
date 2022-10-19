@@ -117,6 +117,12 @@ class Image(db.Model):
         self.url = url
         self.listing_id = listing_id
 
+    def to_json(self):
+        return {
+            "id": self.id,
+            "file_name": self.url
+        }
+
     def save(self):
         db.session.add(self)
         db.session.commit()
@@ -233,7 +239,7 @@ class Listing(db.Model):
         self.update_materials(materials)
 
         for image in images:
-            new_image = Image(image, id)
+            new_image = Image(image, self.id)
 
     def update_want_to_trade_for(self, want_to_trade_for):
         if want_to_trade_for is not None:
@@ -266,19 +272,18 @@ class Listing(db.Model):
                 material.save()
 
     def to_json(self):
-        # this is a sign of bad design
-        #materials = Material.query().all()
-        print("hi")
-        for mat in self.materials:
-            print(mat)
-            print(mat.type)
-            print(mat.to_json())
-        print("looped through mats")
+        # TODO: make this an address method?
+        address = Address.query.get(self.addressId)
+        place = ""
+        if address is not None:
+            place = address.place
+
+        images = Image.query.filter_by(listing_id=self.id).all()
 
         return {
             "id": self.id,
             "title": self.title,
-            # TODO: user
+            "user": User.query.get(self.user_id).to_json(),
             "description": self.description,
             "is_sell_listing": self.is_sell_listing,
             "want_to_trade_for": [category.to_json() for category in self.categories],
@@ -290,9 +295,10 @@ class Listing(db.Model):
             "weight": self.weight,
             "volume": self.volume,
             "status": self.status,
-            # TODO: implement address, 
-            # TODO: implement images
-            "images": [],
+            "address": {
+                "place": place
+            },
+            "images": [image.to_json() for image in images],
             "materials": [mat.to_json() for mat in self.materials]
         }
 
