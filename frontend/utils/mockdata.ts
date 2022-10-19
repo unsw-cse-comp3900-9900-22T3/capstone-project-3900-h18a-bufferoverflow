@@ -16,3 +16,16 @@ export const mockRequest = async (): Promise<ItemCardProps[]> => {
   }
   return data
 }
+
+export const singleItemCardData = (want: boolean) => {
+  return (
+    structuredClone({
+      title: 'Used Kayak',
+      price: 9999,
+      location: 'Kensingston, NSW',
+      image: 'https://images.unsplash.com/photo-1499720565725-bd574541a3ee?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+      avatar: 'https://mui.com/static/images/avatar/3.jpg',
+      want: want
+    })
+  )
+}
