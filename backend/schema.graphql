@@ -40,13 +40,57 @@ type UsersResult {
   users: [User]
 }
 
+type Image {
+  id: ID!
+  fileName: String!
+}
+
+# TODO: category "valid" endpoint?
+type Category {
+  type: String!
+}
+
+type Material {
+  type: String 
+}
+
+type Listing {
+  id: ID!
+  title: String! 
+  description: String!
+  user: User!
+  isSellListing: Boolean!
+  wantToTradeFor: [Category]!
+  priceMin: Float!
+  priceMax: Float!
+  canTrade: Boolean!
+  canPayCash: Boolean!
+  canPayBank: Boolean!
+  weight: Float!
+  volume: Float!
+  status: Int!
+  address: Address!
+  images: [Image]!
+  materials: [Material]!
+}
+
+type ListingResult {
+  success: Boolean!
+  errors: [String]
+  listing: Listing
+}
+
+type ListingsResult {
+  success: Boolean!
+  errors: [String]
+  listings: [Listing]
+}
+
 type Query {
   listUsers: UsersResult!
   getUser(email: String!): UserResult!
-}
-
-input AddressInput {
-  place: String!
+  listListings: ListingsResult!
+  getListing(id: ID!): ListingResult!
 }
 
 type Mutation {
@@ -57,7 +101,44 @@ type Mutation {
     preferredDistance: Int
     bio: String
     displayImg: String
-    address: AddressInput
+    address: String
   ): UserResult!
   deleteUser(email: String!): UserResult!
+  createListing(
+    userEmail: String! 
+    title: String! 
+    description: String!
+    isSellListing: Boolean!
+    priceMin: Float!
+    priceMax: Float!
+    canTrade: Boolean!
+    canPayCash: Boolean!
+    canPayBank: Boolean!
+    status: String!
+    wantToTradeFor: [String]!
+    weight: Float 
+    volume: Float 
+    materials: [String]!
+    address: String!
+    images: [String]!
+  ): ListingResult!
+  updateListing(
+    id: ID!
+    title: String
+    description: String
+    isSellListing: Boolean
+    priceMin: Float
+    priceMax: Float
+    canTrade: Boolean
+    canPayCash: Boolean
+    canPayBank: Boolean
+    status: String
+    wantToTradeFor: [String]
+    weight: Float
+    volume: Float
+    materials: [String]
+    address: String
+    images: [String]
+  ): ListingResult!
+  deleteListing(id: ID!): ListingResult!
 }
