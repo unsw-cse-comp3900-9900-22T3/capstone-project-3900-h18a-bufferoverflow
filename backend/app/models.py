@@ -1,3 +1,4 @@
+from unicodedata import category
 from app import db
 from app.helpers import determine_address_id
 from app.config import material_names, category_names
@@ -143,6 +144,11 @@ class Category(db.Model):
     def __init__(self, type):
         self.type = type
 
+    def to_json(self):
+        return {
+            "type": self.type
+        }
+
     def save(self):
         db.session.add(self)
         db.session.commit()
@@ -157,6 +163,11 @@ class Material(db.Model):
 
     def __init__(self, type):
         self.type = type
+
+    def to_json(self):
+        return {
+            "type": self.type
+        }
 
     def save(self):
         db.session.add(self)
@@ -255,14 +266,22 @@ class Listing(db.Model):
                 material.save()
 
     def to_json(self):
+        # this is a sign of bad design
+        #materials = Material.query().all()
+        print("hi")
+        for mat in self.materials:
+            print(mat)
+            print(mat.type)
+            print(mat.to_json())
+        print("looped through mats")
+
         return {
             "id": self.id,
             "title": self.title,
             # TODO: user
             "description": self.description,
             "is_sell_listing": self.is_sell_listing,
-            # TODO: implement want to trade for
-            "want_to_trade_for": [],
+            "want_to_trade_for": [category.to_json() for category in self.categories],
             "price_min": self.price_min,
             "price_max": self.price_max,
             "can_trade": self.can_trade,
@@ -274,8 +293,7 @@ class Listing(db.Model):
             # TODO: implement address, 
             # TODO: implement images
             "images": [],
-            # TODO: implement materials
-            "materials": []
+            "materials": [mat.to_json() for mat in self.materials]
         }
 
     def save(self):
