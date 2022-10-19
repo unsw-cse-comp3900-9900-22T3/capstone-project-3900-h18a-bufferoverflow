@@ -21,6 +21,8 @@ services:
     volumes:
       - ./frontend/:/app/
       - ignore:/app/node_modules/
+    environment:
+      - NEXT_PUBLIC_BACKEND_PORT=${BACKEND_PORT:-8000}
   db:
     image: postgres:13-alpine
     volumes:
