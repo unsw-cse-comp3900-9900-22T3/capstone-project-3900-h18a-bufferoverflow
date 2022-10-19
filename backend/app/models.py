@@ -194,7 +194,7 @@ class Listing(db.Model):
     weight = db.Column(db.Float, nullable=True)
     volume = db.Column(db.Float, nullable=True)
 
-    status = db.Column(db.Integer, nullable=False)
+    status = db.Column(db.String(16), nullable=False)
     addressId = db.Column(db.Integer, db.ForeignKey("addresses.id"), nullable=True)
 
     def __init__(self,
@@ -223,8 +223,7 @@ class Listing(db.Model):
         self.can_trade = can_trade
         self.can_pay_cash = can_pay_cash
         self.can_pay_bank = can_pay_bank
-        # TODO: remove hardcoding
-        self.status = 1
+        self.status = status
         self.weight = weight
         self.volume = volume
 
