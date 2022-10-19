@@ -240,6 +240,7 @@ class Listing(db.Model):
 
         for image in images:
             new_image = Image(image, self.id)
+            new_image.save()
 
     def update_want_to_trade_for(self, want_to_trade_for):
         if want_to_trade_for is not None:
