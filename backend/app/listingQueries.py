@@ -70,7 +70,8 @@ def create_listing_resolver(obj, info,
     return payload
 
 @convert_kwargs_to_snake_case
-def update_listing_resolver(obj, info, user_email,
+def update_listing_resolver(obj, info, 
+        id,
         title,
         description,
         is_sell_listing,
@@ -88,7 +89,7 @@ def update_listing_resolver(obj, info, user_email,
         images
     ):
     try:
-        listing = Listing.query.filter_by(user_email=user_email).first()
+        listing = Listing.query.get(id)
         listing.title = title if title is not None else listing.title
         listing.description = description if description is not None else listing.description
         listing.is_sell_listing = is_sell_listing if is_sell_listing is not None else listing.is_sell_listing
@@ -97,7 +98,7 @@ def update_listing_resolver(obj, info, user_email,
         listing.can_trade = can_trade if can_trade is not None else listing.can_trade
         listing.can_pay_cash = can_pay_cash if can_pay_cash is not None else listing.can_pay_cash
         listing.can_pay_bank = can_pay_bank if can_pay_bank is not None else listing.can_pay_bank
-        listing.status = status if status is not None else listing.status
+        listing.status = 1
         listing.update_want_to_trade_for(want_to_trade_for)
         listing.weight = weight if weight is not None else listing.weight
         listing.volume = volume if volume is not None else listing.volume
