@@ -229,7 +229,10 @@ class Listing(db.Model):
             # to successfully remove all previous want_to_trade_for
             for category_name in category_names:
                 category = Category.query.filter_by(type=category_name).first()
-                category.category_to.remove(self)
+                try:
+                    category.category_to.remove(self)
+                except: 
+                    pass
 
             for category_name in want_to_trade_for:
                 category = Category.query.filter_by(type=category_name).first()
@@ -241,7 +244,10 @@ class Listing(db.Model):
             # to successfully remove all previous materials
             for material_name in material_names:
                 material = Material.query.filter_by(type=material_name).first()
-                material.material_to.remove(self)
+                try: 
+                    material.material_to.remove(self)
+                except: 
+                    pass
 
             for material_name in materials:
                 material = Material.query.filter_by(type=material_name).first()
@@ -251,13 +257,25 @@ class Listing(db.Model):
     def to_json(self):
         return {
             "id": self.id,
+            "title": self.title,
+            # TODO: user
             "description": self.description,
             "is_sell_listing": self.is_sell_listing,
+            # TODO: implement want to trade for
+            "want_to_trade_for": [],
             "price_min": self.price_min,
             "price_max": self.price_max,
             "can_trade": self.can_trade,
             "can_pay_cash": self.can_pay_cash,
-            "can_pay_bank": self.can_pay_bank
+            "can_pay_bank": self.can_pay_bank,
+            "weight": self.weight,
+            "volume": self.volume,
+            "status": self.status,
+            # TODO: implement address, 
+            # TODO: implement images
+            "images": [],
+            # TODO: implement materials
+            "materials": []
         }
 
     def save(self):

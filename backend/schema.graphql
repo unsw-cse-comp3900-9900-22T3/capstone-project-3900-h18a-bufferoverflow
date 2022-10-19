@@ -58,21 +58,21 @@ type Listing {
   id: ID!
   title: String! 
   description: String!
-  user: User!
+  # user: User!
   isSellListing: Boolean!
   # below should probably be a category list
-  # wantToTradeFor: [Category]!
+  wantToTradeFor: [Category]!
   priceMin: Float!
   priceMax: Float!
   canTrade: Boolean!
   canPayCash: Boolean!
   canPayBank: Boolean!
-  # weight: Float!
-  # volume: Float!
-  # status: Int!
+  weight: Float!
+  volume: Float!
+  status: Int!
   # address: Address!
-  # images: [Image]!
-  # materials: [Material]!
+  images: [Image]!
+  materials: [Material]!
 }
 
 type ListingResult {
