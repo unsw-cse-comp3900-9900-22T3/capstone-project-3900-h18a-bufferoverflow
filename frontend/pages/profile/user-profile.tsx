@@ -6,10 +6,12 @@ import { Avatar, Button, Card, Typography } from '@mui/material'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useRouter } from 'next/router'
 import { createRef, useEffect, useState } from 'react'
-import { uploadFile } from '../../utils/imageUtils'
+import { uploadFile } from '../../utils/utils'
 import { gql, useMutation, useQuery } from '@apollo/client'
-import { useStore } from '../../store/store'
+import { useStore, useStoreUpdate } from '../../store/store'
 import { Toast } from '../../components/generic/Toast'
+import { getAuth, updateProfile } from 'firebase/auth'
+import { convertUserToAuthProps } from '../../store/utils'
 
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
@@ -84,10 +86,11 @@ const UserProfile: NextPage = () => {
   const ref = createRef<any>()
   const router = useRouter()
   const { auth } = useStore()
+  const setStore = useStoreUpdate()
 
   // Graphql Query
   const { data } = useQuery<ProfileGraphqlProps>(GET_USER_QUERY, { variables: { email: auth?.email || '' } })
-  const [updateProfile, _] = useMutation(UPDATE_USER_MUTATION)
+  const [updateUserProfile, _] = useMutation(UPDATE_USER_MUTATION)
 
   useEffect(() => {
     // Once data is loaded from graphql query, use useState hook to set the state
@@ -136,11 +139,19 @@ const UserProfile: NextPage = () => {
           <Button variant="outlined" sx={{ borderRadius: 30 }} onClick={async () => {
             // We need to post request with modified data later
             let data = { displayImg: image, username, bio, email: auth?.email || '' }
+            if (username.length === 0) {
+              setErrorToast("Username cannot be empty")
+              return
+            }
             try {
-              await updateProfile({ variables: data })
+              const user = getAuth().currentUser!
+              let res = await updateUserProfile({ variables: data })
+              if (!res.data.updateUser.success) throw 'username is already taken'
+              await updateProfile(user, { displayName: username })
+              setStore({ auth: await convertUserToAuthProps(user) })
               setSuccessToast("Updated profile successfully!")
             } catch (e) {
-              setErrorToast("Failed to update profile")
+              setErrorToast("Error: " + e)
             }
           }}>
             Update Profile
