@@ -26,6 +26,7 @@ export const SingleChatOverview = (props: {
         justifyContent: "space-between",
         width: "100%",
         border: "1px solid #e6e6e6",
+        paddingLeft: "10px",
       }}
     >
       <Link href={props.href}>
