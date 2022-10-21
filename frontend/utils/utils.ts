@@ -12,3 +12,7 @@ export const uploadFile = async (file: File) => {
   await blob.uploadData(file, { blobHTTPHeaders: { blobContentType: file.type } })
   return blob.url
 }
+
+export const parseFirebaseError = (error: string): string => {
+  return error.split('/').at(-1)!.split('-').join(' ')
+}
