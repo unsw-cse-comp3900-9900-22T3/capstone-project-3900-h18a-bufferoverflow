@@ -5,6 +5,8 @@ from ariadne.constants import PLAYGROUND_HTML
 from flask import request, jsonify
 from app.userQueries import listUsers_resolver, getUser_resolver, \
     create_user_resolver, update_user_resolver, delete_user_resolver
+from app.listingQueries import listListings_resolver, create_listing_resolver, \
+    update_listing_resolver, delete_listing_resolver
 from app.models import User
 
 
@@ -12,12 +14,16 @@ from app.models import User
 query = ObjectType("Query")
 query.set_field("listUsers", listUsers_resolver)
 query.set_field("getUser", getUser_resolver)
+query.set_field("listListings", listListings_resolver)
 
 # Create mutations
 mutation = ObjectType("Mutation")
 mutation.set_field("createUser", create_user_resolver)
 mutation.set_field("updateUser", update_user_resolver)
 mutation.set_field("deleteUser", delete_user_resolver)
+mutation.set_field("createListing", create_listing_resolver)
+mutation.set_field("updateListing", update_listing_resolver)
+mutation.set_field("deleteListing", delete_listing_resolver)
 
 
 # Create schema
