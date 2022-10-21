@@ -20,7 +20,7 @@ const Success: NextPage = () => {
             <Typography sx={{ mb: 5, width: 240, textAlign: 'center', fontWeight: 'bold' }}>
               Message the user to arrange the exchange
             </Typography>
-            <Button variant="outlined" sx={{ borderRadius: 30, width: 240, height: 45 }}>
+            <Button variant="outlined" sx={{ borderRadius: 30, width: 240, height: 45 }} href='/chat/chat'>
               Message User
             </Button>
           </Box>

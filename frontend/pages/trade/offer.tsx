@@ -25,7 +25,7 @@ const Offer: NextPage = () => {
           <ItemCard {...swappee} href={`/detailed-listing/have?title=${swappee.title}`} />
         </Box>
         <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', mt: 5 }}>
-          <Button variant="outlined" sx={{ borderRadius: 30, mr: 0.5, width: 300, height: 45 }}>
+          <Button variant="outlined" sx={{ borderRadius: 30, mr: 0.5, width: 300, height: 45 }} href='/trade/success'>
             Accept
           </Button>
           <Button variant="outlined" sx={{ borderRadius: 30, ml: 0.5, width: 300, height: 45 }}>
