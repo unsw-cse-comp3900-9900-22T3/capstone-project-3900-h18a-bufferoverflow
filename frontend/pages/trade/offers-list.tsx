@@ -46,7 +46,7 @@ const OfferBar = (props: {
 }) => {
   return (
     <Link href={props.href}>
-      <Box sx={{ width: '80vw', border: 1, display: 'flex', borderColor: '#616161', justifyContent: 'space-between', mb: 1 }}>
+      <Box sx={{ width: '80vw', border: 0.5, display: 'flex', borderRadius: 2, justifyContent: 'space-between', mb: 1 }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Avatar src={props.avatar} sx={{ m: 1.5, ml: 3, mr: 3 }} />
           <Typography>{props.name}</Typography>
