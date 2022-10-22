@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import { ItemCard, ItemCardProps } from '../../components/feed/ItemCard'
 import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar';
 import { Template } from '../../components/generic/Template'
+import { mockItemCardRequest } from '../../utils/mockdata';
 import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals';
-import { mockRequest } from '../../utils/mockdata';
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
@@ -25,7 +25,7 @@ const RecommendedFeed: NextPage = () => {
   })
 
   useEffect(() => {
-    mockRequest()
+    mockItemCardRequest()
       .then(data => setData(data))
   }, [])
 
