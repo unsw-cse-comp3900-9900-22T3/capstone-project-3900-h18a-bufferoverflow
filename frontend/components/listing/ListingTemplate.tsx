@@ -42,6 +42,9 @@ export const ListingTemplate = (props: {
   have?: boolean;
 }) => {
 
+  const validTradeCategories = ['Entertainment', 'Vehicles']
+  const validMaterialCategories = ['Wood', 'Metal']
+
   const ref = createRef<any>()
 
   const [title, setTitle] = useState<string>('')
@@ -146,15 +149,15 @@ export const ListingTemplate = (props: {
         <Typography sx={{ fontSize: 16, fontWeight: 'bold', mb: 1.5, ml: 0.5 }}>Materials</Typography>
         <CategorySearch
           setCategories={setMaterials}
-          validCategories={['Wood', 'Metal']}
+          validCategories={validMaterialCategories}
           title="Materials"
           width={'100%'}
         />
         <Typography sx={{ fontSize: 16, fontWeight: 'bold', mb: 1.5, ml: 0.5, mt: 1.5 }}>Willing To Trade For Categories</Typography>
         <CategorySearch
-          setCategories={setMaterials}
-          validCategories={['Wood', 'Metal']}
-          title="Materials"
+          setCategories={setTradeCategories}
+          validCategories={validTradeCategories}
+          title="Trade Categories"
           width={'100%'}
         />
         <Box sx={{ display: 'flex', alignItems: 'center', mt: 2.5, mb: 2.5 }}>
