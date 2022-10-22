@@ -1,8 +1,8 @@
 import { Box, Button, Card, Checkbox, FormControl, FormControlLabel, FormGroup, InputAdornment, Tab, Tabs, TextField, Typography } from "@mui/material";
 import { createRef, useEffect, useState } from "react";
 import { ListingProps, StatusType } from "../../components/listing/types";
-import { uploadFile } from "../../utils/imageUtils";
 import { CategorySearch } from "../../components/feed/CategorySearch";
+import { uploadFile } from "../../utils/utils";
 
 /////////////////////////////////////////////////////////////////////////////
 // Secondary Components and Constants
@@ -111,7 +111,9 @@ export const ListingTemplate = (props: {
           title="Category"
           width={450}
         />
-        <Slider status={status} setStatus={setStatus} />
+        {
+          props.edit ? <Slider status={status} setStatus={setStatus} /> : <></>
+        }
       </Box>
 
       {/** Right Section */}
