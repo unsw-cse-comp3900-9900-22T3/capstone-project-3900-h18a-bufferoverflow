@@ -1,6 +1,5 @@
 from app import db
 from app.models import Listing
-from app.helpers import determine_address_id
 
 from ariadne import convert_kwargs_to_snake_case
 
@@ -103,7 +102,7 @@ def update_listing_resolver(obj, info,
         listing.weight = weight if weight is not None else listing.weight
         listing.volume = volume if volume is not None else listing.volume
         listing.update_materials(materials)
-        listing.address = determine_address_id(address) if address is not None else listing.address
+        listing.address = address if address is not None else listing.address
         listing.images = images if images is not None else listing.images
         listing.save()
         payload = {

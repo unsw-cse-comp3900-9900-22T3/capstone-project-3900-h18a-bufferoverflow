@@ -1,70 +1,6 @@
 from unicodedata import category
 from app import db
-from app.helpers import determine_address_id
 from app.config import material_names, category_names
-
-class Address(db.Model):
-    __tablename__ = "addresses"
-
-    id = db.Column(db.Integer, primary_key=True)
-    place = db.Column(db.String, nullable=False)
-    # street = db.Column(db.String(80), nullable=False)
-    # cityId = db.Column(db.Integer, db.ForeignKey('cities.id'), nullable=False)
-    # stateId = db.Column(db.Integer, db.ForeignKey('states.id'), nullable=False)
-    # countryId = db.Column(db.Integer, db.ForeignKey('countries.id'), nullable=False)
-    # postCode = db.Column(db.String(80), nullable=False)
-
-    def __init__(self, place):
-        self.place = place
-
-    def to_json(self):
-        return {
-            "place": self.place
-        }
-
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
-
-# class State(db.Model):
-#     __tablename__ = "states"
-
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(80), nullable=False)
-
-#     def save():
-#         db.session.add(self)
-#         db.session.commit()
-
-# class City(db.Model):
-#     __tablename__ = "cities"
-
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(80), nullable=False)
-
-#     def save():
-#         db.session.add(self)
-#         db.session.commit()
-
-# class Country(db.Model):
-#     __tablename__ = "countries"
-
-#     id = db.Column(db.Integer, primary_key=True)
-#     place = db.Column(db.String(128), unique=True, nullable=False)
-#     # users = db.relationship("User")
-
-#     def __init__(self, place):
-#         self.place = place
-
-#     def to_dict(self):
-#         return {
-#             "id": self.id,
-#             "place": self.place
-#         }
-
-#     def save():
-#         db.session.add(self)
-#         db.session.commit()
 
 
 class User(db.Model):
@@ -76,17 +12,13 @@ class User(db.Model):
     preferred_distance = db.Column(db.Integer, default=100, nullable=False)
     bio = db.Column(db.String(500), default="", nullable=False)
     display_img = db.Column(db.String(500), default="", nullable=False)
-    addressId = db.Column(db.Integer, db.ForeignKey("addresses.id"), nullable=True)
+    address = db.Column(db.String(100), default="", nullable=False)
 
     def __init__(self, email, username):
         self.username = username
         self.email = email
 
     def to_json(self):
-        # fetch address.place 
-        address = Address.query.get(self.addressId)
-        place = "" if address is None else address.place
-
         return {
             "id": self.id,
             "email": self.email,
@@ -94,9 +26,7 @@ class User(db.Model):
             "preferred_distance": self.preferred_distance,
             "bio": self.bio,
             "display_img": self.display_img,
-            "address": {
-                "place": place
-            }
+            "address": self.address
         }
 
     def save(self):
@@ -195,7 +125,7 @@ class Listing(db.Model):
     volume = db.Column(db.Float, nullable=True)
 
     status = db.Column(db.String(16), nullable=False)
-    addressId = db.Column(db.Integer, db.ForeignKey("addresses.id"), nullable=True)
+    address = db.Column(db.String(100), nullable=False)
 
     def __init__(self,
         user_email,
@@ -226,10 +156,10 @@ class Listing(db.Model):
         self.status = status
         self.weight = weight
         self.volume = volume
+        self.address = self.address
 
         # handle relational data
         self.user_id = User.query.filter_by(email=user_email).first().id
-        self.addressId = determine_address_id(address)
 
         self.update_want_to_trade_for(want_to_trade_for)
         self.update_materials(materials)
@@ -286,7 +216,7 @@ class Listing(db.Model):
             "weight": self.weight,
             "volume": self.volume,
             "status": self.status,
-            "address": Address.query.get(self.addressId).to_json(),
+            "address": self.address,
             "images": [image.to_json() for image in images],
             "materials": [mat.to_json() for mat in self.materials]
         }
