@@ -18,7 +18,7 @@ interface FeedGraphqlProps {
   listListings: {
     success: boolean | null;
     erorrs: string[] | null;
-    listings: ItemCardProps[] | null;
+    listings: any | null;
   };
 }
 const GET_LISTINGS = gql`
@@ -38,6 +38,8 @@ const GET_LISTINGS = gql`
     }
 
   `
+
+
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -75,7 +77,7 @@ const RecommendedFeed: NextPage = () => {
         <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '90vw', pl: 10, mb: 10 }}>
           {
             dataR.map(item => {
-              const href = item.want ? '/detailed-listing/want' : '/detailed-listing/have'
+              const href = item.isSellListing ? '/detailed-listing/have' : '/detailed-listing/want'
               return <ItemCard {...item} href={href} />
             })
           }
