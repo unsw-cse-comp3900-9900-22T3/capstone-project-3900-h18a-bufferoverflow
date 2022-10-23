@@ -1,11 +1,25 @@
 from app import db
 from app.models import Listing
-from app.helpers import determine_address_id
 
 from ariadne import convert_kwargs_to_snake_case
 
 @convert_kwargs_to_snake_case
-def listListings_resolver(obj, info):
+def defaultFeed_resolver(obj, info):
+    try:
+        listings = [listing.to_json() for listing in Listing.query.all()]
+        payload = {
+            "success": True,
+            "listings": listings
+        }
+    except Exception as error:
+        payload = {
+            "success": False,
+            "errors": [str(error)]
+        }
+    return payload
+
+@convert_kwargs_to_snake_case
+def userFeed_resolver(obj, info, user_email):
     try:
         listings = [listing.to_json() for listing in Listing.query.all()]
         payload = {
@@ -36,7 +50,7 @@ def create_listing_resolver(obj, info,
         volume,
         materials,
         address,
-        images
+        image
     ):
     try:
         listing = Listing(
@@ -55,7 +69,7 @@ def create_listing_resolver(obj, info,
             volume,
             materials,
             address,
-            images
+            image
         )
         listing.save()
         payload = {
@@ -86,7 +100,7 @@ def update_listing_resolver(obj, info,
         volume,
         materials,
         address,
-        images
+        image
     ):
     try:
         listing = Listing.query.get(id)
@@ -103,8 +117,8 @@ def update_listing_resolver(obj, info,
         listing.weight = weight if weight is not None else listing.weight
         listing.volume = volume if volume is not None else listing.volume
         listing.update_materials(materials)
-        listing.address = determine_address_id(address) if address is not None else listing.address
-        listing.images = images if images is not None else listing.images
+        listing.address = address if address is not None else listing.address
+        listing.image = image if image is not None else listing.image
         listing.save()
         payload = {
             "success": True,
