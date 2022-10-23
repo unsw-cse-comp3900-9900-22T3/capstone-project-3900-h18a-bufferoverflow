@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Box, Button, Divider, TextField } from "@mui/material";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { Toast } from "../../components/generic/Toast";
+import { parseFirebaseError } from "../../utils/utils";
 
 const title = 'Reset Password'
 
@@ -34,7 +35,7 @@ export const ResetPassword = () => {
                 setSuccessToast('Reset password email sent')
               })
               .catch(err => {
-                setErrorToast('Email is not valid')
+                setErrorToast('Error: ' + parseFirebaseError(err.code))
               })
           }}
         >

@@ -3,7 +3,7 @@ import { NextPage } from 'next'
 import { ItemCard, ItemCardProps } from '../../components/feed/ItemCard'
 import { Box, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
-import { mockRequest } from '../../utils/mockdata'
+import { mockItemCardRequest } from '../../utils/mockdata'
 import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar'
 import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals'
 
@@ -27,7 +27,7 @@ const DefaultFeed: NextPage = () => {
   })
 
   useEffect(() => {
-    mockRequest()
+    mockItemCardRequest()
       .then(data => setData(data))
   }, [])
 
