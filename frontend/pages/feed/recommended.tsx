@@ -6,12 +6,21 @@ import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar';
 import { Template } from '../../components/generic/Template'
 import { mockItemCardRequest } from '../../utils/mockdata';
 import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals';
-import { useQuery, gql } from "@apollo/client"
+import { useQuery, gql, DocumentNode } from "@apollo/client"
 import { graphql } from "../../gql/gql"
+import type {Listing} from "../../gql/graphql"
 
 /////////////////////////////////////////////////////////////////////////////
 // Data
 /////////////////////////////////////////////////////////////////////////////
+
+interface FeedGraphqlProps {
+  listListings: {
+    success: boolean | null;
+    erorrs: string[] | null;
+    listings: Listing[] | null;
+  };
+}
 const GET_LISTINGS = graphql(
   `
     query {
@@ -37,17 +46,14 @@ const GET_LISTINGS = graphql(
   `
 );
 
-
-
-
-
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
 /////////////////////////////////////////////////////////////////////////////
 
 const RecommendedFeed: NextPage = () => {
 
-  const listings = useQuery({ query: GET_LISTINGS });
+
+  const listings = useQuery<FeedGraphqlProps>(GET_LISTINGS.);
   const [data, setData] = useState<ItemCardProps[]>([])
   const [search, setSearch] = useState<SearchBarProps>({
     categories: [],
@@ -59,12 +65,8 @@ const RecommendedFeed: NextPage = () => {
     distance: MAX_DISTANCE
   })
 
-  useEffect(() => {
-    if (listings) {
-      console.log(listings)
-    }
-    mockItemCardRequest()
-      .then(data => setData(data))
+  useEffect((data) => {
+    // setData(data)
   }, [])
 
   return (
