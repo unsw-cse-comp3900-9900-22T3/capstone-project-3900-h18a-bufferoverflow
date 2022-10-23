@@ -24,11 +24,6 @@ type UsersResult {
   users: [User]
 }
 
-type Image {
-  id: ID!
-  fileName: String!
-}
-
 # TODO: category "valid" endpoint?
 type Category {
   type: String!
@@ -54,7 +49,7 @@ type Listing {
   volume: Float!
   status: Int!
   address: String!
-  images: [Image]!
+  images: String
   materials: [Material]!
 }
 
@@ -104,7 +99,7 @@ type Mutation {
     volume: Float 
     materials: [String]!
     address: String!
-    images: [String]!
+    image: String!
   ): ListingResult!
   updateListing(
     id: ID!
@@ -122,7 +117,7 @@ type Mutation {
     volume: Float
     materials: [String]
     address: String
-    images: [String]
+    images: String
   ): ListingResult!
   deleteListing(id: ID!): ListingResult!
 }

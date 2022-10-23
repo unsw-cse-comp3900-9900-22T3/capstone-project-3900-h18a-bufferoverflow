@@ -33,28 +33,6 @@ class User(db.Model):
         db.session.add(self)
         db.session.commit()
 
-class Image(db.Model):
-    __tablename__ = "images"
-
-    id = db.Column(db.Integer, primary_key=True)
-    url = db.Column(db.String(128), unique=True, nullable=False)
-    listing_id = db.Column(db.Integer, db.ForeignKey('listings.id'), nullable=False)
-
-    def __init__(self, url, listing_id):
-        self.url = url
-        self.listing_id = listing_id
-
-    def to_json(self):
-        return {
-            "id": self.id,
-            "file_name": self.url
-        }
-
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
-
-
 listing_material = db.Table('listing_material',
     db.Column('listing_id', db.Integer, db.ForeignKey('listings.id'), primary_key=True),
     db.Column('material_id', db.Integer, db.ForeignKey('materials.id'), primary_key=True)
@@ -143,7 +121,7 @@ class Listing(db.Model):
         volume,
         materials,
         address,
-        images
+        image
     ):
         self.title = title
         self.description = description
@@ -156,17 +134,14 @@ class Listing(db.Model):
         self.status = status
         self.weight = weight
         self.volume = volume
-        self.address = self.address
+        self.address = address
+        self.image = image
 
         # handle relational data
         self.user_id = User.query.filter_by(email=user_email).first().id
 
         self.update_want_to_trade_for(want_to_trade_for)
         self.update_materials(materials)
-
-        for image in images:
-            new_image = Image(image, self.id)
-            new_image.save()
 
     def update_want_to_trade_for(self, want_to_trade_for):
         if want_to_trade_for is not None:
@@ -199,8 +174,6 @@ class Listing(db.Model):
                 material.save()
 
     def to_json(self):
-        images = Image.query.filter_by(listing_id=self.id).all()
-
         return {
             "id": self.id,
             "title": self.title,
@@ -217,7 +190,7 @@ class Listing(db.Model):
             "volume": self.volume,
             "status": self.status,
             "address": self.address,
-            "images": [image.to_json() for image in images],
+            "image": self.image,
             "materials": [mat.to_json() for mat in self.materials]
         }
 

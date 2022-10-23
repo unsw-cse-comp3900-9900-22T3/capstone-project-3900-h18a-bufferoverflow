@@ -35,7 +35,7 @@ def create_listing_resolver(obj, info,
         volume,
         materials,
         address,
-        images
+        image
     ):
     try:
         listing = Listing(
@@ -54,7 +54,7 @@ def create_listing_resolver(obj, info,
             volume,
             materials,
             address,
-            images
+            image
         )
         listing.save()
         payload = {
@@ -85,7 +85,7 @@ def update_listing_resolver(obj, info,
         volume,
         materials,
         address,
-        images
+        image
     ):
     try:
         listing = Listing.query.get(id)
@@ -103,7 +103,7 @@ def update_listing_resolver(obj, info,
         listing.volume = volume if volume is not None else listing.volume
         listing.update_materials(materials)
         listing.address = address if address is not None else listing.address
-        listing.images = images if images is not None else listing.images
+        listing.image = image if image is not None else listing.image
         listing.save()
         payload = {
             "success": True,
