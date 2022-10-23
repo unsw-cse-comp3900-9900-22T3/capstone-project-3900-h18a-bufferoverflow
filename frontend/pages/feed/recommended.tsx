@@ -39,8 +39,6 @@ export const GET_USER_FEED = gql`
 
 const RecommendedFeed: NextPage = () => {
   const { auth } = useStore();
-
-
   const { data } = useQuery<FeedGraphqlProps>(GET_USER_FEED, { variables: { userEmail: auth?.email || '' } });
   const [search, setSearch] = useState<SearchBarProps>({
     categories: [],

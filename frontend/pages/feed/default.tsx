@@ -1,9 +1,8 @@
 import { Template } from '../../components/generic/Template'
 import { NextPage } from 'next'
-import { ItemCard, ItemCardProps } from '../../components/feed/ItemCard'
+import { ItemCard } from '../../components/feed/ItemCard'
 import { Box, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
-import { mockItemCardRequest } from '../../utils/mockdata'
 import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar'
 import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals'
 import { useQuery, gql } from "@apollo/client";
@@ -59,7 +58,6 @@ export const GET_DEFAULT_FEED = gql`
 
 const DefaultFeed: NextPage = () => {
 
-  // const { data } = useQuery<ItemCardProps[]>(GET_FEED);
 
   const { data } = useQuery<FeedGraphqlProps>(GET_DEFAULT_FEED);
   const [search, setSearch] = useState<SearchBarProps>({
