@@ -8,7 +8,7 @@ import { mockItemCardRequest } from '../../utils/mockdata';
 import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals';
 import { useQuery, gql, DocumentNode } from "@apollo/client"
 import { graphql } from "../../gql/gql"
-import type {Listing} from "../../gql/graphql"
+import type {ListingResult} from "../../gql/graphql"
 
 /////////////////////////////////////////////////////////////////////////////
 // Data
@@ -18,10 +18,10 @@ interface FeedGraphqlProps {
   listListings: {
     success: boolean | null;
     erorrs: string[] | null;
-    listings: Listing[] | null;
+    listings: ListingResult | null;
   };
 }
-const GET_LISTINGS = graphql(
+const GET_LISTINGS = gql
   `
     query {
       listListings {
@@ -44,7 +44,7 @@ const GET_LISTINGS = graphql(
       }
     }
   `
-);
+
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
@@ -53,8 +53,8 @@ const GET_LISTINGS = graphql(
 const RecommendedFeed: NextPage = () => {
 
 
-  const listings = useQuery<FeedGraphqlProps>(GET_LISTINGS.);
-  const [data, setData] = useState<ItemCardProps[]>([])
+  const {data} = useQuery<FeedGraphqlProps>(GET_LISTINGS);
+  const [dataR, setData] = useState<ItemCardProps[]>([])
   const [search, setSearch] = useState<SearchBarProps>({
     categories: [],
     price: {
@@ -65,9 +65,11 @@ const RecommendedFeed: NextPage = () => {
     distance: MAX_DISTANCE
   })
 
-  useEffect((data) => {
-    // setData(data)
-  }, [])
+  useEffect(() => {
+    console.log(data);
+      mockItemCardRequest()
+      .then(data => setData(data))
+  }, [data])
 
   return (
     <Template title='Swapr'>
@@ -78,7 +80,7 @@ const RecommendedFeed: NextPage = () => {
         </Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '90vw', pl: 10, mb: 10 }}>
           {
-            data.map(item => {
+            dataR.map(item => {
               const href = item.want ? '/detailed-listing/want' : '/detailed-listing/have'
               return <ItemCard {...item} href={href} />
             })
