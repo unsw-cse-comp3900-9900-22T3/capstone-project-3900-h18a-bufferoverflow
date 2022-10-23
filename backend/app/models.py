@@ -94,8 +94,7 @@ class Listing(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     is_sell_listing = db.Column(db.Boolean, nullable=False)
 
-    price_min = db.Column(db.Float,nullable=True)
-    price_max = db.Column(db.Float, nullable=True)
+    price = db.Column(db.Float,nullable=True)
     can_trade = db.Column(db.Boolean, nullable=False)
     can_pay_cash = db.Column(db.Boolean, nullable=False)
     can_pay_bank = db.Column(db.Boolean, nullable=False)
@@ -110,8 +109,7 @@ class Listing(db.Model):
         title,
         description,
         is_sell_listing,
-        price_min,
-        price_max,
+        price,
         can_trade,
         can_pay_cash,
         can_pay_bank,
@@ -126,8 +124,7 @@ class Listing(db.Model):
         self.title = title
         self.description = description
         self.is_sell_listing = is_sell_listing
-        self.price_min = price_min
-        self.price_max = price_max
+        self.price = price
         self.can_trade = can_trade
         self.can_pay_cash = can_pay_cash
         self.can_pay_bank = can_pay_bank
@@ -181,8 +178,7 @@ class Listing(db.Model):
             "description": self.description,
             "is_sell_listing": self.is_sell_listing,
             "want_to_trade_for": [category.to_json() for category in self.categories],
-            "price_min": self.price_min,
-            "price_max": self.price_max,
+            "price": self.price,
             "can_trade": self.can_trade,
             "can_pay_cash": self.can_pay_cash,
             "can_pay_bank": self.can_pay_bank,
