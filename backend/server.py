@@ -1,4 +1,4 @@
-from app import app, db
+from app import app, db, socketio
 from ariadne import load_schema_from_path, make_executable_schema, \
     graphql_sync, snake_case_fallback_resolvers, ObjectType
 from ariadne.constants import PLAYGROUND_HTML
@@ -8,7 +8,7 @@ from app.userQueries import listUsers_resolver, getUser_resolver, \
 from app.listingQueries import listListings_resolver, create_listing_resolver, \
     update_listing_resolver, delete_listing_resolver
 from app.models import User
-
+from flask_socketio import send, emit
 
 # Create queries
 query = ObjectType("Query")
@@ -97,3 +97,8 @@ def query():
 def getToken():
     username = request.json["username"]
     return {"username": username}
+
+@socketio.on('connect')
+def handle_message(message):
+    print('received message: ' + message)
+    emit("response", "hi")

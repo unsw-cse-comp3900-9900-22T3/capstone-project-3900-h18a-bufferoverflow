@@ -8,6 +8,8 @@ CORS(app)
 app.config.from_object("app.config.Config")
 db = SQLAlchemy(app)
 app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app)
 
-socketio.run(app)
+socketio = SocketIO(app, cors_allowed_origins=['http://localhost:5002'])
+if __name__ == '__main__':
+    socketio.run(app)
+

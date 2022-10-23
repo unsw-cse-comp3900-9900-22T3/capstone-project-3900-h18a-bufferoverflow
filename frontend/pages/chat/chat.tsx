@@ -7,6 +7,22 @@ let socket;
 
 const Chat: NextPage = () => {
 
+  useEffect(() => {
+    fetch(`http://localhost:${process.env.NEXT_PUBLIC_BACKEND_PORT}/chat`).finally(() => {
+      const socket = io()
+
+      socket.on('connect', () => {
+        console.log('connect')
+        socket.emit('hello')
+      })
+
+      socket.on('hello', data => {
+        console.log('hello', data)
+      })
+    })
+  }, [])
+
+
   return (
     <Template title="Chat">
       <Typography>Hello</Typography>

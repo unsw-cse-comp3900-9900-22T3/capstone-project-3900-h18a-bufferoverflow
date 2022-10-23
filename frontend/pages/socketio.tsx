@@ -5,25 +5,18 @@ let socket
 export default () => {
   
   useEffect(() => {
-    fetch(`http://localhost:${process.env.NEXT_PUBLIC_BACKEND_PORT}/chat`).finally(() => {
-      const socket = io()
+    fetch(`http://localhost:${process.env.NEXT_PUBLIC_BACKEND_PORT}`).finally(() => {
+      const socket = io(`http://localhost:${process.env.NEXT_PUBLIC_BACKEND_PORT}`)
 
       socket.on('connect', () => {
         console.log('connect')
-        socket.emit('hello')
+        socket.emit('hello', 'test')
       })
 
-      socket.on('hello', data => {
+      socket.on('response', data => {
         console.log('hello', data)
       })
 
-      socket.on('a user connected', () => {
-        console.log('a user connected')
-      })
-
-      socket.on('disconnect', () => {
-        console.log('disconnect')
-      })
     })
   }, [])
 
