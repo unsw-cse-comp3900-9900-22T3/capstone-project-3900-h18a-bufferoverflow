@@ -18,31 +18,25 @@ interface FeedGraphqlProps {
   listListings: {
     success: boolean | null;
     erorrs: string[] | null;
-    listings: ListingResult | null;
+    listings: ItemCardProps[] | null;
   };
 }
-const GET_LISTINGS = gql
-  `
-    query {
-      listListings {
-        listings {
-          isSellListing
-          title
-          description
-          user {
-            displayImg
-          }
-          priceMin
-          priceMax
-          address {
-            place
-          }
-          images {
-            id
-          }
+const GET_LISTINGS = gql`
+  query {
+    listListings {
+      listings {
+        isSellListing
+        title
+        description
+        user {
+          displayImg
         }
+        price
+        address
+        image  
       }
     }
+
   `
 
 
