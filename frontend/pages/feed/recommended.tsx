@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ItemCard } from '../../components/feed/ItemCard'
 import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar';
 import { Template } from '../../components/generic/Template'
-import { GET_DEFAULT_FEED, FeedGraphqlProps } from './default';
+import { FeedGraphqlProps } from './default';
 import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals';
 import { useQuery, gql } from "@apollo/client"
 import { useStore } from '../../store/store';
@@ -15,7 +15,23 @@ import { useStore } from '../../store/store';
 /////////////////////////////////////////////////////////////////////////////
 
 
-
+export const GET_USER_FEED = gql`
+  query {
+    userFeed(userEmail : $userEmail) {
+      listings {
+        title
+        description
+        address
+        price
+        images
+        user {
+          displayImg
+        }
+        isSellListing
+      }
+    }
+  }
+`;
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
@@ -25,7 +41,7 @@ const RecommendedFeed: NextPage = () => {
   const { auth } = useStore();
 
 
-  const { data } = useQuery<FeedGraphqlProps>(GET_DEFAULT_FEED);
+  const { data } = useQuery<FeedGraphqlProps>(GET_USER_FEED, { variables: { userEmail: auth?.email || '' } });
   const [search, setSearch] = useState<SearchBarProps>({
     categories: [],
     price: {
@@ -69,14 +85,7 @@ const RecommendedFeed: NextPage = () => {
                 location={item.address} 
                 href={item.isSellListing ? "/detailed-listing/have" : "/detailed-listing/want"} 
                 />; 
-          })
-          
-          /*dataR.map(item => {
-              const href = item.want ? '/detailed-listing/want' : '/detailed-listing/have'
-              return <ItemCard {...item} href={href} /> 
-            }
-            )*/
-            
+            })
           }
         </Box>
       </Box>
