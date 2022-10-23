@@ -6,6 +6,40 @@ import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar';
 import { Template } from '../../components/generic/Template'
 import { mockItemCardRequest } from '../../utils/mockdata';
 import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals';
+import { useQuery, gql } from "@apollo/client"
+import { graphql } from "../../gql/gql"
+
+/////////////////////////////////////////////////////////////////////////////
+// Data
+/////////////////////////////////////////////////////////////////////////////
+const GET_LISTINGS = graphql(
+  `
+    query {
+      listListings {
+        listings {
+          isSellListing
+          title
+          description
+          user {
+            displayImg
+          }
+          priceMin
+          priceMax
+          address {
+            place
+          }
+          images {
+            id
+          }
+        }
+      }
+    }
+  `
+);
+
+
+
+
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
@@ -13,6 +47,7 @@ import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals';
 
 const RecommendedFeed: NextPage = () => {
 
+  const listings = useQuery({ query: GET_LISTINGS });
   const [data, setData] = useState<ItemCardProps[]>([])
   const [search, setSearch] = useState<SearchBarProps>({
     categories: [],
@@ -25,6 +60,9 @@ const RecommendedFeed: NextPage = () => {
   })
 
   useEffect(() => {
+    if (listings) {
+      console.log(listings)
+    }
     mockItemCardRequest()
       .then(data => setData(data))
   }, [])
