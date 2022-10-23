@@ -11,7 +11,7 @@ import { useQuery, gql } from "@apollo/client";
 // Data
 /////////////////////////////////////////////////////////////////////////////
 
-export interface FeedGraphqlProps {
+interface DefaultFeedGraphqlProps {
   defaultFeed: {
     success: boolean | null;
     erorrs: string[] | null;
@@ -19,7 +19,7 @@ export interface FeedGraphqlProps {
   };
 }
 
-interface GraphqlListing {
+export interface GraphqlListing {
   title: string;
   description: string;
   price: number;
@@ -59,7 +59,7 @@ export const GET_DEFAULT_FEED = gql`
 const DefaultFeed: NextPage = () => {
 
 
-  const { data } = useQuery<FeedGraphqlProps>(GET_DEFAULT_FEED);
+  const { data } = useQuery<DefaultFeedGraphqlProps>(GET_DEFAULT_FEED);
   const [search, setSearch] = useState<SearchBarProps>({
     categories: [],
     price: {

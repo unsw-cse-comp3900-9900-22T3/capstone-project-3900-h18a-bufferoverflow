@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ItemCard } from '../../components/feed/ItemCard'
 import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar';
 import { Template } from '../../components/generic/Template'
-import { FeedGraphqlProps } from './default';
+import { GraphqlListing } from './default';
 import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals';
 import { useQuery, gql } from "@apollo/client"
 import { useStore } from '../../store/store';
@@ -14,9 +14,16 @@ import { useStore } from '../../store/store';
 // Data
 /////////////////////////////////////////////////////////////////////////////
 
+export interface RecommendedFeedGraphqlProps {
+  userFeed: {
+    success: boolean | null;
+    erorrs: string[] | null;
+    listings: GraphqlListing[] | null;
+  };
+}
 
-export const GET_USER_FEED = gql`
-  query {
+const GET_USER_FEED = gql`
+  query($userEmail : String!) {
     userFeed(userEmail : $userEmail) {
       listings {
         title
@@ -39,7 +46,7 @@ export const GET_USER_FEED = gql`
 
 const RecommendedFeed: NextPage = () => {
   const { auth } = useStore();
-  const { data } = useQuery<FeedGraphqlProps>(GET_USER_FEED, { variables: { userEmail: auth?.email || '' } });
+  const { data } = useQuery<RecommendedFeedGraphqlProps>(GET_USER_FEED, { variables: { userEmail: auth?.email || '' } });
   const [search, setSearch] = useState<SearchBarProps>({
     categories: [],
     price: {
@@ -74,7 +81,7 @@ const RecommendedFeed: NextPage = () => {
             mb: 10,
           }}
         >
-          {data?.defaultFeed.listings?.map(item => {
+          {data?.userFeed.listings?.map(item => {
               return <ItemCard
                 title={item.title}
                 price={item.price}
