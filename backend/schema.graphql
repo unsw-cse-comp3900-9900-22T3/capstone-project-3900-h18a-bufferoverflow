@@ -67,7 +67,9 @@ type ListingsResult {
 type Query {
   listUsers: UsersResult!
   getUser(email: String!): UserResult!
-  listListings: ListingsResult!
+  defaultFeed: ListingsResult!
+  # TODO: implement machine-learning resolver
+  userFeed(userEmail: String!): ListingsResult!
   getListing(id: ID!): ListingResult!
 }
 

@@ -4,7 +4,22 @@ from app.models import Listing
 from ariadne import convert_kwargs_to_snake_case
 
 @convert_kwargs_to_snake_case
-def listListings_resolver(obj, info):
+def defaultFeed_resolver(obj, info):
+    try:
+        listings = [listing.to_json() for listing in Listing.query.all()]
+        payload = {
+            "success": True,
+            "listings": listings
+        }
+    except Exception as error:
+        payload = {
+            "success": False,
+            "errors": [str(error)]
+        }
+    return payload
+
+@convert_kwargs_to_snake_case
+def userFeed_resolver(obj, info, user_email):
     try:
         listings = [listing.to_json() for listing in Listing.query.all()]
         payload = {
