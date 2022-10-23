@@ -29,7 +29,7 @@ const MyListings: NextPage = () => {
           {
             data.map(item => {
               if (item.want) {
-                return <ItemCard {...item} href='/detailed-listing/want' />
+                return <ItemCard {...item} href='/listing/edit-want-listing' />
               }
             })
           }
@@ -41,7 +41,7 @@ const MyListings: NextPage = () => {
           {
             data.map(item => {
               if (!item.want) {
-                return <ItemCard {...item} href='/detailed-listing/have' />
+                return <ItemCard {...item} href='/listing/edit-have-listing' />
               }
             })
           }
