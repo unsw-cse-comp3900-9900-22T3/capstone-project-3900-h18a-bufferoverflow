@@ -1,7 +1,8 @@
+import { SingleChatOverviewProps } from "../components/chat/single-chat";
 import { ItemCardProps } from "../components/feed/ItemCard";
 
 // This is a function that mimics a post request - returns data after 1 seconds delay
-export const mockRequest = async (): Promise<ItemCardProps[]> => {
+export const mockItemCardRequest = async (): Promise<ItemCardProps[]> => {
   await new Promise(resolve => setTimeout(resolve, 1000));
   let data = []
   for (let i = 0; i < 20; i++) {
@@ -28,4 +29,21 @@ export const singleItemCardData = (want: boolean) => {
       want: want
     })
   )
+}
+
+// This is a function that mimics a post request - returns data after 1 seconds delay
+export const mockSingleChatRequest = async (): Promise<SingleChatOverviewProps[]> => {
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  let data = []
+  for (let i = 0; i < 4; i++) {
+    data.push(structuredClone({
+      // TODO: fix href to be dynamic to be between the logged in user and the other user, here as 'John Doe'
+      href: '/chat/yourusername-theirusername',
+      delHref: '/chat/del/yourusername-theirusername',
+      username: 'John Doe',
+      avatar: 'https://mui.com/static/images/avatar/1.jpg',
+      lastMessageTime: '2 hours ago',
+    }))
+  }
+  return data
 }

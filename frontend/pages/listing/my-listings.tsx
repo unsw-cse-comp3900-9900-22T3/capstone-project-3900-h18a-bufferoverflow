@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import { Box, Typography } from "@mui/material";
 import { ItemCard, ItemCardProps } from "../../components/feed/ItemCard";
 import { useEffect, useState } from "react";
-import { mockRequest } from "../../utils/mockdata";
+import { mockItemCardRequest } from "../../utils/mockdata";
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
@@ -15,7 +15,7 @@ const MyListings: NextPage = () => {
 
   // Pre-fill data once POST request is complete
   useEffect(() => {
-    mockRequest()
+    mockItemCardRequest()
       .then(data => setData(data))
   }, [])
 
@@ -29,7 +29,7 @@ const MyListings: NextPage = () => {
           {
             data.map(item => {
               if (item.want) {
-                return <ItemCard {...item} href='/detailed-listing/want' />
+                return <ItemCard {...item} href='/listing/edit-want-listing' />
               }
             })
           }
@@ -41,7 +41,7 @@ const MyListings: NextPage = () => {
           {
             data.map(item => {
               if (!item.want) {
-                return <ItemCard {...item} href='/detailed-listing/have' />
+                return <ItemCard {...item} href='/listing/edit-have-listing' />
               }
             })
           }

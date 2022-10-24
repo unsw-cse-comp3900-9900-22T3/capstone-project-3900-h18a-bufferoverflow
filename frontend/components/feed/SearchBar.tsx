@@ -135,6 +135,9 @@ export const SearchBar = (props: {
   setData: (arg: SearchBarProps) => void;
   onSearch: () => void;
 }) => {
+
+  const validSearchCategories = ['Entertainment', 'Vehicles', 'Clothing']
+
   const setCategories = (categories: string[]) => {
     props.setData({ ...props.data, categories })
   }
@@ -151,9 +154,10 @@ export const SearchBar = (props: {
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', mt: 5 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '90vw' }}>
         <CategorySearch
+          title='Categories'
           setCategories={setCategories}
           onSearch={props.onSearch}
-          validCategories={['Entertainment', 'Vehicles', 'Clothing']}
+          validCategories={validSearchCategories}
           width={'60vw'}
         />
         <DistanceDropdown distance={props.data.distance} setDistance={setDistance} />
