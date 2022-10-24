@@ -98,7 +98,12 @@ def getToken():
     username = request.json["username"]
     return {"username": username}
 
-@socketio.on('connect')
+# @socketio.on('connect')
+# def handle_message(message):
+#     print('received message: ' + message)
+#     emit("response", "hi")
+
+@socketio.on('send_message')
 def handle_message(message):
-    print('received message: ' + message)
-    emit("response", "hi")
+    print('received message and sent back: ' + message)
+    emit("to_client", message, broadcast=True)
