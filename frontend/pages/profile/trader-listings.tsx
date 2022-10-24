@@ -24,32 +24,31 @@ const TraderListings: NextPage = () => {
   return (
     <Template title="Trader Listings">
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography sx={{ width: '85vw', fontWeight: 'bold', mt: 2, mb: 1 }}>
-          {username}'s Listings
+        <Typography sx={{ width: '80vw', fontWeight: 'bold', mt: 3.5, mb: 2.5 }}>
+          {username}'s Want Listings
         </Typography>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '90vw' }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '90vw', pl: 10 }}>
           {
             data.map(item => {
               if (item.want) {
-                return <ItemCard {...item} href='/detailed-listing/want' />
+                return <ItemCard {...item} href={`/detailed-listing/want?title=${item.title}`} />
               }
             })
           }
         </Box>
-        <Typography sx={{ width: '85vw', fontWeight: 'bold', mt: 2, mb: 2 }}>
-          {username}'s Listings
+        <Typography sx={{ width: '80vw', fontWeight: 'bold', mt: 2.5, mb: 2.5 }}>
+          {username}'s Have Listings
         </Typography>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '90vw' }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '90vw', pl: 10, mb: 10 }}>
           {
             data.map(item => {
               if (!item.want) {
-                return <ItemCard {...item} href='/detailed-listing/have' />
+                return <ItemCard {...item} href={`/detailed-listing/have?title=${item.title}`} />
               }
             })
           }
         </Box>
       </Box>
-
     </Template>
   );
 };
