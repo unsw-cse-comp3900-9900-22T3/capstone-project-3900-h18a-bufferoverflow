@@ -87,7 +87,7 @@ const VisitorProfile: NextPage = () => {
             <Typography>{user?.bio}</Typography>
           </Card>
           <Typography sx={{ mb: 2.5, ml: 1 }}>Trader Location</Typography>
-          <Card variant="outlined" sx={{ display: 'flex', alignItems: 'center', p: 1.5, mb: 5 }}>
+          <Card variant="outlined" sx={{ display: 'flex', alignItems: 'center', minHeight: 45, p: 1.5, mb: 5 }}>
             <Typography>{user?.address}</Typography>
           </Card>
           <Button variant="outlined" sx={{ borderRadius: 3 }} href={`/profile/trader-listings?email=${email}`}>
