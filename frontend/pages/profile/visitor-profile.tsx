@@ -3,6 +3,9 @@ import { NextPage } from "next";
 import { Box, Button, Card, Typography } from "@mui/material";
 import { gql, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
+import StarIcon from '@mui/icons-material/Star';
+import DoneIcon from '@mui/icons-material/Done';
+import { useState } from "react";
 
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
@@ -46,6 +49,7 @@ const VisitorProfile: NextPage = () => {
   const { email } = router.query
   const { data } = useQuery<ProfileGraphqlProps>(GET_USER_QUERY, { variables: { email } })
   const user = data?.getUser.user
+  const [following, setFollowing] = useState<boolean>(false)
 
   return (
     <Template title="Visitor Profile" center>
@@ -61,14 +65,34 @@ const VisitorProfile: NextPage = () => {
             }
           </Card>
           <Typography sx={{ fontSize: 20, mt: 4, textAlign: 'center' }}>{user?.username}</Typography>
-          <Button variant="outlined" sx={{ borderRadius: 30 }} onClick={async () => { }}>
-            Follow
-          </Button>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {
+              following
+                ? <DoneIcon fontSize="large" sx={{ mr: 4, color: '#616161' }} />
+                : <StarIcon fontSize="large" sx={{ mr: 4, color: '#616161' }} />
+            }
+            <Button variant="outlined" sx={{ borderRadius: 30, width: '100%', mr: 3 }} onClick={async () => {
+              // query here then toggle is successful
+              setFollowing(!following)
+            }}>
+              {following ? 'Unfollow' : 'Follow'}
+            </Button>
+          </Box>
         </Box>
 
         {/** Right Section */}
         <Box sx={{ display: 'flex', flexDirection: 'column', width: 300 }}>
-          <Typography sx={{ mb: 2 }}>Public Information</Typography>
+          <Typography sx={{ mb: 2.5, ml: 1 }}>About The Trader</Typography>
+          <Card variant="outlined" sx={{ minHeight: 100, p: 1.5, mb: 3 }}>
+            <Typography>{user?.bio}</Typography>
+          </Card>
+          <Typography sx={{ mb: 2.5, ml: 1 }}>Trader Location</Typography>
+          <Card variant="outlined" sx={{ display: 'flex', alignItems: 'center', p: 1.5, mb: 5 }}>
+            <Typography>{user?.address}</Typography>
+          </Card>
+          <Button variant="outlined" sx={{ borderRadius: 3 }} href={`/profile/trader-listings?email=${email}`}>
+            View trader listings
+          </Button>
         </Box>
 
       </Box>

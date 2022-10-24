@@ -2,12 +2,12 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 
-const FollowerListings: NextPage = () => {
+const TraderListings: NextPage = () => {
   return (
-    <Template title="Follower Listings">
+    <Template title="Trader Listings">
 
     </Template>
   );
 };
 
-export default FollowerListings
+export default TraderListings
