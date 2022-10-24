@@ -64,7 +64,7 @@ const VisitorProfile: NextPage = () => {
                 : <></>
             }
           </Card>
-          <Typography sx={{ fontSize: 20, mt: 4, textAlign: 'center' }}>{user?.username}</Typography>
+          <Typography sx={{ fontSize: 20, mt: 3, mb: 5, textAlign: 'center' }}>{user?.username}</Typography>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {
               following
