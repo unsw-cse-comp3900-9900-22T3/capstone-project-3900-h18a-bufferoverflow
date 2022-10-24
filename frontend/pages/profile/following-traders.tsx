@@ -20,19 +20,19 @@ const mockData: FollowingTraderProps[] = [
   {
     avatar: 'https://mui.com/static/images/avatar/3.jpg',
     name: 'Bobby',
-    email: 'bobby@gmail.com',
+    email: 'bobby1@gmail.com',
     href: '/trade/offer'
   },
   {
     avatar: 'https://mui.com/static/images/avatar/3.jpg',
     name: 'Robby',
-    email: 'bobby@gmail.com',
+    email: 'bobby2@gmail.com',
     href: '/trade/offer'
   },
   {
     avatar: 'https://mui.com/static/images/avatar/3.jpg',
-    name: 'Bobby',
-    email: 'bobby@gmail.com',
+    name: 'Hobby',
+    email: 'bobby3@gmail.com',
     href: '/trade/offer'
   }
 ]
@@ -62,7 +62,16 @@ const FollowingTraders: NextPage = () => {
                 <Avatar src={offer.avatar} sx={{ m: 1.5, ml: 3, mr: 3 }} />
                 <Typography>{offer.name}</Typography>
               </Box>
-              <Button href='/' sx={{ display: 'flex', zIndex: 10000 }}>
+              <Button
+                sx={{ display: 'flex', zIndex: 10000 }}
+                onClick={async () => {
+                  // Should query api to update the unfollow action then if successfuly, continue with
+                  // rendering the change
+                  const index = data.findIndex(x => x.email === offer.email)
+                  data.splice(index, 1)
+                  setData([...data])
+                }}
+              >
                 <ClearIcon />
               </Button>
             </Box>
