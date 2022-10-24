@@ -19,6 +19,7 @@ interface WantListingProps {
   categories: string[];
   description: string;
   trader: string;
+  email: string;
   cash: boolean;
   trade: boolean;
   bank: boolean;
@@ -66,6 +67,7 @@ const DetailedWantListing: NextPage = () => {
     "https://images.unsplash.com/photo-1499720565725-bd574541a3ee?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80";
   const categories = ["asdfsadf", "asdfdf", "asdfsa", "asdfsa", "asdfsa"];
   const trader = "Sean";
+  const email = 'test@gmail.com'
   const cash = true;
   const trade = true;
   const bank = true;
@@ -177,14 +179,14 @@ const DetailedWantListing: NextPage = () => {
             <Button
               variant="outlined"
               sx={{ borderRadius: 30, mr: 0.5, width: "50%", height: 45 }}
-              href={`/chat/chat?user=${trader}`}
+              href={`/chat/chat?email=${email}`}
             >
               Message User
             </Button>
             <Button
               variant="outlined"
               sx={{ borderRadius: 30, ml: 0.5, width: "50%", height: 45 }}
-              href={`/profile/visitor-profile?user=${trader}`}
+              href={`/profile/visitor-profile?email=${email}`}
             >
               View Trader Profile
             </Button>
