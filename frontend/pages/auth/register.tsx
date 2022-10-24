@@ -101,6 +101,7 @@ export const Register = () => {
                 .then(async (res) => {
                   await updateProfile(res.user, { displayName: username })
                   setStore({ auth: await convertUserToAuthProps(res.user) })
+                  router.push('/')
                 })
                 .catch(err => {
                   setErrorToast('Error: ' + parseFirebaseError(err.code))
