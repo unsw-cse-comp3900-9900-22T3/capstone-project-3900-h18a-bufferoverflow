@@ -1,4 +1,3 @@
-from unicodedata import category
 from app import db
 from app.config import material_names, category_names
 

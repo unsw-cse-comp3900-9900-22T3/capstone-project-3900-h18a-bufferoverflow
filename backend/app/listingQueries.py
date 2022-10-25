@@ -1,3 +1,4 @@
+from operator import sub
 from app import db
 from app.models import Listing
 
@@ -37,20 +38,26 @@ def userFeed_resolver(obj, info, user_email):
 def searchListings_resolver(obi, info,
     category=None,
     distance=None,
-    type=None,
+    is_sell_listing=None,
     price_min=None,
     price_max=None
 ):
-    subquery = Listing.query.all()
-    print(subquery)
+    subquery = None
     if price_min and price_max:
-        subquery = Listing.query.filter(db.and_(Listing.price >= price_min, Listing.price <= price_max))
+        subquery = Listing.query.filter(db.and_(Listing.price >= price_min, Listing.price <= price_max)).subquery()
     elif price_min:
-        subquery = Listing.query.filter(Listing.price >= price_min)
+        subquery = Listing.query.filter(Listing.price >= price_min).subquery('price')
     elif price_max: 
-        subquery = Listing.query.filter(Listing.price <= price_max)
+        subquery = Listing.query.filter(Listing.price <= price_max).subquery('price')
 
-    print(subquery)
+    if is_sell_listing and subquery is not None: 
+        subquery = Listing.query.filter(db.and_(Listing.is_sell_listing == is_sell_listing, Listing.id.in_(subquery)))
+
+    # Listing.id.in_(subquery)
+
+    return [listing.to_json() for listing in subquery.all()]
+
+
    
 
 @convert_kwargs_to_snake_case

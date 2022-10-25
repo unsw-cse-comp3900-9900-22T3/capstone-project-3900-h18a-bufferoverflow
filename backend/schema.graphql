@@ -46,7 +46,7 @@ type Listing {
   canPayBank: Boolean!
   weight: Float!
   volume: Float!
-  status: Int!
+  status: String!
   address: String!
   images: String
   materials: [Material]!
@@ -74,7 +74,7 @@ type Query {
   searchListings(
     category: [String]
     distance: Int 
-    type: String
+    isSellListing: Boolean
     priceMin: Float 
     priceMax: Float
   ): ListingsResult!
