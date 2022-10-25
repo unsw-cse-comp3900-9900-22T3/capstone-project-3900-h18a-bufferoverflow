@@ -1,3 +1,4 @@
+from operator import sub
 from app import db
 from app.models import Listing
 
@@ -34,13 +35,47 @@ def userFeed_resolver(obj, info, user_email):
     return payload
 
 @convert_kwargs_to_snake_case
+def searchListings_resolver(obi, info,
+    category=None,
+    distance=None,
+    is_sell_listing=None,
+    price_min=None,
+    price_max=None
+):
+    try:
+        result = [listing.to_json() for listing in Listing.query.all()]
+        if price_min:
+            result = filter(lambda x: x["price"] >= price_min, result)
+        if price_max:
+            result = filter(lambda x: x["price"] <= price_max, result)
+
+        if is_sell_listing == True: 
+            result = filter(lambda x: x["is_sell_listing"], result)
+        elif is_sell_listing == False:
+            result = filter(lambda x: not x["is_sell_listing"], result)
+
+        payload = {
+            "success": True,
+            "listings": result
+        }
+
+    except Exception as error:
+        payload = {
+            "success": False,
+            "errors": [str(error)]
+        }
+    return payload
+
+
+   
+
+@convert_kwargs_to_snake_case
 def create_listing_resolver(obj, info,
         user_email,
         title,
         description,
         is_sell_listing,
-        price_min,
-        price_max,
+        price,
         can_trade,
         can_pay_cash,
         can_pay_bank,
@@ -58,8 +93,7 @@ def create_listing_resolver(obj, info,
             title,
             description,
             is_sell_listing,
-            price_min,
-            price_max,
+            price,
             can_trade,
             can_pay_cash,
             can_pay_bank,
@@ -89,8 +123,7 @@ def update_listing_resolver(obj, info,
         title,
         description,
         is_sell_listing,
-        price_min,
-        price_max,
+        price,
         can_trade,
         can_pay_cash,
         can_pay_bank,
@@ -107,12 +140,11 @@ def update_listing_resolver(obj, info,
         listing.title = title if title is not None else listing.title
         listing.description = description if description is not None else listing.description
         listing.is_sell_listing = is_sell_listing if is_sell_listing is not None else listing.is_sell_listing
-        listing.price_min = price_min if price_min is not None else listing.price_min
-        listing.price_max = price_max if price_max is not None else listing.price_max
+        listing.price = price if price is not None else listing.price
         listing.can_trade = can_trade if can_trade is not None else listing.can_trade
         listing.can_pay_cash = can_pay_cash if can_pay_cash is not None else listing.can_pay_cash
         listing.can_pay_bank = can_pay_bank if can_pay_bank is not None else listing.can_pay_bank
-        listing.status = 1
+        listing.status = status if status is not None else listing.status
         listing.update_want_to_trade_for(want_to_trade_for)
         listing.weight = weight if weight is not None else listing.weight
         listing.volume = volume if volume is not None else listing.volume
