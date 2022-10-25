@@ -77,7 +77,7 @@ def create_listing_resolver(obj, info,
             title,
             description,
             is_sell_listing,
-            price
+            price,
             can_trade,
             can_pay_cash,
             can_pay_bank,
@@ -128,7 +128,7 @@ def update_listing_resolver(obj, info,
         listing.can_trade = can_trade if can_trade is not None else listing.can_trade
         listing.can_pay_cash = can_pay_cash if can_pay_cash is not None else listing.can_pay_cash
         listing.can_pay_bank = can_pay_bank if can_pay_bank is not None else listing.can_pay_bank
-        listing.status = 1
+        listing.status = status if status is not None else listing.status
         listing.update_want_to_trade_for(want_to_trade_for)
         listing.weight = weight if weight is not None else listing.weight
         listing.volume = volume if volume is not None else listing.volume
