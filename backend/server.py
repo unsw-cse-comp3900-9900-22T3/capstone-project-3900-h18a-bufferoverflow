@@ -6,7 +6,7 @@ from flask import request, jsonify
 from app.userQueries import listUsers_resolver, getUser_resolver, \
     create_user_resolver, update_user_resolver, delete_user_resolver
 from app.listingQueries import listListings_resolver, create_listing_resolver, \
-    update_listing_resolver, delete_listing_resolver
+    update_listing_resolver, delete_listing_resolver, searchListings_resolver
 from app.models import User
 
 
@@ -15,6 +15,7 @@ query = ObjectType("Query")
 query.set_field("listUsers", listUsers_resolver)
 query.set_field("getUser", getUser_resolver)
 query.set_field("listListings", listListings_resolver)
+query.set_field("searchListings", searchListings_resolver)
 
 # Create mutations
 mutation = ObjectType("Mutation")

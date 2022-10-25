@@ -20,6 +20,26 @@ def listListings_resolver(obj, info):
     return payload
 
 @convert_kwargs_to_snake_case
+def searchListings_resolver(obi, info,
+    category=None,
+    distance=None,
+    type=None,
+    price_min=None,
+    price_max=None
+):
+    subquery = Listing.query.all()
+    print(subquery)
+    if price_min and price_max:
+        subquery = Listing.query.filter(db.and_(Listing.price >= price_min, Listing.price <= price_max))
+    elif price_min:
+        subquery = Listing.query.filter(Listing.price >= price_min)
+    elif price_max: 
+        subquery = Listing.query.filter(Listing.price <= price_max)
+
+    print(subquery)
+   
+
+@convert_kwargs_to_snake_case
 def create_listing_resolver(obj, info,
         user_email,
         title,
