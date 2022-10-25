@@ -45,17 +45,17 @@ export const DeleteChat = (props: {
             This action is irreversible.
           </DialogContentText>
         </DialogContent>
-        <DialogActions sx={{ display: "flex", justifyContent: "space-around"}}>
+        <DialogActions sx={{ display: "flex", justifyContent: "space-around" }}>
           <Button
             variant="outlined"
-            sx={{ width: 135, mr: 1 }}
+            sx={{ width: 135, mr: 1, borderRadius: 30, mt: 4, height: 45 }}
             onClick={handleClose}
           >
             Cancel
           </Button>
           <Button
             variant="outlined"
-            sx={{ width: 135, mr: 1 }}
+            sx={{ width: 135, mr: 1, borderRadius: 30, mt: 4, height: 45 }}
             onClick={handleClose}
             autoFocus
             href={props.delHref}
