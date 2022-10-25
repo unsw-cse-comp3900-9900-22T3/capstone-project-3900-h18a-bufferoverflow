@@ -59,8 +59,7 @@ def create_listing_resolver(obj, info,
         title,
         description,
         is_sell_listing,
-        price_min,
-        price_max,
+        price,
         can_trade,
         can_pay_cash,
         can_pay_bank,
@@ -78,8 +77,7 @@ def create_listing_resolver(obj, info,
             title,
             description,
             is_sell_listing,
-            price_min,
-            price_max,
+            price
             can_trade,
             can_pay_cash,
             can_pay_bank,
@@ -109,8 +107,7 @@ def update_listing_resolver(obj, info,
         title,
         description,
         is_sell_listing,
-        price_min,
-        price_max,
+        price,
         can_trade,
         can_pay_cash,
         can_pay_bank,
@@ -127,8 +124,7 @@ def update_listing_resolver(obj, info,
         listing.title = title if title is not None else listing.title
         listing.description = description if description is not None else listing.description
         listing.is_sell_listing = is_sell_listing if is_sell_listing is not None else listing.is_sell_listing
-        listing.price_min = price_min if price_min is not None else listing.price_min
-        listing.price_max = price_max if price_max is not None else listing.price_max
+        listing.price = price if price is not None else listing.price
         listing.can_trade = can_trade if can_trade is not None else listing.can_trade
         listing.can_pay_cash = can_pay_cash if can_pay_cash is not None else listing.can_pay_cash
         listing.can_pay_bank = can_pay_bank if can_pay_bank is not None else listing.can_pay_bank
