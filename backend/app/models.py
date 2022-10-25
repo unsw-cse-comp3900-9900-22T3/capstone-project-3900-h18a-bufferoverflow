@@ -102,6 +102,7 @@ class Listing(db.Model):
 
     status = db.Column(db.String(16), nullable=False)
     address = db.Column(db.String(100), nullable=False)
+    image = db.Column(db.String(500), default="", nullable=False)
 
     def __init__(self,
         user_email,

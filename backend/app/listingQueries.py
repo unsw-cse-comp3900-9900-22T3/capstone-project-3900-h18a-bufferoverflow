@@ -42,20 +42,29 @@ def searchListings_resolver(obi, info,
     price_min=None,
     price_max=None
 ):
-    subquery = None
-    if price_min and price_max:
-        subquery = Listing.query.filter(db.and_(Listing.price >= price_min, Listing.price <= price_max)).subquery()
-    elif price_min:
-        subquery = Listing.query.filter(Listing.price >= price_min).subquery('price')
-    elif price_max: 
-        subquery = Listing.query.filter(Listing.price <= price_max).subquery('price')
+    try:
+        result = [listing.to_json() for listing in Listing.query.all()]
+        if price_min:
+            result = filter(lambda x: x["price"] >= price_min, result)
+        if price_max:
+            result = filter(lambda x: x["price"] <= price_max, result)
 
-    if is_sell_listing and subquery is not None: 
-        subquery = Listing.query.filter(db.and_(Listing.is_sell_listing == is_sell_listing, Listing.id.in_(subquery)))
+        if is_sell_listing == True: 
+            result = filter(lambda x: x["is_sell_listing"], result)
+        elif is_sell_listing == False:
+            result = filter(lambda x: not x["is_sell_listing"], result)
 
-    # Listing.id.in_(subquery)
+        payload = {
+            "success": True,
+            "listings": result
+        }
 
-    return [listing.to_json() for listing in subquery.all()]
+    except Exception as error:
+        payload = {
+            "success": False,
+            "errors": [str(error)]
+        }
+    return payload
 
 
    
