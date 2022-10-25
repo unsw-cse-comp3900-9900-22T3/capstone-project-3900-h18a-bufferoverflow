@@ -34,13 +34,13 @@ export const DeleteChat = (props: {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title" sx={{ titleAlign: "center" }}>
+        <DialogTitle id="alert-dialog-title" sx={{ titleAlign: "center", mt: 1 }}>
           {"Are you sure you want to delete this chat?"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText
             id="alert-dialog-description"
-            sx={{ textAlign: "center" }}
+            sx={{ textAlign: "center", justifyContent: "center" }}
           >
             This action is irreversible.
           </DialogContentText>
@@ -48,14 +48,14 @@ export const DeleteChat = (props: {
         <DialogActions sx={{ display: "flex", justifyContent: "space-around" }}>
           <Button
             variant="outlined"
-            sx={{ width: 135, mr: 1, borderRadius: 30, mt: 4, height: 45 }}
+            sx={{ width: 135, mr: 1, borderRadius: 30, mb: 1, height: 45 }}
             onClick={handleClose}
           >
             Cancel
           </Button>
           <Button
             variant="outlined"
-            sx={{ width: 135, mr: 1, borderRadius: 30, mt: 4, height: 45 }}
+            sx={{ width: 135, mr: 1, borderRadius: 30, mb:1,  height: 45 }}
             onClick={handleClose}
             autoFocus
             href={props.delHref}
