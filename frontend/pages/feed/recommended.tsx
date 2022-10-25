@@ -1,19 +1,52 @@
 import { Box, Typography } from '@mui/material'
 import { NextPage } from 'next'
-import { useEffect, useState } from 'react';
-import { ItemCard, ItemCardProps } from '../../components/feed/ItemCard'
+import { useState } from 'react';
+import { ItemCard } from '../../components/feed/ItemCard'
 import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar';
 import { Template } from '../../components/generic/Template'
-import { mockItemCardRequest } from '../../utils/mockdata';
+import { GraphqlListing } from './default';
 import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals';
+import { useQuery, gql } from "@apollo/client"
+import { useStore } from '../../store/store';
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Data
+/////////////////////////////////////////////////////////////////////////////
+
+export interface RecommendedFeedGraphqlProps {
+  userFeed: {
+    success: boolean | null;
+    erorrs: string[] | null;
+    listings: GraphqlListing[] | null;
+  };
+}
+
+const GET_USER_FEED = gql`
+  query($userEmail : String!) {
+    userFeed(userEmail : $userEmail) {
+      listings {
+        title
+        description
+        address
+        price
+        images
+        user {
+          displayImg
+        }
+        isSellListing
+      }
+    }
+  }
+`;
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
 /////////////////////////////////////////////////////////////////////////////
 
 const RecommendedFeed: NextPage = () => {
-
-  const [data, setData] = useState<ItemCardProps[]>([])
+  const { auth } = useStore();
+  const { data } = useQuery<RecommendedFeedGraphqlProps>(GET_USER_FEED, { variables: { userEmail: auth?.email || '' } });
   const [search, setSearch] = useState<SearchBarProps>({
     categories: [],
     price: {
@@ -24,29 +57,45 @@ const RecommendedFeed: NextPage = () => {
     distance: MAX_DISTANCE
   })
 
-  useEffect(() => {
-    mockItemCardRequest()
-      .then(data => setData(data))
-  }, [])
-
   return (
-    <Template title='Swapr'>
-      <SearchBar data={search} setData={setSearch} onSearch={() => console.log(search)} />
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography sx={{ width: '80vw', fontWeight: 'bold', mt: 3.5, mb: 2.5 }}>
+    <Template title="Swapr">
+      <SearchBar
+        data={search}
+        setData={setSearch}
+        onSearch={() => console.log(search)}
+      />
+      <Box
+        sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+      >
+        <Typography
+          sx={{ width: "80vw", fontWeight: "bold", mt: 3.5, mb: 2.5 }}
+        >
           Recommended Feed
         </Typography>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '90vw', pl: 10, mb: 10 }}>
-          {
-            data.map(item => {
-              const href = item.want ? '/detailed-listing/want' : '/detailed-listing/have'
-              return <ItemCard {...item} href={href} />
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            width: "90vw",
+            pl: 10,
+            mb: 10,
+          }}
+        >
+          {data?.userFeed.listings?.map(item => {
+              return <ItemCard
+                title={item.title}
+                price={item.price}
+                image={item.images}
+                avatar={item.user.displayImg}
+                location={item.address} 
+                href={item.isSellListing ? "/detailed-listing/have" : "/detailed-listing/want"} 
+                />; 
             })
           }
         </Box>
       </Box>
     </Template>
-  )
+  );
 }
 
 export default RecommendedFeed
