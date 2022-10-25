@@ -91,6 +91,13 @@ type Query {
   getUser(email: String!): UserResult!
   listListings: ListingsResult!
   getListing(id: ID!): ListingResult!
+  searchListings(
+    category: [String]
+    distance: Int 
+    type: String
+    priceMin: Float 
+    priceMax: Float
+  ): ListingsResult!
 }
 
 type Mutation {
