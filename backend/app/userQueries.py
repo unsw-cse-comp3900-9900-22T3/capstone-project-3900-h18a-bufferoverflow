@@ -1,6 +1,6 @@
+from audioop import add
 from app import db
-from app.models import User, Address
-from app.helpers import determine_address_id
+from app.models import User
 
 from ariadne import convert_kwargs_to_snake_case
 
@@ -72,7 +72,7 @@ def update_user_resolver(
             user.bio = bio if bio is not None else user.bio
             user.display_img = display_img if display_img is not None else user.display_img
 
-            user.addressId = determine_address_id(address)
+            user.address = address if address is not None else user.address
             user.save()
 
         payload = {

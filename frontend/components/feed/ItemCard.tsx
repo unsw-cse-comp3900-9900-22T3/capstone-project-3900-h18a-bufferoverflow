@@ -22,11 +22,12 @@ export const ItemCard = (props: {
   location: string;
   image: string;
   avatar: string;
-  href: string;
+  href?: string;
+  onClick?: () => void;
 }) => {
   return (
-    <Link href={props.href}>
-      <Card sx={{ maxWidth: 345, margin: '8px' }}>
+    <Link href={props.href || ''}>
+      <Card sx={{ maxWidth: 345, margin: '8px' }} onClick={props.onClick}>
         <CardMedia component='img' height='194' image={props.image} alt={props.title} />
         <CardHeader title={props.title} />
         <CardContent>

@@ -80,7 +80,7 @@ const theme = createTheme({
       main: '#616161',
     },
     secondary: {
-      main: '#4f00b0',
+      main: '#5E72E4',
     },
   }
 })

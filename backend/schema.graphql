@@ -3,29 +3,13 @@ schema {
   mutation: Mutation
 }
 
-# type State {
-#   name: String!
-# }
-
-# type City {
-#   name: String!
-# }
-
-# type Country {
-#   name: String!
-# }
-
-type Address {
-  place: String!
-}
-
 type User {
   username: String!
   email: String!
   preferredDistance: Int!
   bio: String!
   displayImg: String!
-  address: Address
+  address: String!
 }
 
 type UserResult {
@@ -38,11 +22,6 @@ type UsersResult {
   success: Boolean!
   errors: [String]
   users: [User]
-}
-
-type Image {
-  id: ID!
-  fileName: String!
 }
 
 # TODO: category "valid" endpoint?
@@ -61,16 +40,15 @@ type Listing {
   user: User!
   isSellListing: Boolean!
   wantToTradeFor: [Category]!
-  priceMin: Float!
-  priceMax: Float!
+  price: Float!
   canTrade: Boolean!
   canPayCash: Boolean!
   canPayBank: Boolean!
   weight: Float!
   volume: Float!
   status: Int!
-  address: Address!
-  images: [Image]!
+  address: String!
+  images: String
   materials: [Material]!
 }
 
@@ -89,7 +67,9 @@ type ListingsResult {
 type Query {
   listUsers: UsersResult!
   getUser(email: String!): UserResult!
-  listListings: ListingsResult!
+  defaultFeed: ListingsResult!
+  # TODO: implement machine-learning resolver
+  userFeed(userEmail: String!): ListingsResult!
   getListing(id: ID!): ListingResult!
   searchListings(
     category: [String]
@@ -116,8 +96,7 @@ type Mutation {
     title: String! 
     description: String!
     isSellListing: Boolean!
-    priceMin: Float!
-    priceMax: Float!
+    price: Float!
     canTrade: Boolean!
     canPayCash: Boolean!
     canPayBank: Boolean!
@@ -127,15 +106,14 @@ type Mutation {
     volume: Float 
     materials: [String]!
     address: String!
-    images: [String]!
+    image: String!
   ): ListingResult!
   updateListing(
     id: ID!
     title: String
     description: String
     isSellListing: Boolean
-    priceMin: Float
-    priceMax: Float
+    price: Float
     canTrade: Boolean
     canPayCash: Boolean
     canPayBank: Boolean
@@ -145,7 +123,7 @@ type Mutation {
     volume: Float
     materials: [String]
     address: String
-    images: [String]
+    images: String
   ): ListingResult!
   deleteListing(id: ID!): ListingResult!
 }
