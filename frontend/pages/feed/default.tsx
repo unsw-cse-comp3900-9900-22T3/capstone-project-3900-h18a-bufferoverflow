@@ -52,6 +52,33 @@ export const GET_DEFAULT_FEED = gql`
   }
 `;
 
+interface SearchGraphqlProps {
+  searchListings: {
+    success: boolean | null;
+    erorrs: string[] | null;
+    listings: GraphqlListing[];
+  };
+}
+
+
+export const GET_SEARCH_RESULTS = gql`
+  query ($category: [String], $distance: Int, $isSellListing : $Boolean, $priceMin: Float, $priceMax: Float) {
+    searchListings(category: $category, distance: $distance, isSellListing: $isSellListing, priceMin : $priceMin, priceMax : $priceMax) {
+      listings {
+        title
+        description
+        address
+        price
+        images
+        user {
+          displayImg
+        }
+        isSellListing
+      }
+    }
+  }
+`;
+
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
 /////////////////////////////////////////////////////////////////////////////
@@ -60,6 +87,8 @@ const DefaultFeed: NextPage = () => {
 
 
   const { data } = useQuery<DefaultFeedGraphqlProps>(GET_DEFAULT_FEED);
+  const searchResults  = useQuery<SearchGraphqlProps>(GET_SEARCH_RESULTS).data;
+  const [isSearch, setIsSearch] = useState(false);
   const [search, setSearch] = useState<SearchBarProps>({
     categories: [],
     price: {
@@ -73,37 +102,81 @@ const DefaultFeed: NextPage = () => {
   var numberItems: number = 0
 
   useEffect(() =>{
-    if (data && data.defaultFeed.listings) {
+    if (isSearch) {
+
+    }
+    else if (data && data.defaultFeed.listings) {
       numberItems = data.defaultFeed.listings.length
     }
-  }, [data])
+    // TODO: update search gql
+  }, [data, search])              
 
   return (
-    <Template title='Swapr'>
-      <SearchBar data={search} setData={setSearch} onSearch={() => console.log(search)} />
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography sx={{ width: '80vw', fontWeight: 'bold', mt: 3.5, mb: 2.5 }}>
+    <Template title="Swapr">
+      <SearchBar
+        data={search}
+        setData={setSearch}
+        onSearch={() => {
+          setIsSearch(true);
+        }}
+      />
+      <Box
+        sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+      >
+        <Typography
+          sx={{ width: "80vw", fontWeight: "bold", mt: 3.5, mb: 2.5 }}
+        >
           {numberItems} Items for Sale
         </Typography>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '90vw', pl: 10, mb: 10 }}>
-          
-          {data?.defaultFeed.listings?.map(item => {
-              return <ItemCard
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            width: "90vw",
+            pl: 10,
+            mb: 10,
+          }}
+        >
+          {isSearch &&
+            searchResults?.searchListings.listings?.map((item) => {
+              return (
+                <ItemCard
+                  title={item.title}
+                  price={item.price}
+                  image={item.images}
+                  avatar={item.user.displayImg}
+                  location={item.address}
+                  href={
+                    item.isSellListing
+                      ? "/detailed-listing/have"
+                      : "/detailed-listing/want"
+                  }
+                />
+              );
+            })}
+          {!isSearch && data?.defaultFeed.listings?.map((item) => {
+            return (
+              <ItemCard
                 title={item.title}
                 price={item.price}
                 image={item.images}
                 avatar={item.user.displayImg}
-                location={item.address} 
-                href={item.isSellListing ? "/detailed-listing/have" : "/detailed-listing/want"} 
-                />; 
-          })
-           
-          }
-          
+                location={item.address}
+                href={
+                  item.isSellListing
+                    ? "/detailed-listing/have"
+                    : "/detailed-listing/want"
+                }
+              />
+            );
+          })}
         </Box>
       </Box>
     </Template>
-  )
+  );
 }
 
 export default DefaultFeed
+
+
+

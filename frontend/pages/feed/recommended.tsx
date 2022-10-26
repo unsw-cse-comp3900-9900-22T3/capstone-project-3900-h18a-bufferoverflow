@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material'
 import { NextPage } from 'next'
-import { useState } from 'react';
+import { useState , useEffect } from 'react';
 import { ItemCard } from '../../components/feed/ItemCard'
 import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar';
 import { Template } from '../../components/generic/Template'
@@ -56,6 +56,10 @@ const RecommendedFeed: NextPage = () => {
     listing: 'have',
     distance: MAX_DISTANCE
   })
+
+  useEffect(() => {
+  }, [data, search]);
+
 
   return (
     <Template title="Swapr">
