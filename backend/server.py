@@ -40,7 +40,7 @@ schema = make_executable_schema(
 
 @app.route("/test", methods=["GET"])
 def test():
-    return jsonify([user.to_dict() for user in User.query.all()])
+    return jsonify([user.to_json() for user in User.query.all()])
 
 @app.route("/graphql", methods=["GET"])
 def graphql_playground():
@@ -64,7 +64,7 @@ def hello():
 
 @app.route("/allUsers")
 def getAllUsers():
-    return json.dumps([user.email for user in User.query.all()])
+    return jsonify([user.to_json() for user in User.query.all()])
 
 
 @app.route("/addUser", methods=["POST"])
@@ -100,3 +100,22 @@ def query():
 def getToken():
     username = request.json["username"]
     return {"username": username}
+
+@app.route("/showListings")
+def show_listings():
+    result = db.session.execute('select * from listings')
+    listings = [
+        {
+            "id" : row[0],
+            "title" : row[1],
+            "description" : row[2],
+        }
+        for row in result
+    ]
+    return jsonify({"listings": listings})
+
+@app.route("/getMaterials")
+def get_materials():
+    result = db.session.execute('select * from materials')
+    materials = [row[1] for row in result]
+    return jsonify({"materials": materials})
