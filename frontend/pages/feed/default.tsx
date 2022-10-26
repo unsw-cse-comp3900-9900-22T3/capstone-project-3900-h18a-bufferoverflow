@@ -52,7 +52,7 @@ export const GET_DEFAULT_FEED = gql`
   }
 `;
 
-interface SearchGraphqlProps {
+export interface SearchGraphqlProps {
   searchListings: {
     success: boolean | null;
     erorrs: string[] | null;
@@ -62,7 +62,7 @@ interface SearchGraphqlProps {
 
 
 export const GET_SEARCH_RESULTS = gql`
-  query ($category: [String], $distance: Int, $isSellListing : $Boolean, $priceMin: Float, $priceMax: Float) {
+  query ($category: [String], $distance: Int, $isSellListing : Boolean, $priceMin: Float, $priceMax: Float) {
     searchListings(category: $category, distance: $distance, isSellListing: $isSellListing, priceMin : $priceMin, priceMax : $priceMax) {
       listings {
         title
@@ -131,9 +131,7 @@ const DefaultFeed: NextPage = () => {
       <SearchBar
         data={search}
         setData={setSearch}
-        onSearch={() => {
-          setIsSearch(true);
-        }}
+        onSearch={() => {setIsSearch(true);}}
       />
       <Box
         sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}

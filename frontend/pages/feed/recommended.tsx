@@ -4,7 +4,7 @@ import { useState , useEffect } from 'react';
 import { ItemCard } from '../../components/feed/ItemCard'
 import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar';
 import { Template } from '../../components/generic/Template'
-import { GraphqlListing } from './default';
+import { GraphqlListing, SearchGraphqlProps, GET_SEARCH_RESULTS } from './default';
 import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals';
 import { useQuery, gql } from "@apollo/client"
 import { useStore } from '../../store/store';
@@ -47,6 +47,7 @@ const GET_USER_FEED = gql`
 const RecommendedFeed: NextPage = () => {
   const { auth } = useStore();
   const { data } = useQuery<RecommendedFeedGraphqlProps>(GET_USER_FEED, { variables: { userEmail: auth?.email || '' } });
+  const [isSearch, setIsSearch] = useState(false);
   const [search, setSearch] = useState<SearchBarProps>({
     categories: [],
     price: {
@@ -56,26 +57,61 @@ const RecommendedFeed: NextPage = () => {
     listing: 'have',
     distance: MAX_DISTANCE
   })
+  var searchResults = useQuery<SearchGraphqlProps>(GET_SEARCH_RESULTS, {
+    variables: {
+      category: search.categories,
+      distance: search.distance,
+      isSellListing: search.listing == "have",
+      priceMin: search.price.min,
+      priceMax: search.price.max,
+    },
+  })?.data;
+
+  var numberItems: number = 0;
 
   useEffect(() => {
+    if (isSearch) {
+      searchResults = useQuery<SearchGraphqlProps>(GET_SEARCH_RESULTS, {
+        variables: {
+          category: search.categories,
+          distance: search.distance,
+          isSellListing: search.listing == "have",
+          priceMin: search.price.min,
+          priceMax: search.price.max,
+        },
+      })?.data;
+      
+      const count = searchResults?.searchListings.listings
+      if (count) {
+        numberItems = count.length;
+      }
+      
+    }
   }, [data, search]);
 
+  const heading = !isSearch ? (
+    <Typography sx={{ width: "80vw", fontWeight: "bold", mt: 3.5, mb: 2.5 }}>
+      Recommended Feed
+    </Typography>
+  ) : (
+    <Typography sx={{ width: "80vw", fontWeight: "bold", mt: 3.5, mb: 2.5 }}>
+      {numberItems} Search Results
+    </Typography>
+  );
 
   return (
     <Template title="Swapr">
       <SearchBar
         data={search}
         setData={setSearch}
-        onSearch={() => console.log(search)}
+        onSearch={() => {
+          setIsSearch(true);
+        }}
       />
       <Box
         sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
       >
-        <Typography
-          sx={{ width: "80vw", fontWeight: "bold", mt: 3.5, mb: 2.5 }}
-        >
-          Recommended Feed
-        </Typography>
+        {heading}
         <Box
           sx={{
             display: "flex",
@@ -85,17 +121,39 @@ const RecommendedFeed: NextPage = () => {
             mb: 10,
           }}
         >
-          {data?.userFeed.listings?.map(item => {
-              return <ItemCard
+          {isSearch &&
+            searchResults?.searchListings?.listings?.map((item) => {
+              return (
+                <ItemCard
+                  title={item.title}
+                  price={item.price}
+                  image={item.images}
+                  avatar={item.user.displayImg}
+                  location={item.address}
+                  href={
+                    item.isSellListing
+                      ? "/detailed-listing/have"
+                      : "/detailed-listing/want"
+                  }
+                />
+              );
+            })}
+          {!isSearch && data?.userFeed.listings?.map((item) => {
+            return (
+              <ItemCard
                 title={item.title}
                 price={item.price}
                 image={item.images}
                 avatar={item.user.displayImg}
-                location={item.address} 
-                href={item.isSellListing ? "/detailed-listing/have" : "/detailed-listing/want"} 
-                />; 
-            })
-          }
+                location={item.address}
+                href={
+                  item.isSellListing
+                    ? "/detailed-listing/have"
+                    : "/detailed-listing/want"
+                }
+              />
+            );
+          })}
         </Box>
       </Box>
     </Template>
