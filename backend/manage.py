@@ -1,13 +1,13 @@
 from flask.cli import FlaskGroup
 
 from app import app, db
-from app.models import User, Category, Material
+from app.models import User, Category, Material, Listing
 from app.config import material_names, category_names
 
 
 cli = FlaskGroup(app)
 
-# helper functions  
+# helper functions
 def create_materials():
 
     for material in material_names:
@@ -27,10 +27,86 @@ def create_db():
     create_materials()
     create_categories()
 
+@cli.command("create_db_with_data")
+def create_db_with_data():
+
+    # drop all tables in db in dependency order
+    tables_in_dependency_order = reversed(db.metadata.sorted_tables)
+    for table in tables_in_dependency_order:
+        db.session.execute(table.delete())
+
+    db.create_all()
+    db.session.commit()
+    create_materials()
+    create_categories()
+
+    # create users
+    user1 = User(email="user1@gmail.com", username="user1")
+    user2 = User(email="user2@gmail.com", username="user2")
+    user3 = User(email="user3@gmail.com", username="user3")
+
+    # save users
+    user1.save()
+    user2.save()
+    user3.save()
+
+    # create listings
+    listing1 = Listing(
+        user_email="user1@gmail.com",
+        title = "listing1",
+        description="listing1 description",
+        is_sell_listing=True,
+        price=100.0,
+        can_trade=True,
+        can_pay_cash=True,
+        can_pay_bank=True,
+        status="active",
+        want_to_trade_for=["furniture", "electronics"],
+        weight=1.0,
+        volume=1.0,
+        materials=["wood", "metal"],
+    )
+    listing2 = Listing(
+        user_email="user2@gmail.com",
+        title = "listing2",
+        description="listing2 description",
+        is_sell_listing=False,
+        price=199.0,
+        can_trade=False,
+        can_pay_cash=False,
+        can_pay_bank=True,
+        status="active",
+        want_to_trade_for=["toys", "books"],
+        weight=.5,
+        volume=2.0,
+        materials=["ceramic"]
+    )
+    listing3 = Listing(
+        user_email="user3@gmail.com",
+        title = "listing3",
+        description="listing3 description",
+        is_sell_listing=False,
+        price=20.0,
+        can_trade=True,
+        can_pay_cash=True,
+        can_pay_bank=True,
+        status="active",
+        want_to_trade_for=["clothes", "furniture"],
+        weight=.75,
+        volume=10.0,
+        materials=["wood", "polyester"]
+    )
+    #save listings
+    listing1.save()
+    listing2.save()
+    listing3.save()
+
+
+
 
 @cli.command("seed_db")
 def seed_db():
-    db.session.add(User(email="lukebanicevic@gmail.com"))
+    db.session.add(User(email="lukebanicevic@gmail.com", username="luke"))
     db.session.commit()
 
 @cli.command("query_db")
