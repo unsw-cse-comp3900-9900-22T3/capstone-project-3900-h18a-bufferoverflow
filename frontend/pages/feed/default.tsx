@@ -85,9 +85,7 @@ export const GET_SEARCH_RESULTS = gql`
 
 const DefaultFeed: NextPage = () => {
 
-
   const { data } = useQuery<DefaultFeedGraphqlProps>(GET_DEFAULT_FEED);
-  const searchResults  = useQuery<SearchGraphqlProps>(GET_SEARCH_RESULTS).data;
   const [isSearch, setIsSearch] = useState(false);
   const [search, setSearch] = useState<SearchBarProps>({
     categories: [],
@@ -98,18 +96,35 @@ const DefaultFeed: NextPage = () => {
     listing: 'have',
     distance: MAX_DISTANCE
   })
+  var searchResults = useQuery<SearchGraphqlProps>(GET_SEARCH_RESULTS, {
+      variables: {
+        category: search.categories,
+        distance: search.distance,
+        isSellListing: search.listing == "have",
+        priceMin: search.price.min,
+        priceMax: search.price.max,
+      },
+  })?.data;
 
   var numberItems: number = 0
 
   useEffect(() =>{
+    // update searchResults using gql if user has made a search
     if (isSearch) {
-
+      searchResults = useQuery<SearchGraphqlProps>(GET_SEARCH_RESULTS, {
+        variables: {
+          category: search.categories,
+          distance: search.distance,
+          isSellListing: search.listing == "have",
+          priceMin: search.price.min,
+          priceMax: search.price.max,
+        },
+      })?.data;
+    // else, show default feed
+    } else if (data && data.defaultFeed.listings) {
+      numberItems = data.defaultFeed.listings.length;
     }
-    else if (data && data.defaultFeed.listings) {
-      numberItems = data.defaultFeed.listings.length
-    }
-    // TODO: update search gql
-  }, [data, search])              
+  }, [data, isSearch])
 
   return (
     <Template title="Swapr">
@@ -138,7 +153,7 @@ const DefaultFeed: NextPage = () => {
           }}
         >
           {isSearch &&
-            searchResults?.searchListings.listings?.map((item) => {
+            searchResults?.searchListings?.listings?.map((item) => {
               return (
                 <ItemCard
                   title={item.title}
