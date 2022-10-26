@@ -39,6 +39,12 @@ type Material {
   type: String 
 }
 
+type MaterialResult {
+  success: Boolean!
+  errors: [String]
+  materials: [String]!
+}
+
 type Listing {
   id: ID!
   title: String! 
@@ -85,6 +91,7 @@ type Query {
     priceMax: Float
   ): ListingsResult!
   getCategories: CategoryResult!
+  getMaterials: MaterialResult! 
 }
 
 type Mutation {

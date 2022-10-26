@@ -1,7 +1,7 @@
 from operator import sub
 from app import db
 from app.models import Listing
-from manage import category_names
+from manage import category_names, material_names
 
 from ariadne import convert_kwargs_to_snake_case
 
@@ -186,6 +186,20 @@ def getCategories_resolver(obj, info):
         payload = {
             "success": True,
             "categories": category_names
+        }
+    except Exception as error:
+        payload = {
+            "success": False,
+            "errors": [str(error)]
+        }
+    return payload
+
+@convert_kwargs_to_snake_case
+def getMaterials_resolver(obj, info):
+    try:
+        payload = {
+            "success": True,
+            "materials": material_names
         }
     except Exception as error:
         payload = {
