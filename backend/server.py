@@ -6,7 +6,8 @@ from flask import request, jsonify
 from app.userQueries import listUsers_resolver, getUser_resolver, \
     create_user_resolver, update_user_resolver, delete_user_resolver
 from app.listingQueries import defaultFeed_resolver, create_listing_resolver, \
-    update_listing_resolver, delete_listing_resolver, userFeed_resolver
+    update_listing_resolver, delete_listing_resolver, userFeed_resolver, \
+    searchListings_resolver, getCategories_resolver
 from app.models import User
 from flask_socketio import send, emit, join_room
 
@@ -16,6 +17,8 @@ query.set_field("listUsers", listUsers_resolver)
 query.set_field("getUser", getUser_resolver)
 query.set_field("defaultFeed", defaultFeed_resolver)
 query.set_field("userFeed", userFeed_resolver)
+query.set_field("searchListings", searchListings_resolver)
+query.set_field("getCategories", getCategories_resolver)
 
 # Create mutations
 mutation = ObjectType("Mutation")
@@ -38,7 +41,7 @@ schema = make_executable_schema(
 
 @app.route("/test", methods=["GET"])
 def test():
-    return jsonify([user.to_dict() for user in User.query.all()])
+    return jsonify([user.to_json() for user in User.query.all()])
 
 @app.route("/graphql", methods=["GET"])
 def graphql_playground():
@@ -62,7 +65,7 @@ def hello():
 
 @app.route("/allUsers")
 def getAllUsers():
-    return json.dumps([user.email for user in User.query.all()])
+    return jsonify([user.to_json() for user in User.query.all()])
 
 
 @app.route("/addUser", methods=["POST"])
@@ -91,7 +94,6 @@ def updateUserImage():
 def query():
     result = db.session.execute('select * from users')
     emails = [row[1] for row in result]
-    print(1)
     return jsonify({"emails": emails})
 
 @app.route("/getToken", methods=["POST"])
@@ -99,10 +101,24 @@ def getToken():
     username = request.json["username"]
     return {"username": username}
 
-# @socketio.on('connect')
-# def handle_message(message):
-#     print('received message: ' + message)
-#     emit("response", "hi")
+@app.route("/showListings")
+def show_listings():
+    result = db.session.execute('select * from listings')
+    listings = [
+        {
+            "id" : row[0],
+            "title" : row[1],
+            "description" : row[2],
+        }
+        for row in result
+    ]
+    return jsonify({"listings": listings})
+
+@app.route("/getMaterials")
+def get_materials():
+    result = db.session.execute('select * from materials')
+    materials = [row[1] for row in result]
+    return jsonify({"materials": materials})
 
 @socketio.on('send_message')
 def handle_message(message):
@@ -115,3 +131,4 @@ def on_join(data):
     room = data['room']
     join_room(room)
     send(username + ' has entered the room.', to=room)
+    

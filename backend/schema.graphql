@@ -29,6 +29,12 @@ type Category {
   type: String!
 }
 
+type CategoryResult {
+  success: Boolean!
+  errors: [String]
+  categories: [String]!
+}
+
 type Material {
   type: String 
 }
@@ -46,7 +52,7 @@ type Listing {
   canPayBank: Boolean!
   weight: Float!
   volume: Float!
-  status: Int!
+  status: String!
   address: String!
   images: String
   materials: [Material]!
@@ -71,6 +77,14 @@ type Query {
   # TODO: implement machine-learning resolver
   userFeed(userEmail: String!): ListingsResult!
   getListing(id: ID!): ListingResult!
+  searchListings(
+    category: [String]
+    distance: Int 
+    isSellListing: Boolean
+    priceMin: Float 
+    priceMax: Float
+  ): ListingsResult!
+  getCategories: CategoryResult!
 }
 
 type Mutation {
