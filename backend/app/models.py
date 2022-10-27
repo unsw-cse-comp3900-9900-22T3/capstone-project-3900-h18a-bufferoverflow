@@ -42,6 +42,11 @@ listing_category = db.Table('listing_category',
     db.Column('category_id', db.Integer, db.ForeignKey('categories.id'), primary_key=True)
 )
 
+listing_want_to_trade_for = db.Table('listing_want_to_trade_for',
+    db.Column('listing_id', db.Integer, db.ForeignKey('listings.id'), primary_key=True),
+    db.Column('category_id', db.Integer, db.ForeignKey('categories.id'), primary_key=True)
+)
+
 
 class Category(db.Model):
     __tablename__ = "categories"
@@ -50,6 +55,7 @@ class Category(db.Model):
     type = db.Column(db.String(20), unique=True, nullable=False)
 
     category_to = db.relationship('Listing', secondary=listing_category, backref='categories')
+    want_to_trade_for_to = db.relationship('Listing', secondary=listing_want_to_trade_for, backref='want_to_trade_for')
 
     def __init__(self, type):
         self.type = type
@@ -114,6 +120,7 @@ class Listing(db.Model):
         can_pay_cash,
         can_pay_bank,
         status,
+        categories,
         want_to_trade_for,
         weight,
         volume,
@@ -136,13 +143,16 @@ class Listing(db.Model):
 
         # handle relational data
         self.user_id = User.query.filter_by(email=user_email).first().id
+
         if address is None:
             self.address = User.query.filter_by(email=user_email).first().address
+
+        self.update_categories(categories)
         self.update_want_to_trade_for(want_to_trade_for)
         self.update_materials(materials)
 
-    def update_want_to_trade_for(self, want_to_trade_for):
-        if want_to_trade_for is not None:
+    def update_categories(self, categories):
+        if categories is not None:
             # to successfully remove all previous want_to_trade_for
             for category_name in category_names:
                 category = Category.query.filter_by(type=category_name).first()
@@ -151,9 +161,24 @@ class Listing(db.Model):
                 except: 
                     pass
 
-            for category_name in want_to_trade_for:
+            for category_name in categories:
                 category = Category.query.filter_by(type=category_name).first()
                 category.category_to.append(self)
+                category.save()
+
+    def update_want_to_trade_for(self, want_to_trade_for):
+        if want_to_trade_for is not None:
+            # to successfully remove all previous want_to_trade_for
+            for category_name in category_names:
+                category = Category.query.filter_by(type=category_name).first()
+                try:
+                    category.want_to_trade_for_to.remove(self)
+                except: 
+                    pass
+
+            for category_name in want_to_trade_for:
+                category = Category.query.filter_by(type=category_name).first()
+                category.want_to_trade_for_to.append(self)
                 category.save()
 
     def update_materials(self, materials):
@@ -179,7 +204,8 @@ class Listing(db.Model):
             "user": User.query.get(self.user_id).to_json(),
             "description": self.description,
             "is_sell_listing": self.is_sell_listing,
-            "want_to_trade_for": [category.to_json() for category in self.categories],
+            "categories": [category.to_json() for category in self.categories],
+            "want_to_trade_for": [category.to_json() for category in self.want_to_trade_for],
             "price": self.price,
             "can_trade": self.can_trade,
             "can_pay_cash": self.can_pay_cash,
