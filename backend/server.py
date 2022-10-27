@@ -8,7 +8,7 @@ from app.userQueries import listUsers_resolver, getUser_resolver, \
 from app.listingQueries import defaultFeed_resolver, create_listing_resolver, \
     update_listing_resolver, delete_listing_resolver, userFeed_resolver
 from app.models import User
-from flask_socketio import send, emit
+from flask_socketio import send, emit, join_room
 
 # Create queries
 query = ObjectType("Query")
@@ -106,5 +106,12 @@ def getToken():
 
 @socketio.on('send_message')
 def handle_message(message):
-    print('received message and sent back: ' + message)
+    print(f'received message and sent back: {message}')
     emit("to_client", message, broadcast=True)
+
+@socketio.on('join')
+def on_join(data):
+    username = data['username']
+    room = data['room']
+    join_room(room)
+    send(username + ' has entered the room.', to=room)

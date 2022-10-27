@@ -1,56 +1,67 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { Button, TextField, Typography } from "@mui/material";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
+import { render } from "react-dom";
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
+type Message = {
+  text: string;
+  author: string;
+  timestamp: number;
+};
+
 const Chat: NextPage = () => {
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<Array<String>>([]);
+  const url = `http://localhost:${process.env.NEXT_PUBLIC_BACKEND_PORT}`;
+  const [text, setText] = useState("");
+  const [messages, setMessages] = useState<Array<Message>>([]);
 
+
+  // apparently useEffect is run 2x by default, avoid this.
+  const rendered = useRef(false);
+  
   useEffect(() => {
-    fetch(`http://localhost:${process.env.NEXT_PUBLIC_BACKEND_PORT}`).finally(
-      () => {
-        socket = io(`http://localhost:${process.env.NEXT_PUBLIC_BACKEND_PORT}`);
-        socket.on("connect", () => {
-          console.log("connect");
-          socket.emit("hello");
-        });
+    if (!rendered.current) {
+      socket = io(url);
+      console.log("effect");
+  
+      socket.on("connect", () => {
+        console.log(socket.id); // x8WIv7-mJelg7on_ALbx
+      });
+  
+      socket.on("to_client", (message) => {
+        console.log(message);
+        setMessages((oldMessages) => [...oldMessages, message]);
+      });
+    }
 
-        socket.on("to_client", (message) => {
-          console.log(message);
-          setMessages((oldMessages) => [
-            ...oldMessages,
-            message
-          ]);
-        });
-      }
-    );
+    rendered.current = true;
   }, []);
 
   const sendMessage = async () => {
-    socket.emit("send_message", message);
-    // setMessages((currentMsg) => [
-    //   ...currentMsg,
-    //   { author: chosenUsername, message },
-    // ]);
-    setMessage("");
+    socket.emit("send_message", {
+      text: text,
+      author: "3900",
+      timestamp: Date.now(),
+    });
+    setText("");
   };
 
   return (
     <Template title="Chat">
       <Typography>Messages:</Typography>
       <ol>
-        {/* TODO: messages not actually unique should be an id / timestamp */}
         {messages.map((message) => (
-          <li key={message}>{message}</li>
+          <li key={message.timestamp}>
+            <b>{message.author}</b>: {message.text}
+          </li>
         ))}
       </ol>
       <TextField
-        onChange={(e) => setMessage(e.target.value)}
-        value={message}
+        onChange={(e) => setText(e.target.value)}
+        value={text}
       ></TextField>
       <Button onClick={sendMessage}>Test</Button>
     </Template>
