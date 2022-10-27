@@ -77,6 +77,11 @@ type ListingsResult {
   listings: [Listing]
 }
 
+type Result {
+  success: Boolean!
+  errors: [String]
+}
+
 type Query {
   listUsers: UsersResult!
   getUser(email: String!): UserResult!
@@ -93,6 +98,8 @@ type Query {
   ): ListingsResult!
   getCategories: CategoryResult!
   getMaterials: MaterialResult! 
+  # TODO: getFollowing(is user following this user)
+  # TODO: getFollowingList(gets all users someone is following)
 }
 
 type Mutation {
@@ -143,4 +150,9 @@ type Mutation {
     images: String
   ): ListingResult!
   deleteListing(id: ID!): ListingResult!
+  followUser(
+    followerEmail: String!
+    followedEmail: String!
+  ): Result! 
+  # TODO: unfollow
 }

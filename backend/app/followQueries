@@ -1,0 +1,12 @@
+from app import db
+from app.models import User
+
+def followUser_resolver(obj, info,
+    follower_email,
+    followed_email
+):
+    follower = User.query.filter_by(email=follower_email)
+    followed = User.query.filter_by(email=followed_email)
+    # TODO: add
+    follower.add_following(followed)
+

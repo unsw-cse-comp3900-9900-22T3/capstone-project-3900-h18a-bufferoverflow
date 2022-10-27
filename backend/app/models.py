@@ -47,6 +47,11 @@ listing_want_to_trade_for = db.Table('listing_want_to_trade_for',
     db.Column('category_id', db.Integer, db.ForeignKey('categories.id'), primary_key=True)
 )
 
+user_following = db.Table('user_following',
+    db.Column('follower_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('followed_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
+)
+
 
 class Category(db.Model):
     __tablename__ = "categories"
@@ -150,6 +155,8 @@ class Listing(db.Model):
         self.update_categories(categories)
         self.update_want_to_trade_for(want_to_trade_for)
         self.update_materials(materials)
+
+        following = db.relationship('User', secondary=user_following, backref='followed_by')
 
     def update_categories(self, categories):
         if categories is not None:
