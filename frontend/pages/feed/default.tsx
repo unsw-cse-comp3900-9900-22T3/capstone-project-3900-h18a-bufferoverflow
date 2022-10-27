@@ -63,7 +63,7 @@ export interface SearchGraphqlProps {
 
 export const GET_SEARCH_RESULTS = gql`
   query ($category: [String], $distance: Int, $isSellListing : Boolean, $priceMin: Float, $priceMax: Float) {
-    searchListings(category: $category, distance: $distance, isSellListing: $isSellListing, priceMin : $priceMin, priceMax : $priceMax) {
+    searchListings(category: $category, distance: $distance, isSellListing: $isSellListing, priceMin: $priceMin, priceMax: $priceMax) {
       listings {
         title
         description
@@ -85,7 +85,7 @@ export const GET_SEARCH_RESULTS = gql`
 
 const DefaultFeed: NextPage = () => {
 
-  const { data } = useQuery<DefaultFeedGraphqlProps>(GET_DEFAULT_FEED);
+  const feed = useQuery<DefaultFeedGraphqlProps>(GET_DEFAULT_FEED).data;
   const [isSearch, setIsSearch] = useState(false);
   const [search, setSearch] = useState<SearchBarProps>({
     categories: [],
@@ -96,42 +96,47 @@ const DefaultFeed: NextPage = () => {
     listing: 'have',
     distance: MAX_DISTANCE
   })
-  var searchResults = useQuery<SearchGraphqlProps>(GET_SEARCH_RESULTS, {
+
+  
+
+ 
+  const { data , refetch } = useQuery<SearchGraphqlProps>(GET_SEARCH_RESULTS, {
       variables: {
         category: search.categories,
         distance: search.distance,
-        isSellListing: search.listing == "have",
+        isSellListing: search.listing === "have",
         priceMin: search.price.min,
         priceMax: search.price.max,
       },
-  })?.data;
+  });
+  
 
-  var numberItems: number = 0
+  const [numberItems, setNumberItems] = useState(0);
 
   useEffect(() =>{
-    // update searchResults using gql if user has made a search
-    if (isSearch) {
-      searchResults = useQuery<SearchGraphqlProps>(GET_SEARCH_RESULTS, {
-        variables: {
-          category: search.categories,
-          distance: search.distance,
-          isSellListing: search.listing == "have",
-          priceMin: search.price.min,
-          priceMax: search.price.max,
-        },
-      })?.data;
-    // else, show default feed
-    } else if (data && data.defaultFeed.listings) {
-      numberItems = data.defaultFeed.listings.length;
+    if (feed && feed.defaultFeed?.success && feed.defaultFeed?.listings) {
+      setNumberItems(
+        feed.defaultFeed.listings.filter((item) => item.isSellListing).length
+      );
     }
-  }, [data, isSearch])
+  }, [data])
 
   return (
     <Template title="Swapr">
       <SearchBar
         data={search}
         setData={setSearch}
-        onSearch={() => {setIsSearch(true);}}
+        onSearch={() => {
+          setIsSearch(true);
+          console.log(data);
+          refetch({
+            category: search.categories,
+            distance: search.distance,
+            isSellListing: search.listing === "have",
+            priceMin: search.price.min,
+            priceMax: search.price.max,
+          });
+        }}
       />
       <Box
         sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
@@ -151,7 +156,7 @@ const DefaultFeed: NextPage = () => {
           }}
         >
           {isSearch &&
-            searchResults?.searchListings?.listings?.map((item) => {
+            data?.searchListings?.listings?.map((item) => {
               return (
                 <ItemCard
                   title={item.title}
@@ -167,22 +172,29 @@ const DefaultFeed: NextPage = () => {
                 />
               );
             })}
-          {!isSearch && data?.defaultFeed.listings?.map((item) => {
-            return (
-              <ItemCard
-                title={item.title}
-                price={item.price}
-                image={item.images}
-                avatar={item.user.displayImg}
-                location={item.address}
-                href={
-                  item.isSellListing
-                    ? "/detailed-listing/have"
-                    : "/detailed-listing/want"
-                }
-              />
-            );
-          })}
+
+          {!isSearch &&
+            feed?.defaultFeed.listings
+              // filter to only show 'have' listings by default
+              ?.filter((item) => {
+                item.isSellListing;
+              })
+              .map((item) => {
+                return (
+                  <ItemCard
+                    title={item.title}
+                    price={item.price}
+                    image={item.images}
+                    avatar={item.user.displayImg}
+                    location={item.address}
+                    href={
+                      item.isSellListing
+                        ? "/detailed-listing/have"
+                        : "/detailed-listing/want"
+                    }
+                  />
+                );
+              })}
         </Box>
       </Box>
     </Template>

@@ -46,7 +46,7 @@ const GET_USER_FEED = gql`
 
 const RecommendedFeed: NextPage = () => {
   const { auth } = useStore();
-  const { data } = useQuery<RecommendedFeedGraphqlProps>(GET_USER_FEED, { variables: { userEmail: auth?.email || '' } });
+  const feed = useQuery<RecommendedFeedGraphqlProps>(GET_USER_FEED, { variables: { userEmail: auth?.email || '' } }).data;
   const [isSearch, setIsSearch] = useState(false);
   const [search, setSearch] = useState<SearchBarProps>({
     categories: [],
@@ -57,47 +57,41 @@ const RecommendedFeed: NextPage = () => {
     listing: 'have',
     distance: MAX_DISTANCE
   })
-  var searchResults = useQuery<SearchGraphqlProps>(GET_SEARCH_RESULTS, {
+
+  const [numberItems , setNumberItems ] = useState(0);
+
+   
+  const { data, error, refetch } = useQuery<SearchGraphqlProps>(GET_SEARCH_RESULTS, {
     variables: {
       category: search.categories,
       distance: search.distance,
-      isSellListing: search.listing == "have",
+      isSellListing: search.listing === "have",
       priceMin: search.price.min,
       priceMax: search.price.max,
     },
-  })?.data;
+  });
+  
 
-  var numberItems: number = 0;
 
   useEffect(() => {
-    if (isSearch) {
-      searchResults = useQuery<SearchGraphqlProps>(GET_SEARCH_RESULTS, {
-        variables: {
-          category: search.categories,
-          distance: search.distance,
-          isSellListing: search.listing == "have",
-          priceMin: search.price.min,
-          priceMax: search.price.max,
-        },
-      })?.data;
-      
-      const count = searchResults?.searchListings.listings
-      if (count) {
-        numberItems = count.length;
-      }
-      
+    if (isSearch && data && data.searchListings?.success) {
+      setNumberItems(data.searchListings.listings.length);
     }
-  }, [data, search]);
+  }, [data]);
+
+  
 
   const heading = !isSearch ? (
     <Typography sx={{ width: "80vw", fontWeight: "bold", mt: 3.5, mb: 2.5 }}>
-      Recommended Feed
+      Recommended Feed 
     </Typography>
   ) : (
     <Typography sx={{ width: "80vw", fontWeight: "bold", mt: 3.5, mb: 2.5 }}>
       {numberItems} Search Results
     </Typography>
   );
+
+  
 
   return (
     <Template title="Swapr">
@@ -106,6 +100,24 @@ const RecommendedFeed: NextPage = () => {
         setData={setSearch}
         onSearch={() => {
           setIsSearch(true);
+          
+
+          console.log(search.categories);
+          console.log(search.distance);
+          console.log(search.listing);
+          console.log(search.price.min);
+          console.log(search.price.max);
+
+          refetch({
+            category: search.categories,
+            distance: search.distance,
+            isSellListing: search.listing === "have",
+            priceMin: search.price.min,
+            priceMax: search.price.max,
+          });
+          console.log(search.price.min);
+          console.log(data?.searchListings.listings);
+          
         }}
       />
       <Box
@@ -122,7 +134,7 @@ const RecommendedFeed: NextPage = () => {
           }}
         >
           {isSearch &&
-            searchResults?.searchListings?.listings?.map((item) => {
+            data?.searchListings?.listings?.map((item) => {
               return (
                 <ItemCard
                   title={item.title}
@@ -138,22 +150,29 @@ const RecommendedFeed: NextPage = () => {
                 />
               );
             })}
-          {!isSearch && data?.userFeed.listings?.map((item) => {
-            return (
-              <ItemCard
-                title={item.title}
-                price={item.price}
-                image={item.images}
-                avatar={item.user.displayImg}
-                location={item.address}
-                href={
-                  item.isSellListing
-                    ? "/detailed-listing/have"
-                    : "/detailed-listing/want"
-                }
-              />
-            );
-          })}
+
+          {!isSearch &&
+            // filter to only show 'have' listings by default
+            feed?.userFeed.listings
+              ?.filter((item) => {
+                item.isSellListing;
+              })
+              .map((item) => {
+                return (
+                  <ItemCard
+                    title={item.title}
+                    price={item.price}
+                    image={item.images}
+                    avatar={item.user.displayImg}
+                    location={item.address}
+                    href={
+                      item.isSellListing
+                        ? "/detailed-listing/have"
+                        : "/detailed-listing/want"
+                    }
+                  />
+                );
+              })}
         </Box>
       </Box>
     </Template>
