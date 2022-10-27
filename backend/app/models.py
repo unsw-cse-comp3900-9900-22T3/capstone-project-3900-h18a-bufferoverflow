@@ -125,8 +125,8 @@ class Listing(db.Model):
         weight,
         volume,
         materials,
-        address,
-        image
+        address = None,
+        image = ""
     ):
         self.title = title
         self.description = description
@@ -143,6 +143,9 @@ class Listing(db.Model):
 
         # handle relational data
         self.user_id = User.query.filter_by(email=user_email).first().id
+
+        if address is None:
+            self.address = User.query.filter_by(email=user_email).first().address
 
         self.update_categories(categories)
         self.update_want_to_trade_for(want_to_trade_for)
@@ -192,6 +195,7 @@ class Listing(db.Model):
                 material = Material.query.filter_by(type=material_name).first()
                 material.material_to.append(self)
                 material.save()
+
 
     def to_json(self):
         return {

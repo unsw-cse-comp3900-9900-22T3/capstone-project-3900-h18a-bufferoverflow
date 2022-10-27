@@ -29,6 +29,12 @@ type Category {
   type: String!
 }
 
+type CategoryResult {
+  success: Boolean!
+  errors: [String]
+  categories: [String]!
+}
+
 type Material {
   type: String 
 }
@@ -79,6 +85,7 @@ type Query {
     priceMin: Float 
     priceMax: Float
   ): ListingsResult!
+  getCategories: CategoryResult!
 }
 
 type Mutation {
