@@ -64,6 +64,8 @@ def add_data():
         weight=1.0,
         volume=1.0,
         materials=["wood", "metal"],
+        image = "https://images.unsplash.com/photo-1666475877254-235b2f5fd4b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+        address = "9 Beagle St, Sydney, NSW 2039"
     )
     listing2 = Listing(
         user_email="user2@gmail.com",
@@ -79,7 +81,9 @@ def add_data():
         want_to_trade_for=["toys", "books"],
         weight=.5,
         volume=2.0,
-        materials=["ceramic"]
+        materials=["ceramic"],
+        image = "https://images.unsplash.com/photo-1666475877254-235b2f5fd4b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+        address = "27 Main St, Australia, WA 6057"
     )
     listing3 = Listing(
         user_email="user3@gmail.com",
@@ -95,7 +99,9 @@ def add_data():
         want_to_trade_for=["clothes", "furniture"],
         weight=.75,
         volume=10.0,
-        materials=["wood", "polyester"]
+        materials=["wood", "polyester"],
+        image = "https://images.unsplash.com/photo-1666475877254-235b2f5fd4b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+        address = "19 Penshurt St, Willoughby, NSW 2068"
     )
     #save listings
     listing1.save()
