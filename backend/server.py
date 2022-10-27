@@ -94,7 +94,6 @@ def updateUserImage():
 def query():
     result = db.session.execute('select * from users')
     emails = [row[1] for row in result]
-    print(1)
     return jsonify({"emails": emails})
 
 @app.route("/getToken", methods=["POST"])

@@ -182,7 +182,6 @@ def delete_listing_resolver(obj, info, user_email):
 
 @convert_kwargs_to_snake_case
 def getCategories_resolver(obj, info):
-    print(category_names)
     try:
         payload = {
             "success": True,

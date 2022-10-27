@@ -21,24 +21,22 @@ def create_categories():
 
 @cli.command("create_db")
 def create_db():
-    db.drop_all()
-    db.create_all()
-    db.session.commit()
-    create_materials()
-    create_categories()
-
-@cli.command("create_db_with_data")
-def create_db_with_data():
-
-    # drop all tables in db in dependency order
+    # drop all tables in db in dependency order if they exist
     tables_in_dependency_order = reversed(db.metadata.sorted_tables)
     for table in tables_in_dependency_order:
-        db.session.execute(table.delete())
+        # if table in database, delete
+        if table.exists(db.engine):
+            table.drop(db.engine)
 
+    # create all tables in db
+    db.session.commit()
     db.create_all()
     db.session.commit()
     create_materials()
     create_categories()
+
+@cli.command("add_data")
+def add_data():
 
     # create users
     user1 = User(email="user1@gmail.com", username="user1")
