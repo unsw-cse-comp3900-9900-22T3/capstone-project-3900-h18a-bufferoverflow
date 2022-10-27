@@ -72,7 +72,7 @@ type Query {
   userFeed(userEmail: String!): ListingsResult!
   getListing(id: ID!): ListingResult!
   searchListings(
-    wantToTradeFor: [String]
+    categories: [String]
     distance: Int 
     isSellListing: Boolean
     priceMin: Float 

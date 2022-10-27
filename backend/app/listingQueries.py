@@ -36,7 +36,7 @@ def userFeed_resolver(obj, info, user_email):
 
 @convert_kwargs_to_snake_case
 def searchListings_resolver(obi, info,
-    want_to_trade_for=None,
+    categories=None,
     distance=None,
     is_sell_listing=None,
     price_min=None,
@@ -54,9 +54,7 @@ def searchListings_resolver(obi, info,
         elif is_sell_listing == False:
             result = filter(lambda x: not x["is_sell_listing"], result)
 
-        
-        
-        if want_to_trade_for:
+        if categories:
             new_result = []
             for listing in result: 
                 found_category_match = False
@@ -64,7 +62,7 @@ def searchListings_resolver(obi, info,
                     # if we have something of one of the categories we are 
                     # searching for, then we can break, 
                     # as it fits the criteria
-                    if listing_want_to_trade["type"] in want_to_trade_for:
+                    if listing_want_to_trade["type"] in categories:
                         found_category_match = True
                         break 
                 # if we found a match, add it to our new result
