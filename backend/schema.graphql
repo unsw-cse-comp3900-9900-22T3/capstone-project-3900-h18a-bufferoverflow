@@ -39,6 +39,7 @@ type Listing {
   description: String!
   user: User!
   isSellListing: Boolean!
+  categories: [Category]!
   wantToTradeFor: [Category]!
   price: Float!
   canTrade: Boolean!
@@ -101,6 +102,7 @@ type Mutation {
     canPayCash: Boolean!
     canPayBank: Boolean!
     status: String!
+    categories: [String]!
     wantToTradeFor: [String]!
     weight: Float 
     volume: Float 
@@ -118,6 +120,7 @@ type Mutation {
     canPayCash: Boolean
     canPayBank: Boolean
     status: String
+    categories: [String]
     wantToTradeFor: [String]
     weight: Float
     volume: Float

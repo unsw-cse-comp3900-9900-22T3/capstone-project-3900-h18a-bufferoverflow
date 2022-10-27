@@ -58,11 +58,11 @@ def searchListings_resolver(obi, info,
             new_result = []
             for listing in result: 
                 found_category_match = False
-                for listing_want_to_trade in listing["want_to_trade_for"]:
+                for listing_categories in listing["categories"]:
                     # if we have something of one of the categories we are 
                     # searching for, then we can break, 
                     # as it fits the criteria
-                    if listing_want_to_trade["type"] in categories:
+                    if listing_categories["type"] in categories:
                         found_category_match = True
                         break 
                 # if we found a match, add it to our new result
@@ -98,6 +98,7 @@ def create_listing_resolver(obj, info,
         can_pay_cash,
         can_pay_bank,
         status,
+        categories,
         want_to_trade_for,
         weight,
         volume,
@@ -116,6 +117,7 @@ def create_listing_resolver(obj, info,
             can_pay_cash,
             can_pay_bank,
             status,
+            categories,
             want_to_trade_for,
             weight,
             volume,
@@ -146,6 +148,7 @@ def update_listing_resolver(obj, info,
         can_pay_cash,
         can_pay_bank,
         status,
+        categories,
         want_to_trade_for,
         weight,
         volume,
@@ -163,6 +166,7 @@ def update_listing_resolver(obj, info,
         listing.can_pay_cash = can_pay_cash if can_pay_cash is not None else listing.can_pay_cash
         listing.can_pay_bank = can_pay_bank if can_pay_bank is not None else listing.can_pay_bank
         listing.status = status if status is not None else listing.status
+        listing.update_categories(categories)
         listing.update_want_to_trade_for(want_to_trade_for)
         listing.weight = weight if weight is not None else listing.weight
         listing.volume = volume if volume is not None else listing.volume
