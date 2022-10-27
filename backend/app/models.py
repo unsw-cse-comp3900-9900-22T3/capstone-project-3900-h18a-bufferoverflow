@@ -1,6 +1,10 @@
 from app import db
 from app.config import material_names, category_names
 
+user_following = db.Table('user_following',
+    db.Column('follower_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+    db.Column('followed_id', db.Integer, db.ForeignKey('users.id'), primary_key=True)
+)
 
 class User(db.Model):
     __tablename__ = "users"
@@ -13,9 +17,15 @@ class User(db.Model):
     display_img = db.Column(db.String(500), default="", nullable=False)
     address = db.Column(db.String(100), default="", nullable=False)
 
+    # TODO: add foreign keys arg?
+    following = db.relationship('User', secondary=user_following, backref='followed_by')
+
     def __init__(self, email, username):
         self.username = username
         self.email = email
+
+    def add_following(self, followed):
+        self.following.append(followed)
 
     def to_json(self):
         return {
@@ -45,11 +55,6 @@ listing_category = db.Table('listing_category',
 listing_want_to_trade_for = db.Table('listing_want_to_trade_for',
     db.Column('listing_id', db.Integer, db.ForeignKey('listings.id'), primary_key=True),
     db.Column('category_id', db.Integer, db.ForeignKey('categories.id'), primary_key=True)
-)
-
-user_following = db.Table('user_following',
-    db.Column('follower_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
-    db.Column('followed_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
 )
 
 
@@ -156,8 +161,6 @@ class Listing(db.Model):
         self.update_want_to_trade_for(want_to_trade_for)
         self.update_materials(materials)
 
-        following = db.relationship('User', secondary=user_following, backref='followed_by')
-
     def update_categories(self, categories):
         if categories is not None:
             # to successfully remove all previous want_to_trade_for
@@ -202,7 +205,6 @@ class Listing(db.Model):
                 material = Material.query.filter_by(type=material_name).first()
                 material.material_to.append(self)
                 material.save()
-
 
     def to_json(self):
         return {

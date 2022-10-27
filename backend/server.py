@@ -8,6 +8,7 @@ from app.userQueries import listUsers_resolver, getUser_resolver, \
 from app.listingQueries import defaultFeed_resolver, create_listing_resolver, \
     update_listing_resolver, delete_listing_resolver, userFeed_resolver, \
     searchListings_resolver, getCategories_resolver, getMaterials_resolver
+from app.followQueries import followUser_resolver
 from app.models import User
 
 
@@ -29,7 +30,7 @@ mutation.set_field("deleteUser", delete_user_resolver)
 mutation.set_field("createListing", create_listing_resolver)
 mutation.set_field("updateListing", update_listing_resolver)
 mutation.set_field("deleteListing", delete_listing_resolver)
-
+mutation.set_field("followUser", followUser_resolver)
 
 # Create schema
 type_defs = load_schema_from_path("schema.graphql")
