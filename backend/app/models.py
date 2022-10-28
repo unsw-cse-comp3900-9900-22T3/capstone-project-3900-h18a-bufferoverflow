@@ -195,3 +195,34 @@ class Listing(db.Model):
     def save(self):
         db.session.add(self)
         db.session.commit()
+
+class Message(db.Model):
+    __tablename__ = "messages"
+    
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.BigInteger, nullable=False)
+    text = db.Column(db.String, nullable=False)
+    # todo: should this relational?
+    author = db.Column(db.String(80), nullable=False)
+    # since conversation is a two emails joined by a '-',
+    # it should be able to hold 80 + 80 + 1 chars
+    conversation = db.Column(db.String(161), nullable=False)
+
+    def __init__(self, timestamp, text, author, conversation):
+        self.timestamp = timestamp
+        self.text = text
+        self.author = author
+        self.conversation = conversation
+    
+    def to_json(self):
+        return {
+            "id": self.id,
+            "timestamp": self.timestamp,
+            "text": self.text,
+            "author": self.author,
+            "conversation": self.conversation
+        }
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()

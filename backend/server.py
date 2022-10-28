@@ -8,7 +8,8 @@ from app.userQueries import listUsers_resolver, getUser_resolver, \
 from app.listingQueries import defaultFeed_resolver, create_listing_resolver, \
     update_listing_resolver, delete_listing_resolver, userFeed_resolver, \
     searchListings_resolver, getCategories_resolver
-from app.models import User
+from app.chatQueries import create_message_resolver, getMessages_resolver
+from app.models import User, Message
 from flask_socketio import send, emit, join_room
 
 # Create queries
@@ -19,6 +20,7 @@ query.set_field("defaultFeed", defaultFeed_resolver)
 query.set_field("userFeed", userFeed_resolver)
 query.set_field("searchListings", searchListings_resolver)
 query.set_field("getCategories", getCategories_resolver)
+query.set_field("getMessages", getMessages_resolver)
 
 # Create mutations
 mutation = ObjectType("Mutation")
@@ -28,7 +30,7 @@ mutation.set_field("deleteUser", delete_user_resolver)
 mutation.set_field("createListing", create_listing_resolver)
 mutation.set_field("updateListing", update_listing_resolver)
 mutation.set_field("deleteListing", delete_listing_resolver)
-
+mutation.set_field("createMessage", create_message_resolver)
 
 # Create schema
 type_defs = load_schema_from_path("schema.graphql")
@@ -43,9 +45,11 @@ schema = make_executable_schema(
 def test():
     return jsonify([user.to_json() for user in User.query.all()])
 
+
 @app.route("/graphql", methods=["GET"])
 def graphql_playground():
     return PLAYGROUND_HTML, 200
+
 
 @app.route("/graphql", methods=["POST"])
 def graphql_server():
@@ -59,9 +63,11 @@ def graphql_server():
     status_code = 200 if success else 400
     return jsonify(result), status_code
 
+
 @app.route("/")
 def hello():
     return "Hello World from Flask"
+
 
 @app.route("/allUsers")
 def getAllUsers():
@@ -75,20 +81,23 @@ def addUser():
     try:
         db.session.add(User(username, email, 100, "", None, 1))
         db.session.commit()
-        return jsonify({"status" : "success"})
+        return jsonify({"status": "success"})
     except Exception as e:
-        return jsonify({"status" : "failure", "error" : str(e)})
+        return jsonify({"status": "failure", "error": str(e)})
+
 
 @app.route("/updateUserImage", methods=["POST"])
 def updateUserImage():
     imageUrl = request.json["imageUrl"]
     userEmail = request.json["userEmail"]
     try:
-        db.session.query(User).filter_by(email=userEmail).update({"displayImg" : imageUrl})
+        db.session.query(User).filter_by(
+            email=userEmail).update({"displayImg": imageUrl})
         db.session.commit()
-        return {"status" : "success"}
+        return {"status": "success"}
     except Exception as e:
-        return {"status" : "failure", "error" : str(e)}
+        return {"status": "failure", "error": str(e)}
+
 
 @app.route("/query")
 def query():
@@ -96,23 +105,26 @@ def query():
     emails = [row[1] for row in result]
     return jsonify({"emails": emails})
 
+
 @app.route("/getToken", methods=["POST"])
 def getToken():
     username = request.json["username"]
     return {"username": username}
+
 
 @app.route("/showListings")
 def show_listings():
     result = db.session.execute('select * from listings')
     listings = [
         {
-            "id" : row[0],
-            "title" : row[1],
-            "description" : row[2],
+            "id": row[0],
+            "title": row[1],
+            "description": row[2],
         }
         for row in result
     ]
     return jsonify({"listings": listings})
+
 
 @app.route("/getMaterials")
 def get_materials():
@@ -120,15 +132,26 @@ def get_materials():
     materials = [row[1] for row in result]
     return jsonify({"materials": materials})
 
+
+@socketio.on('load_messages')
+def load_messages(conversation):
+    # todo: load all messages relevant to a conversation
+    pass
+
+
 @socketio.on('send_message')
-def handle_message(message):
-    print(f'received message and sent back: {message}')
-    emit("to_client", message, broadcast=True)
+def send_message(data):
+    print(f'received message and sent back: {data}')
+
+    db.session.add(
+        Message(data['timestamp'], data['text'], data['author'], data['conversation']))
+    db.session.commit()
+    emit("to_client", data, broadcast=True)
+
 
 @socketio.on('join')
 def on_join(data):
     username = data['username']
-    room = data['room']
+    room = data['conversation']
     join_room(room)
     send(username + ' has entered the room.', to=room)
-    

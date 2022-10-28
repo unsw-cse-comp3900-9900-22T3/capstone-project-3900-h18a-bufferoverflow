@@ -3,6 +3,9 @@ schema {
   mutation: Mutation
 }
 
+# TODO: is this all you need for this custom scalar?
+scalar Date
+
 type User {
   username: String!
   email: String!
@@ -70,6 +73,20 @@ type ListingsResult {
   listings: [Listing]
 }
 
+type Message {
+  id: ID!
+  timestamp: Date!
+  text: String! 
+  author: String!
+  conversation: String!
+}
+
+type MessageResult {
+  success: Boolean!
+  errors: [String]
+  messages: [Message]
+}
+
 type Query {
   listUsers: UsersResult!
   getUser(email: String!): UserResult!
@@ -85,6 +102,9 @@ type Query {
     priceMax: Float
   ): ListingsResult!
   getCategories: CategoryResult!
+  getMessages(
+    conversation: String
+  ): MessageResult!
 }
 
 type Mutation {
@@ -133,4 +153,10 @@ type Mutation {
     images: String
   ): ListingResult!
   deleteListing(id: ID!): ListingResult!
+  createMessage(
+    timestamp: Int!
+    text: String!
+    author: String!
+    conversation: String!
+  ): MessageResult!
 }

@@ -175,7 +175,7 @@ const LoggedIn = (props: {
         aria-label='account of current user'
         aria-controls='menu-appbar'
         aria-haspopup='true'
-        onClick={() => router.push('/chat/chat')}
+        onClick={() => router.push('/chat/overview')}
         sx={{ color: textColor }}
       >
         <MessageIcon />

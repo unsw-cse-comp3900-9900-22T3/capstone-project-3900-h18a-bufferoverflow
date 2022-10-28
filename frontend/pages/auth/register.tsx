@@ -94,7 +94,7 @@ export const Register = () => {
                 const error = data.createUser.errors
                 if (error.toString().includes('Key (email)')) setErrorToast('Email is already taken')
                 else if (error.toString().includes('Key (username)')) setErrorToast('Username is already taken')
-                else setErrorToast(`Server error ${error}`)
+                else setErrorToast(`Server error: ${error}`)
                 return
               }
               await createUserWithEmailAndPassword(getAuth(), email, password)
