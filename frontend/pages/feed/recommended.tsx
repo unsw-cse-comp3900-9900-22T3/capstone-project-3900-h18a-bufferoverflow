@@ -69,20 +69,10 @@ const RecommendedFeed: NextPage = () => {
   });
   
   useEffect(() => {
-    if (isSearch && data && data.searchListings?.success) {
-      setNumberItems(data.searchListings.listings.length);
+    if (!isSearch && feed?.userFeed?.listings) {
+      setNumberItems(feed?.userFeed?.listings.length);
     }
   }, [data, feed]);
-
-  const heading = !isSearch ? (
-    <Typography sx={{ width: "80vw", fontWeight: "bold", mt: 3.5, mb: 2.5 }}>
-      Recommended Feed 
-    </Typography>
-  ) : (
-    <Typography sx={{ width: "80vw", fontWeight: "bold", mt: 3.5, mb: 2.5 }}>
-      {numberItems} Search Results
-    </Typography>
-  );
 
   return (
     <Template title="Swapr">
@@ -98,12 +88,19 @@ const RecommendedFeed: NextPage = () => {
             priceMin: search.price.min,
             priceMax: search.price.max,
           });
+          if (data && data?.searchListings?.listings) {
+            setNumberItems(data?.searchListings?.listings.length);
+          }
         }}
       />
       <Box
         sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
       >
-        {heading}
+        <Typography
+          sx={{ width: "80vw", fontWeight: "bold", mt: 3.5, mb: 2.5 }}
+        >
+          {!isSearch ? "RecommendedFeed" : `${numberItems} Search Results`}
+        </Typography>
         <Box
           sx={{
             display: "flex",

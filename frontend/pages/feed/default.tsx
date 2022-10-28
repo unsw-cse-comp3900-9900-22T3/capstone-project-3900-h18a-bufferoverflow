@@ -106,11 +106,12 @@ const DefaultFeed: NextPage = () => {
   const [numberItems, setNumberItems] = useState(0);
 
   useEffect(() =>{
-    if (feed && feed.defaultFeed?.success && feed.defaultFeed?.listings) {
+    if (!isSearch && feed && feed.defaultFeed?.listings) {
       setNumberItems(
-        feed.defaultFeed.listings.filter(item => item.isSellListing).length
+        (feed.defaultFeed.listings.filter(item => item.isSellListing)).length
       );
     }
+
   }, [data, feed])
 
   return (
@@ -127,6 +128,12 @@ const DefaultFeed: NextPage = () => {
             priceMin: search.price.min,
             priceMax: search.price.max,
           });
+          
+          if (data && data?.searchListings?.listings) 
+          {
+            setNumberItems(data?.searchListings?.listings.length);
+          }
+          
         }}
       />
       <Box
@@ -134,9 +141,7 @@ const DefaultFeed: NextPage = () => {
       >
         <Typography
           sx={{ width: "80vw", fontWeight: "bold", mt: 3.5, mb: 2.5 }}
-        >
-          {numberItems} Items for Sale
-        </Typography>
+        ></Typography>
         <Box
           sx={{
             display: "flex",
@@ -146,6 +151,11 @@ const DefaultFeed: NextPage = () => {
             mb: 10,
           }}
         >
+          <Typography
+            sx={{ width: "80vw", fontWeight: "bold", mt: 3.5, mb: 2.5 }}
+          >
+            {numberItems} {!isSearch ? "Items For Sale" : "Search Results"}
+          </Typography>
           {!isSearch &&
             feed?.defaultFeed?.listings
               ?.filter((item) => item.isSellListing)
