@@ -202,9 +202,9 @@ def update_listing_resolver(obj, info,
     return payload
 
 @convert_kwargs_to_snake_case
-def delete_listing_resolver(obj, info, user_email):
+def delete_listing_resolver(obj, info, id):
     try:
-        listing = Listing.query.filter_by(user_email=user_email).first()
+        listing = Listing.query.get(id)
         listing.delete()
         payload = {
             "success": True,
