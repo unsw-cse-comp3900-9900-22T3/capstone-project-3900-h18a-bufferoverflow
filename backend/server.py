@@ -132,13 +132,6 @@ def get_materials():
     materials = [row[1] for row in result]
     return jsonify({"materials": materials})
 
-
-@socketio.on('load_messages')
-def load_messages(conversation):
-    # todo: load all messages relevant to a conversation
-    pass
-
-
 @socketio.on('send_message')
 def send_message(data):
     print(f'received message and sent back: {data}')

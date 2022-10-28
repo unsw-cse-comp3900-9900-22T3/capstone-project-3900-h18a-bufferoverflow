@@ -17,7 +17,7 @@ import { useStore } from '../../store/store';
 export interface RecommendedFeedGraphqlProps {
   userFeed: {
     success: boolean | null;
-    erorrs: string[] | null;
+    errors: string[] | null;
     listings: GraphqlListing[] | null;
   };
 }
