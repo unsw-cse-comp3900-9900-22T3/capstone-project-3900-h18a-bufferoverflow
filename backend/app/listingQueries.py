@@ -205,7 +205,7 @@ def update_listing_resolver(obj, info,
 def delete_listing_resolver(obj, info, id):
     try:
         listing = Listing.query.get(id)
-
+        listing.delete()
         payload = {
             "success": True,
             "listing": listing.to_json()
