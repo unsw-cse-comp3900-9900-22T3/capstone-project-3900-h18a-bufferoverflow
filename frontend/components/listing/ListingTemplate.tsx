@@ -25,6 +25,16 @@ const GET_LISTING = gql`
         materials {
           type
         }
+        images
+        description
+        address
+        status
+        price
+        canTrade
+        canPayCash
+        canPayBank
+        weight
+        volume
       }
       errors
       success
@@ -86,7 +96,6 @@ export const ListingTemplate = (props: {
   const [trade, setTrade] = useState<boolean>(false)
   const [cash, setCash] = useState<boolean>(false)
   const [bank, setBank] = useState<boolean>(false)
-  const [tradeDescription, setTradeDescription] = useState<string>('')
   const [weight, setWeight] = useState<number>()
   const [volume, setVolume] = useState<number>()
   const [materials, setMaterials] = useState<string[]>([])
@@ -101,14 +110,14 @@ export const ListingTemplate = (props: {
   useEffect(() => {
     if (data) {
       setTitle(data.title)
-      setImage(data.image)
+      setImage(data.images)
       setDescription(data.description)
-      setLocation(data.location)
+      setLocation(data.address)
       setCategories(data.categories.map((item: any) => item.type))
       setStatus(data.status)
-      setTrade(data.trade)
-      setCash(data.cash)
-      setBank(data.bank)
+      setTrade(data.canTrade)
+      setCash(data.canPayCash)
+      setBank(data.canPayBank)
       setTradeDescription(data.tradeDescription)
       setWeight(data.weight)
       setVolume(data.volume)
@@ -173,7 +182,6 @@ export const ListingTemplate = (props: {
             />
           </FormGroup>
         </FormControl>
-        <TextField value={tradeDescription} label="What I want as a trade" variant="outlined" sx={{ mb: 1.5 }} multiline rows={3} onChange={e => setTradeDescription(e.target.value)} />
         <Typography sx={{ fontSize: 16, fontWeight: 'bold', mb: 1.5, ml: 0.5 }}>Approximate Item Stats</Typography>
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
           <TextField value={weight} type='number' label="Weight (kg)" variant="outlined" onChange={e => setWeight(parseInt(e.target.value))} />
