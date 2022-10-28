@@ -23,7 +23,7 @@ export interface GraphqlListing {
   title: string;
   description: string;
   price: number;
-  images: string;
+  image: string;
   address: string;
   user: GraphqlUser;
   isSellListing: boolean;
@@ -40,7 +40,7 @@ export const GET_DEFAULT_FEED = gql`
         description
         address
         price
-        images
+        image
         user {
           displayImg
         }
@@ -164,7 +164,7 @@ const DefaultFeed: NextPage = () => {
                   <ItemCard
                     title={item.title}
                     price={item.price}
-                    image={item.images}
+                    image={item.image}
                     avatar={item.user.displayImg}
                     location={item.address}
                     href={
@@ -181,7 +181,7 @@ const DefaultFeed: NextPage = () => {
                 <ItemCard
                   title={item.title}
                   price={item.price}
-                  image={item.images}
+                  image={item.image}
                   avatar={item.user.displayImg}
                   location={item.address}
                   href={

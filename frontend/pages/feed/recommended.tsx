@@ -28,7 +28,7 @@ const GET_USER_FEED = gql`
         description
         address
         price
-        images
+        image
         user {
           displayImg
         }
@@ -118,7 +118,7 @@ const RecommendedFeed: NextPage = () => {
                   <ItemCard
                     title={item.title}
                     price={item.price}
-                    image={item.images}
+                    image={item.image}
                     avatar={item.user.displayImg}
                     location={item.address}
                     href={
@@ -135,7 +135,7 @@ const RecommendedFeed: NextPage = () => {
                 <ItemCard
                   title={item.title}
                   price={item.price}
-                  image={item.images}
+                  image={item.image}
                   avatar={item.user.displayImg}
                   location={item.address}
                   href={
