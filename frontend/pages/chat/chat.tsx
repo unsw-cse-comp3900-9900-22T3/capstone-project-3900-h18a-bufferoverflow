@@ -76,13 +76,15 @@ const Chat: NextPage = () => {
   }, []);
 
   const sendMessage = async () => {
-    socket.emit("send_message", {
-      timestamp: Date.now(),
-      text: text,
-      author: author,
-      conversation: conversation,
-    });
-    setText("");
+    if (text != "") {
+      socket.emit("send_message", {
+        timestamp: Date.now(),
+        text: text,
+        author: author,
+        conversation: conversation,
+      });
+      setText("");
+    }
   };
 
   return (
@@ -97,9 +99,15 @@ const Chat: NextPage = () => {
       </ol>
       <TextField
         onChange={(e) => setText(e.target.value)}
+        onKeyPress={(e) => {
+          if (e.key == 'Enter') {
+            sendMessage();
+            e.preventDefault();
+          }
+        }}
         value={text}
       ></TextField>
-      <Button onClick={sendMessage}>Test</Button>
+      <Button onClick={sendMessage}>Send</Button>
     </Template>
   );
 };
