@@ -28,11 +28,9 @@ export interface GraphqlListing {
   user: GraphqlUser;
   isSellListing: boolean;
 }
-
 interface GraphqlUser {
   displayImg: string;
 }
-
 
 export const GET_DEFAULT_FEED = gql`
   query {
@@ -51,7 +49,6 @@ export const GET_DEFAULT_FEED = gql`
     }
   }
 `;
-
 export interface SearchGraphqlProps {
   searchListings: {
     success: boolean | null;
@@ -59,7 +56,6 @@ export interface SearchGraphqlProps {
     listings: GraphqlListing[];
   };
 }
-
 
 export const GET_SEARCH_RESULTS = gql`
   query ($category: [String], $distance: Int, $isSellListing : Boolean, $priceMin: Float, $priceMax: Float) {
@@ -97,9 +93,6 @@ const DefaultFeed: NextPage = () => {
     distance: MAX_DISTANCE
   })
 
-  
-
- 
   const { data , refetch } = useQuery<SearchGraphqlProps>(GET_SEARCH_RESULTS, {
       variables: {
         category: search.categories,
@@ -109,17 +102,16 @@ const DefaultFeed: NextPage = () => {
         priceMax: search.price.max,
       },
   });
-  
 
   const [numberItems, setNumberItems] = useState(0);
 
   useEffect(() =>{
     if (feed && feed.defaultFeed?.success && feed.defaultFeed?.listings) {
       setNumberItems(
-        feed.defaultFeed.listings.filter((item) => item.isSellListing).length
+        feed.defaultFeed.listings.filter(item => item.isSellListing).length
       );
     }
-  }, [data])
+  }, [data, feed])
 
   return (
     <Template title="Swapr">
@@ -128,7 +120,6 @@ const DefaultFeed: NextPage = () => {
         setData={setSearch}
         onSearch={() => {
           setIsSearch(true);
-          console.log(data);
           refetch({
             category: search.categories,
             distance: search.distance,
@@ -155,6 +146,25 @@ const DefaultFeed: NextPage = () => {
             mb: 10,
           }}
         >
+          {!isSearch &&
+            feed?.defaultFeed?.listings
+              ?.filter((item) => item.isSellListing)
+              .map((item) => {
+                return (
+                  <ItemCard
+                    title={item.title}
+                    price={item.price}
+                    image={item.images}
+                    avatar={item.user.displayImg}
+                    location={item.address}
+                    href={
+                      item.isSellListing
+                        ? "/detailed-listing/have"
+                        : "/detailed-listing/want"
+                    }
+                  />
+                );
+              })}
           {isSearch &&
             data?.searchListings?.listings?.map((item) => {
               return (
@@ -172,29 +182,6 @@ const DefaultFeed: NextPage = () => {
                 />
               );
             })}
-
-          {!isSearch &&
-            feed?.defaultFeed.listings
-              // filter to only show 'have' listings by default
-              ?.filter((item) => {
-                item.isSellListing;
-              })
-              .map((item) => {
-                return (
-                  <ItemCard
-                    title={item.title}
-                    price={item.price}
-                    image={item.images}
-                    avatar={item.user.displayImg}
-                    location={item.address}
-                    href={
-                      item.isSellListing
-                        ? "/detailed-listing/have"
-                        : "/detailed-listing/want"
-                    }
-                  />
-                );
-              })}
         </Box>
       </Box>
     </Template>

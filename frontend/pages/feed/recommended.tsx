@@ -9,11 +9,9 @@ import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals';
 import { useQuery, gql } from "@apollo/client"
 import { useStore } from '../../store/store';
 
-
 /////////////////////////////////////////////////////////////////////////////
 // Data
 /////////////////////////////////////////////////////////////////////////////
-
 export interface RecommendedFeedGraphqlProps {
   userFeed: {
     success: boolean | null;
@@ -60,8 +58,7 @@ const RecommendedFeed: NextPage = () => {
 
   const [numberItems , setNumberItems ] = useState(0);
 
-   
-  const { data, error, refetch } = useQuery<SearchGraphqlProps>(GET_SEARCH_RESULTS, {
+  const { data, refetch } = useQuery<SearchGraphqlProps>(GET_SEARCH_RESULTS, {
     variables: {
       category: search.categories,
       distance: search.distance,
@@ -71,15 +68,11 @@ const RecommendedFeed: NextPage = () => {
     },
   });
   
-
-
   useEffect(() => {
     if (isSearch && data && data.searchListings?.success) {
       setNumberItems(data.searchListings.listings.length);
     }
-  }, [data]);
-
-  
+  }, [data, feed]);
 
   const heading = !isSearch ? (
     <Typography sx={{ width: "80vw", fontWeight: "bold", mt: 3.5, mb: 2.5 }}>
@@ -91,8 +84,6 @@ const RecommendedFeed: NextPage = () => {
     </Typography>
   );
 
-  
-
   return (
     <Template title="Swapr">
       <SearchBar
@@ -100,14 +91,6 @@ const RecommendedFeed: NextPage = () => {
         setData={setSearch}
         onSearch={() => {
           setIsSearch(true);
-          
-
-          console.log(search.categories);
-          console.log(search.distance);
-          console.log(search.listing);
-          console.log(search.price.min);
-          console.log(search.price.max);
-
           refetch({
             category: search.categories,
             distance: search.distance,
@@ -115,9 +98,6 @@ const RecommendedFeed: NextPage = () => {
             priceMin: search.price.min,
             priceMax: search.price.max,
           });
-          console.log(search.price.min);
-          console.log(data?.searchListings.listings);
-          
         }}
       />
       <Box
@@ -133,6 +113,25 @@ const RecommendedFeed: NextPage = () => {
             mb: 10,
           }}
         >
+          {!isSearch &&
+            feed?.userFeed.listings
+              ?.filter((item) => item.isSellListing)
+              .map((item) => {
+                return (
+                  <ItemCard
+                    title={item.title}
+                    price={item.price}
+                    image={item.images}
+                    avatar={item.user.displayImg}
+                    location={item.address}
+                    href={
+                      item.isSellListing
+                        ? "/detailed-listing/have"
+                        : "/detailed-listing/want"
+                    }
+                  />
+                );
+              })}
           {isSearch &&
             data?.searchListings?.listings?.map((item) => {
               return (
@@ -150,29 +149,6 @@ const RecommendedFeed: NextPage = () => {
                 />
               );
             })}
-
-          {!isSearch &&
-            // filter to only show 'have' listings by default
-            feed?.userFeed.listings
-              ?.filter((item) => {
-                item.isSellListing;
-              })
-              .map((item) => {
-                return (
-                  <ItemCard
-                    title={item.title}
-                    price={item.price}
-                    image={item.images}
-                    avatar={item.user.displayImg}
-                    location={item.address}
-                    href={
-                      item.isSellListing
-                        ? "/detailed-listing/have"
-                        : "/detailed-listing/want"
-                    }
-                  />
-                );
-              })}
         </Box>
       </Box>
     </Template>
