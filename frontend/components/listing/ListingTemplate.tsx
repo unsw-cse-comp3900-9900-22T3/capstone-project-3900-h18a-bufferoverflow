@@ -11,25 +11,69 @@ import { gql } from "@apollo/client";
 
 const CREATE_LISTING_MUTATION = gql`
   mutation (
-    email: String!,
-    title: String!,
-    description: String!,
-    sell: Boolean!,
-    price: Float!,
-    trade: Boolean!,
-    cash: Boolean!,
-    bank: Boolean!,
-    status: String!,
-    categories: [String]!,
-    tradeCategories: [String]!,
-    weight: Float,
-    volume: Float,
-    materials: [String]!,
-    address: String!,
-    image: String!,
+    email: String!
+    title: String!
+    description: String!
+    sell: Boolean!
+    price: Float!
+    trade: Boolean!
+    cash: Boolean!
+    bank: Boolean!
+    status: String!
+    categories: [String]!
+    tradeCategories: [String]!
+    weight: Float
+    volume: Float
+    materials: [String]!
+    address: String!
+    image: String!
   ) {
     createListing(
       userEmail: $email,
+      title: $title,
+      description: $description,
+      isSellListing: $sell,
+      price: $price,
+      canTrade: $trade,
+      canPayCash: $cash,
+      canPayBank: $bank,
+      status: $status,
+      categories: $categories,
+      wantToTradeFor: $tradeCategories,
+      weight: $weight,
+      volume: $volume,
+      materials: $materials,
+      address: $address,
+      image: $image,
+    ) {
+      errors
+      success
+    }
+  }
+`
+
+const UPDATE_LISTING_MUTATION = gql`
+  mutation (
+    id: ID!
+    email: String!
+    title: String!
+    description: String!
+    sell: Boolean!
+    price: Float!
+    trade: Boolean!
+    cash: Boolean!
+    bank: Boolean!
+    status: String!
+    categories: [String]!
+    tradeCategories: [String]!
+    weight: Float
+    volume: Float
+    materials: [String]!
+    address: String!
+    image: String!
+  ) {
+    updateListing(
+      id: $id,
       title: $title,
       description: $description,
       isSellListing: $sell,
