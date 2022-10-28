@@ -9,29 +9,26 @@ import { gql } from "@apollo/client";
 
 const UPDATE_LISTING_MUTATION = gql`
   mutation (
-    id: ID!
-    email: String!
-    title: String!
-    description: String!
-    sell: Boolean!
-    price: Float!
-    trade: Boolean!
-    cash: Boolean!
-    bank: Boolean!
-    status: String!
-    categories: [String]!
-    tradeCategories: [String]!
-    weight: Float
-    volume: Float
-    materials: [String]!
-    address: String!
-    image: String!
+    $id: ID!
+    $title: String
+    $description: String
+    $price: Float
+    $trade: Boolean
+    $cash: Boolean
+    $bank: Boolean
+    $status: String
+    $categories: [String]
+    $tradeCategories: [String]
+    $weight: Float
+    $volume: Float
+    $materials: [String]
+    $location: String
+    $image: String
   ) {
     updateListing(
       id: $id,
       title: $title,
       description: $description,
-      isSellListing: $sell,
       price: $price,
       canTrade: $trade,
       canPayCash: $cash,
@@ -42,7 +39,7 @@ const UPDATE_LISTING_MUTATION = gql`
       weight: $weight,
       volume: $volume,
       materials: $materials,
-      address: $address,
+      address: $location,
       image: $image,
     ) {
       errors
