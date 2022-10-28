@@ -19,6 +19,12 @@ const GET_LISTING = gql`
         categories {
           type
         }
+        wantToTradeFor {
+          type
+        }
+        materials {
+          type
+        }
       }
       errors
       success
@@ -106,8 +112,8 @@ export const ListingTemplate = (props: {
       setTradeDescription(data.tradeDescription)
       setWeight(data.weight)
       setVolume(data.volume)
-      setMaterials(data.material)
-      setTradeCategories(data.tradeCategories)
+      setMaterials(data.materials.map((item: any) => item.type))
+      setTradeCategories(data.wantToTradeFor.map((item: any) => item.type))
       setPrice(data.price)
     }
   }, [data])
@@ -136,7 +142,7 @@ export const ListingTemplate = (props: {
         <Typography sx={{ fontSize: 16, fontWeight: 'bold', mb: 1.5, ml: 0.5 }}>Location</Typography>
         <TextField value={location} label="Location" variant="outlined" sx={{ mb: 1.5 }} onChange={e => setLocation(e.target.value)} />
         <CategorySearch
-          categories={categories ? categories : undefined}
+          categories={categories || undefined}
           setCategories={setCategories}
           validCategories={['Entertainment', 'Vehicles']}
           title="Category"
@@ -176,6 +182,7 @@ export const ListingTemplate = (props: {
         </Box>
         <Typography sx={{ fontSize: 16, fontWeight: 'bold', mb: 1.5, ml: 0.5 }}>Materials</Typography>
         <CategorySearch
+          categories={materials || undefined}
           setCategories={setMaterials}
           validCategories={validMaterialCategories}
           title="Materials"
@@ -183,6 +190,7 @@ export const ListingTemplate = (props: {
         />
         <Typography sx={{ fontSize: 16, fontWeight: 'bold', mb: 1.5, ml: 0.5, mt: 1.5 }}>Willing To Trade For Categories</Typography>
         <CategorySearch
+          categories={tradeCategories || undefined}
           setCategories={setTradeCategories}
           validCategories={validTradeCategories}
           title="Trade Categories"
