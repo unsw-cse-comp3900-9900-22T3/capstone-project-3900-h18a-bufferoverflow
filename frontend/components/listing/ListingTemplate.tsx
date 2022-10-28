@@ -16,6 +16,9 @@ const GET_LISTING = gql`
       listing {
         id
         title
+        categories {
+          type
+        }
       }
       errors
       success
@@ -86,7 +89,7 @@ export const ListingTemplate = (props: {
 
   const router = useRouter()
   const { id } = router.query
-  
+
   const data = useQuery(GET_LISTING, { variables: { id } }).data?.getListing.listing
 
   useEffect(() => {
@@ -95,7 +98,7 @@ export const ListingTemplate = (props: {
       setImage(data.image)
       setDescription(data.description)
       setLocation(data.location)
-      setCategories(data.categories)
+      setCategories(data.categories.map((item: any) => item.type))
       setStatus(data.status)
       setTrade(data.trade)
       setCash(data.cash)
@@ -133,6 +136,7 @@ export const ListingTemplate = (props: {
         <Typography sx={{ fontSize: 16, fontWeight: 'bold', mb: 1.5, ml: 0.5 }}>Location</Typography>
         <TextField value={location} label="Location" variant="outlined" sx={{ mb: 1.5 }} onChange={e => setLocation(e.target.value)} />
         <CategorySearch
+          categories={categories ? categories : undefined}
           setCategories={setCategories}
           validCategories={['Entertainment', 'Vehicles']}
           title="Category"
