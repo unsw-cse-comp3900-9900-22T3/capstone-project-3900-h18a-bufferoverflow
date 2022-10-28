@@ -3,6 +3,25 @@ import { createRef, useEffect, useState } from "react";
 import { ListingProps, StatusType } from "../../components/listing/types";
 import { CategorySearch } from "../../components/feed/CategorySearch";
 import { uploadFile } from "../../utils/utils";
+import { gql, useQuery } from "@apollo/client";
+import { useRouter } from "next/router";
+
+/////////////////////////////////////////////////////////////////////////////
+// Queries
+/////////////////////////////////////////////////////////////////////////////
+
+const GET_LISTING = gql`
+  query ($id: ID!) {
+    getListing(id: $id) {
+      listing {
+        id
+        title
+      }
+      errors
+      success
+    }
+  }
+`
 
 /////////////////////////////////////////////////////////////////////////////
 // Secondary Components and Constants
@@ -17,7 +36,9 @@ const Slider = (props: {
 }) => {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5, ml: 0.5 }}>
-      <Typography sx={{ fontSize: 16, fontWeight: 'bold', mr: 3, mt: 0.9 }}>Status</Typography>
+      <Typography sx={{ fontSize: 16, fontWeight: 'bold', mr: 3, mt: 0.9 }}>
+        Status
+      </Typography>
       <Tabs
         value={props.status}
         onChange={(_, val) => props.setStatus(val)}
@@ -63,7 +84,10 @@ export const ListingTemplate = (props: {
   const [tradeCategories, setTradeCategories] = useState<string[]>([])
   const [price, setPrice] = useState<number>(0)
 
-  const { data } = props
+  const router = useRouter()
+  const { id } = router.query
+  
+  const data = useQuery(GET_LISTING, { variables: { id } }).data?.getListing.listing
 
   useEffect(() => {
     if (data) {
