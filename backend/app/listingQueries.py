@@ -6,6 +6,21 @@ from manage import category_names, material_names
 from ariadne import convert_kwargs_to_snake_case
 
 @convert_kwargs_to_snake_case
+def getListing_resolver(obj, info, id):
+    try:
+        listing = Listing.query.get(id)
+        payload = {
+            "success": True,
+            "listing": listing.to_json()
+        }
+    except Exception as e:
+        payload = {
+            "success": False,
+            "errors": [str(e)]
+        }
+    return payload
+
+@convert_kwargs_to_snake_case
 def defaultFeed_resolver(obj, info):
     try:
         listings = [listing.to_json() for listing in Listing.query.all()]
