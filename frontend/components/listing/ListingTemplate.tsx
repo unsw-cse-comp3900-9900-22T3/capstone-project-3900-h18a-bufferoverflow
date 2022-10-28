@@ -25,7 +25,7 @@ const GET_LISTING = gql`
         materials {
           type
         }
-        images
+        image
         description
         address
         status
@@ -110,7 +110,7 @@ export const ListingTemplate = (props: {
   useEffect(() => {
     if (data) {
       setTitle(data.title)
-      setImage(data.images)
+      setImage(data.image)
       setDescription(data.description)
       setLocation(data.address)
       setCategories(data.categories.map((item: any) => item.type))
