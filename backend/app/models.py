@@ -125,12 +125,12 @@ class Listing(db.Model):
         can_pay_bank,
         status,
         categories,
-        want_to_trade_for,
         weight,
         volume,
         materials,
         address = None,
-        image = ""
+        image = "",
+        want_to_trade_for = [],
     ):
         self.title = title
         self.description = description
@@ -152,7 +152,8 @@ class Listing(db.Model):
             self.address = User.query.filter_by(email=user_email).first().address
 
         self.update_categories(categories)
-        self.update_want_to_trade_for(want_to_trade_for)
+        if self.is_sell_listing:
+            self.update_want_to_trade_for(want_to_trade_for)
         self.update_materials(materials)
 
     def update_categories(self, categories):
