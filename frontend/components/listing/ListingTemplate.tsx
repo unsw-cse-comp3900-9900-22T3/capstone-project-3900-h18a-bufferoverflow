@@ -43,6 +43,47 @@ const GET_LISTING = gql`
   }
 `
 
+const UPDATE_LISTING = gql`
+  mutation (
+    $id: ID!
+    $title: String
+    $description: String
+    $price: Float
+    $trade: Boolean
+    $cash: Boolean
+    $bank: Boolean
+    $status: String
+    $categories: [String]
+    $tradeCategories: [String]
+    $weight: Float
+    $volume: Float
+    $materials: [String]
+    $location: String
+    $image: String
+  ) {
+    updateListing(
+      id: $id,
+      title: $title,
+      description: $description,
+      price: $price,
+      canTrade: $trade,
+      canPayCash: $cash,
+      canPayBank: $bank,
+      status: $status,
+      categories: $categories,
+      wantToTradeFor: $tradeCategories,
+      weight: $weight,
+      volume: $volume,
+      materials: $materials,
+      address: $location,
+      image: $image,
+    ) {
+      errors
+      success
+    }
+  }
+`
+
 const DELETE_LISTING = gql`
   mutation ($id: ID!) {
     deleteListing(id: $id) {
@@ -96,6 +137,7 @@ export const ListingTemplate = (props: {
 
   const ref = createRef<any>()
   const [errorToast, setErrorToast] = useState<string>('');
+  const [successToast, setSuccessToast] = useState<string>('');
 
   const [title, setTitle] = useState<string>('')
   const [image, setImage] = useState<string>('')
@@ -116,7 +158,8 @@ export const ListingTemplate = (props: {
   const { id } = router.query
 
   const data = useQuery(GET_LISTING, { variables: { id } }).data?.getListing.listing
-  const [deleteListing, _] = useMutation(DELETE_LISTING);
+  const [deleteListing, _1] = useMutation(DELETE_LISTING);
+  const [updateListing, _2] = useMutation(UPDATE_LISTING);
 
   useEffect(() => {
     if (data) {
@@ -140,6 +183,7 @@ export const ListingTemplate = (props: {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 40 }}>
       <Toast toast={errorToast} setToast={setErrorToast} type='warning' />
+      <Toast toast={successToast} setToast={setSuccessToast} type='success' />
 
       {/** Left Section */}
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -232,7 +276,18 @@ export const ListingTemplate = (props: {
         {
           props.edit
             ? <Box sx={{ display: 'flex', mt: 1.5, width: '100%' }}>
-              <Button variant="outlined" sx={{ borderRadius: 30, mr: 0.5, width: '50%', height: 45 }}>
+              <Button
+                variant="outlined"
+                sx={{ borderRadius: 30, mr: 0.5, width: '50%', height: 45 }}
+                onClick={() => {
+                  updateListing({ variables: { id, title, image, description, location, categories, status, trade, cash, bank, weight, volume, materials, tradeCategories, price } })
+                    .then(() => {
+                      if (_2.error) throw Error('Error')
+                      setSuccessToast('Successfully updated listing')
+                    })
+                    .catch(() => setErrorToast('Failed to update listing'))
+                }}
+              >
                 Update {props.have ? 'Have' : 'Want'} Listing
               </Button>
               <Button
