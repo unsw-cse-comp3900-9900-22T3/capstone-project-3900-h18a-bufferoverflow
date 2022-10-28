@@ -3,8 +3,9 @@ import { createRef, useEffect, useState } from "react";
 import { ListingProps, StatusType } from "../../components/listing/types";
 import { CategorySearch } from "../../components/feed/CategorySearch";
 import { uploadFile } from "../../utils/utils";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
+import { Toast } from "../generic/Toast";
 
 /////////////////////////////////////////////////////////////////////////////
 // Queries
@@ -37,6 +38,14 @@ const GET_LISTING = gql`
         volume
       }
       errors
+      success
+    }
+  }
+`
+
+const DELETE_LISTING = gql`
+  mutation ($id: ID!) {
+    deleteListing(id: $id) {
       success
     }
   }
@@ -86,6 +95,7 @@ export const ListingTemplate = (props: {
   const validMaterialCategories = ['Wood', 'Metal']
 
   const ref = createRef<any>()
+  const [errorToast, setErrorToast] = useState<string>('');
 
   const [title, setTitle] = useState<string>('')
   const [image, setImage] = useState<string>('')
@@ -106,6 +116,7 @@ export const ListingTemplate = (props: {
   const { id } = router.query
 
   const data = useQuery(GET_LISTING, { variables: { id } }).data?.getListing.listing
+  const [deleteListing, _] = useMutation(DELETE_LISTING);
 
   useEffect(() => {
     if (data) {
@@ -128,6 +139,7 @@ export const ListingTemplate = (props: {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 40 }}>
+      <Toast toast={errorToast} setToast={setErrorToast} type='warning' />
 
       {/** Left Section */}
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -223,7 +235,15 @@ export const ListingTemplate = (props: {
               <Button variant="outlined" sx={{ borderRadius: 30, mr: 0.5, width: '50%', height: 45 }}>
                 Update {props.have ? 'Have' : 'Want'} Listing
               </Button>
-              <Button variant="outlined" sx={{ borderRadius: 30, ml: 0.5, width: '50%', height: 45 }}>
+              <Button
+                variant="outlined"
+                sx={{ borderRadius: 30, ml: 0.5, width: '50%', height: 45 }}
+                onClick={() => {
+                  deleteListing({ variables: { id } })
+                    .then(() => router.back())
+                    .catch(() => setErrorToast('Failed to delete listing'))
+                }}
+              >
                 Delete Listing
               </Button>
             </Box>
