@@ -6,6 +6,7 @@ import { uploadFile } from "../../utils/utils";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import { Toast } from "../generic/Toast";
+import { useStore } from "../../store/store";
 
 /////////////////////////////////////////////////////////////////////////////
 // Queries
@@ -27,7 +28,7 @@ const CREATE_LISTING = gql`
     $weight: Float
     $volume: Float
     $materials: [String]!
-    $address: String!
+    $location: String!
     $image: String!
   ) {
     createListing(
@@ -45,7 +46,7 @@ const CREATE_LISTING = gql`
       weight: $weight,
       volume: $volume,
       materials: $materials,
-      address: $address,
+      address: $location,
       image: $image,
     ) {
       errors
@@ -195,6 +196,7 @@ export const ListingTemplate = (props: {
   const validMaterialCategories = useQuery(GET_MATERIALS).data?.getMaterials.materials
 
   const ref = createRef<any>()
+  const { auth } = useStore()
   const [errorToast, setErrorToast] = useState<string>('');
   const [successToast, setSuccessToast] = useState<string>('');
 
@@ -207,8 +209,8 @@ export const ListingTemplate = (props: {
   const [trade, setTrade] = useState<boolean>(false)
   const [cash, setCash] = useState<boolean>(false)
   const [bank, setBank] = useState<boolean>(false)
-  const [weight, setWeight] = useState<number>()
-  const [volume, setVolume] = useState<number>()
+  const [weight, setWeight] = useState<number>(0)
+  const [volume, setVolume] = useState<number>(0)
   const [materials, setMaterials] = useState<string[]>([])
   const [tradeCategories, setTradeCategories] = useState<string[]>([])
   const [price, setPrice] = useState<number>(0)
@@ -219,6 +221,7 @@ export const ListingTemplate = (props: {
   const data = useQuery(GET_LISTING, { variables: { id } }).data?.getListing.listing
   const [deleteListing, _1] = useMutation(DELETE_LISTING);
   const [updateListing, _2] = useMutation(UPDATE_LISTING);
+  const [createListing, _3] = useMutation(CREATE_LISTING);
 
   useEffect(() => {
     if (data) {
@@ -341,7 +344,7 @@ export const ListingTemplate = (props: {
                 onClick={() => {
                   updateListing({ variables: { id, title, image, description, location, categories, status, trade, cash, bank, weight, volume, materials, tradeCategories, price } })
                     .then(() => {
-                      if (_2.error) throw Error('Error')
+                      if (!_3.data.updateListing.success) throw Error('Error')
                       setSuccessToast('Successfully updated listing')
                     })
                     .catch(() => setErrorToast('Failed to update listing'))
@@ -354,14 +357,25 @@ export const ListingTemplate = (props: {
                 sx={{ borderRadius: 30, ml: 0.5, width: '50%', height: 45 }}
                 onClick={() => {
                   deleteListing({ variables: { id } })
-                    .then(() => router.push('/'))
+                    .then(() => router.push('/listing/my-listings'))
                     .catch(() => setErrorToast('Failed to delete listing'))
                 }}
               >
                 Delete Listing
               </Button>
             </Box>
-            : <Button variant="outlined" sx={{ borderRadius: 30, width: '100%', height: 45 }}>
+            : <Button
+              variant="outlined"
+              sx={{ borderRadius: 30, width: '100%', height: 45 }}
+              onClick={() => {
+                createListing({ variables: { email: auth?.email, sell: !!props.have, id, title, image, description, location, categories, status, trade, cash, bank, weight, volume, materials, tradeCategories, price } })
+                  .then(() => {
+                    if (!_3.data.createListing.success) throw Error('Error')
+                    router.push('/listing/my-listings')
+                  })
+                  .catch((e) => setErrorToast('Failed to create listing'))
+              }}
+            >
               Post {props.have ? 'Have' : 'Want'} Listing
             </Button>
         }
