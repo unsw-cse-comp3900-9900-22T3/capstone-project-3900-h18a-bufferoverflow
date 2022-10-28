@@ -58,8 +58,8 @@ export interface SearchGraphqlProps {
 }
 
 export const GET_SEARCH_RESULTS = gql`
-  query ($category: [String], $distance: Int, $isSellListing : Boolean, $priceMin: Float, $priceMax: Float) {
-    searchListings(category: $category, distance: $distance, isSellListing: $isSellListing, priceMin: $priceMin, priceMax: $priceMax) {
+  query ($categories: [String], $distance: Int, $isSellListing : Boolean, $priceMin: Float, $priceMax: Float) {
+    searchListings(categories: $categories, distance: $distance, isSellListing: $isSellListing, priceMin: $priceMin, priceMax: $priceMax) {
       listings {
         title
         description
@@ -95,7 +95,7 @@ const DefaultFeed: NextPage = () => {
 
   const { data , refetch } = useQuery<SearchGraphqlProps>(GET_SEARCH_RESULTS, {
       variables: {
-        category: search.categories,
+        categories: search.categories,
         distance: search.distance,
         isSellListing: search.listing === "have",
         priceMin: search.price.min,
@@ -121,7 +121,7 @@ const DefaultFeed: NextPage = () => {
         onSearch={() => {
           setIsSearch(true);
           refetch({
-            category: search.categories,
+            categories: search.categories,
             distance: search.distance,
             isSellListing: search.listing === "have",
             priceMin: search.price.min,

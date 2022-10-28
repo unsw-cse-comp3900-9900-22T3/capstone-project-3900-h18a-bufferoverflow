@@ -60,7 +60,7 @@ const RecommendedFeed: NextPage = () => {
 
   const { data, refetch } = useQuery<SearchGraphqlProps>(GET_SEARCH_RESULTS, {
     variables: {
-      category: search.categories,
+      categories: search.categories,
       distance: search.distance,
       isSellListing: search.listing === "have",
       priceMin: search.price.min,
@@ -92,7 +92,7 @@ const RecommendedFeed: NextPage = () => {
         onSearch={() => {
           setIsSearch(true);
           refetch({
-            category: search.categories,
+            categories: search.categories,
             distance: search.distance,
             isSellListing: search.listing === "have",
             priceMin: search.price.min,
