@@ -118,7 +118,6 @@ export const ListingTemplate = (props: {
       setTrade(data.canTrade)
       setCash(data.canPayCash)
       setBank(data.canPayBank)
-      setTradeDescription(data.tradeDescription)
       setWeight(data.weight)
       setVolume(data.volume)
       setMaterials(data.materials.map((item: any) => item.type))
