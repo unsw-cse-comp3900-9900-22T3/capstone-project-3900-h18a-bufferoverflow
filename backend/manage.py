@@ -101,13 +101,69 @@ def add_data():
         image = "https://images.unsplash.com/photo-1666475877254-235b2f5fd4b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
         address = "19 Penshurt St, Willoughby, NSW 2068"
     )
-    #save listings
+
+    listing4 = Listing(
+        user_email="user3@gmail.com",
+        title="listing4",
+        description="listing4 description",
+        is_sell_listing=True,
+        price=8.88,
+        can_pay_bank=True,
+        can_pay_cash=True,
+        can_trade=True,
+        status="active",
+        categories=["electronics", "automotive"],
+        weight=1.0,
+        volume=1.0,
+        materials=["plastic"],
+        image = "https://images.unsplash.com/photo-1666475877254-235b2f5fd4b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+        address = "19 Coora St, Sale, NSW 1111"
+    )
+
+    listing5 = Listing(
+        user_email="user2@gmail.com",
+        title="listing5",
+        description="listing5 description",
+        is_sell_listing=True,
+        price=3.33,
+        can_pay_bank=True,
+        can_pay_cash=True,
+        can_trade=True,
+        status="active",
+        categories=["kitchen and dining", "automotive"],
+        weight=1.0,
+        volume=1.0,
+        materials=["cotton"],
+        image = "https://images.unsplash.com/photo-1666475877254-235b2f5fd4b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+        address = "39 Kuul St, Chatswood, NSW 1234"
+    )
+
+    listing6 = Listing(
+        user_email="user2@gmail.com",
+        title="listing6",
+        description="listing6 description",
+        is_sell_listing=True,
+        price=3.33,
+        can_pay_bank=True,
+        can_pay_cash=True,
+        can_trade=True,
+        status="active",
+        categories=["kitchen and dining", "beauty"],
+        weight=1.0,
+        volume=1.0,
+        materials=["cotton", "metal"],
+        image = "https://images.unsplash.com/photo-1666475877254-235b2f5fd4b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+        address = "17 BigBoy Ave, Heaven, NSW 7777"
+    )
+
+
+    # save listings
     listing1.save()
     listing2.save()
     listing3.save()
-
-
-
+    listing4.save()
+    listing5.save()
+    listing6.save()
 
 @cli.command("seed_db")
 def seed_db():
