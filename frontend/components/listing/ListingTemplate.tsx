@@ -92,6 +92,22 @@ const DELETE_LISTING = gql`
   }
 `
 
+const GET_MATERIALS = gql`
+  query {
+    getMaterials {
+      materials
+    }
+  }
+`
+
+const GET_CATEGORIES = gql`
+  query {
+    getCategories {
+      categories
+    }
+  }
+`
+
 /////////////////////////////////////////////////////////////////////////////
 // Secondary Components and Constants
 /////////////////////////////////////////////////////////////////////////////
@@ -132,8 +148,8 @@ export const ListingTemplate = (props: {
   have?: boolean;
 }) => {
 
-  const validTradeCategories = ['Entertainment', 'Vehicles']
-  const validMaterialCategories = ['Wood', 'Metal']
+  const validTradeCategories = useQuery(GET_CATEGORIES).data?.getCategories.categories
+  const validMaterialCategories = useQuery(GET_MATERIALS).data?.getMaterials.materials
 
   const ref = createRef<any>()
   const [errorToast, setErrorToast] = useState<string>('');
@@ -208,7 +224,7 @@ export const ListingTemplate = (props: {
         <CategorySearch
           categories={categories || undefined}
           setCategories={setCategories}
-          validCategories={['Entertainment', 'Vehicles']}
+          validCategories={validTradeCategories}
           title="Category"
           width={450}
         />
