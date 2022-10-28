@@ -28,11 +28,9 @@ export interface GraphqlListing {
   user: GraphqlUser;
   isSellListing: boolean;
 }
-
 interface GraphqlUser {
   displayImg: string;
 }
-
 
 export const GET_DEFAULT_FEED = gql`
   query {
@@ -51,6 +49,31 @@ export const GET_DEFAULT_FEED = gql`
     }
   }
 `;
+export interface SearchGraphqlProps {
+  searchListings: {
+    success: boolean | null;
+    erorrs: string[] | null;
+    listings: GraphqlListing[];
+  };
+}
+
+export const GET_SEARCH_RESULTS = gql`
+  query ($categories: [String], $distance: Int, $isSellListing : Boolean, $priceMin: Float, $priceMax: Float) {
+    searchListings(categories: $categories, distance: $distance, isSellListing: $isSellListing, priceMin: $priceMin, priceMax: $priceMax) {
+      listings {
+        title
+        description
+        address
+        price
+        images
+        user {
+          displayImg
+        }
+        isSellListing
+      }
+    }
+  }
+`;
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
@@ -58,8 +81,8 @@ export const GET_DEFAULT_FEED = gql`
 
 const DefaultFeed: NextPage = () => {
 
-
-  const { data } = useQuery<DefaultFeedGraphqlProps>(GET_DEFAULT_FEED);
+  const feed = useQuery<DefaultFeedGraphqlProps>(GET_DEFAULT_FEED).data;
+  const [isSearch, setIsSearch] = useState(false);
   const [search, setSearch] = useState<SearchBarProps>({
     categories: [],
     price: {
@@ -70,40 +93,112 @@ const DefaultFeed: NextPage = () => {
     distance: MAX_DISTANCE
   })
 
-  var numberItems: number = 0
+  const { data , refetch } = useQuery<SearchGraphqlProps>(GET_SEARCH_RESULTS, {
+      variables: {
+        categories: search.categories,
+        distance: search.distance,
+        isSellListing: search.listing === "have",
+        priceMin: search.price.min,
+        priceMax: search.price.max,
+      },
+  });
+
+  const [numberItems, setNumberItems] = useState(0);
 
   useEffect(() =>{
-    if (data && data.defaultFeed.listings) {
-      numberItems = data.defaultFeed.listings.length
+    if (!isSearch && feed && feed.defaultFeed?.listings) {
+      setNumberItems(
+        (feed.defaultFeed.listings.filter(item => item.isSellListing)).length
+      );
     }
-  }, [data])
+
+  }, [data, feed])
 
   return (
-    <Template title='Swapr'>
-      <SearchBar data={search} setData={setSearch} onSearch={() => console.log(search)} />
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography sx={{ width: '80vw', fontWeight: 'bold', mt: 3.5, mb: 2.5 }}>
-          {numberItems} Items for Sale
-        </Typography>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '90vw', pl: 10, mb: 10 }}>
+    <Template title="Swapr">
+      <SearchBar
+        data={search}
+        setData={setSearch}
+        onSearch={() => {
+          setIsSearch(true);
+          refetch({
+            categories: search.categories,
+            distance: search.distance,
+            isSellListing: search.listing === "have",
+            priceMin: search.price.min,
+            priceMax: search.price.max,
+          });
           
-          {data?.defaultFeed.listings?.map(item => {
-              return <ItemCard
-                title={item.title}
-                price={item.price}
-                image={item.image}
-                avatar={item.user.displayImg}
-                location={item.address} 
-                href={item.isSellListing ? "/detailed-listing/have" : "/detailed-listing/want"} 
-                />; 
-          })
-           
+          if (data && data?.searchListings?.listings) 
+          {
+            setNumberItems(data?.searchListings?.listings.length);
           }
           
+        }}
+      />
+      <Box
+        sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+      >
+        <Typography
+          sx={{ width: "80vw", fontWeight: "bold", mt: 3.5, mb: 2.5 }}
+        ></Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            width: "90vw",
+            pl: 10,
+            mb: 10,
+          }}
+        >
+          <Typography
+            sx={{ width: "80vw", fontWeight: "bold", mt: 3.5, mb: 2.5 }}
+          >
+            {numberItems} {!isSearch ? "Items For Sale" : "Search Results"}
+          </Typography>
+          {!isSearch &&
+            feed?.defaultFeed?.listings
+              ?.filter((item) => item.isSellListing)
+              .map((item) => {
+                return (
+                  <ItemCard
+                    title={item.title}
+                    price={item.price}
+                    image={item.image}
+                    avatar={item.user.displayImg}
+                    location={item.address}
+                    href={
+                      item.isSellListing
+                        ? "/detailed-listing/have"
+                        : "/detailed-listing/want"
+                    }
+                  />
+                );
+              })}
+          {isSearch &&
+            data?.searchListings?.listings?.map((item) => {
+              return (
+                <ItemCard
+                  title={item.title}
+                  price={item.price}
+                  image={item.image}
+                  avatar={item.user.displayImg}
+                  location={item.address}
+                  href={
+                    item.isSellListing
+                      ? "/detailed-listing/have"
+                      : "/detailed-listing/want"
+                  }
+                />
+              );
+            })}
         </Box>
       </Box>
     </Template>
-  )
+  );
 }
 
 export default DefaultFeed
+
+
+
