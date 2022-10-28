@@ -311,7 +311,7 @@ export const ListingTemplate = (props: {
                 sx={{ borderRadius: 30, ml: 0.5, width: '50%', height: 45 }}
                 onClick={() => {
                   deleteListing({ variables: { id } })
-                    .then(() => router.back())
+                    .then(() => router.push('/'))
                     .catch(() => setErrorToast('Failed to delete listing'))
                 }}
               >
