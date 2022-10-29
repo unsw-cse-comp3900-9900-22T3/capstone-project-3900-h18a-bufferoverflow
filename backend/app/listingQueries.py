@@ -6,6 +6,21 @@ from manage import category_names, material_names
 from ariadne import convert_kwargs_to_snake_case
 
 @convert_kwargs_to_snake_case
+def getListing_resolver(obj, info, id):
+    try:
+        listing = Listing.query.get(id)
+        payload = {
+            "success": True,
+            "listing": listing.to_json()
+        }
+    except Exception as e:
+        payload = {
+            "success": False,
+            "errors": [str(e)]
+        }
+    return payload
+
+@convert_kwargs_to_snake_case
 def defaultFeed_resolver(obj, info):
     try:
         listings = [listing.to_json() for listing in Listing.query.all()]
@@ -50,29 +65,29 @@ def searchListings_resolver(obi, info,
         if price_max:
             result = filter(lambda x: x["price"] <= price_max, result)
 
-        if is_sell_listing == True: 
+        if is_sell_listing == True:
             result = filter(lambda x: x["is_sell_listing"], result)
         elif is_sell_listing == False:
             result = filter(lambda x: not x["is_sell_listing"], result)
 
         if categories:
             new_result = []
-            for listing in result: 
+            for listing in result:
                 found_category_match = False
                 for listing_categories in listing["categories"]:
-                    # if we have something of one of the categories we are 
-                    # searching for, then we can break, 
+                    # if we have something of one of the categories we are
+                    # searching for, then we can break,
                     # as it fits the criteria
                     if listing_categories["type"] in categories:
                         found_category_match = True
-                        break 
+                        break
                 # if we found a match, add it to our new result
                 if found_category_match:
                     new_result.append(listing)
-            # finished looping. set result = new_result 
+            # finished looping. set result = new_result
             result = new_result
-                        
-                    
+
+
         payload = {
             "success": True,
             "listings": result
@@ -86,7 +101,7 @@ def searchListings_resolver(obi, info,
     return payload
 
 
-   
+
 
 @convert_kwargs_to_snake_case
 def create_listing_resolver(obj, info,
@@ -139,23 +154,23 @@ def create_listing_resolver(obj, info,
     return payload
 
 @convert_kwargs_to_snake_case
-def update_listing_resolver(obj, info, 
+def update_listing_resolver(obj, info,
         id,
-        title,
-        description,
-        is_sell_listing,
-        price,
-        can_trade,
-        can_pay_cash,
-        can_pay_bank,
-        status,
-        categories,
-        want_to_trade_for,
-        weight,
-        volume,
-        materials,
-        address,
-        image
+        title = None,
+        description = None,
+        is_sell_listing = None,
+        price = None,
+        can_trade = None,
+        can_pay_cash = None,
+        can_pay_bank = None,
+        status = None,
+        categories = None,
+        want_to_trade_for = None,
+        weight = None,
+        volume = None,
+        materials = None,
+        address = None,
+        image = None,
     ):
     try:
         listing = Listing.query.get(id)
@@ -187,9 +202,9 @@ def update_listing_resolver(obj, info,
     return payload
 
 @convert_kwargs_to_snake_case
-def delete_listing_resolver(obj, info, user_email):
+def delete_listing_resolver(obj, info, id):
     try:
-        listing = Listing.query.filter_by(user_email=user_email).first()
+        listing = Listing.query.get(id)
         listing.delete()
         payload = {
             "success": True,

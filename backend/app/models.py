@@ -48,6 +48,10 @@ class User(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
 listing_material = db.Table('listing_material',
     db.Column('listing_id', db.Integer, db.ForeignKey('listings.id'), primary_key=True),
     db.Column('material_id', db.Integer, db.ForeignKey('materials.id'), primary_key=True)
@@ -137,12 +141,12 @@ class Listing(db.Model):
         can_pay_bank,
         status,
         categories,
-        want_to_trade_for,
         weight,
         volume,
         materials,
         address = None,
-        image = ""
+        image = "",
+        want_to_trade_for = [],
     ):
         self.title = title
         self.description = description
@@ -164,7 +168,8 @@ class Listing(db.Model):
             self.address = User.query.filter_by(email=user_email).first().address
 
         self.update_categories(categories)
-        self.update_want_to_trade_for(want_to_trade_for)
+        if self.is_sell_listing:
+            self.update_want_to_trade_for(want_to_trade_for)
         self.update_materials(materials)
 
     def update_categories(self, categories):
@@ -174,7 +179,7 @@ class Listing(db.Model):
                 category = Category.query.filter_by(type=category_name).first()
                 try:
                     category.category_to.remove(self)
-                except: 
+                except:
                     pass
 
             for category_name in categories:
@@ -189,7 +194,7 @@ class Listing(db.Model):
                 category = Category.query.filter_by(type=category_name).first()
                 try:
                     category.want_to_trade_for_to.remove(self)
-                except: 
+                except:
                     pass
 
             for category_name in want_to_trade_for:
@@ -202,9 +207,9 @@ class Listing(db.Model):
             # to successfully remove all previous materials
             for material_name in material_names:
                 material = Material.query.filter_by(type=material_name).first()
-                try: 
+                try:
                     material.material_to.remove(self)
-                except: 
+                except:
                     pass
 
             for material_name in materials:
@@ -235,4 +240,8 @@ class Listing(db.Model):
 
     def save(self):
         db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
         db.session.commit()

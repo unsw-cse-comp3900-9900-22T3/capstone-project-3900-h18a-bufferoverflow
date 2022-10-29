@@ -61,7 +61,7 @@ type Listing {
   volume: Float!
   status: String!
   address: String!
-  images: String
+  image: String
   materials: [Material]!
 }
 
@@ -147,7 +147,7 @@ type Mutation {
     volume: Float
     materials: [String]
     address: String
-    images: String
+    image: String
   ): ListingResult!
   deleteListing(id: ID!): ListingResult!
   followUser(

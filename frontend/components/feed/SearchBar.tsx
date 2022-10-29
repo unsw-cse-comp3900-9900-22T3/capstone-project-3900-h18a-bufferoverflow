@@ -3,6 +3,7 @@ import { useState } from "react";
 import { MAX_DISTANCE, MAX_PRICE } from "../../utils/globals";
 import { Toast } from "../generic/Toast";
 import { CategorySearch } from "./CategorySearch";
+import { useQuery, gql } from "@apollo/client";
 
 /////////////////////////////////////////////////////////////////////////////
 // Constants and Types
@@ -21,6 +22,23 @@ export interface SearchBarProps {
   listing: ListingType;
   price: PriceType;
 }
+
+interface CategoriesGraphqlProps {
+    getCategories: {
+      success: boolean | null;
+      erorrs: string[] | null;
+      categories: string[] | undefined;
+  }
+}
+
+const GET_CATEGORIES = gql`
+  query {
+    getCategories {
+      categories
+    }
+  }
+`;
+
 
 /////////////////////////////////////////////////////////////////////////////
 // Secondary Components
@@ -135,8 +153,7 @@ export const SearchBar = (props: {
   setData: (arg: SearchBarProps) => void;
   onSearch: () => void;
 }) => {
-
-  const validSearchCategories = ['Entertainment', 'Vehicles', 'Clothing']
+  const validSearchCategories = useQuery<CategoriesGraphqlProps>(GET_CATEGORIES).data?.getCategories.categories;
 
   const setCategories = (categories: string[]) => {
     props.setData({ ...props.data, categories })
