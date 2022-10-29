@@ -1,6 +1,6 @@
 from operator import sub
 from app import db
-from app.models import Listing
+from app.models import Listing, User
 from manage import category_names, material_names
 
 from ariadne import convert_kwargs_to_snake_case
@@ -12,6 +12,23 @@ def getListing_resolver(obj, info, id):
         payload = {
             "success": True,
             "listing": listing.to_json()
+        }
+    except Exception as e:
+        payload = {
+            "success": False,
+            "errors": [str(e)]
+        }
+    return payload
+
+@convert_kwargs_to_snake_case
+def getListingsByUser_resolver(obj, info, user_email):
+    try:
+        user_id = User.query.filter_by(email=user_email).first().id
+        listings = [listing.to_json() for listing in Listing.query.all() if listing.user_id == user_id]
+
+        payload = {
+            "success": True,
+            "listings": listings
         }
     except Exception as e:
         payload = {
