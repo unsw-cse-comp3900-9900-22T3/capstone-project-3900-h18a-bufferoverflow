@@ -19,6 +19,7 @@ query.set_field("userFeed", userFeed_resolver)
 query.set_field("searchListings", searchListings_resolver)
 query.set_field("getCategories", getCategories_resolver)
 query.set_field("getMaterials", getMaterials_resolver)
+query.set_field("getTradeOffersByUser", getTradeOffersByUser_resolver)
 
 # Create mutations
 mutation = ObjectType("Mutation")

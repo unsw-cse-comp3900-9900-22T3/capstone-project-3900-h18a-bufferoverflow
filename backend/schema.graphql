@@ -81,8 +81,6 @@ type TradeOffer {
   id: ID!
   listingOne: Listing!
   listingTwo: Listing!
-  dateAccepted: String
-  isAccepted: Boolean!
 }
 
 type TradeOfferResult {
@@ -107,6 +105,7 @@ type Query {
   ): ListingsResult!
   getCategories: CategoryResult!
   getMaterials: MaterialResult! 
+  getTradeOffersByUser: TradeOfferResult!
 }
 
 type Mutation {
@@ -163,7 +162,6 @@ type Mutation {
   ): TradeOfferResult!
   updateTradeOffer(
     id: ID!
-    dateAccepted: String
     isAccepted: Boolean
   ): TradeOfferResult!
   deleteTradeOffer(id: ID!): TradeOfferResult!
