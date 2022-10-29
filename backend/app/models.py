@@ -31,8 +31,16 @@ class User(db.Model):
         self.email = email
 
     def add_following(self, followed):
-        self.following.append(followed)
-        self.save()
+        if not self.is_following():
+            self.following.append(followed)
+            self.save()
+
+    def is_following(self, user):
+        followed_users = [followed.to_json() for followed in user.following]
+        for u in followed_users: 
+            if u.id == user.id:
+                return True 
+        return False
 
     def to_json(self):
         return {

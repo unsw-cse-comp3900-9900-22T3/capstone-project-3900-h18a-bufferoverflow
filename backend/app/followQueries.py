@@ -26,7 +26,6 @@ def getFollowingList_resolver(obj, info, email):
     try:
         user = User.query.filter_by(email=email).first()
         followed_users = [followed.to_json() for followed in user.following]
-        print(followed_users)
         payload = {
             "success": True,
             "users": followed_users
