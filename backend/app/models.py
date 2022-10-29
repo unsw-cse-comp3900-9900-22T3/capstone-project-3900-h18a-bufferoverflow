@@ -18,7 +18,13 @@ class User(db.Model):
     address = db.Column(db.String(100), default="", nullable=False)
 
     # TODO: add foreign keys arg?
-    following = db.relationship('User', secondary=user_following, backref='followed_by')
+    following = db.relationship(
+        'User', 
+        secondary=user_following,  
+        primaryjoin=(user_following.c.follower_id == id),
+        secondaryjoin=(user_following.c.followed_id == id),
+        backref='followed_by'
+    )
 
     def __init__(self, email, username):
         self.username = username
