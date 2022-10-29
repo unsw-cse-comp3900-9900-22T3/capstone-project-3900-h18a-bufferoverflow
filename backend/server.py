@@ -8,7 +8,7 @@ from app.userQueries import listUsers_resolver, getUser_resolver, \
 from app.listingQueries import defaultFeed_resolver, create_listing_resolver, \
     update_listing_resolver, delete_listing_resolver, userFeed_resolver, \
     searchListings_resolver, getCategories_resolver, getMaterials_resolver, \
-    getListing_resolver
+    getListing_resolver, getListingsByUser_resolver
 from app.models import User
 
 
@@ -17,6 +17,7 @@ query = ObjectType("Query")
 query.set_field("listUsers", listUsers_resolver)
 query.set_field("getUser", getUser_resolver)
 query.set_field("getListing", getListing_resolver)
+query.set_field("getListingsByUser", getListingsByUser_resolver)
 query.set_field("defaultFeed", defaultFeed_resolver)
 query.set_field("userFeed", userFeed_resolver)
 query.set_field("searchListings", searchListings_resolver)
