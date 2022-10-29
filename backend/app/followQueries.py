@@ -41,9 +41,29 @@ def unfollowUser_resolver(obj, info,
     return payload
 
 @convert_kwargs_to_snake_case
-def getFollowingList_resolver(obj, info, email):
+def getFollowing_resolver(obj, info, user_email, check_follower_email):
     try:
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter_by(email=user_email).first()
+        check_follower = User.query.filter_by(email=check_follower_email).first()
+        if user.is_following(check_follower):
+            payload = {
+                "success": True
+            }
+        else:
+            payload = {
+                "success": False
+            }
+    except Exception as e:
+        payload = {
+            "success": False,
+            "errors": [str(e)]
+        }
+    return payload    
+
+@convert_kwargs_to_snake_case
+def getFollowingList_resolver(obj, info, user_email):
+    try:
+        user = User.query.filter_by(email=user_email).first()
         followed_users = [followed.to_json() for followed in user.following]
         payload = {
             "success": True,

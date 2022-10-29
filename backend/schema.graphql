@@ -98,8 +98,11 @@ type Query {
   ): ListingsResult!
   getCategories: CategoryResult!
   getMaterials: MaterialResult! 
-  # getFollowing(email: String!): Result!
-  getFollowingList(email: String!): UsersResult!
+  getFollowing(
+    userEmail: String!
+    checkFollowerEmail: String!
+  ): Result!
+  getFollowingList(userEmail: String!): UsersResult!
 }
 
 type Mutation {
