@@ -242,6 +242,10 @@ export const ListingTemplate = (props: {
     }
   }, [data])
 
+  const check = () => {
+    return title && image && description && location && price && (trade || cash || bank)
+  }
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 40 }}>
       <Toast toast={errorToast} setToast={setErrorToast} type='warning' />
@@ -342,6 +346,10 @@ export const ListingTemplate = (props: {
                 variant="outlined"
                 sx={{ borderRadius: 30, mr: 0.5, width: '50%', height: 45 }}
                 onClick={() => {
+                  if (!check()) {
+                    setErrorToast('Required fields are empty')
+                    return
+                  }
                   updateListing({ variables: { id, title, image, description, location, categories, status, trade, cash, bank, weight, volume, materials, tradeCategories, price } })
                     .then(() => {
                       if (!_3.data.updateListing.success) throw Error('Error')
@@ -368,6 +376,10 @@ export const ListingTemplate = (props: {
               variant="outlined"
               sx={{ borderRadius: 30, width: '100%', height: 45 }}
               onClick={() => {
+                if (!check()) {
+                  setErrorToast('Required fields are empty')
+                  return
+                }
                 createListing({ variables: { email: auth?.email, sell: !!props.have, id, title, image, description, location, categories, status, trade, cash, bank, weight, volume, materials, tradeCategories, price } })
                   .then(() => {
                     if (!_3.data.createListing.success) throw Error('Error')
