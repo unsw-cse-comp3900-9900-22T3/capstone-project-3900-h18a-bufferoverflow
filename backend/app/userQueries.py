@@ -6,7 +6,6 @@ from ariadne import convert_kwargs_to_snake_case
 def listUsers_resolver(obj, info):
     try:
         users = [user.to_json() for user in User.query.all()]
-        print(users)
         payload = {
             "success": True,
             "users": users

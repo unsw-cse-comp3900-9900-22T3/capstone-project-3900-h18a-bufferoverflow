@@ -31,14 +31,19 @@ class User(db.Model):
         self.email = email
 
     def add_following(self, followed):
-        if not self.is_following():
+        if not self.is_following(followed):
             self.following.append(followed)
             self.save()
 
+    def remove_following(self, user):
+        if self.is_following(user):
+            self.following.remove(user)   
+            self.save()
+
     def is_following(self, user):
-        followed_users = [followed.to_json() for followed in user.following]
-        for u in followed_users: 
-            if u.id == user.id:
+        followed_users = [followed.to_json() for followed in self.following]
+        for u in followed_users:
+            if u["id"] == user.id:
                 return True 
         return False
 

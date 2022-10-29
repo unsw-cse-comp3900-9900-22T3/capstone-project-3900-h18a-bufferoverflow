@@ -98,8 +98,8 @@ type Query {
   ): ListingsResult!
   getCategories: CategoryResult!
   getMaterials: MaterialResult! 
-  # TODO: getFollowing(is user following this user)
-  getFollowingList(email: String!): UsersResult
+  # getFollowing(email: String!): Result!
+  getFollowingList(email: String!): UsersResult!
 }
 
 type Mutation {
@@ -154,5 +154,8 @@ type Mutation {
     followerEmail: String!
     followedEmail: String!
   ): Result! 
-  # TODO: unfollow
+  unfollowUser(
+    followerEmail: String!
+    followedEmail: String!
+  ): Result! 
 }
