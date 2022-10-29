@@ -100,5 +100,3 @@ def delete_user_resolver(obj, info, email):
             "errors": ["User matching id {id} not found"]
         }
     return payload
-
-

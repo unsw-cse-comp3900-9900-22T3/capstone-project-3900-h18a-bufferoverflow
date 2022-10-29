@@ -99,7 +99,7 @@ type Query {
   getCategories: CategoryResult!
   getMaterials: MaterialResult! 
   # TODO: getFollowing(is user following this user)
-  # TODO: getFollowingList(gets all users someone is following)
+  getFollowingList(email: String!): UsersResult
 }
 
 type Mutation {

@@ -32,6 +32,7 @@ class User(db.Model):
 
     def add_following(self, followed):
         self.following.append(followed)
+        self.save()
 
     def to_json(self):
         return {

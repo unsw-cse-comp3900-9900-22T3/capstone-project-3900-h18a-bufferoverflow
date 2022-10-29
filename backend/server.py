@@ -9,7 +9,7 @@ from app.listingQueries import defaultFeed_resolver, create_listing_resolver, \
     update_listing_resolver, delete_listing_resolver, userFeed_resolver, \
     searchListings_resolver, getCategories_resolver, getMaterials_resolver, \
     getListing_resolver
-from app.followQueries import followUser_resolver
+from app.followQueries import followUser_resolver, getFollowingList_resolver
 from app.models import User
 
 
@@ -23,6 +23,7 @@ query.set_field("userFeed", userFeed_resolver)
 query.set_field("searchListings", searchListings_resolver)
 query.set_field("getCategories", getCategories_resolver)
 query.set_field("getMaterials", getMaterials_resolver)
+query.set_field("getFollowingList", getFollowingList_resolver)
 
 # Create mutations
 mutation = ObjectType("Mutation")
