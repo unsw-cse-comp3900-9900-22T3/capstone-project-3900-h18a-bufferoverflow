@@ -84,6 +84,7 @@ type Query {
   # TODO: implement machine-learning resolver
   userFeed(userEmail: String!): ListingsResult!
   getListing(id: ID!): ListingResult!
+  getListingsByUser(userEmail: String!): ListingsResult!
   searchListings(
     categories: [String]
     distance: Int 
