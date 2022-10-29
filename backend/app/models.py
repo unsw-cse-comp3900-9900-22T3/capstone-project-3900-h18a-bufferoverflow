@@ -17,6 +17,9 @@ class User(db.Model):
         self.username = username
         self.email = email
 
+    def add_display_img(self, display_img):
+        self.display_img = display_img
+
     def to_json(self):
         return {
             "id": self.id,
