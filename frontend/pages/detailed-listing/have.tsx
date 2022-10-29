@@ -19,6 +19,7 @@ interface HaveListingProps {
   categories: string[];
   description: string;
   trader: string;
+  email: string;
   cash: boolean;
   trade: boolean;
   bank: boolean;
@@ -78,6 +79,7 @@ const DetailedHaveListing: NextPage = () => {
     "asdfsa",
   ]
   const trader = 'Sean'
+  const email = 'test@gmail.com'
   const cash = true;
   const trade = true;
   const bank = true;
@@ -145,10 +147,10 @@ const DetailedHaveListing: NextPage = () => {
             Propose Trade
           </Button>
           <Box sx={{ display: 'flex', mt: 1.5, width: '100%' }}>
-            <Button variant="outlined" sx={{ borderRadius: 30, mr: 0.5, width: '50%', height: 45 }} href={`/chat/chat?user=${trader}`}>
+            <Button variant="outlined" sx={{ borderRadius: 30, mr: 0.5, width: '50%', height: 45 }} href={`/chat/chat?email=${email}`}>
               Message User
             </Button>
-            <Button variant="outlined" sx={{ borderRadius: 30, ml: 0.5, width: '50%', height: 45 }} href={`/profile/visitor-profile?user=${trader}`}>
+            <Button variant="outlined" sx={{ borderRadius: 30, ml: 0.5, width: '50%', height: 45 }} href={`/profile/visitor-profile?email=${email}`}>
               View Trader Profile
             </Button>
           </Box>
