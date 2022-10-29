@@ -14,8 +14,7 @@ import { ListingProps, StatusType } from "../../components/listing/types";
 // Queries
 /////////////////////////////////////////////////////////////////////////////
 
-// TODO: get user who posted listing
-const GET_DETAILED_LISTING = gql`
+export const GET_DETAILED_LISTING = gql`
   query ($id: ID!) {
     getListing(id: $id) {
       listing {

@@ -1,10 +1,13 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
+import { useState, useEffect } from "react";
 import { Avatar, Box, Button, Card, Typography } from "@mui/material";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import PersonIcon from "@mui/icons-material/Person";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { useRouter } from "next/router";
+import { GET_DETAILED_LISTING } from "./have"
+import { useQuery } from "@apollo/client";
 
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
@@ -61,17 +64,39 @@ const DetailedWantListing: NextPage = () => {
 
   // Get item name from query params
   const router = useRouter()
-  const { title } = router.query
+  const { id } = router.query
+  const data = useQuery(GET_DETAILED_LISTING, { variables: { id } }).data
+    ?.getListing.listing;
 
-  const image =
-    "https://images.unsplash.com/photo-1499720565725-bd574541a3ee?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80";
-  const categories = ["asdfsadf", "asdfdf", "asdfsa", "asdfsa", "asdfsa"];
-  const trader = "Sean";
-  const email = 'test@gmail.com'
-  const cash = true;
-  const trade = true;
-  const bank = true;
-  const price = 453;
+  const [title, setTitle] = useState<string>("");
+  const [image, setImage] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [location, setLocation] = useState<string>("");
+  const [categories, setCategories] = useState<string[]>([]);
+  const [trade, setTrade] = useState<boolean>(false);
+  const [cash, setCash] = useState<boolean>(false);
+  const [bank, setBank] = useState<boolean>(false);
+  const [tradeCategories, setTradeCategories] = useState<string[]>([]);
+  const [price, setPrice] = useState<number>(0);
+  const [itemPosessor, setItemPossesor] = useState("");
+  const [itemPosessorImageURL, setItemPossesorImageURL] = useState("");
+
+  useEffect(() => {
+    if (data) {
+      setTitle(data.title);
+      setImage(data.image);
+      setDescription(data.description);
+      setLocation(data.address);
+      setCategories(data.categories.map((item: any) => item.type));
+      setTrade(data.canTrade);
+      setCash(data.canPayCash);
+      setBank(data.canPayBank);
+      setTradeCategories(data.wantToTradeFor.map((item: any) => item.type));
+      setPrice(data.price);
+      setItemPossesor(data.user.username);
+      setItemPossesorImageURL(data.user.displayImg);
+    }
+  }, [data]);
 
   // Create description field given boolean parameters
   let rewardOptions = "";
@@ -82,7 +107,7 @@ const DetailedWantListing: NextPage = () => {
     rewardOptions = `mutual trade only`;
   else rewardOptions = `not available`;
 
-  let buyer = `${trader} wants this item`;
+  let buyer = `${itemPosessor} wants this item`;
 
   let paymentOptions = "";
   if (cash && bank)
@@ -123,10 +148,13 @@ const DetailedWantListing: NextPage = () => {
             {title}
           </Typography>
           <DescriptionBox
+            icon={<Avatar src={itemPosessorImageURL}></Avatar>}
+            description={buyer}
+          />
+          <DescriptionBox
             icon={<AttachMoneyIcon />}
             description={rewardOptions}
           />
-          <DescriptionBox icon={<PersonIcon />} description={buyer} />
           <DescriptionBox
             icon={<LocalShippingIcon />}
             description={paymentOptions}
@@ -137,7 +165,7 @@ const DetailedWantListing: NextPage = () => {
         <Box sx={{ display: "flex", flexDirection: "column", width: 500 }}>
           <LabelBox title="Location">
             <Typography fontSize={16} variant="body2">
-              The University of New South Wales High St Kensington NSW 2033
+              {location}
             </Typography>
           </LabelBox>
           <LabelBox title="Categories">
@@ -161,17 +189,36 @@ const DetailedWantListing: NextPage = () => {
               ))}
             </Box>
           </LabelBox>
+          <LabelBox title="Want to Trade For Categories">
+            <Box
+              sx={{ display: "flex", flexWrap: "wrap", flexDirection: "row" }}
+            >
+              {tradeCategories.map((category) => (
+                <Box
+                  sx={{
+                    border: 1,
+                    width: 140,
+                    p: 1,
+                    borderRadius: 10,
+                    m: 0.5,
+                    textAlign: "center",
+                    color: "#616161",
+                  }}
+                >
+                  {category}
+                </Box>
+              ))}
+            </Box>
+          </LabelBox>
           <LabelBox title="Description">
             <Typography fontSize={16} variant="body2">
-              Location askdjfh lkasjdfh lksajdhf lkajsdh flkjsdh fljkash
-              fljkahsd lfjksahd lfjkhsa kfjh lsadkjf hl lsjdf hklsaj hflkjsadh
-              flkajsh f
+              {description}
             </Typography>
           </LabelBox>
           <Button
             variant="outlined"
             sx={{ borderRadius: 30, mt: 4, height: 45 }}
-            href={`/trade/propose?user=${trader}`}
+            href={`/trade/propose?user=${itemPosessor}`}
           >
             Propose Trade
           </Button>
@@ -179,14 +226,14 @@ const DetailedWantListing: NextPage = () => {
             <Button
               variant="outlined"
               sx={{ borderRadius: 30, mr: 0.5, width: "50%", height: 45 }}
-              href={`/chat/chat?email=${email}`}
+              href={`/chat/chat?user=${itemPosessor}`}
             >
               Message User
             </Button>
             <Button
               variant="outlined"
               sx={{ borderRadius: 30, ml: 0.5, width: "50%", height: 45 }}
-              href={`/profile/visitor-profile?email=${email}`}
+              href={`/profile/visitor-profile?user=${itemPosessor}`}
             >
               View Trader Profile
             </Button>
