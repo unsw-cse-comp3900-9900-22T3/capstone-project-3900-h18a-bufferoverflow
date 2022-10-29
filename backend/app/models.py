@@ -259,3 +259,29 @@ class Listing(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+class TradeOffer(db.Model):
+    __tablename__ = "trade_offer"
+
+    id = db.Column(db.Integer, primary_key=True)
+    listing_one_id = db.Column(db.Integer, db.ForeignKey("listings.id"), nullable=False)
+    listing_two_id = db.Column(db.Integer, db.ForeignKey("listings.id"), nullable=False)
+
+    def __init__(self, listing_one_id, listing_two_id, date_accepted=None, is_accepted=False):
+        self.listing_one_id = listing_one_id
+        self.listing_two_id = listing_two_id
+
+    def to_json(self):
+        return {
+            "id" : self.id,
+            "listing_one_id" : self.listing_one_id,
+            "listing_two_id" : self.listing_two_id,
+        }
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
