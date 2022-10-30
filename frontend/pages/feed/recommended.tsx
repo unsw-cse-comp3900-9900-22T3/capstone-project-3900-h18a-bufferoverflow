@@ -1,11 +1,10 @@
 import { Box, Typography } from '@mui/material'
 import { NextPage } from 'next'
 import { useState , useEffect } from 'react';
-import { ItemCard } from '../../components/feed/ItemCard'
+import { itemDataToItemCard, GraphqlListing } from "../../components/feed/ItemCard";
 import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar';
 import { Template } from '../../components/generic/Template'
 import { SearchGraphqlProps, GET_SEARCH_RESULTS } from './default';
-import { GraphqlListing } from "../../components/listing/types";
 import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals';
 import { useQuery, gql } from "@apollo/client"
 import { useStore } from '../../store/store';
@@ -115,37 +114,11 @@ const RecommendedFeed: NextPage = () => {
             feed?.userFeed.listings
               ?.filter((item) => item.isSellListing)
               .map((item) => {
-                return (
-                  <ItemCard
-                    title={item.title}
-                    price={item.price}
-                    image={item.image}
-                    avatar={item.user.displayImg}
-                    location={item.address}
-                    href={
-                      item.isSellListing
-                        ? "/detailed-listing/have"
-                        : "/detailed-listing/want"
-                    }
-                  />
-                );
+                return itemDataToItemCard(item);
               })}
           {isSearch &&
             data?.searchListings?.listings?.map((item) => {
-              return (
-                <ItemCard
-                  title={item.title}
-                  price={item.price}
-                  image={item.image}
-                  avatar={item.user.displayImg}
-                  location={item.address}
-                  href={
-                    item.isSellListing
-                      ? "/detailed-listing/have"
-                      : "/detailed-listing/want"
-                  }
-                />
-              );
+              return itemDataToItemCard(item);
             })}
         </Box>
       </Box>

@@ -1,11 +1,13 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 import { Box, Typography } from "@mui/material";
-import { ItemCard, ItemCardProps } from "../../components/feed/ItemCard";
+import {
+  itemDataToItemCard,
+  GraphqlListing,
+} from "../../components/feed/ItemCard";
 import { useEffect, useState } from "react";
 import { mockItemCardRequest } from "../../utils/mockdata";
 import { gql, useQuery } from "@apollo/client";
-import { GraphqlListing } from "../../components/listing/types";
 import { useStore } from "../../store/store";
 
 /////////////////////////////////////////////////////////////////////////////
