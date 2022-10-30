@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar'
 import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals'
 import { useQuery, gql } from "@apollo/client";
+import { GraphqlListing } from '../../components/listing/types'
 
 /////////////////////////////////////////////////////////////////////////////
 // Data
@@ -19,18 +20,6 @@ interface DefaultFeedGraphqlProps {
   };
 }
 
-export interface GraphqlListing {
-  title: string;
-  description: string;
-  price: number;
-  image: string;
-  address: string;
-  user: GraphqlUser;
-  isSellListing: boolean;
-}
-interface GraphqlUser {
-  displayImg: string;
-}
 
 export const GET_DEFAULT_FEED = gql`
   query {

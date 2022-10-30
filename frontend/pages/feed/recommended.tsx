@@ -4,7 +4,8 @@ import { useState , useEffect } from 'react';
 import { ItemCard } from '../../components/feed/ItemCard'
 import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar';
 import { Template } from '../../components/generic/Template'
-import { GraphqlListing, SearchGraphqlProps, GET_SEARCH_RESULTS } from './default';
+import { SearchGraphqlProps, GET_SEARCH_RESULTS } from './default';
+import { GraphqlListing } from "../../components/listing/types";
 import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals';
 import { useQuery, gql } from "@apollo/client"
 import { useStore } from '../../store/store';
