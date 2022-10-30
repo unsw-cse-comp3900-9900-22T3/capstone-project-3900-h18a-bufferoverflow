@@ -30,6 +30,18 @@ const GET_LISTINGS = gql`
   }
 `
 
+const GET_USER = gql`
+  query getUser($email: String!) {
+    getUser(email: $email) {
+      errors
+      success
+      user {
+        username
+      }
+    }
+  }
+`
+
 interface ListingProp {
   id: number;
   title: string;
@@ -52,8 +64,7 @@ const TraderListings: NextPage = () => {
   const { email } = router.query
 
   const data = useQuery(GET_LISTINGS, { variables: { email } }).data?.getListingsByUser.listings as ListingProp[]
-
-  const username = 'Sean' // this should be fetched from api later
+  const username = useQuery(GET_USER, { variables: { email } }).data?.getUser.user.username
 
   return (
     <Template title="Trader Listings">
