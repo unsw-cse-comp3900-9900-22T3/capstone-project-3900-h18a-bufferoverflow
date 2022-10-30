@@ -101,47 +101,59 @@ export const Template = (props: {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Header header={props.title} />
-      <Toast toast={toast} setToast={setToast} type='success' />
-      <AppBar position="static" style={{ background: '#e6e6e6' }} elevation={0}>
+      <Toast toast={toast} setToast={setToast} type="success" />
+      <AppBar position="static" style={{ background: "#e6e6e6" }} elevation={0}>
         <Toolbar>
           <IconButton
-            size='large'
-            edge='start'
-            color='inherit'
-            aria-label='menu'
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
             sx={{ mr: 2, color: textColor }}
             onClick={() => setDrawer(true)}
           >
             <MenuIcon />
           </IconButton>
 
-          <Link href='/'>
-            <Image src='/logo.png' alt='logo' width={35} height={35} />
+          <Link href="/">
+            <Image src="/logo.png" alt="logo" width={35} height={35} />
           </Link>
-          <Typography variant='h6' component='div' sx={{ flexGrow: 1, color: textColor, ml: 1.5, letterSpacing: 4 }}>
-            Swapr
-          </Typography>
+          <Link href="/">
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{ flexGrow: 1, color: textColor, ml: 1.5, letterSpacing: 4 }}
+            >
+              Swapr
+            </Typography>
+          </Link>
           {!auth && <RegisterLoggedOut />}
-          {auth ? <LoggedIn setDrawer={() => setDrawer(true)} /> : <LoggedOut />}
+          {auth ? (
+            <LoggedIn setDrawer={() => setDrawer(true)} />
+          ) : (
+            <LoggedOut />
+          )}
         </Toolbar>
       </AppBar>
       <SideBar drawer={drawer} setDrawer={setDrawer} />
       <ThemeProvider theme={theme}>
-        {
-          props.center
-            ? <Box sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: 'calc(100vh - 64px)'
-            }}>
-              {props.children}
-            </Box>
-            : props.children
-        }
+        {props.center ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "calc(100vh - 64px)",
+            }}
+          >
+            {props.children}
+          </Box>
+        ) : (
+          props.children
+        )}
       </ThemeProvider>
     </Box>
-  )
+  );
 }
 
 const LoggedIn = (props: {
