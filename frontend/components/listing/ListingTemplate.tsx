@@ -6,10 +6,54 @@ import { uploadFile } from "../../utils/utils";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import { Toast } from "../generic/Toast";
+import { useStore } from "../../store/store";
 
 /////////////////////////////////////////////////////////////////////////////
 // Queries
 /////////////////////////////////////////////////////////////////////////////
+
+const CREATE_LISTING = gql`
+  mutation (
+    $email: String!
+    $title: String!
+    $description: String!
+    $sell: Boolean!
+    $price: Float!
+    $trade: Boolean!
+    $cash: Boolean!
+    $bank: Boolean!
+    $status: String!
+    $categories: [String]!
+    $tradeCategories: [String]!
+    $weight: Float
+    $volume: Float
+    $materials: [String]!
+    $location: String!
+    $image: String!
+  ) {
+    createListing(
+      userEmail: $email,
+      title: $title,
+      description: $description,
+      isSellListing: $sell,
+      price: $price,
+      canTrade: $trade,
+      canPayCash: $cash,
+      canPayBank: $bank,
+      status: $status,
+      categories: $categories,
+      wantToTradeFor: $tradeCategories,
+      weight: $weight,
+      volume: $volume,
+      materials: $materials,
+      address: $location,
+      image: $image,
+    ) {
+      errors
+      success
+    }
+  }
+`
 
 const GET_LISTING = gql`
   query ($id: ID!) {
@@ -43,10 +87,67 @@ const GET_LISTING = gql`
   }
 `
 
+const UPDATE_LISTING = gql`
+  mutation (
+    $id: ID!
+    $title: String
+    $description: String
+    $price: Float
+    $trade: Boolean
+    $cash: Boolean
+    $bank: Boolean
+    $status: String
+    $categories: [String]
+    $tradeCategories: [String]
+    $weight: Float
+    $volume: Float
+    $materials: [String]
+    $location: String
+    $image: String
+  ) {
+    updateListing(
+      id: $id,
+      title: $title,
+      description: $description,
+      price: $price,
+      canTrade: $trade,
+      canPayCash: $cash,
+      canPayBank: $bank,
+      status: $status,
+      categories: $categories,
+      wantToTradeFor: $tradeCategories,
+      weight: $weight,
+      volume: $volume,
+      materials: $materials,
+      address: $location,
+      image: $image,
+    ) {
+      errors
+      success
+    }
+  }
+`
+
 const DELETE_LISTING = gql`
   mutation ($id: ID!) {
     deleteListing(id: $id) {
       success
+    }
+  }
+`
+
+const GET_MATERIALS = gql`
+  query {
+    getMaterials {
+      materials
+    }
+  }
+`
+
+const GET_CATEGORIES = gql`
+  query {
+    getCategories {
+      categories
     }
   }
 `
@@ -91,11 +192,13 @@ export const ListingTemplate = (props: {
   have?: boolean;
 }) => {
 
-  const validTradeCategories = ['Entertainment', 'Vehicles']
-  const validMaterialCategories = ['Wood', 'Metal']
+  const validTradeCategories = useQuery(GET_CATEGORIES).data?.getCategories.categories
+  const validMaterialCategories = useQuery(GET_MATERIALS).data?.getMaterials.materials
 
   const ref = createRef<any>()
+  const { auth } = useStore()
   const [errorToast, setErrorToast] = useState<string>('');
+  const [successToast, setSuccessToast] = useState<string>('');
 
   const [title, setTitle] = useState<string>('')
   const [image, setImage] = useState<string>('')
@@ -106,8 +209,8 @@ export const ListingTemplate = (props: {
   const [trade, setTrade] = useState<boolean>(false)
   const [cash, setCash] = useState<boolean>(false)
   const [bank, setBank] = useState<boolean>(false)
-  const [weight, setWeight] = useState<number>()
-  const [volume, setVolume] = useState<number>()
+  const [weight, setWeight] = useState<number>(0)
+  const [volume, setVolume] = useState<number>(0)
   const [materials, setMaterials] = useState<string[]>([])
   const [tradeCategories, setTradeCategories] = useState<string[]>([])
   const [price, setPrice] = useState<number>(0)
@@ -116,7 +219,9 @@ export const ListingTemplate = (props: {
   const { id } = router.query
 
   const data = useQuery(GET_LISTING, { variables: { id } }).data?.getListing.listing
-  const [deleteListing, _] = useMutation(DELETE_LISTING);
+  const [deleteListing, _1] = useMutation(DELETE_LISTING);
+  const [updateListing, _2] = useMutation(UPDATE_LISTING);
+  const [createListing, _3] = useMutation(CREATE_LISTING);
 
   useEffect(() => {
     if (data) {
@@ -137,9 +242,14 @@ export const ListingTemplate = (props: {
     }
   }, [data])
 
+  const check = () => {
+    return title && image && description && location && price && (trade || cash || bank)
+  }
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 40 }}>
       <Toast toast={errorToast} setToast={setErrorToast} type='warning' />
+      <Toast toast={successToast} setToast={setSuccessToast} type='success' />
 
       {/** Left Section */}
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -164,7 +274,7 @@ export const ListingTemplate = (props: {
         <CategorySearch
           categories={categories || undefined}
           setCategories={setCategories}
-          validCategories={['Entertainment', 'Vehicles']}
+          validCategories={validTradeCategories}
           title="Category"
           width={450}
         />
@@ -232,7 +342,22 @@ export const ListingTemplate = (props: {
         {
           props.edit
             ? <Box sx={{ display: 'flex', mt: 1.5, width: '100%' }}>
-              <Button variant="outlined" sx={{ borderRadius: 30, mr: 0.5, width: '50%', height: 45 }}>
+              <Button
+                variant="outlined"
+                sx={{ borderRadius: 30, mr: 0.5, width: '50%', height: 45 }}
+                onClick={() => {
+                  if (!check()) {
+                    setErrorToast('Required fields are empty')
+                    return
+                  }
+                  updateListing({ variables: { id, title, image, description, location, categories, status, trade, cash, bank, weight, volume, materials, tradeCategories, price } })
+                    .then(() => {
+                      if (!_3.data.updateListing.success) throw Error('Error')
+                      setSuccessToast('Successfully updated listing')
+                    })
+                    .catch(() => setErrorToast('Failed to update listing'))
+                }}
+              >
                 Update {props.have ? 'Have' : 'Want'} Listing
               </Button>
               <Button
@@ -240,14 +365,29 @@ export const ListingTemplate = (props: {
                 sx={{ borderRadius: 30, ml: 0.5, width: '50%', height: 45 }}
                 onClick={() => {
                   deleteListing({ variables: { id } })
-                    .then(() => router.back())
+                    .then(() => router.push('/listing/my-listings'))
                     .catch(() => setErrorToast('Failed to delete listing'))
                 }}
               >
                 Delete Listing
               </Button>
             </Box>
-            : <Button variant="outlined" sx={{ borderRadius: 30, width: '100%', height: 45 }}>
+            : <Button
+              variant="outlined"
+              sx={{ borderRadius: 30, width: '100%', height: 45 }}
+              onClick={() => {
+                if (!check()) {
+                  setErrorToast('Required fields are empty')
+                  return
+                }
+                createListing({ variables: { email: auth?.email, sell: !!props.have, id, title, image, description, location, categories, status, trade, cash, bank, weight, volume, materials, tradeCategories, price } })
+                  .then(() => {
+                    if (!_3.data.createListing.success) throw Error('Error')
+                    router.push('/listing/my-listings')
+                  })
+                  .catch((e) => setErrorToast('Failed to create listing'))
+              }}
+            >
               Post {props.have ? 'Have' : 'Want'} Listing
             </Button>
         }

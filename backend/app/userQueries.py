@@ -1,4 +1,3 @@
-from audioop import add
 from app import db
 from app.models import User
 
@@ -7,7 +6,6 @@ from ariadne import convert_kwargs_to_snake_case
 def listUsers_resolver(obj, info):
     try:
         users = [user.to_json() for user in User.query.all()]
-        print(users)
         payload = {
             "success": True,
             "users": users
@@ -101,5 +99,3 @@ def delete_user_resolver(obj, info, email):
             "errors": ["User matching id {id} not found"]
         }
     return payload
-
-

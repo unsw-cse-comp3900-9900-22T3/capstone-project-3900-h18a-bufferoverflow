@@ -1,6 +1,10 @@
 from app import db
 from app.config import material_names, category_names
 
+user_following = db.Table('user_following',
+    db.Column('follower_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+    db.Column('followed_id', db.Integer, db.ForeignKey('users.id'), primary_key=True)
+)
 
 class User(db.Model):
     __tablename__ = "users"
@@ -13,12 +17,38 @@ class User(db.Model):
     display_img = db.Column(db.String(500), default="", nullable=False)
     address = db.Column(db.String(100), default="", nullable=False)
 
+    # TODO: add foreign keys arg?
+    following = db.relationship(
+        'User', 
+        secondary=user_following,  
+        primaryjoin=(user_following.c.follower_id == id),
+        secondaryjoin=(user_following.c.followed_id == id),
+        backref='followed_by'
+    )
+
     def __init__(self, email, username):
         self.username = username
         self.email = email
 
     def add_display_img(self, display_img):
         self.display_img = display_img
+
+    def add_following(self, followed):
+        if not self.is_following(followed):
+            self.following.append(followed)
+            self.save()
+
+    def remove_following(self, user):
+        if self.is_following(user):
+            self.following.remove(user)   
+            self.save()
+
+    def is_following(self, user):
+        followed_users = [followed.to_json() for followed in self.following]
+        for u in followed_users:
+            if u["id"] == user.id:
+                return True 
+        return False
 
     def to_json(self):
         return {
@@ -204,7 +234,6 @@ class Listing(db.Model):
                 material.material_to.append(self)
                 material.save()
 
-
     def to_json(self):
         return {
             "id": self.id,
@@ -224,6 +253,32 @@ class Listing(db.Model):
             "address": self.address,
             "image": self.image,
             "materials": [mat.to_json() for mat in self.materials]
+        }
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+class TradeOffer(db.Model):
+    __tablename__ = "trade_offer"
+
+    id = db.Column(db.Integer, primary_key=True)
+    listing_one_id = db.Column(db.Integer, db.ForeignKey("listings.id"), nullable=False)
+    listing_two_id = db.Column(db.Integer, db.ForeignKey("listings.id"), nullable=False)
+
+    def __init__(self, listing_one_id, listing_two_id, date_accepted=None, is_accepted=False):
+        self.listing_one_id = listing_one_id
+        self.listing_two_id = listing_two_id
+
+    def to_json(self):
+        return {
+            "id" : self.id,
+            "listing_one_id" : self.listing_one_id,
+            "listing_two_id" : self.listing_two_id,
         }
 
     def save(self):
