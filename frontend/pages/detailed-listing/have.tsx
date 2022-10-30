@@ -22,6 +22,7 @@ export const GET_DETAILED_LISTING = gql`
         user {
           username
           displayImg
+          email
         }
         title
         categories {
@@ -122,6 +123,7 @@ const DetailedHaveListing: NextPage = () => {
   const [price, setPrice] = useState<number>(0);
   const [itemPosessor, setItemPossesor] = useState("");
   const [itemPosessorImageURL, setItemPossesorImageURL] = useState("");
+  const [itemPosessorEmail, setItemPossesorEmail] = useState("");
 
   useEffect(() => {
     if (data) {
@@ -137,6 +139,7 @@ const DetailedHaveListing: NextPage = () => {
       setPrice(data.price);
       setItemPossesor(data.user.username);
       setItemPossesorImageURL(data.user.displayImg);
+      setItemPossesorEmail(data.user.email);
     }
   }, [data]);
 
@@ -254,7 +257,7 @@ const DetailedHaveListing: NextPage = () => {
           <Button
             variant="outlined"
             sx={{ borderRadius: 30, mt: 4, height: 45 }}
-            href={`/trade/propose?user=${itemPosessor}`}
+            href={`/trade/propose?email=${itemPosessorEmail}`}
           >
             Propose Trade
           </Button>
@@ -262,14 +265,14 @@ const DetailedHaveListing: NextPage = () => {
             <Button
               variant="outlined"
               sx={{ borderRadius: 30, mr: 0.5, width: "50%", height: 45 }}
-              href={`/chat/chat?user=${itemPosessor}`}
+              href={`/chat/chat?other=${itemPosessorEmail}`}
             >
               Message User
             </Button>
             <Button
               variant="outlined"
               sx={{ borderRadius: 30, ml: 0.5, width: "50%", height: 45 }}
-              href={`/profile/visitor-profile?user=${itemPosessor}`}
+              href={`/profile/visitor-profile?email=${itemPosessorEmail}`}
             >
               View Trader Profile
             </Button>
