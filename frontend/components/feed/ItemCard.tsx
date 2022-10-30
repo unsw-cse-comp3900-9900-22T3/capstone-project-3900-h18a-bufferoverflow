@@ -7,6 +7,38 @@ import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
 import Link from 'next/link'
 
+export interface GraphqlListing {
+  title: string;
+  id: number;
+  description: string;
+  price: number;
+  image: string;
+  address: string;
+  user: GraphqlUser;
+  isSellListing: boolean;
+}
+
+interface GraphqlUser {
+  displayImg: string;
+}
+
+export const itemDataToItemCard = (item: GraphqlListing) => {
+    return (
+      <ItemCard
+        title={item.title}
+        price={item.price}
+        image={item.image}
+        avatar={item.user.displayImg}
+        location={item.address}
+        href={
+          item.isSellListing
+            ? `/detailed-listing/have?=id${item.id}`
+            : `/detailed-listing/want?=id${item.id}`
+        }
+      />
+    );
+  };
+
 export interface ItemCardProps {
   title: string;
   price: number;
@@ -16,7 +48,7 @@ export interface ItemCardProps {
   want: boolean;
 }
 
-export const ItemCard = (props: {
+const ItemCard = (props: {
   title: string;
   price: number;
   location: string;
