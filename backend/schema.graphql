@@ -77,6 +77,17 @@ type ListingsResult {
   listings: [Listing]
 }
 
+type TradeOffer {
+  id: ID!
+  listingOne: Listing!
+  listingTwo: Listing!
+}
+
+type TradeOfferResult {
+  success: Boolean!
+  errors: [String]
+  tradeOffer: TradeOffer
+ 
 type Result {
   success: Boolean!
   errors: [String]
@@ -99,6 +110,7 @@ type Query {
   ): ListingsResult!
   getCategories: CategoryResult!
   getMaterials: MaterialResult! 
+  getTradeOffersByUser: TradeOfferResult!
   getFollowing(
     userEmail: String!
     checkFollowerEmail: String!
@@ -154,6 +166,15 @@ type Mutation {
     image: String
   ): ListingResult!
   deleteListing(id: ID!): ListingResult!
+  createTradeOffer(
+    listingOneId: ID!
+    listingTwoId: ID!
+  ): TradeOfferResult!
+  updateTradeOffer(
+    id: ID!
+    isAccepted: Boolean
+  ): TradeOfferResult!
+  deleteTradeOffer(id: ID!): TradeOfferResult!
   followUser(
     followerEmail: String!
     followedEmail: String!
