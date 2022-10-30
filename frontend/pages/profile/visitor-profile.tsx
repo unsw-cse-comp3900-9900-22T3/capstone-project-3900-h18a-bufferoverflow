@@ -39,6 +39,24 @@ const GET_USER_QUERY = gql`
   }
 `
 
+const UNFOLLOW = gql`
+  mutation UnfollowQuery($email1: String!, $email2: String!) {
+    unfollowUser(followerEmail: $email1, followedEmail: $email2) {
+      success
+      errors
+    }
+  }
+`
+
+const FOLLOW = gql`
+  mutation followQuery($email1: String!, $email2: String!) {
+    followUser(followerEmail: $email1, followedEmail: $email2) {
+      success
+      errors
+    }
+  }
+`
+
 /////////////////////////////////////////////////////////////////////////////
 // Primary Component
 /////////////////////////////////////////////////////////////////////////////
