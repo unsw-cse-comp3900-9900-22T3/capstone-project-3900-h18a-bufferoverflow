@@ -4,7 +4,6 @@ import { Box, Typography } from "@mui/material";
 import { GraphqlListing } from "../../components/listing/types";
 import { itemDataToUserItemCard } from "../../components/listing/UserItemCard";
 import { useEffect, useState } from "react";
-import { mockItemCardRequest } from "../../utils/mockdata";
 import { gql, useQuery } from "@apollo/client";
 import { useStore } from "../../store/store";
 
