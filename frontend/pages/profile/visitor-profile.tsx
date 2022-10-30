@@ -5,7 +5,8 @@ import { gql, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import StarIcon from '@mui/icons-material/Star';
 import DoneIcon from '@mui/icons-material/Done';
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useStore } from "../../store/store";
 
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
@@ -39,6 +40,15 @@ const GET_USER_QUERY = gql`
   }
 `
 
+const GET_FOLLOW = gql`
+  query getFollowingQuery($email1: String!, $email2: String!) {
+    getFollowing (userEmail: $email1, checkFollowerEmail: $email2){
+      success
+      errors
+    }
+  }
+`
+
 const UNFOLLOW = gql`
   mutation UnfollowQuery($email1: String!, $email2: String!) {
     unfollowUser(followerEmail: $email1, followedEmail: $email2) {
@@ -67,7 +77,14 @@ const VisitorProfile: NextPage = () => {
   const { email } = router.query
   const { data } = useQuery<ProfileGraphqlProps>(GET_USER_QUERY, { variables: { email } })
   const user = data?.getUser.user
+  const { auth } = useStore()
   const [following, setFollowing] = useState<boolean>(false)
+
+  const response = useQuery(GET_FOLLOW, { variables: { email1: auth?.email, email2: email } }).data?.getFollowing.success
+
+  useEffect(() => {
+    if (response) setFollowing(response)
+  }, [response])
 
   return (
     <Template title="Visitor Profile" center>
