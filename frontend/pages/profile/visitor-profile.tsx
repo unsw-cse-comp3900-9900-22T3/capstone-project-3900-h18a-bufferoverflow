@@ -1,7 +1,7 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 import { Box, Button, Card, Typography } from "@mui/material";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import StarIcon from '@mui/icons-material/Star';
 import DoneIcon from '@mui/icons-material/Done';
@@ -81,6 +81,8 @@ const VisitorProfile: NextPage = () => {
   const [following, setFollowing] = useState<boolean>(false)
 
   const response = useQuery(GET_FOLLOW, { variables: { email1: auth?.email, email2: email } }).data?.getFollowing.success
+  const [unfollow, _1] = useMutation(UNFOLLOW);
+  const [follow, _2] = useMutation(FOLLOW);
 
   useEffect(() => {
     if (response) setFollowing(response)
@@ -107,7 +109,8 @@ const VisitorProfile: NextPage = () => {
                 : <StarIcon fontSize="large" sx={{ mr: 4, color: '#616161' }} />
             }
             <Button variant="outlined" sx={{ borderRadius: 30, width: '100%', mr: 3 }} onClick={async () => {
-              // query here then toggle is successful
+              if (following) await unfollow({ variables: { email1: auth?.email, email2: email } })
+              else await follow({ variables: { email1: auth?.email, email2: email } })
               setFollowing(!following)
             }}>
               {following ? 'Unfollow' : 'Follow'}
