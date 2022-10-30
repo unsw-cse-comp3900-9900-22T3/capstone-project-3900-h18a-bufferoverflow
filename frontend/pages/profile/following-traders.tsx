@@ -4,7 +4,7 @@ import { Avatar, Box, Button, Typography } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { gql, useLazyQuery, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { useStore } from "../../store/store";
 
 /////////////////////////////////////////////////////////////////////////////
@@ -19,6 +19,15 @@ const GET_FOLLOWING = gql`
         displayImg
         username
       }
+    }
+  }
+`
+
+const UNFOLLOW = gql`
+  mutation UnfollowQuery($email1: String!, $email2: String!) {
+    unfollowUser(followerEmail: $email1, followedEmail: $email2) {
+      success
+      errors
     }
   }
 `
@@ -39,6 +48,7 @@ const FollowingTraders: NextPage = () => {
   const { auth } = useStore()
 
   const response = useQuery(GET_FOLLOWING, { variables: { email: auth?.email } }).data?.getFollowingList.users
+  const [unfollow, _] = useMutation(UNFOLLOW);
 
   const [data, setData] = useState<FollowingTraderProps[]>([])
 
@@ -65,8 +75,7 @@ const FollowingTraders: NextPage = () => {
               <Button
                 sx={{ display: 'flex', zIndex: 10000 }}
                 onClick={async () => {
-                  // Should query api to update the unfollow action then if successfuly, continue with
-                  // rendering the change
+                  await unfollow({ variables: { email1: auth?.email, email2: offer.email } })
                   const index = data.findIndex(x => x.email === offer.email)
                   data.splice(index, 1)
                   setData([...data])
