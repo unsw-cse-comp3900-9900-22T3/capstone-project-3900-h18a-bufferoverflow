@@ -288,7 +288,7 @@ class Message(db.Model):
         db.session.commit()
 
 class Conversation(db.Model):
-    __tablename__ = "conversations"
+    __tablename__ = "conversation"
 
     id = db.Column(db.Integer, primary_key=True)
     conversation = db.Column(db.String(1000), nullable=False)
