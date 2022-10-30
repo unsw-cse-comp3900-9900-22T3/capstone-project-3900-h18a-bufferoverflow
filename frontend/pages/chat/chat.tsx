@@ -1,5 +1,6 @@
 import { Template } from "../../components/generic/Template";
 import { useStore } from "../../store/store";
+import { uploadFile } from "../../utils/utils";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
@@ -14,6 +15,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import CheckIcon from "@mui/icons-material/Check";
 import SendIcon from "@mui/icons-material/Send";
 import StarIcon from "@mui/icons-material/Star";
@@ -21,9 +23,10 @@ import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { gql, useQuery } from "@apollo/client";
 import styled from "@emotion/styled";
 
-// TODO: The chat must display images with minimal latency
+// todo
 // Messages should be marked as read when they are…read.
 // don't show to logged out users
+// stop socket breaking on hot reload
 
 type Message = {
   text: string;
@@ -32,9 +35,9 @@ type Message = {
 };
 
 type Person = {
-  username: string,
-  displayImg: string
-}
+  username: string;
+  displayImg: string;
+};
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
@@ -67,7 +70,7 @@ interface UserGraphqlProps {
       displayImg: string;
       username: string;
     } | null;
-  }
+  };
 }
 
 const GET_USER_QUERY = gql`
@@ -81,7 +84,7 @@ const GET_USER_QUERY = gql`
       }
     }
   }
-`
+`;
 
 const followingIcon = (following: boolean) => {
   if (following) {
@@ -124,20 +127,24 @@ const Chat: NextPage = () => {
   const conversation = [author, other].sort().join("-");
 
   const [us, setUs] = useState<Person>({});
-  const us_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, { variables: { email: author || '' } })
+  const us_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
+    variables: { email: author || "" },
+  });
   useEffect(() => {
     if (us_response.data?.getUser.user) {
       const user = us_response.data?.getUser.user;
-      setUs({username: user.username, displayImg: user.displayImg});
+      setUs({ username: user.username, displayImg: user.displayImg });
     }
   }, [us_response]);
 
   const [them, setThem] = useState<Person>({});
-  const them_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, { variables: { email: other || '' } })
+  const them_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
+    variables: { email: other || "" },
+  });
   useEffect(() => {
     if (them_response.data?.getUser.user) {
       const user = them_response.data?.getUser.user;
-      setThem({username: user.username, displayImg: user.displayImg});
+      setThem({ username: user.username, displayImg: user.displayImg });
     }
   }, [them_response]);
 
@@ -189,6 +196,18 @@ const Chat: NextPage = () => {
     }
   };
 
+  const imageRef = useRef(null);
+  const [image, setImage] = useState("");
+
+  useEffect(() => {
+    socket.emit("send_message", {
+      timestamp: Date.now(),
+      text: image,
+      author: author,
+      conversation: conversation,
+    });
+  }, [image]);
+
   return (
     <Template title="Chat">
       <ChatDiv>
@@ -211,13 +230,27 @@ const Chat: NextPage = () => {
               >
                 <Stack direction="row">
                   {!(message.author == author) && (
-                    <Link href={`/profile/visitor-profile?email=${ other}`}>
-                      <Tooltip title={ them.username }>
-                        <Avatar src={ them.displayImg } alt={ them.username }/>
+                    <Link href={`/profile/visitor-profile?email=${other}`}>
+                      <Tooltip title={them.username}>
+                        <Avatar src={them.displayImg} alt={them.username} />
                       </Tooltip>
                     </Link>
                   )}
-                  <Typography sx={{ padding: 1 }}>{message.text}</Typography>
+                  {message.text.startsWith(
+                    "https://comp3900storage.blob.core.windows.net"
+                  ) ? (
+                    <Box
+                      sx={{ display: "grid", justifyItems: "center", width: 1 }}
+                    >
+                      <Box
+                        component="img"
+                        src={message.text}
+                        sx={{ width: 1, maxWidth: 400 }}
+                      />
+                    </Box>
+                  ) : (
+                    <Typography sx={{ padding: 1 }}>{message.text}</Typography>
+                  )}
                 </Stack>
               </Box>
             </Box>
@@ -227,7 +260,6 @@ const Chat: NextPage = () => {
         <Stack
           direction="row"
           sx={{
-            // position: "fixed",
             bottom: 0,
             padding: 2,
             width: 1,
@@ -250,6 +282,20 @@ const Chat: NextPage = () => {
             }}
             value={text}
           ></TextField>
+          <Button component="label">
+            <AddAPhotoIcon />
+            <input
+              type="file"
+              ref={imageRef}
+              hidden
+              accept="image/png, image/jpeg"
+              onChange={async () => {
+                if (imageRef.current?.files[0]) {
+                  setImage(await uploadFile(imageRef.current.files[0]));
+                }
+              }}
+            />
+          </Button>
           <Button onClick={sendMessage}>
             <SendIcon />
           </Button>
