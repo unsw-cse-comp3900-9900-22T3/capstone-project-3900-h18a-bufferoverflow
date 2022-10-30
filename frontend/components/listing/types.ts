@@ -20,12 +20,12 @@ export interface ListingProps {
 
 export interface GraphqlListing {
   title: string;
-  description: string;
+  address: string;
   price: number;
   image: string;
-  address: string;
   user: GraphqlUser;
   isSellListing: boolean;
+  id: string;
 }
 
 interface GraphqlUser {

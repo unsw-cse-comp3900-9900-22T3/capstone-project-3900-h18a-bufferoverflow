@@ -1,7 +1,7 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 import { Box, Typography } from "@mui/material";
-import { GraphqlListing } from "../../components/feed/ItemCard";
+import { GraphqlListing } from "../../components/listing/types";
 import { itemDataToUserItemCard } from "../../components/listing/UserItemCard";
 import { useEffect, useState } from "react";
 import { mockItemCardRequest } from "../../utils/mockdata";
@@ -25,11 +25,14 @@ const GET_USER_LISTINGS = gql`
     getListingsByUser(userEmail: $userEmail) {
       listings {
         title
-        description
         address
         price
         image
+        user {
+          displayImg
+        }
         isSellListing
+        id
       }
     }
   }
@@ -49,7 +52,6 @@ const MyListings: NextPage = () => {
   const [wantListings, setWantListings] = useState<GraphqlListing[]>([]);
   const [haveListings, setHaveListings] = useState<GraphqlListing[]>([]);
 
-  // Pre-fill data once POST request is complete
   useEffect(() => {
     if (data && data.getListingsByUser?.listings) {
       setWantListings(data.getListingsByUser.listings.filter(item => !item.isSellListing))
