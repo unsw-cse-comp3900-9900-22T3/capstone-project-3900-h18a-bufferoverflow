@@ -87,6 +87,10 @@ type TradeOfferResult {
   success: Boolean!
   errors: [String]
   tradeOffer: TradeOffer
+ 
+type Result {
+  success: Boolean!
+  errors: [String]
 }
 
 type Query {
@@ -107,6 +111,11 @@ type Query {
   getCategories: CategoryResult!
   getMaterials: MaterialResult! 
   getTradeOffersByUser: TradeOfferResult!
+  getFollowing(
+    userEmail: String!
+    checkFollowerEmail: String!
+  ): Result!
+  getFollowingList(userEmail: String!): UsersResult!
 }
 
 type Mutation {
@@ -166,4 +175,12 @@ type Mutation {
     isAccepted: Boolean
   ): TradeOfferResult!
   deleteTradeOffer(id: ID!): TradeOfferResult!
+  followUser(
+    followerEmail: String!
+    followedEmail: String!
+  ): Result! 
+  unfollowUser(
+    followerEmail: String!
+    followedEmail: String!
+  ): Result! 
 }

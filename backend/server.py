@@ -6,6 +6,7 @@ from flask import request, jsonify
 from app.userQueries import *
 from app.listingQueries import *
 from app.tradeOfferQueries import *
+from app.followQueries import *
 from app.models import User
 
 
@@ -21,6 +22,8 @@ query.set_field("searchListings", searchListings_resolver)
 query.set_field("getCategories", getCategories_resolver)
 query.set_field("getMaterials", getMaterials_resolver)
 query.set_field("getTradeOffersByUser", getTradeOffersByUser_resolver)
+query.set_field("getFollowing", getFollowing_resolver)
+query.set_field("getFollowingList", getFollowingList_resolver)
 
 # Create mutations
 mutation = ObjectType("Mutation")
@@ -33,7 +36,8 @@ mutation.set_field("deleteListing", delete_listing_resolver)
 mutation.set_field("createTradeOffer", createTradeOffer_resolver)
 mutation.set_field("updateTradeOffer", updateTradeOffer_resolver)
 mutation.set_field("deleteTradeOffer", deleteTradeOffer_resolver)
-
+mutation.set_field("followUser", followUser_resolver)
+mutation.set_field("unfollowUser", unfollowUser_resolver)
 
 # Create schema
 type_defs = load_schema_from_path("schema.graphql")
