@@ -8,6 +8,7 @@ import {
   Avatar,
   Box,
   Button,
+  Link,
   Stack,
   TextField,
   Tooltip,
@@ -29,6 +30,11 @@ type Message = {
   author: string;
   timestamp: number;
 };
+
+type Person = {
+  username: string,
+  displayImg: string
+}
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
@@ -52,6 +58,30 @@ const GET_CONVERSATION_MESSAGES_QUERY = gql`
     }
   }
 `;
+
+interface UserGraphqlProps {
+  getUser: {
+    success: boolean | null;
+    errors: string[] | null;
+    user: {
+      displayImg: string;
+      username: string;
+    } | null;
+  }
+}
+
+const GET_USER_QUERY = gql`
+  query getUserQuery($email: String!) {
+    getUser(email: $email) {
+      errors
+      success
+      user {
+        displayImg
+        username
+      }
+    }
+  }
+`
 
 const followingIcon = (following: boolean) => {
   if (following) {
@@ -90,7 +120,26 @@ const Chat: NextPage = () => {
   // apparently useEffect is run 2x by default, avoid this.
   const router = useRouter();
   const author = auth?.email;
-  const conversation = [author, router.query.other].sort().join("-");
+  const other = router.query.other;
+  const conversation = [author, other].sort().join("-");
+
+  const [us, setUs] = useState<Person>({});
+  const us_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, { variables: { email: author || '' } })
+  useEffect(() => {
+    if (us_response.data?.getUser.user) {
+      const user = us_response.data?.getUser.user;
+      setUs({username: user.username, displayImg: user.displayImg});
+    }
+  }, [us_response]);
+
+  const [them, setThem] = useState<Person>({});
+  const them_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, { variables: { email: other || '' } })
+  useEffect(() => {
+    if (them_response.data?.getUser.user) {
+      const user = them_response.data?.getUser.user;
+      setThem({username: user.username, displayImg: user.displayImg});
+    }
+  }, [them_response]);
 
   const { data } = useQuery<MessageGraphqlProps>(
     GET_CONVERSATION_MESSAGES_QUERY,
@@ -140,8 +189,6 @@ const Chat: NextPage = () => {
     }
   };
 
-  let left;
-
   return (
     <Template title="Chat">
       <ChatDiv>
@@ -158,16 +205,17 @@ const Chat: NextPage = () => {
               <Box
                 sx={{
                   backgroundColor: "#e6e6e6",
-                  // borderStyle: "solid",
                   borderRadius: 1,
                   width: 0.5,
                 }}
               >
                 <Stack direction="row">
                   {!(message.author == author) && (
-                    <Tooltip title={message.author}>
-                      <Avatar src="https://mui.com/static/images/avatar/1.jpg" />
-                    </Tooltip>
+                    <Link href={`/profile/visitor-profile?email=${ other}`}>
+                      <Tooltip title={ them.username }>
+                        <Avatar src={ them.displayImg } alt={ them.username }/>
+                      </Tooltip>
+                    </Link>
                   )}
                   <Typography sx={{ padding: 1 }}>{message.text}</Typography>
                 </Stack>
