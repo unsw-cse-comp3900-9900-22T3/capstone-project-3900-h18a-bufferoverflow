@@ -42,12 +42,19 @@ type Material {
   type: String 
 }
 
+type MaterialResult {
+  success: Boolean!
+  errors: [String]
+  materials: [String]!
+}
+
 type Listing {
   id: ID!
   title: String! 
   description: String!
   user: User!
   isSellListing: Boolean!
+  categories: [Category]!
   wantToTradeFor: [Category]!
   price: Float!
   canTrade: Boolean!
@@ -57,7 +64,7 @@ type Listing {
   volume: Float!
   status: String!
   address: String!
-  images: String
+  image: String
   materials: [Material]!
 }
 
@@ -73,6 +80,7 @@ type ListingsResult {
   listings: [Listing]
 }
 
+<<<<<<< HEAD
 type Message {
   id: ID!
   timestamp: Date!
@@ -85,6 +93,22 @@ type MessageResult {
   success: Boolean!
   errors: [String]
   messages: [Message]
+=======
+type TradeOffer {
+  id: ID!
+  listingOne: Listing!
+  listingTwo: Listing!
+}
+
+type TradeOfferResult {
+  success: Boolean!
+  errors: [String]
+  tradeOffer: TradeOffer
+ 
+type Result {
+  success: Boolean!
+  errors: [String]
+>>>>>>> master
 }
 
 type Query {
@@ -94,17 +118,28 @@ type Query {
   # TODO: implement machine-learning resolver
   userFeed(userEmail: String!): ListingsResult!
   getListing(id: ID!): ListingResult!
+  getListingsByUser(userEmail: String!): ListingsResult!
   searchListings(
-    category: [String]
+    categories: [String]
     distance: Int 
     isSellListing: Boolean
     priceMin: Float 
     priceMax: Float
   ): ListingsResult!
   getCategories: CategoryResult!
+<<<<<<< HEAD
   getMessages(
     conversation: String
   ): MessageResult!
+=======
+  getMaterials: MaterialResult! 
+  getTradeOffersByUser: TradeOfferResult!
+  getFollowing(
+    userEmail: String!
+    checkFollowerEmail: String!
+  ): Result!
+  getFollowingList(userEmail: String!): UsersResult!
+>>>>>>> master
 }
 
 type Mutation {
@@ -128,6 +163,7 @@ type Mutation {
     canPayCash: Boolean!
     canPayBank: Boolean!
     status: String!
+    categories: [String]!
     wantToTradeFor: [String]!
     weight: Float 
     volume: Float 
@@ -145,18 +181,39 @@ type Mutation {
     canPayCash: Boolean
     canPayBank: Boolean
     status: String
+    categories: [String]
     wantToTradeFor: [String]
     weight: Float
     volume: Float
     materials: [String]
     address: String
-    images: String
+    image: String
   ): ListingResult!
   deleteListing(id: ID!): ListingResult!
+<<<<<<< HEAD
   createMessage(
     timestamp: Int!
     text: String!
     author: String!
     conversation: String!
   ): MessageResult!
+=======
+  createTradeOffer(
+    listingOneId: ID!
+    listingTwoId: ID!
+  ): TradeOfferResult!
+  updateTradeOffer(
+    id: ID!
+    isAccepted: Boolean
+  ): TradeOfferResult!
+  deleteTradeOffer(id: ID!): TradeOfferResult!
+  followUser(
+    followerEmail: String!
+    followedEmail: String!
+  ): Result! 
+  unfollowUser(
+    followerEmail: String!
+    followedEmail: String!
+  ): Result! 
+>>>>>>> master
 }

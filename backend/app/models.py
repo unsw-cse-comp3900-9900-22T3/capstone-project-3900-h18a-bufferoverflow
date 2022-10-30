@@ -1,6 +1,10 @@
 from app import db
 from app.config import material_names, category_names
 
+user_following = db.Table('user_following',
+    db.Column('follower_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+    db.Column('followed_id', db.Integer, db.ForeignKey('users.id'), primary_key=True)
+)
 
 class User(db.Model):
     __tablename__ = "users"
@@ -13,9 +17,35 @@ class User(db.Model):
     display_img = db.Column(db.String(500), default="", nullable=False)
     address = db.Column(db.String(100), default="", nullable=False)
 
+    # TODO: add foreign keys arg?
+    following = db.relationship(
+        'User', 
+        secondary=user_following,  
+        primaryjoin=(user_following.c.follower_id == id),
+        secondaryjoin=(user_following.c.followed_id == id),
+        backref='followed_by'
+    )
+
     def __init__(self, email, username):
         self.username = username
         self.email = email
+
+    def add_following(self, followed):
+        if not self.is_following(followed):
+            self.following.append(followed)
+            self.save()
+
+    def remove_following(self, user):
+        if self.is_following(user):
+            self.following.remove(user)   
+            self.save()
+
+    def is_following(self, user):
+        followed_users = [followed.to_json() for followed in self.following]
+        for u in followed_users:
+            if u["id"] == user.id:
+                return True 
+        return False
 
     def to_json(self):
         return {
@@ -32,12 +62,21 @@ class User(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
 listing_material = db.Table('listing_material',
     db.Column('listing_id', db.Integer, db.ForeignKey('listings.id'), primary_key=True),
     db.Column('material_id', db.Integer, db.ForeignKey('materials.id'), primary_key=True)
 )
 
 listing_category = db.Table('listing_category',
+    db.Column('listing_id', db.Integer, db.ForeignKey('listings.id'), primary_key=True),
+    db.Column('category_id', db.Integer, db.ForeignKey('categories.id'), primary_key=True)
+)
+
+listing_want_to_trade_for = db.Table('listing_want_to_trade_for',
     db.Column('listing_id', db.Integer, db.ForeignKey('listings.id'), primary_key=True),
     db.Column('category_id', db.Integer, db.ForeignKey('categories.id'), primary_key=True)
 )
@@ -50,6 +89,7 @@ class Category(db.Model):
     type = db.Column(db.String(20), unique=True, nullable=False)
 
     category_to = db.relationship('Listing', secondary=listing_category, backref='categories')
+    want_to_trade_for_to = db.relationship('Listing', secondary=listing_want_to_trade_for, backref='want_to_trade_for')
 
     def __init__(self, type):
         self.type = type
@@ -114,12 +154,13 @@ class Listing(db.Model):
         can_pay_cash,
         can_pay_bank,
         status,
-        want_to_trade_for,
+        categories,
         weight,
         volume,
         materials,
         address = None,
-        image = ""
+        image = "",
+        want_to_trade_for = [],
     ):
         self.title = title
         self.description = description
@@ -136,10 +177,29 @@ class Listing(db.Model):
 
         # handle relational data
         self.user_id = User.query.filter_by(email=user_email).first().id
+
         if address is None:
             self.address = User.query.filter_by(email=user_email).first().address
-        self.update_want_to_trade_for(want_to_trade_for)
+
+        self.update_categories(categories)
+        if self.is_sell_listing:
+            self.update_want_to_trade_for(want_to_trade_for)
         self.update_materials(materials)
+
+    def update_categories(self, categories):
+        if categories is not None:
+            # to successfully remove all previous want_to_trade_for
+            for category_name in category_names:
+                category = Category.query.filter_by(type=category_name).first()
+                try:
+                    category.category_to.remove(self)
+                except:
+                    pass
+
+            for category_name in categories:
+                category = Category.query.filter_by(type=category_name).first()
+                category.category_to.append(self)
+                category.save()
 
     def update_want_to_trade_for(self, want_to_trade_for):
         if want_to_trade_for is not None:
@@ -147,13 +207,13 @@ class Listing(db.Model):
             for category_name in category_names:
                 category = Category.query.filter_by(type=category_name).first()
                 try:
-                    category.category_to.remove(self)
-                except: 
+                    category.want_to_trade_for_to.remove(self)
+                except:
                     pass
 
             for category_name in want_to_trade_for:
                 category = Category.query.filter_by(type=category_name).first()
-                category.category_to.append(self)
+                category.want_to_trade_for_to.append(self)
                 category.save()
 
     def update_materials(self, materials):
@@ -161,16 +221,15 @@ class Listing(db.Model):
             # to successfully remove all previous materials
             for material_name in material_names:
                 material = Material.query.filter_by(type=material_name).first()
-                try: 
+                try:
                     material.material_to.remove(self)
-                except: 
+                except:
                     pass
 
             for material_name in materials:
                 material = Material.query.filter_by(type=material_name).first()
                 material.material_to.append(self)
                 material.save()
-
 
     def to_json(self):
         return {
@@ -179,7 +238,8 @@ class Listing(db.Model):
             "user": User.query.get(self.user_id).to_json(),
             "description": self.description,
             "is_sell_listing": self.is_sell_listing,
-            "want_to_trade_for": [category.to_json() for category in self.categories],
+            "categories": [category.to_json() for category in self.categories],
+            "want_to_trade_for": [category.to_json() for category in self.want_to_trade_for],
             "price": self.price,
             "can_trade": self.can_trade,
             "can_pay_cash": self.can_pay_cash,
@@ -222,7 +282,33 @@ class Message(db.Model):
             "author": self.author,
             "conversation": self.conversation
         }
+        
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+class TradeOffer(db.Model):
+    __tablename__ = "trade_offer"
+
+    id = db.Column(db.Integer, primary_key=True)
+    listing_one_id = db.Column(db.Integer, db.ForeignKey("listings.id"), nullable=False)
+    listing_two_id = db.Column(db.Integer, db.ForeignKey("listings.id"), nullable=False)
+
+    def __init__(self, listing_one_id, listing_two_id, date_accepted=None, is_accepted=False):
+        self.listing_one_id = listing_one_id
+        self.listing_two_id = listing_two_id
+
+    def to_json(self):
+        return {
+            "id" : self.id,
+            "listing_one_id" : self.listing_one_id,
+            "listing_two_id" : self.listing_two_id,
+        }
 
     def save(self):
         db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
         db.session.commit()
