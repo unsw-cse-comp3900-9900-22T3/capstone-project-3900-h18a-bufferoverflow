@@ -65,7 +65,7 @@ export const GET_SEARCH_RESULTS = gql`
         description
         address
         price
-        images
+        image
         user {
           displayImg
         }
