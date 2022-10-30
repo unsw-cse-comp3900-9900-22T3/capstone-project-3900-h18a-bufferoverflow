@@ -21,10 +21,8 @@ import { gql, useQuery } from "@apollo/client";
 import styled from "@emotion/styled";
 
 // TODO: The chat must display images with minimal latency
-// Chat should display the other user’s profile picture next to their messages
 // Messages should be marked as read when they are…read.
-// ui
-// remake layout with grid - 2 rows - 1 chat, 1 message bar
+// don't show to logged out users
 
 type Message = {
   text: string;
@@ -81,15 +79,6 @@ const ChatDiv = styled.div`
     // wanted this to be % based but couldn't get working
     min-width: 800px;
     overflow: scroll;
-  }
-`;
-
-const MessageDiv = styled.div`
-  width: 60%;
-  div {
-    background-color: #6b6b6b;
-    border-style: 'solid'
-    border-radius: 15%;
   }
 `;
 
@@ -151,20 +140,39 @@ const Chat: NextPage = () => {
     }
   };
 
+  let left;
 
   return (
     <Template title="Chat">
       <ChatDiv>
         <div>
           {messages.map((message) => (
-            <MessageDiv key={message.timestamp}>
-              <div>
-                {message.text}
-              </div>
-              <Tooltip title={message.author}>
-                <Avatar src="https://mui.com/static/images/avatar/1.jpg" />
-              </Tooltip>
-            </MessageDiv>
+            <Box
+              sx={{
+                display: "grid",
+                justifyItems: message.author == author ? "end" : "start",
+                padding: 0.5,
+              }}
+              key={message.timestamp}
+            >
+              <Box
+                sx={{
+                  backgroundColor: "#e6e6e6",
+                  // borderStyle: "solid",
+                  borderRadius: 1,
+                  width: 0.5,
+                }}
+              >
+                <Stack direction="row">
+                  {!(message.author == author) && (
+                    <Tooltip title={message.author}>
+                      <Avatar src="https://mui.com/static/images/avatar/1.jpg" />
+                    </Tooltip>
+                  )}
+                  <Typography sx={{ padding: 1 }}>{message.text}</Typography>
+                </Stack>
+              </Box>
+            </Box>
           ))}
           <div ref={end}></div>
         </div>
@@ -176,7 +184,7 @@ const Chat: NextPage = () => {
             padding: 2,
             width: 1,
             justifyContent: "center",
-            backgroundColor: "white"
+            backgroundColor: "white",
           }}
         >
           {/* todo: make this change based on following state */}
@@ -194,9 +202,9 @@ const Chat: NextPage = () => {
             }}
             value={text}
           ></TextField>
-            <Button onClick={sendMessage}>
-              <SendIcon />
-            </Button>
+          <Button onClick={sendMessage}>
+            <SendIcon />
+          </Button>
         </Stack>
       </ChatDiv>
     </Template>
