@@ -4,17 +4,27 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import { Button, Chip, Stack, TextField, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Stack,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import SendIcon from "@mui/icons-material/Send";
 import StarIcon from "@mui/icons-material/Star";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { gql, useQuery } from "@apollo/client";
+import styled from "@emotion/styled";
 
 // TODO: The chat must display images with minimal latency
 // Chat should display the other user’s profile picture next to their messages
 // Messages should be marked as read when they are…read.
 // ui
+// remake layout with grid - 2 rows - 1 chat, 1 message bar
 
 type Message = {
   text: string;
@@ -47,14 +57,45 @@ const GET_CONVERSATION_MESSAGES_QUERY = gql`
 
 const followingIcon = (following: boolean) => {
   if (following) {
-    return <CheckIcon />;
+    return (
+      <Tooltip title="You are following this user">
+        <CheckIcon />
+      </Tooltip>
+    );
   } else {
-    return <StarIcon />;
+    return (
+      <Tooltip title="Follow this user">
+        <StarIcon />
+      </Tooltip>
+    );
   }
 };
 
+const ChatDiv = styled.div`
+  display: grid;
+  grid-template-rows: 86vh 1fr;
+  justify-content: center;
+  align-content: center | end;
+  width: 100%;
+  > div {
+    // wanted this to be % based but couldn't get working
+    min-width: 800px;
+    overflow: scroll;
+  }
+`;
+
+const MessageDiv = styled.div`
+  width: 60%;
+  div {
+    background-color: #6b6b6b;
+    border-style: 'solid'
+    border-radius: 15%;
+  }
+`;
+
 const Chat: NextPage = () => {
   const url = `http://localhost:${process.env.NEXT_PUBLIC_BACKEND_PORT}`;
+  const end = useRef(null);
 
   const { auth } = useStore();
   // apparently useEffect is run 2x by default, avoid this.
@@ -94,6 +135,10 @@ const Chat: NextPage = () => {
     rendered.current = true;
   }, []);
 
+  useEffect(() => {
+    end.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   const sendMessage = async () => {
     if (text != "") {
       socket.emit("send_message", {
@@ -106,44 +151,54 @@ const Chat: NextPage = () => {
     }
   };
 
+
   return (
     <Template title="Chat">
-      <Typography>Messages:</Typography>
-      <ol>
-        {messages.map((message) => (
-          <li key={message.timestamp}>
-            <b>{message.author}</b>: {message.text}
-          </li>
-        ))}
-      </ol>
-      <Stack
-        direction="row"
-        sx={{
-          position: "absolute",
-          bottom: 20,
-          width: 1,
-          justifyContent: "center",
-        }}
-      >
-        {/* todo: make this change based on following state */}
-        <Button>{followingIcon(true)}</Button>
-        <TextField
-          placeholder="Type something..."
-          disabled={!rendered.current}
-          sx={{ width: 0.9 }}
-          onChange={(e) => setText(e.target.value)}
-          onKeyPress={(e) => {
-            if (e.key == "Enter") {
-              sendMessage();
-              e.preventDefault();
-            }
+      <ChatDiv>
+        <div>
+          {messages.map((message) => (
+            <MessageDiv key={message.timestamp}>
+              <div>
+                {message.text}
+              </div>
+              <Tooltip title={message.author}>
+                <Avatar src="https://mui.com/static/images/avatar/1.jpg" />
+              </Tooltip>
+            </MessageDiv>
+          ))}
+          <div ref={end}></div>
+        </div>
+        <Stack
+          direction="row"
+          sx={{
+            // position: "fixed",
+            bottom: 0,
+            padding: 2,
+            width: 1,
+            justifyContent: "center",
+            backgroundColor: "white"
           }}
-          value={text}
-        ></TextField>
-        <Button onClick={sendMessage}>
-          <SendIcon />
-        </Button>
-      </Stack>
+        >
+          {/* todo: make this change based on following state */}
+          <Button>{followingIcon(true)}</Button>
+          <TextField
+            placeholder="Type something..."
+            disabled={!rendered.current}
+            sx={{ width: 0.9 }}
+            onChange={(e) => setText(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key == "Enter") {
+                sendMessage();
+                e.preventDefault();
+              }
+            }}
+            value={text}
+          ></TextField>
+            <Button onClick={sendMessage}>
+              <SendIcon />
+            </Button>
+        </Stack>
+      </ChatDiv>
     </Template>
   );
 };
