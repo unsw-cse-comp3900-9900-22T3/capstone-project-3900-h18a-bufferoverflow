@@ -3,6 +3,154 @@ import { createRef, useEffect, useState } from "react";
 import { ListingProps, StatusType } from "../../components/listing/types";
 import { CategorySearch } from "../../components/feed/CategorySearch";
 import { uploadFile } from "../../utils/utils";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import { useRouter } from "next/router";
+import { Toast } from "../generic/Toast";
+import { useStore } from "../../store/store";
+
+/////////////////////////////////////////////////////////////////////////////
+// Queries
+/////////////////////////////////////////////////////////////////////////////
+
+const CREATE_LISTING = gql`
+  mutation (
+    $email: String!
+    $title: String!
+    $description: String!
+    $sell: Boolean!
+    $price: Float!
+    $trade: Boolean!
+    $cash: Boolean!
+    $bank: Boolean!
+    $status: String!
+    $categories: [String]!
+    $tradeCategories: [String]!
+    $weight: Float
+    $volume: Float
+    $materials: [String]!
+    $location: String!
+    $image: String!
+  ) {
+    createListing(
+      userEmail: $email,
+      title: $title,
+      description: $description,
+      isSellListing: $sell,
+      price: $price,
+      canTrade: $trade,
+      canPayCash: $cash,
+      canPayBank: $bank,
+      status: $status,
+      categories: $categories,
+      wantToTradeFor: $tradeCategories,
+      weight: $weight,
+      volume: $volume,
+      materials: $materials,
+      address: $location,
+      image: $image,
+    ) {
+      errors
+      success
+    }
+  }
+`
+
+const GET_LISTING = gql`
+  query ($id: ID!) {
+    getListing(id: $id) {
+      listing {
+        id
+        title
+        categories {
+          type
+        }
+        wantToTradeFor {
+          type
+        }
+        materials {
+          type
+        }
+        image
+        description
+        address
+        status
+        price
+        canTrade
+        canPayCash
+        canPayBank
+        weight
+        volume
+      }
+      errors
+      success
+    }
+  }
+`
+
+const UPDATE_LISTING = gql`
+  mutation (
+    $id: ID!
+    $title: String
+    $description: String
+    $price: Float
+    $trade: Boolean
+    $cash: Boolean
+    $bank: Boolean
+    $status: String
+    $categories: [String]
+    $tradeCategories: [String]
+    $weight: Float
+    $volume: Float
+    $materials: [String]
+    $location: String
+    $image: String
+  ) {
+    updateListing(
+      id: $id,
+      title: $title,
+      description: $description,
+      price: $price,
+      canTrade: $trade,
+      canPayCash: $cash,
+      canPayBank: $bank,
+      status: $status,
+      categories: $categories,
+      wantToTradeFor: $tradeCategories,
+      weight: $weight,
+      volume: $volume,
+      materials: $materials,
+      address: $location,
+      image: $image,
+    ) {
+      errors
+      success
+    }
+  }
+`
+
+const DELETE_LISTING = gql`
+  mutation ($id: ID!) {
+    deleteListing(id: $id) {
+      success
+    }
+  }
+`
+
+const GET_MATERIALS = gql`
+  query {
+    getMaterials {
+      materials
+    }
+  }
+`
+
+const GET_CATEGORIES = gql`
+  query {
+    getCategories {
+      categories
+    }
+  }
+`
 
 /////////////////////////////////////////////////////////////////////////////
 // Secondary Components and Constants
@@ -17,7 +165,9 @@ const Slider = (props: {
 }) => {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5, ml: 0.5 }}>
-      <Typography sx={{ fontSize: 16, fontWeight: 'bold', mr: 3, mt: 0.9 }}>Status</Typography>
+      <Typography sx={{ fontSize: 16, fontWeight: 'bold', mr: 3, mt: 0.9 }}>
+        Status
+      </Typography>
       <Tabs
         value={props.status}
         onChange={(_, val) => props.setStatus(val)}
@@ -42,10 +192,13 @@ export const ListingTemplate = (props: {
   have?: boolean;
 }) => {
 
-  const validTradeCategories = ['Entertainment', 'Vehicles']
-  const validMaterialCategories = ['Wood', 'Metal']
+  const validTradeCategories = useQuery(GET_CATEGORIES).data?.getCategories.categories
+  const validMaterialCategories = useQuery(GET_MATERIALS).data?.getMaterials.materials
 
   const ref = createRef<any>()
+  const { auth } = useStore()
+  const [errorToast, setErrorToast] = useState<string>('');
+  const [successToast, setSuccessToast] = useState<string>('');
 
   const [title, setTitle] = useState<string>('')
   const [image, setImage] = useState<string>('')
@@ -56,37 +209,47 @@ export const ListingTemplate = (props: {
   const [trade, setTrade] = useState<boolean>(false)
   const [cash, setCash] = useState<boolean>(false)
   const [bank, setBank] = useState<boolean>(false)
-  const [tradeDescription, setTradeDescription] = useState<string>('')
-  const [weight, setWeight] = useState<number>()
-  const [volume, setVolume] = useState<number>()
+  const [weight, setWeight] = useState<number>(0)
+  const [volume, setVolume] = useState<number>(0)
   const [materials, setMaterials] = useState<string[]>([])
   const [tradeCategories, setTradeCategories] = useState<string[]>([])
   const [price, setPrice] = useState<number>(0)
 
-  const { data } = props
+  const router = useRouter()
+  const { id } = router.query
+
+  const data = useQuery(GET_LISTING, { variables: { id } }).data?.getListing.listing
+  const [deleteListing, _1] = useMutation(DELETE_LISTING);
+  const [updateListing, _2] = useMutation(UPDATE_LISTING);
+  const [createListing, _3] = useMutation(CREATE_LISTING);
 
   useEffect(() => {
     if (data) {
       setTitle(data.title)
       setImage(data.image)
       setDescription(data.description)
-      setLocation(data.location)
-      setCategories(data.categories)
+      setLocation(data.address)
+      setCategories(data.categories.map((item: any) => item.type))
       setStatus(data.status)
-      setTrade(data.trade)
-      setCash(data.cash)
-      setBank(data.bank)
-      setTradeDescription(data.tradeDescription)
+      setTrade(data.canTrade)
+      setCash(data.canPayCash)
+      setBank(data.canPayBank)
       setWeight(data.weight)
       setVolume(data.volume)
-      setMaterials(data.material)
-      setTradeCategories(data.tradeCategories)
+      setMaterials(data.materials.map((item: any) => item.type))
+      setTradeCategories(data.wantToTradeFor.map((item: any) => item.type))
       setPrice(data.price)
     }
   }, [data])
 
+  const check = () => {
+    return title && image && description && location && price && (trade || cash || bank)
+  }
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 40 }}>
+      <Toast toast={errorToast} setToast={setErrorToast} type='warning' />
+      <Toast toast={successToast} setToast={setSuccessToast} type='success' />
 
       {/** Left Section */}
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -109,8 +272,9 @@ export const ListingTemplate = (props: {
         <Typography sx={{ fontSize: 16, fontWeight: 'bold', mb: 1.5, ml: 0.5 }}>Location</Typography>
         <TextField value={location} label="Location" variant="outlined" sx={{ mb: 1.5 }} onChange={e => setLocation(e.target.value)} />
         <CategorySearch
+          categories={categories || undefined}
           setCategories={setCategories}
-          validCategories={['Entertainment', 'Vehicles']}
+          validCategories={validTradeCategories}
           title="Category"
           width={450}
         />
@@ -139,7 +303,6 @@ export const ListingTemplate = (props: {
             />
           </FormGroup>
         </FormControl>
-        <TextField value={tradeDescription} label="What I want as a trade" variant="outlined" sx={{ mb: 1.5 }} multiline rows={3} onChange={e => setTradeDescription(e.target.value)} />
         <Typography sx={{ fontSize: 16, fontWeight: 'bold', mb: 1.5, ml: 0.5 }}>Approximate Item Stats</Typography>
         <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
           <TextField value={weight} type='number' label="Weight (kg)" variant="outlined" onChange={e => setWeight(parseInt(e.target.value))} />
@@ -148,6 +311,7 @@ export const ListingTemplate = (props: {
         </Box>
         <Typography sx={{ fontSize: 16, fontWeight: 'bold', mb: 1.5, ml: 0.5 }}>Materials</Typography>
         <CategorySearch
+          categories={materials || undefined}
           setCategories={setMaterials}
           validCategories={validMaterialCategories}
           title="Materials"
@@ -155,6 +319,7 @@ export const ListingTemplate = (props: {
         />
         <Typography sx={{ fontSize: 16, fontWeight: 'bold', mb: 1.5, ml: 0.5, mt: 1.5 }}>Willing To Trade For Categories</Typography>
         <CategorySearch
+          categories={tradeCategories || undefined}
           setCategories={setTradeCategories}
           validCategories={validTradeCategories}
           title="Trade Categories"
@@ -177,14 +342,52 @@ export const ListingTemplate = (props: {
         {
           props.edit
             ? <Box sx={{ display: 'flex', mt: 1.5, width: '100%' }}>
-              <Button variant="outlined" sx={{ borderRadius: 30, mr: 0.5, width: '50%', height: 45 }}>
+              <Button
+                variant="outlined"
+                sx={{ borderRadius: 30, mr: 0.5, width: '50%', height: 45 }}
+                onClick={() => {
+                  if (!check()) {
+                    setErrorToast('Required fields are empty')
+                    return
+                  }
+                  updateListing({ variables: { id, title, image, description, location, categories, status, trade, cash, bank, weight, volume, materials, tradeCategories, price } })
+                    .then(() => {
+                      if (!_3.data.updateListing.success) throw Error('Error')
+                      setSuccessToast('Successfully updated listing')
+                    })
+                    .catch(() => setErrorToast('Failed to update listing'))
+                }}
+              >
                 Update {props.have ? 'Have' : 'Want'} Listing
               </Button>
-              <Button variant="outlined" sx={{ borderRadius: 30, ml: 0.5, width: '50%', height: 45 }}>
+              <Button
+                variant="outlined"
+                sx={{ borderRadius: 30, ml: 0.5, width: '50%', height: 45 }}
+                onClick={() => {
+                  deleteListing({ variables: { id } })
+                    .then(() => router.push('/listing/my-listings'))
+                    .catch(() => setErrorToast('Failed to delete listing'))
+                }}
+              >
                 Delete Listing
               </Button>
             </Box>
-            : <Button variant="outlined" sx={{ borderRadius: 30, width: '100%', height: 45 }}>
+            : <Button
+              variant="outlined"
+              sx={{ borderRadius: 30, width: '100%', height: 45 }}
+              onClick={() => {
+                if (!check()) {
+                  setErrorToast('Required fields are empty')
+                  return
+                }
+                createListing({ variables: { email: auth?.email, sell: !!props.have, id, title, image, description, location, categories, status, trade, cash, bank, weight, volume, materials, tradeCategories, price } })
+                  .then(() => {
+                    if (!_3.data.createListing.success) throw Error('Error')
+                    router.push('/listing/my-listings')
+                  })
+                  .catch((e) => setErrorToast('Failed to create listing'))
+              }}
+            >
               Post {props.have ? 'Have' : 'Want'} Listing
             </Button>
         }
