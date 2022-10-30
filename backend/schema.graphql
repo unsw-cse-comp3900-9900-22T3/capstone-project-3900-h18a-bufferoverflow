@@ -80,7 +80,6 @@ type ListingsResult {
   listings: [Listing]
 }
 
-<<<<<<< HEAD
 type Message {
   id: ID!
   timestamp: Date!
@@ -93,7 +92,8 @@ type MessageResult {
   success: Boolean!
   errors: [String]
   messages: [Message]
-=======
+}
+
 type TradeOffer {
   id: ID!
   listingOne: Listing!
@@ -108,7 +108,6 @@ type TradeOfferResult {
 type Result {
   success: Boolean!
   errors: [String]
->>>>>>> master
 }
 
 type Query {
@@ -127,11 +126,9 @@ type Query {
     priceMax: Float
   ): ListingsResult!
   getCategories: CategoryResult!
-<<<<<<< HEAD
   getMessages(
     conversation: String
   ): MessageResult!
-=======
   getMaterials: MaterialResult! 
   getTradeOffersByUser: TradeOfferResult!
   getFollowing(
@@ -139,7 +136,6 @@ type Query {
     checkFollowerEmail: String!
   ): Result!
   getFollowingList(userEmail: String!): UsersResult!
->>>>>>> master
 }
 
 type Mutation {
@@ -190,14 +186,12 @@ type Mutation {
     image: String
   ): ListingResult!
   deleteListing(id: ID!): ListingResult!
-<<<<<<< HEAD
   createMessage(
     timestamp: Int!
     text: String!
     author: String!
     conversation: String!
   ): MessageResult!
-=======
   createTradeOffer(
     listingOneId: ID!
     listingTwoId: ID!
@@ -215,5 +209,4 @@ type Mutation {
     followerEmail: String!
     followedEmail: String!
   ): Result! 
->>>>>>> master
 }
