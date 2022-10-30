@@ -5,10 +5,35 @@ import { ItemCard, ItemCardProps } from "../../components/feed/ItemCard";
 import { useEffect, useState } from "react";
 import { mockItemCardRequest } from "../../utils/mockdata";
 import { gql, useQuery } from "@apollo/client";
+import { GraphqlListing } from "../../components/listing/types";
+import { useStore } from "../../store/store";
 
 /////////////////////////////////////////////////////////////////////////////
 // Data
 /////////////////////////////////////////////////////////////////////////////
+
+export interface MyListingsGraphqlProps {
+  getListingsByUser: {
+    success: boolean | null;
+    erorrs: string[] | null;
+    listings: GraphqlListing[] | null;
+  };
+}
+
+const GET_USER_LISTINGS = gql`
+  query ($userEmail: String!) {
+    getListingsByUser(userEmail: $userEmail) {
+      listings {
+        title
+        description
+        address
+        price
+        image
+        isSellListing
+      }
+    }
+  }
+`;
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
@@ -16,12 +41,14 @@ import { gql, useQuery } from "@apollo/client";
 
 const MyListings: NextPage = () => {
 
-  const [data, setData] = useState<ItemCardProps[]>([])
+  const { auth } = useStore();
+  const { data } = useQuery<MyListingsGraphqlProps>(GET_USER_LISTINGS, {
+    variables: { userEmail: auth?.email || "" },
+  });
 
   // Pre-fill data once POST request is complete
   useEffect(() => {
-    mockItemCardRequest()
-      .then(data => setData(data))
+
   }, [])
 
   return (
@@ -32,7 +59,7 @@ const MyListings: NextPage = () => {
         </Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '90vw' }}>
           {
-            data.map(item => {
+            data?.map(item => {
               if (item.want) {
                 return <ItemCard {...item} href='/listing/edit-want-listing' />
               }
@@ -44,7 +71,7 @@ const MyListings: NextPage = () => {
         </Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '90vw' }}>
           {
-            data.map(item => {
+            data?.map(item => {
               if (!item.want) {
                 return <ItemCard {...item} href='/listing/edit-have-listing' />
               }
