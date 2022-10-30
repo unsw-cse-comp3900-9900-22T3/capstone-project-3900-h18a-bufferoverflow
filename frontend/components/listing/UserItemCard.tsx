@@ -16,8 +16,8 @@ export const itemDataToUserItemCard = (item: GraphqlListing) => {
       location={item.address}
       href={
         item.isSellListing
-          ? `/listing/edit-have-listing?=id${item.id}`
-          : `/listing/edit-want-listing?=id${item.id}`
+          ? `/listing/edit-have-listing?id=${item.id}`
+          : `/listing/edit-want-listing?id=${item.id}`
       }
     />
   );
