@@ -45,7 +45,7 @@ const ItemCard = (props: {
 }) => {
   return (
     <Link href={props.href || ''}>
-      <Card sx={{ maxWidth: 345, margin: '8px' }} onClick={props.onClick}>
+      <Card sx={{ width: 250, margin: '8px' }} onClick={props.onClick}>
         <CardMedia component='img' height='194' image={props.image} alt={props.title} />
         <CardHeader title={props.title} />
         <CardContent>
