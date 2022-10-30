@@ -2,24 +2,58 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 import { Box, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import { mockItemCardRequest } from "../../utils/mockdata";
-import { ItemCard, ItemCardProps } from "../../components/feed/ItemCard";
+import { ItemCard } from "../../components/feed/ItemCard";
 import { useRouter } from "next/router";
+import { gql, useQuery } from "@apollo/client";
+
+/////////////////////////////////////////////////////////////////////////////
+// Queries
+/////////////////////////////////////////////////////////////////////////////
+
+const GET_LISTINGS = gql`
+  query getListingsQuery($email: String!) {
+    getListingsByUser(userEmail: $email) {
+      errors
+      success
+      listings {
+        title
+        id
+        image
+        price
+        address
+        user {
+          displayImg
+        }
+        isSellListing
+      }
+    }
+  }
+`
+
+interface ListingProp {
+  id: number;
+  title: string;
+  image: string;
+  price: number;
+  address: string;
+  user: {
+    displayImg: string;
+  }
+  isSellListing: boolean;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// Primary Component
+/////////////////////////////////////////////////////////////////////////////
 
 const TraderListings: NextPage = () => {
 
-  const [data, setData] = useState<ItemCardProps[]>([])
   const router = useRouter()
   const { email } = router.query
 
-  const username = 'Sean' // this should be fetched from api later
+  const data = useQuery(GET_LISTINGS, { variables: { email } }).data?.getListingsByUser.listings as ListingProp[]
 
-  // Pre-fill data once POST request is complete
-  useEffect(() => {
-    mockItemCardRequest()
-      .then(data => setData(data))
-  }, [])
+  const username = 'Sean' // this should be fetched from api later
 
   return (
     <Template title="Trader Listings">
@@ -29,9 +63,14 @@ const TraderListings: NextPage = () => {
         </Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '90vw', pl: 10 }}>
           {
-            data.map(item => {
-              if (item.want) {
-                return <ItemCard {...item} href={`/detailed-listing/want?title=${item.title}`} />
+            data?.map(item => {
+              if (!item.isSellListing) {
+                return <ItemCard
+                  {...item}
+                  location={item.address}
+                  avatar={item.user.displayImg}
+                  href={`/detailed-listing/want?id=${item.id}`}
+                />
               }
             })
           }
@@ -41,9 +80,14 @@ const TraderListings: NextPage = () => {
         </Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '90vw', pl: 10, mb: 10 }}>
           {
-            data.map(item => {
-              if (!item.want) {
-                return <ItemCard {...item} href={`/detailed-listing/have?title=${item.title}`} />
+            data?.map(item => {
+              if (item.isSellListing) {
+                return <ItemCard
+                  {...item}
+                  location={item.address}
+                  avatar={item.user.displayImg}
+                  href={`/detailed-listing/have?id=${item.id}`}
+                />
               }
             })
           }
