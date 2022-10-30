@@ -287,6 +287,34 @@ class Message(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+class Conversation(db.Model):
+    __tablename__ = "conversations"
+
+    id = db.Column(db.Integer, primary_key=True)
+    conversation = db.Column(db.String(1000), nullable=False)
+    last_read_first = db.Column(db.Integer, db.ForeignKey("messages.id"), nullable=True)
+    last_read_second = db.Column(db.Integer, db.ForeignKey("messages.id"), nullable=True)
+
+    def __init__(self, conversation, last_read_first=None, last_read_second=None):
+        self.conversation = conversation
+        self.last_read_first = last_read_first
+        self.last_read_second = last_read_second
+
+    def to_json(self):
+        return {
+            "id" : self.id,
+            "last_read_first": self.last_read_first,
+            "last_read_second": self.last_read_second,
+        }
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
 class TradeOffer(db.Model):
     __tablename__ = "trade_offer"
 
