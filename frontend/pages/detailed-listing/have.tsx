@@ -18,7 +18,6 @@ export const GET_DETAILED_LISTING = gql`
         id
         user {
           username
-          email
           displayImg
           email
         }
