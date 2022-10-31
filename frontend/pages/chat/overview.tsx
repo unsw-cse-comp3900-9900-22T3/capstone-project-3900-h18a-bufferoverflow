@@ -13,6 +13,10 @@ const ChatOverview: NextPage = () => {
       mockSingleChatRequest().then((data) => setData(data));
   }, []);
 
+  // todo
+  // add messages for when no chats exist
+  // chats are created once you've talked to that person, through a listing
+
   return (
     <Template title="Chat Overview">
       <Box sx={{padding: "20px"}}>
