@@ -31,7 +31,7 @@ const GET_USER_LISTINGS = gql`
 `
 
 const PROPOSE_TRADE = gql`
-  mutation ($l1: String!, $l2: String!) {
+  mutation ($l1: ID!, $l2: ID!) {
     createTradeOffer(listingOneId: $l1, listingTwoId: $l2) {
       success
     }
