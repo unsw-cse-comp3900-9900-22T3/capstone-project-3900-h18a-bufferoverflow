@@ -48,12 +48,14 @@ for i in range(NUM_USERS):
 # Create 10 listings per user
 ###########################################################################
 
-NUM_LISTINGS_PER_USER = 10
+NUM_LISTINGS_PER_USER = 5
 
 print("---------------- Creating Dummy Listings ---------------")
 
+j = 7
+
 for i in range(NUM_USERS):
-    for j in range(NUM_LISTINGS_PER_USER):
+    for _ in range(NUM_LISTINGS_PER_USER):
         query = f'''
             mutation {{
                 createListing (
@@ -82,3 +84,4 @@ for i in range(NUM_USERS):
             }}
         '''
         execute_query(query)
+        j += 1
