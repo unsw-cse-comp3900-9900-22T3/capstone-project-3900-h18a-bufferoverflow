@@ -29,6 +29,7 @@ query.set_field("getMaterials", getMaterials_resolver)
 query.set_field("getTradeOffersByUser", getTradeOffersByUser_resolver)
 query.set_field("getFollowing", getFollowing_resolver)
 query.set_field("getFollowingList", getFollowingList_resolver)
+query.set_field("getConversation", getConversation_resolver)
 
 # Create mutations
 mutation = ObjectType("Mutation")
@@ -44,6 +45,8 @@ mutation.set_field("updateTradeOffer", updateTradeOffer_resolver)
 mutation.set_field("deleteTradeOffer", deleteTradeOffer_resolver)
 mutation.set_field("followUser", followUser_resolver)
 mutation.set_field("unfollowUser", unfollowUser_resolver)
+mutation.set_field("createConversation", createConversation_resolver)
+mutation.set_field("updateConversation", updateConversation_resolver)
 
 # Create schema
 type_defs = load_schema_from_path("schema.graphql")
