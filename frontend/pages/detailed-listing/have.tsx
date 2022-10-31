@@ -8,6 +8,7 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { useRouter } from "next/router";
 import { gql, useQuery } from "@apollo/client";
 import { ListingProps, StatusType } from "../../components/listing/types";
+import { useStore } from "../../store/store";
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -123,6 +124,7 @@ const DetailedHaveListing: NextPage = () => {
   const [price, setPrice] = useState<number>(0);
   const [itemPosessor, setItemPossesor] = useState("");
   const [itemPosessorImageURL, setItemPossesorImageURL] = useState("");
+  const { auth } = useStore()
 
   useEffect(() => {
     if (data) {
@@ -255,7 +257,7 @@ const DetailedHaveListing: NextPage = () => {
           <Button
             variant="outlined"
             sx={{ borderRadius: 30, mt: 4, height: 45 }}
-            href={`/trade/propose?email=${data?.user.email}`}
+            href={`/trade/propose?email=${auth?.email}`}
           >
             Propose Trade
           </Button>
