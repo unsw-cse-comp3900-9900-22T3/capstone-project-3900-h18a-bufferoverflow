@@ -1,6 +1,6 @@
 import { DataArray } from "@mui/icons-material";
-import { Avatar, Chip } from "@mui/material"
-import { Box, Stack } from "@mui/system"
+import { Avatar, Chip } from "@mui/material";
+import { Box, Stack } from "@mui/system";
 
 import Link from "next/link";
 import { DeleteChat } from "./delete-chat";
@@ -22,23 +22,23 @@ export const SingleChatOverview = (props: {
   lastMessageTime: number;
   unread: boolean;
 }) => {
+  // writing time code myself, I know gross
   const rtf = new Intl.RelativeTimeFormat("en", {
-    localeMatcher: "best fit", // other values: "lookup"
-    numeric: "always", // other values: "auto"
-    style: "long", // other values: "short" or "narrow"
+    localeMatcher: "best fit",
+    numeric: "always", 
+    style: "long",
   });
 
-  const diff = (props.lastMessageTime - Date.now());
-  // writing time code myself, I know gross
-  let time = rtf.format(Math.round(diff / (1000 * 60 * 60 * 24)), 'days');
+  const diff = props.lastMessageTime - Date.now();
+  let time = rtf.format(Math.round(diff / (1000 * 60 * 60 * 24)), "days");
   if (diff / (1000 * 60 * 60 * 24) > -1) {
-    rtf.format(Math.round(diff / (1000 * 60 * 60)), 'hours');
+    rtf.format(Math.round(diff / (1000 * 60 * 60)), "hours");
   }
   if (diff / (1000 * 60 * 60) > -1) {
-    time = rtf.format(Math.round(diff / (1000 * 60)), 'minutes');
+    time = rtf.format(Math.round(diff / (1000 * 60)), "minutes");
   }
   if (diff / (1000 * 60) > -1) {
-    time = rtf.format(Math.round(diff / (1000)), 'seconds');
+    time = rtf.format(Math.round(diff / 1000), "seconds");
   }
 
   return (
@@ -67,7 +67,7 @@ export const SingleChatOverview = (props: {
           {props.unread && <Chip label="unread" color="primary" />}
         </Stack>
       </Link>
-      <DeleteChat delHref={props.delHref} />   
+      <DeleteChat delHref={props.delHref} />
     </Box>
   );
 };
