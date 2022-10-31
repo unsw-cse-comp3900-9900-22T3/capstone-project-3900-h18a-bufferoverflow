@@ -34,7 +34,6 @@ const GET_USER_FEED = gql`
           displayImg
         }
         isSellListing
-        id
       }
     }
   }
