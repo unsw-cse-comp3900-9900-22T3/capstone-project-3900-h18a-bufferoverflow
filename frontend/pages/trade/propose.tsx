@@ -4,7 +4,7 @@ import { Box, Typography } from "@mui/material";
 import { ItemCard } from "../../components/feed/ItemCard";
 import { useEffect, useState } from "react";
 import { Toast } from "../../components/generic/Toast";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import { GraphqlListing } from "../../components/listing/types";
 
@@ -30,6 +30,14 @@ const GET_USER_LISTINGS = gql`
   }
 `
 
+const PROPOSE_TRADE = gql`
+  mutation ($l1: String!, $l2: String!) {
+    createTradeOffer(listingOneId: $l1, listingTwoId: $l2) {
+      success
+    }
+  }
+`
+
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
 /////////////////////////////////////////////////////////////////////////////
@@ -37,8 +45,9 @@ const GET_USER_LISTINGS = gql`
 const Propose: NextPage = () => {
 
   const router = useRouter()
-  const { email } = router.query
+  const { email, id } = router.query
   const data = useQuery(GET_USER_LISTINGS, { variables: { email } }).data?.getListingsByUser.listings as GraphqlListing[]
+  const [propose, _] = useMutation(PROPOSE_TRADE)
 
   const [successToast, setSuccessToast] = useState<string>('');
 
@@ -61,7 +70,7 @@ const Propose: NextPage = () => {
                   avatar={item.user.displayImg}
                   {...item}
                   onClick={async () => {
-                    // Call propose trade api here
+                    await propose({ variables: { l1: item.id, l2: id } })
                     setSuccessToast('Trade Proposed Successfully');
                     router.push('/')
                   }}
