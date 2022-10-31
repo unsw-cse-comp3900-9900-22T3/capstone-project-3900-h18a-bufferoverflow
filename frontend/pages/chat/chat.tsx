@@ -156,6 +156,8 @@ const Chat: NextPage = () => {
         console.log(socket.id);
       });
 
+      // not the best on slower connections, since you own message will dissapear whilst waiting for the server to reply
+      // makes the logic easier though
       socket.on("to_client", (message) => {
         console.log(message);
         setMessages((oldMessages) => [...oldMessages, message]);
