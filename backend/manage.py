@@ -43,6 +43,8 @@ def add_data():
     user2 = User(email="user2@gmail.com", username="user2")
     user3 = User(email="user3@gmail.com", username="user3")
 
+    user4 = User(email="c@gmail.com", username="c")
+    user4.save()
     # save users
     user1.save()
     user2.save()

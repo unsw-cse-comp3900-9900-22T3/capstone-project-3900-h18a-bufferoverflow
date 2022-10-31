@@ -147,17 +147,17 @@ def get_materials():
 
 @socketio.on('send_message')
 def send_message(data):
-    print(f'received message and sent back: {data}')
-
-    db.session.add(
-        Message(data['timestamp'], data['text'], data['author'], data['conversation']))
-    db.session.commit()
-    emit("to_client", data, broadcast=True)
+    # bit hacky - was complaining about no author but it's set on every emit from frontend?
+    if 'author' in data.keys():
+        print(f'received message and sent back: {data}')
+        db.session.add(
+            Message(data['timestamp'], data['text'], data['author'], data['conversation']))
+        db.session.commit()
+        emit("to_client", data, to=data['conversation'])
 
 
 @socketio.on('join')
 def on_join(data):
-    username = data['username']
-    room = data['conversation']
-    join_room(room)
-    send(username + ' has entered the room.', to=room)
+    print(f"joining room: [{data['conversation']}]")
+    join_room(data['conversation'])
+    # send(username + ' has entered the room.', to=room)

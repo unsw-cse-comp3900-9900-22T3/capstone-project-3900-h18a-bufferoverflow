@@ -117,6 +117,7 @@ const ChatDiv = styled.div`
 
 const Chat: NextPage = () => {
   const url = `http://localhost:${process.env.NEXT_PUBLIC_BACKEND_PORT}`;
+
   const end = useRef(null);
 
   const { auth } = useStore();
@@ -124,7 +125,6 @@ const Chat: NextPage = () => {
   const router = useRouter();
   const author = auth?.email;
   const other = router.query.other;
-  const conversation = [author, other].sort().join("-");
 
   const [us, setUs] = useState<Person>({});
   const us_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
@@ -141,12 +141,41 @@ const Chat: NextPage = () => {
   const them_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
     variables: { email: other || "" },
   });
+
   useEffect(() => {
     if (them_response.data?.getUser.user) {
       const user = them_response.data?.getUser.user;
       setThem({ username: user.username, displayImg: user.displayImg });
     }
   }, [them_response]);
+
+  useEffect(() => {
+    if (!rendered.current) {
+      socket = io(url);
+      socket.on("connect", () => {
+        console.log(socket.id);
+      });
+
+      socket.on("to_client", (message) => {
+        console.log(message);
+        setMessages((oldMessages) => [...oldMessages, message]);
+      });
+    }
+
+    rendered.current = true;
+  });
+
+  const [conversation, setConversation] = useState("");
+  useEffect(() => {
+    if (author != undefined && other != undefined) {
+      // weird but I couldn't get setConversation to have the var set for the socket.emit
+      const local_conversation = [author, other].sort().join("-");
+      setConversation(local_conversation);
+
+      socket.emit("join", { conversation: local_conversation });
+      console.log(`joining [${local_conversation}]`);
+    }
+  }, [author, other]);
 
   const { data } = useQuery<MessageGraphqlProps>(
     GET_CONVERSATION_MESSAGES_QUERY,
@@ -162,23 +191,6 @@ const Chat: NextPage = () => {
       setMessages(data?.getMessages.messages);
     }
   }, [data]);
-
-  useEffect(() => {
-    if (!rendered.current) {
-      socket = io(url);
-
-      socket.on("connect", () => {
-        console.log(socket.id);
-      });
-
-      socket.on("to_client", (message) => {
-        console.log(message);
-        setMessages((oldMessages) => [...oldMessages, message]);
-      });
-    }
-
-    rendered.current = true;
-  }, []);
 
   useEffect(() => {
     end.current?.scrollIntoView({ behavior: "smooth" });
