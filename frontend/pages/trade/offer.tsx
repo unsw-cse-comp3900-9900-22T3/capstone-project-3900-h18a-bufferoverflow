@@ -1,8 +1,8 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
-import { Avatar, Box, Button, CardMedia, Typography } from "@mui/material";
+import { Avatar, Box, Button, Typography } from "@mui/material";
 import { singleItemCardData } from "../../utils/mockdata";
-import { ItemCard } from "../../components/feed/ItemCard";
+import { itemDataToItemCard } from "../../components/feed/ItemCard";
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 
 const Offer: NextPage = () => {
@@ -20,9 +20,9 @@ const Offer: NextPage = () => {
           <Typography>Bobby</Typography>
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 6 }}>
-          <ItemCard {...swapper} href={`/detailed-listing/have?title=${swapper.title}`} />
+          {itemDataToItemCard(swapper)}
           <SwapHorizIcon sx={{ fontSize: 70 }} />
-          <ItemCard {...swappee} href={`/detailed-listing/have?title=${swappee.title}`} />
+          {itemDataToItemCard(swappee)}
         </Box>
         <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', mt: 5 }}>
           <Button variant="outlined" sx={{ borderRadius: 30, mr: 0.5, width: 300, height: 45 }} href='/trade/success'>
