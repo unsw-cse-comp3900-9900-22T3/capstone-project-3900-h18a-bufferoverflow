@@ -104,7 +104,8 @@ type TradeOfferResult {
   success: Boolean!
   errors: [String]
   tradeOffer: TradeOffer
- 
+}
+
 type Result {
   success: Boolean!
   errors: [String]
@@ -130,7 +131,9 @@ type Query {
     conversation: String
   ): MessageResult!
   getMaterials: MaterialResult! 
-  getTradeOffersByUser: TradeOfferResult!
+  getTradeOffersByUser(
+    userEmail: String!
+  ): TradeOfferResult!
   getFollowing(
     userEmail: String!
     checkFollowerEmail: String!

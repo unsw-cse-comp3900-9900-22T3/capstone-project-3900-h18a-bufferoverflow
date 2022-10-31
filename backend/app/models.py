@@ -30,6 +30,9 @@ class User(db.Model):
         self.username = username
         self.email = email
 
+    def add_display_img(self, display_img):
+        self.display_img = display_img
+
     def add_following(self, followed):
         if not self.is_following(followed):
             self.following.append(followed)

@@ -151,12 +151,12 @@ def create_listing_resolver(obj, info,
             can_pay_bank,
             status,
             categories,
-            want_to_trade_for,
             weight,
             volume,
             materials,
             address,
-            image
+            image,
+            want_to_trade_for=want_to_trade_for
         )
         listing.save()
         payload = {
