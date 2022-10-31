@@ -1,11 +1,12 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 import { Box, Typography } from "@mui/material";
-import { GraphqlListing, ItemCard } from "../../components/feed/ItemCard";
+import { ItemCard } from "../../components/feed/ItemCard";
 import { useEffect, useState } from "react";
 import { Toast } from "../../components/generic/Toast";
 import { gql, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
+import { GraphqlListing } from "../../components/listing/types";
 
 /////////////////////////////////////////////////////////////////////////////
 // Queries

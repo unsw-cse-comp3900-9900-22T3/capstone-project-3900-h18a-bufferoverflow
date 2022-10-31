@@ -3,13 +3,9 @@ import { NextPage } from "next";
 import { useState, useEffect } from "react";
 import { Avatar, Box, Button, Card, Typography } from "@mui/material";
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import PersonIcon from '@mui/icons-material/Person';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { useRouter } from "next/router";
 import { gql, useQuery } from "@apollo/client";
-import { ListingProps, StatusType } from "../../components/listing/types";
-import { useStore } from "../../store/store";
-
 
 /////////////////////////////////////////////////////////////////////////////
 // Queries
@@ -24,6 +20,7 @@ export const GET_DETAILED_LISTING = gql`
           username
           email
           displayImg
+          email
         }
         title
         categories {
@@ -124,7 +121,7 @@ const DetailedHaveListing: NextPage = () => {
   const [price, setPrice] = useState<number>(0);
   const [itemPosessor, setItemPossesor] = useState("");
   const [itemPosessorImageURL, setItemPossesorImageURL] = useState("");
-  const { auth } = useStore()
+  const [itemPosessorEmail, setItemPossesorEmail] = useState("");
 
   useEffect(() => {
     if (data) {
@@ -140,6 +137,7 @@ const DetailedHaveListing: NextPage = () => {
       setPrice(data.price);
       setItemPossesor(data.user.username);
       setItemPossesorImageURL(data.user.displayImg);
+      setItemPossesorEmail(data.user.email);
     }
   }, [data]);
 
@@ -257,7 +255,7 @@ const DetailedHaveListing: NextPage = () => {
           <Button
             variant="outlined"
             sx={{ borderRadius: 30, mt: 4, height: 45 }}
-            href={`/trade/propose?email=${auth?.email}`}
+            href={`/trade/propose?email=${itemPosessorEmail}`}
           >
             Propose Trade
           </Button>
@@ -265,14 +263,14 @@ const DetailedHaveListing: NextPage = () => {
             <Button
               variant="outlined"
               sx={{ borderRadius: 30, mr: 0.5, width: "50%", height: 45 }}
-              href={`/chat/chat?other=${data?.user.email}`}
+              href={`/chat/chat?other=${itemPosessorEmail}`}
             >
               Message User
             </Button>
             <Button
               variant="outlined"
               sx={{ borderRadius: 30, ml: 0.5, width: "50%", height: 45 }}
-              href={`/profile/visitor-profile?email=${data?.user.email}`}
+              href={`/profile/visitor-profile?email=${itemPosessorEmail}`}
             >
               View Trader Profile
             </Button>

@@ -1,15 +1,15 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 import { Avatar, Box, Button, Typography } from "@mui/material";
-import { GraphqlListing, itemDataToItemCard } from "../../components/feed/ItemCard";
+import { itemDataToItemCard } from "../../components/feed/ItemCard";
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import { GraphqlListing } from "../../components/listing/types";
 
 const Offer: NextPage = () => {
 
   const swapper: GraphqlListing = {
     title: "asf fds",
     id: 1,
-    description: "asdfasf sdfa asf",
     price: 123,
     image: 'https://images.unsplash.com/photo-1499720565725-bd574541a3ee?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
     address: "34 wonderland",
