@@ -2,7 +2,7 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 import { Box, Typography } from "@mui/material";
-import { ItemCard } from "../../components/feed/ItemCard";
+import { GraphqlListing, itemDataToItemCard } from "../../components/feed/ItemCard";
 import { useRouter } from "next/router";
 import { gql, useQuery } from "@apollo/client";
 
@@ -42,18 +42,6 @@ const GET_USER = gql`
   }
 `
 
-interface ListingProp {
-  id: number;
-  title: string;
-  image: string;
-  price: number;
-  address: string;
-  user: {
-    displayImg: string;
-  }
-  isSellListing: boolean;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // Primary Component
 /////////////////////////////////////////////////////////////////////////////
@@ -63,7 +51,7 @@ const TraderListings: NextPage = () => {
   const router = useRouter()
   const { email } = router.query
 
-  const data = useQuery(GET_LISTINGS, { variables: { email } }).data?.getListingsByUser.listings as ListingProp[]
+  const data = useQuery(GET_LISTINGS, { variables: { email } }).data?.getListingsByUser.listings as GraphqlListing[]
   const username = useQuery(GET_USER, { variables: { email } }).data?.getUser.user.username
 
   return (
@@ -76,12 +64,7 @@ const TraderListings: NextPage = () => {
           {
             data?.map(item => {
               if (!item.isSellListing) {
-                return <ItemCard
-                  {...item}
-                  location={item.address}
-                  avatar={item.user.displayImg}
-                  href={`/detailed-listing/want?id=${item.id}`}
-                />
+                return itemDataToItemCard(item)
               }
             })
           }
@@ -93,12 +76,7 @@ const TraderListings: NextPage = () => {
           {
             data?.map(item => {
               if (item.isSellListing) {
-                return <ItemCard
-                  {...item}
-                  location={item.address}
-                  avatar={item.user.displayImg}
-                  href={`/detailed-listing/have?id=${item.id}`}
-                />
+                return itemDataToItemCard(item)
               }
             })
           }

@@ -1,7 +1,6 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 import { Avatar, Box, Typography } from "@mui/material";
-import { singleItemCardData } from "../../utils/mockdata";
 import Link from "next/link";
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 

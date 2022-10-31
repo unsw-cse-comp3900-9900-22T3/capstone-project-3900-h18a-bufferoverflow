@@ -34,7 +34,7 @@ export interface ItemCardProps {
   want: boolean;
 }
 
-const ItemCard = (props: {
+export const ItemCard = (props: {
   title: string;
   price: number;
   location: string;

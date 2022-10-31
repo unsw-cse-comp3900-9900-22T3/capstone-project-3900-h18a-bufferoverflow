@@ -3,12 +3,9 @@ import { NextPage } from "next";
 import { useState, useEffect } from "react";
 import { Avatar, Box, Button, Card, Typography } from "@mui/material";
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import PersonIcon from '@mui/icons-material/Person';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { useRouter } from "next/router";
 import { gql, useQuery } from "@apollo/client";
-import { ListingProps, StatusType } from "../../components/listing/types";
-
 
 /////////////////////////////////////////////////////////////////////////////
 // Queries

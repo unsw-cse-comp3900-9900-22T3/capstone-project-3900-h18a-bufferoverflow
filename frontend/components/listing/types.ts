@@ -25,7 +25,7 @@ export interface GraphqlListing {
   image: string;
   user: GraphqlUser;
   isSellListing: boolean;
-  id: string;
+  id: number;
 }
 
 interface GraphqlUser {
