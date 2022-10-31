@@ -1,6 +1,7 @@
 import { Template } from '../../components/generic/Template'
 import { NextPage } from 'next'
-import { itemDataToItemCard , GraphqlListing } from '../../components/feed/ItemCard'
+import { itemDataToItemCard } from '../../components/feed/ItemCard'
+import { GraphqlListing } from '../../components/listing/types'
 import { Box, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar'
@@ -24,7 +25,6 @@ export const GET_DEFAULT_FEED = gql`
     defaultFeed {
       listings {
         title
-        description
         address
         price
         image
@@ -32,6 +32,7 @@ export const GET_DEFAULT_FEED = gql`
           displayImg
         }
         isSellListing
+        id
       }
     }
   }
@@ -49,7 +50,6 @@ export const GET_SEARCH_RESULTS = gql`
     searchListings(categories: $categories, distance: $distance, isSellListing: $isSellListing, priceMin: $priceMin, priceMax: $priceMax) {
       listings {
         title
-        description
         address
         price
         image
@@ -57,6 +57,7 @@ export const GET_SEARCH_RESULTS = gql`
           displayImg
         }
         isSellListing
+        id
       }
     }
   }

@@ -1,7 +1,8 @@
 import { Box, Typography } from '@mui/material'
 import { NextPage } from 'next'
 import { useState , useEffect } from 'react';
-import { itemDataToItemCard, GraphqlListing } from "../../components/feed/ItemCard";
+import { itemDataToItemCard } from "../../components/feed/ItemCard";
+import { GraphqlListing } from '../../components/listing/types';
 import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar';
 import { Template } from '../../components/generic/Template'
 import { SearchGraphqlProps, GET_SEARCH_RESULTS } from './default';
@@ -25,7 +26,6 @@ const GET_USER_FEED = gql`
     userFeed(userEmail : $userEmail) {
       listings {
         title
-        description
         address
         price
         image
@@ -33,6 +33,7 @@ const GET_USER_FEED = gql`
           displayImg
         }
         isSellListing
+        id
       }
     }
   }

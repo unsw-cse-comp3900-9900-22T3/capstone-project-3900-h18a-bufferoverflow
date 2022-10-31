@@ -17,3 +17,17 @@ export interface ListingProps {
   tradeCategories: string[];
   price: number;
 }
+
+export interface GraphqlListing {
+  title: string;
+  address: string;
+  price: number;
+  image: string;
+  user: GraphqlUser;
+  isSellListing: boolean;
+  id: string;
+}
+
+interface GraphqlUser {
+  displayImg: string;
+}
