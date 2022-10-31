@@ -83,6 +83,12 @@ type TradeOffer {
   listingTwo: Listing!
 }
 
+type TradeOffersResult {
+  success: Boolean!
+  errors: [String]
+  tradeOffers: [TradeOffer]
+}
+
 type TradeOfferResult {
   success: Boolean!
   errors: [String]
@@ -113,7 +119,13 @@ type Query {
   getMaterials: MaterialResult! 
   getTradeOffersByUser(
     userEmail: String!
-  ): TradeOfferResult!
+  ): TradeOffersResult!
+  getListingsInTradeOffer(
+    tradeOfferId: ID!
+  ): ListingsResult!
+  getUsersInTradeOffer(
+    tradeOfferId: ID!
+  ): UsersResult!
   getFollowing(
     userEmail: String!
     checkFollowerEmail: String!
@@ -176,8 +188,8 @@ type Mutation {
   updateTradeOffer(
     id: ID!
     isAccepted: Boolean
-  ): TradeOfferResult!
-  deleteTradeOffer(id: ID!): TradeOfferResult!
+  ): Result!
+  deleteTradeOffer(id: ID!): Result!
   followUser(
     followerEmail: String!
     followedEmail: String!
