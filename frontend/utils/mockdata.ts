@@ -42,7 +42,8 @@ export const mockSingleChatRequest = async (): Promise<SingleChatOverviewProps[]
       delHref: '/chat/del/yourusername-theirusername',
       username: 'John Doe',
       avatar: 'https://mui.com/static/images/avatar/1.jpg',
-      lastMessageTime: '2 hours ago',
+      lastMessageTime: 1667125450912,
+      unread: true,
     }))
   }
   return data

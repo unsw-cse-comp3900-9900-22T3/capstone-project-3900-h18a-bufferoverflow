@@ -1,4 +1,5 @@
-import { Avatar } from "@mui/material"
+import { DataArray } from "@mui/icons-material";
+import { Avatar, Chip } from "@mui/material"
 import { Box, Stack } from "@mui/system"
 
 import Link from "next/link";
@@ -9,7 +10,8 @@ export interface SingleChatOverviewProps {
   delHref: string;
   username: string;
   avatar: string;
-  lastMessageTime: string;
+  lastMessageTime: number;
+  unread: boolean;
 }
 
 export const SingleChatOverview = (props: {
@@ -17,8 +19,28 @@ export const SingleChatOverview = (props: {
   delHref: string;
   username: string;
   avatar: string;
-  lastMessageTime: string;
+  lastMessageTime: number;
+  unread: boolean;
 }) => {
+  const rtf = new Intl.RelativeTimeFormat("en", {
+    localeMatcher: "best fit", // other values: "lookup"
+    numeric: "always", // other values: "auto"
+    style: "long", // other values: "short" or "narrow"
+  });
+
+  const diff = (props.lastMessageTime - Date.now());
+  // writing time code myself, I know gross
+  let time = rtf.format(Math.round(diff / (1000 * 60 * 60 * 24)), 'days');
+  if (diff / (1000 * 60 * 60 * 24) > -1) {
+    rtf.format(Math.round(diff / (1000 * 60 * 60)), 'hours');
+  }
+  if (diff / (1000 * 60 * 60) > -1) {
+    time = rtf.format(Math.round(diff / (1000 * 60)), 'minutes');
+  }
+  if (diff / (1000 * 60) > -1) {
+    time = rtf.format(Math.round(diff / (1000)), 'seconds');
+  }
+
   return (
     <Box
       sx={{
@@ -41,7 +63,8 @@ export const SingleChatOverview = (props: {
         >
           <Avatar src={props.avatar} />
           <h4>{props.username}</h4>
-          <p>{props.lastMessageTime}</p>
+          <p>{time}</p>
+          {props.unread && <Chip label="unread" color="primary" />}
         </Stack>
       </Link>
       <DeleteChat delHref={props.delHref} />   

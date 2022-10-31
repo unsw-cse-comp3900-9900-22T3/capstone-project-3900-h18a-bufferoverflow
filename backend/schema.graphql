@@ -104,7 +104,8 @@ type TradeOfferResult {
   success: Boolean!
   errors: [String]
   tradeOffer: TradeOffer
- 
+}
+
 type Result {
   success: Boolean!
   errors: [String]

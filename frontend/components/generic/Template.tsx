@@ -1,4 +1,5 @@
 import {
+  Badge,
   Button,
   createTheme,
   Divider,
@@ -37,6 +38,7 @@ import MessageIcon from '@mui/icons-material/Message';
 import StarIcon from '@mui/icons-material/Star';
 import AddIcon from '@mui/icons-material/Add';
 import { useRouter } from 'next/router';
+import { useQuery } from '@apollo/client';
 
 type SideBarProps = { title: string; icon: Icon, href: string }[]
 
@@ -98,6 +100,17 @@ export const Template = (props: {
   const [drawer, setDrawer] = useState<boolean>(false);
   const [toast, setToast] = useState<string>('');
 
+  const notification_count = 10;
+  // const { data } = useQuery<ConversationGraphqlProps>(
+  //   GET_CONVERSATION_MESSAGES_QUERY,
+  //   { variables: { conversation: conversation } }
+  // );
+  // useEffect(() => {
+  //   if (data?.getConvesations.messages) {
+  //     setMessages(data?.getMessages.messages);
+  //   }
+  // }, [data]);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Header header={props.title} />
@@ -122,7 +135,7 @@ export const Template = (props: {
             Swapr
           </Typography>
           {!auth && <RegisterLoggedOut />}
-          {auth ? <LoggedIn setDrawer={() => setDrawer(true)} /> : <LoggedOut />}
+          {auth ? <LoggedIn setDrawer={() => setDrawer(true)} notification_count={notification_count} /> : <LoggedOut />}
         </Toolbar>
       </AppBar>
       <SideBar drawer={drawer} setDrawer={setDrawer} />
@@ -146,6 +159,7 @@ export const Template = (props: {
 
 const LoggedIn = (props: {
   setDrawer: () => void;
+  notification_count: number;
 }) => {
   const router = useRouter()
   return (
@@ -178,7 +192,10 @@ const LoggedIn = (props: {
         onClick={() => router.push('/chat/overview')}
         sx={{ color: textColor }}
       >
-        <MessageIcon />
+        {props.notification_count > 0 
+        ? <Badge badgeContent={props.notification_count} color="primary"><MessageIcon /></Badge>
+        : <MessageIcon />
+        }
       </IconButton>
       <IconButton
         size='large'

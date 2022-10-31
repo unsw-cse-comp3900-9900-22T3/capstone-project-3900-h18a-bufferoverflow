@@ -20,14 +20,14 @@ const ChatOverview: NextPage = () => {
         <Stack spacing={2}>
           {data?.map((item) => {
             const href = item.href;
-            return <SingleChatOverview {...item} href={href} />;
+            return <SingleChatOverview {...item} href={href} key={item.lastMessageTime} />;
           })}
         </Stack>
         <h3>Inactive Chats</h3>
         <Stack spacing={2}>
           {data?.map((item) => {
             const href = item.href;
-            return <SingleChatOverview {...item} href={href} />;
+            return <SingleChatOverview {...item} href={href} key={item.lastMessageTime}/>;
           })}
         </Stack>
       </Box>
