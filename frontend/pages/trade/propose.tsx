@@ -1,15 +1,44 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 import { Box, Typography } from "@mui/material";
-import { ItemCard, ItemCardProps } from "../../components/feed/ItemCard";
+import { GraphqlListing, ItemCard } from "../../components/feed/ItemCard";
 import { useEffect, useState } from "react";
 import { Toast } from "../../components/generic/Toast";
+import { gql, useQuery } from "@apollo/client";
+
+/////////////////////////////////////////////////////////////////////////////
+// Queries
+/////////////////////////////////////////////////////////////////////////////
+
+const GET_USER_LISTINGS = gql`
+  query ($userEmail: String!) {
+    getListingsByUser(userEmail: $userEmail) {
+      listings {
+        title
+        address
+        price
+        image
+        user {
+          displayImg
+        }
+        isSellListing
+        id
+      }
+    }
+  }
+`
+
+/////////////////////////////////////////////////////////////////////////////
+// Primary Components
+/////////////////////////////////////////////////////////////////////////////
 
 const Propose: NextPage = () => {
 
-  const [data, setData] = useState<ItemCardProps[]>([])
-  const [successToast, setSuccessToast] = useState<string>('');
   
+  const data = useQuery(GET_USER_LISTINGS, { variables: {} }).data?.getListingsByUser.listings as GraphqlListing[]
+
+  const [successToast, setSuccessToast] = useState<string>('');
+
   return (
     <Template title="Propose">
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -25,9 +54,11 @@ const Propose: NextPage = () => {
             data?.map(item => {
               return (
                 <ItemCard
+                  location={item.address} 
+                  avatar={item.user.displayImg} 
                   {...item}
                   onClick={() => {
-                    setSuccessToast('Trade Proposed Successfully')
+                    setSuccessToast('Trade Proposed Successfully');
                   }}
                 />
               )

@@ -21,6 +21,7 @@ export const GET_DETAILED_LISTING = gql`
         id
         user {
           username
+          email
           displayImg
         }
         title
@@ -254,7 +255,7 @@ const DetailedHaveListing: NextPage = () => {
           <Button
             variant="outlined"
             sx={{ borderRadius: 30, mt: 4, height: 45 }}
-            href={`/trade/propose?user=${itemPosessor}`}
+            href={`/trade/propose?email=${data?.user.email}`}
           >
             Propose Trade
           </Button>
@@ -262,14 +263,14 @@ const DetailedHaveListing: NextPage = () => {
             <Button
               variant="outlined"
               sx={{ borderRadius: 30, mr: 0.5, width: "50%", height: 45 }}
-              href={`/chat/chat?user=${itemPosessor}`}
+              href={`/chat/chat?email=${data?.user.email}`}
             >
               Message User
             </Button>
             <Button
               variant="outlined"
               sx={{ borderRadius: 30, ml: 0.5, width: "50%", height: 45 }}
-              href={`/profile/visitor-profile?user=${itemPosessor}`}
+              href={`/profile/visitor-profile?email=${data?.user.email}`}
             >
               View Trader Profile
             </Button>
