@@ -24,6 +24,7 @@ const GET_USER_FEED = gql`
   query($userEmail : String!) {
     userFeed(userEmail : $userEmail) {
       listings {
+        id
         title
         description
         address
