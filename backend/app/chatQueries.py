@@ -74,3 +74,18 @@ def updateConversation_resolver(obj, info, id, last_read_first=None, last_read_s
             "errors": [str(error)]
         }
     return payload
+
+@convert_kwargs_to_snake_case
+def getConversation_resolver(obj, info, id):
+    try:
+        conversation = Conversation.query.get(id)
+        payload = {
+            "success": True,
+            "conversation": conversation.to_json() if conversation else None
+        }
+    except Exception as error:
+        payload = {
+            "success": False,
+            "errors": [str(error)]
+        }
+    return payload
