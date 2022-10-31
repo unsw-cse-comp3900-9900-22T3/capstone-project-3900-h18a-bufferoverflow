@@ -10,11 +10,14 @@ def execute_query(query):
     print(json.loads(response.content))
 
 ###########################################################################
-# Create 30 dummy users
+# Create 5 dummy users
 ###########################################################################
 
+NUM_USERS = 5
 
-for i in range(30):
+print("----------------- Creating Dummy Users -----------------")
+
+for i in range(NUM_USERS):
     query = f'''
         mutation {{
             createUser(
@@ -41,3 +44,41 @@ for i in range(30):
     '''
     execute_query(query)
 
+###########################################################################
+# Create 10 listings per user
+###########################################################################
+
+NUM_LISTINGS_PER_USER = 10
+
+print("---------------- Creating Dummy Listings ---------------")
+
+for i in range(NUM_USERS):
+    for j in range(NUM_LISTINGS_PER_USER):
+        query = f'''
+            mutation {{
+                createListing (
+                    userEmail: "user{i}@gmail.com",
+                    title: "Item {j}" ,
+                    description: "This is item {j} and it is a very boring item",
+                    isSellListing: {"false" if j % 3 == 0 else "true"},
+                    price: {j * 123},
+                    canTrade: {"false" if j % 2 == 0 else "true"},
+                    canPayCash: {"false" if j % 4 == 0 else "true"},
+                    canPayBank: {"false" if j % 6 == 0 else "true"},
+                    status: "available",
+                    categories: ["beauty"],
+                    wantToTradeFor: ["beauty"],
+                    weight: {j * 32},
+                    volume: {j * 40},
+                    materials: ["wood"],
+                    address: "{i}{j} Road, Kensington, 2000",
+                    image: "https://images.unsplash.com/photo-1499720565725-bd574541a3ee?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+                ) {{
+                    listing {{
+                        id
+                    }}
+                    success
+                }}
+            }}
+        '''
+        execute_query(query)
