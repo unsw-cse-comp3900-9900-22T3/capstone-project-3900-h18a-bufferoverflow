@@ -3,19 +3,13 @@ import { NextPage } from "next";
 import { Box, Typography } from "@mui/material";
 import { ItemCard, ItemCardProps } from "../../components/feed/ItemCard";
 import { useEffect, useState } from "react";
-import { mockRequest } from "../../utils/mockdata";
 import { Toast } from "../../components/generic/Toast";
 
 const Propose: NextPage = () => {
 
   const [data, setData] = useState<ItemCardProps[]>([])
   const [successToast, setSuccessToast] = useState<string>('');
-
-  useEffect(() => {
-    mockRequest()
-      .then(data => setData(data.filter(item => !item.want)))
-  }, [])
-
+  
   return (
     <Template title="Propose">
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
