@@ -106,6 +106,19 @@ type TradeOfferResult {
   tradeOffer: TradeOffer
 }
 
+type Conversation {
+  id: ID!
+  conversation: String!
+  lastReadFirst: Message
+  lastReadSecond: Message
+}
+
+type ConversationResult {
+  success: Boolean!
+  errors: [String]
+  conversation: Conversation
+}
+
 type Result {
   success: Boolean!
   errors: [String]
@@ -139,6 +152,7 @@ type Query {
     checkFollowerEmail: String!
   ): Result!
   getFollowingList(userEmail: String!): UsersResult!
+  getConversation(id: ID!): ConversationResult!
 }
 
 type Mutation {
@@ -212,4 +226,13 @@ type Mutation {
     followerEmail: String!
     followedEmail: String!
   ): Result! 
+  createConversation(
+    conversation: String!
+  ): ConversationResult!
+  updateConversation(
+    id: ID!
+    lastReadFirst: ID
+    lastReadSecond: ID
+  ): ConversationResult!
+  deleteConversation(id: ID!): ConversationResult!
 }
