@@ -45,7 +45,7 @@ for i in range(NUM_USERS):
     execute_query(query)
 
 ###########################################################################
-# Create 10 listings per user
+# Create 5 listings per user
 ###########################################################################
 
 NUM_LISTINGS_PER_USER = 5
