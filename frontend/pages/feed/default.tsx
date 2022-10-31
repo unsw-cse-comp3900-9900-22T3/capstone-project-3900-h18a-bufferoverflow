@@ -1,6 +1,6 @@
 import { Template } from '../../components/generic/Template'
 import { NextPage } from 'next'
-import { ItemCard } from '../../components/feed/ItemCard'
+import { itemDataToItemCard , GraphqlListing } from '../../components/feed/ItemCard'
 import { Box, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar'
@@ -17,19 +17,6 @@ interface DefaultFeedGraphqlProps {
     errors: string[] | null;
     listings: GraphqlListing[] | null;
   };
-}
-
-export interface GraphqlListing {
-  title: string;
-  description: string;
-  price: number;
-  image: string;
-  address: string;
-  user: GraphqlUser;
-  isSellListing: boolean;
-}
-interface GraphqlUser {
-  displayImg: string;
 }
 
 export const GET_DEFAULT_FEED = gql`
@@ -65,7 +52,7 @@ export const GET_SEARCH_RESULTS = gql`
         description
         address
         price
-        images
+        image
         user {
           displayImg
         }
@@ -160,37 +147,11 @@ const DefaultFeed: NextPage = () => {
             feed?.defaultFeed?.listings
               ?.filter((item) => item.isSellListing)
               .map((item) => {
-                return (
-                  <ItemCard
-                    title={item.title}
-                    price={item.price}
-                    image={item.image}
-                    avatar={item.user.displayImg}
-                    location={item.address}
-                    href={
-                      item.isSellListing
-                        ? "/detailed-listing/have"
-                        : "/detailed-listing/want"
-                    }
-                  />
-                );
+                return itemDataToItemCard(item);
               })}
           {isSearch &&
             data?.searchListings?.listings?.map((item) => {
-              return (
-                <ItemCard
-                  title={item.title}
-                  price={item.price}
-                  image={item.image}
-                  avatar={item.user.displayImg}
-                  location={item.address}
-                  href={
-                    item.isSellListing
-                      ? "/detailed-listing/have"
-                      : "/detailed-listing/want"
-                  }
-                />
-              );
+              return itemDataToItemCard(item);
             })}
         </Box>
       </Box>

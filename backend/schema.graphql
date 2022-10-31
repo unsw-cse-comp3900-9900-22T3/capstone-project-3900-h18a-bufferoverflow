@@ -131,7 +131,9 @@ type Query {
     conversation: String
   ): MessageResult!
   getMaterials: MaterialResult! 
-  getTradeOffersByUser: TradeOfferResult!
+  getTradeOffersByUser(
+    userEmail: String!
+  ): TradeOfferResult!
   getFollowing(
     userEmail: String!
     checkFollowerEmail: String!

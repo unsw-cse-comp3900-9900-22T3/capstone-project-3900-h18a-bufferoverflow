@@ -3,6 +3,7 @@ import SearchIcon from '@mui/icons-material/Search';
 
 export const CategorySearch = (props: {
   title: string;
+  categories?: string[];
   setCategories: (arg: string[]) => void;
   onSearch?: () => void;
   width?: number | string;
@@ -20,6 +21,7 @@ export const CategorySearch = (props: {
       options={validCategories}
       getOptionLabel={(option) => option}
       filterSelectedOptions
+      value={props.categories ? props.categories : undefined}
       onChange={(_, newCategories) => props.setCategories([...newCategories])}
       renderInput={(params) => (
         <Box sx={{ display: 'flex' }}>
