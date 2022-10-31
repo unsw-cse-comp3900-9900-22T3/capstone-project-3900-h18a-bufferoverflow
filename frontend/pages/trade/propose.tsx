@@ -5,14 +5,15 @@ import { GraphqlListing, ItemCard } from "../../components/feed/ItemCard";
 import { useEffect, useState } from "react";
 import { Toast } from "../../components/generic/Toast";
 import { gql, useQuery } from "@apollo/client";
+import { useRouter } from "next/router";
 
 /////////////////////////////////////////////////////////////////////////////
 // Queries
 /////////////////////////////////////////////////////////////////////////////
 
 const GET_USER_LISTINGS = gql`
-  query ($userEmail: String!) {
-    getListingsByUser(userEmail: $userEmail) {
+  query ($email: String!) {
+    getListingsByUser(userEmail: $email) {
       listings {
         title
         address
@@ -34,8 +35,9 @@ const GET_USER_LISTINGS = gql`
 
 const Propose: NextPage = () => {
 
-  
-  const data = useQuery(GET_USER_LISTINGS, { variables: {} }).data?.getListingsByUser.listings as GraphqlListing[]
+  const router = useRouter()
+  const { email } = router.query
+  const data = useQuery(GET_USER_LISTINGS, { variables: { email } }).data?.getListingsByUser.listings as GraphqlListing[]
 
   const [successToast, setSuccessToast] = useState<string>('');
 
@@ -54,11 +56,13 @@ const Propose: NextPage = () => {
             data?.map(item => {
               return (
                 <ItemCard
-                  location={item.address} 
-                  avatar={item.user.displayImg} 
+                  location={item.address}
+                  avatar={item.user.displayImg}
                   {...item}
-                  onClick={() => {
+                  onClick={async () => {
+                    // Call propose trade api here
                     setSuccessToast('Trade Proposed Successfully');
+                    router.push('/')
                   }}
                 />
               )
