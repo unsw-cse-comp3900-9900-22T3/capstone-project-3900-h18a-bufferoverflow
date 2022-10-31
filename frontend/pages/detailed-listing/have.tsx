@@ -265,7 +265,7 @@ const DetailedHaveListing: NextPage = () => {
             <Button
               variant="outlined"
               sx={{ borderRadius: 30, mr: 0.5, width: "50%", height: 45 }}
-              href={`/chat/chat?email=${data?.user.email}`}
+              href={`/chat/chat?other=${data?.user.email}`}
             >
               Message User
             </Button>
