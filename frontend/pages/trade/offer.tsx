@@ -64,7 +64,9 @@ const Offer: NextPage = () => {
           <Button
             variant="outlined"
             sx={{ borderRadius: 30, mr: 0.5, width: 300, height: 45 }}
-            href={`/trade/success?title=${swappee.title}&price=${swappee.price}&image=${swappee.image}&address=${swappee.address}&avatar=${swappee.user?.displayImg}&email=${swappee.user?.email}`}
+            onClick={async () => {
+              router.push(`/trade/success?title=${swappee.title}&price=${swappee.price}&image=${swappee.image}&address=${swappee.address}&avatar=${swappee.user?.displayImg}&email=${swappee.user?.email}`)
+            }}
           >
             Accept
           </Button>
