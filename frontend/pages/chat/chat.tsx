@@ -158,7 +158,6 @@ const Chat: NextPage = () => {
       // will disappear whilst waiting for the server to reply
       // makes the logic easier though
       socket.on("to_client", (message: Message) => {
-        console.log(message);
         setMessages((oldMessages) => [...oldMessages, message]);
         setSeen(message.id);
       });
@@ -169,7 +168,6 @@ const Chat: NextPage = () => {
 
   useEffect(() => {
     if (seen != -1) {
-      console.log('updating seen', position, seen)
       if (position) {
         updateConversation({ variables: { conversation:conversation, lastReadFirst: seen } })
       } else {
@@ -202,7 +200,6 @@ const Chat: NextPage = () => {
   useEffect(() => {
     const messagesData = data?.getMessages.messages
     if (messagesData) {
-      console.log(messagesData)
       setMessages(messagesData);
       if (messagesData.length > 0) {
         setSeen(messagesData[messagesData.length - 1].id);
@@ -216,7 +213,6 @@ const Chat: NextPage = () => {
   }, [messages]);
   
   const sendMessage = async () => {
-    console.log(us.id);
     if (text != "") {
       socket.emit("send_message", {
         timestamp: Date.now(),

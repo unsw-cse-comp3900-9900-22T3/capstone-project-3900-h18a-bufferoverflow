@@ -54,7 +54,6 @@ const ChatOverview: NextPage = () => {
 
   const [chats, setChats] = useState<Array<SingleChatOverviewProps>>([]);
   useEffect(() => {
-    // console.log(conversations, latestMessages);
     let localChats = [];
     if (conversations != undefined) {
       conversations.forEach((conversation, i) => {
