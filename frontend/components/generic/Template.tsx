@@ -1,31 +1,34 @@
 import {
+  AppBar,
   Badge,
+  Box,
   Button,
   createTheme,
   Divider,
   Drawer,
+  IconButton,
+  List,
   ListItem,
   ListItemIcon,
   ListItemText,
   SvgIconTypeMap,
   ThemeProvider,
+  Toolbar,
+  Typography,
 } from "@mui/material";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useEffect, useState } from "react";
 import { Header } from "./Header";
 import Link from "next/link";
-import List from "@mui/material/List";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { getAuth } from "@firebase/auth";
 import { Toast } from "./Toast";
 import { useStore, useStoreUpdate } from "../../store/store";
+import { useRouter } from "next/router";
+import { gql, useQuery } from "@apollo/client";
 import Image from "next/image";
+
+import MenuIcon from "@mui/icons-material/Menu";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import PersonIcon from "@mui/icons-material/Person";
 import DescriptionIcon from "@mui/icons-material/Description";
@@ -37,10 +40,6 @@ import StorefrontIcon from "@mui/icons-material/Storefront";
 import MessageIcon from "@mui/icons-material/Message";
 import StarIcon from "@mui/icons-material/Star";
 import AddIcon from "@mui/icons-material/Add";
-import { useRouter } from "next/router";
-import { gql, useLazyQuery, useQuery } from "@apollo/client";
-import { Conversation, ConversationGraphqlProps } from "../../utils/chat";
-
 
 type SideBarProps = { title: string; icon: Icon; href: string }[];
 
