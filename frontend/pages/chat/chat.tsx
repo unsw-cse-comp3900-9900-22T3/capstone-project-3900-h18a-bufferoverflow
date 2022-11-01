@@ -23,7 +23,7 @@ import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { gql, useMutation , useQuery } from "@apollo/client";
 import styled from "@emotion/styled";
 import { User } from "../../utils/user";
-import { Message } from "../../utils/chat";
+import { Message, MessageGraphqlProps } from "../../utils/chat";
 
 // todo
 // Messages should be marked as read when they are…read.
@@ -31,14 +31,6 @@ import { Message } from "../../utils/chat";
 // stop socket breaking on hot reload
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
-
-interface MessageGraphqlProps {
-  getMessages: {
-    success: boolean;
-    errors: string[] | null;
-    messages: Message[] | null;
-  };
-}
 
 const GET_CONVERSATION_MESSAGES_QUERY = gql`
   query getConversationMessagesQuery($conversation: String!) {

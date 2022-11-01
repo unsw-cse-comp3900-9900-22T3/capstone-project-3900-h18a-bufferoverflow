@@ -6,3 +6,11 @@ export type Message = {
     author: User;
     timestamp: number;
 };
+
+export interface MessageGraphqlProps {
+    getMessages: {
+      success: boolean;
+      errors: string[] | null;
+      messages: Message[] | null;
+    };
+  }
