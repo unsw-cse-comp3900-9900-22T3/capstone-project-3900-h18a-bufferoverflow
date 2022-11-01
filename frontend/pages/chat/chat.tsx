@@ -22,19 +22,14 @@ import StarIcon from "@mui/icons-material/Star";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { gql, useQuery } from "@apollo/client";
 import styled from "@emotion/styled";
+import { Message } from "../../utils/chat";
 
 // todo
 // Messages should be marked as read when they are…read.
 // don't show to logged out users
 // stop socket breaking on hot reload
 
-type Message = {
-  text: string;
-  author: string;
-  timestamp: number;
-};
-
-type Person = {
+type User = {
   username: string;
   displayImg: string;
 };
@@ -121,12 +116,11 @@ const Chat: NextPage = () => {
   const end = useRef(null);
 
   const { auth } = useStore();
-  // apparently useEffect is run 2x by default, avoid this.
   const router = useRouter();
   const author = auth?.email;
   const other = router.query.other;
-
-  const [us, setUs] = useState<Person>({});
+  
+  const [us, setUs] = useState<User>({});
   const us_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
     variables: { email: author || "" },
   });
@@ -136,27 +130,30 @@ const Chat: NextPage = () => {
       setUs({ username: user.username, displayImg: user.displayImg });
     }
   }, [us_response]);
-
-  const [them, setThem] = useState<Person>({});
+  
+  const [them, setThem] = useState<User>({});
   const them_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
     variables: { email: other || "" },
   });
-
+  
   useEffect(() => {
     if (them_response.data?.getUser.user) {
       const user = them_response.data?.getUser.user;
       setThem({ username: user.username, displayImg: user.displayImg });
     }
   }, [them_response]);
-
+  
+  const rendered = useRef(false);
   useEffect(() => {
+    // apparently useEffect is run 2x by default, avoid this.
     if (!rendered.current) {
       socket = io(url);
       socket.on("connect", () => {
         console.log(socket.id);
       });
-
-      // not the best on slower connections, since you own message will dissapear whilst waiting for the server to reply
+      
+      // not the best on slower connections, since your own message 
+      // will dissapear whilst waiting for the server to reply
       // makes the logic easier though
       socket.on("to_client", (message) => {
         console.log(message);
@@ -179,25 +176,24 @@ const Chat: NextPage = () => {
     }
   }, [author, other]);
 
+  const [text, setText] = useState("");
+  const [messages, setMessages] = useState<Array<Message>>([]);
+
   const { data } = useQuery<MessageGraphqlProps>(
     GET_CONVERSATION_MESSAGES_QUERY,
     { variables: { conversation: conversation } }
   );
-  const [text, setText] = useState("");
-  const [messages, setMessages] = useState<Array<Message>>([]);
-
-  const rendered = useRef(false);
-
   useEffect(() => {
     if (data?.getMessages.messages) {
       setMessages(data?.getMessages.messages);
     }
   }, [data]);
-
+  
+  
   useEffect(() => {
     end.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
+  
   const sendMessage = async () => {
     if (text != "") {
       socket.emit("send_message", {
@@ -209,10 +205,10 @@ const Chat: NextPage = () => {
       setText("");
     }
   };
-
+  
   const imageRef = useRef(null);
   const [image, setImage] = useState("");
-
+  
   useEffect(() => {
     socket.emit("send_message", {
       timestamp: Date.now(),
@@ -221,14 +217,14 @@ const Chat: NextPage = () => {
       conversation: conversation,
     });
   }, [image]);
-
+  
   return (
     <Template title="Chat">
       <ChatDiv>
         <div>
           {messages.map((message) => (
             <Box
-              sx={{
+            sx={{
                 display: "grid",
                 justifyItems: message.author == author ? "end" : "start",
                 padding: 0.5,

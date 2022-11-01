@@ -125,6 +125,12 @@ type ConversationResult {
   conversation: Conversation
 }
 
+type ConversationsResult {
+  success: Boolean!
+  errors: [String]
+  conversations:[Conversation]
+}
+
 type Result {
   success: Boolean!
   errors: [String]
@@ -149,6 +155,7 @@ type Query {
   getMessages(
     conversation: String
   ): MessageResult!
+  getConversations(involving: String!): ConversationsResult!
   getMaterials: MaterialResult! 
   getTradeOffersByUser(
     userEmail: String!
@@ -164,7 +171,6 @@ type Query {
     checkFollowerEmail: String!
   ): Result!
   getFollowingList(userEmail: String!): UsersResult!
-  getConversation(id: ID!): ConversationResult!
 }
 
 type Mutation {

@@ -2,9 +2,12 @@ from app import db
 from app.config import material_names, category_names
 
 user_following = db.Table('user_following',
-    db.Column('follower_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
-    db.Column('followed_id', db.Integer, db.ForeignKey('users.id'), primary_key=True)
-)
+                          db.Column('follower_id', db.Integer, db.ForeignKey(
+                              'users.id'), primary_key=True),
+                          db.Column('followed_id', db.Integer, db.ForeignKey(
+                              'users.id'), primary_key=True)
+                          )
+
 
 class User(db.Model):
     __tablename__ = "users"
@@ -19,8 +22,8 @@ class User(db.Model):
 
     # TODO: add foreign keys arg?
     following = db.relationship(
-        'User', 
-        secondary=user_following,  
+        'User',
+        secondary=user_following,
         primaryjoin=(user_following.c.follower_id == id),
         secondaryjoin=(user_following.c.followed_id == id),
         backref='followed_by'
@@ -40,14 +43,14 @@ class User(db.Model):
 
     def remove_following(self, user):
         if self.is_following(user):
-            self.following.remove(user)   
+            self.following.remove(user)
             self.save()
 
     def is_following(self, user):
         followed_users = [followed.to_json() for followed in self.following]
         for u in followed_users:
             if u["id"] == user.id:
-                return True 
+                return True
         return False
 
     def to_json(self):
@@ -69,20 +72,27 @@ class User(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+
 listing_material = db.Table('listing_material',
-    db.Column('listing_id', db.Integer, db.ForeignKey('listings.id'), primary_key=True),
-    db.Column('material_id', db.Integer, db.ForeignKey('materials.id'), primary_key=True)
-)
+                            db.Column('listing_id', db.Integer, db.ForeignKey(
+                                'listings.id'), primary_key=True),
+                            db.Column('material_id', db.Integer, db.ForeignKey(
+                                'materials.id'), primary_key=True)
+                            )
 
 listing_category = db.Table('listing_category',
-    db.Column('listing_id', db.Integer, db.ForeignKey('listings.id'), primary_key=True),
-    db.Column('category_id', db.Integer, db.ForeignKey('categories.id'), primary_key=True)
-)
+                            db.Column('listing_id', db.Integer, db.ForeignKey(
+                                'listings.id'), primary_key=True),
+                            db.Column('category_id', db.Integer, db.ForeignKey(
+                                'categories.id'), primary_key=True)
+                            )
 
 listing_want_to_trade_for = db.Table('listing_want_to_trade_for',
-    db.Column('listing_id', db.Integer, db.ForeignKey('listings.id'), primary_key=True),
-    db.Column('category_id', db.Integer, db.ForeignKey('categories.id'), primary_key=True)
-)
+                                     db.Column('listing_id', db.Integer, db.ForeignKey(
+                                         'listings.id'), primary_key=True),
+                                     db.Column('category_id', db.Integer, db.ForeignKey(
+                                         'categories.id'), primary_key=True)
+                                     )
 
 
 class Category(db.Model):
@@ -91,8 +101,10 @@ class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(20), unique=True, nullable=False)
 
-    category_to = db.relationship('Listing', secondary=listing_category, backref='categories')
-    want_to_trade_for_to = db.relationship('Listing', secondary=listing_want_to_trade_for, backref='want_to_trade_for')
+    category_to = db.relationship(
+        'Listing', secondary=listing_category, backref='categories')
+    want_to_trade_for_to = db.relationship(
+        'Listing', secondary=listing_want_to_trade_for, backref='want_to_trade_for')
 
     def __init__(self, type):
         self.type = type
@@ -106,13 +118,15 @@ class Category(db.Model):
         db.session.add(self)
         db.session.commit()
 
+
 class Material(db.Model):
     __tablename__ = "materials"
 
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(20), unique=True, nullable=False)
 
-    material_to = db.relationship('Listing', secondary=listing_material, backref='materials')
+    material_to = db.relationship(
+        'Listing', secondary=listing_material, backref='materials')
 
     def __init__(self, type):
         self.type = type
@@ -136,7 +150,7 @@ class Listing(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     is_sell_listing = db.Column(db.Boolean, nullable=False)
 
-    price = db.Column(db.Float,nullable=True)
+    price = db.Column(db.Float, nullable=True)
     can_trade = db.Column(db.Boolean, nullable=False)
     can_pay_cash = db.Column(db.Boolean, nullable=False)
     can_pay_bank = db.Column(db.Boolean, nullable=False)
@@ -148,23 +162,23 @@ class Listing(db.Model):
     image = db.Column(db.String(500), default="", nullable=False)
 
     def __init__(self,
-        user_email,
-        title,
-        description,
-        is_sell_listing,
-        price,
-        can_trade,
-        can_pay_cash,
-        can_pay_bank,
-        status,
-        categories,
-        weight,
-        volume,
-        materials,
-        address = None,
-        image = "",
-        want_to_trade_for = [],
-    ):
+                 user_email,
+                 title,
+                 description,
+                 is_sell_listing,
+                 price,
+                 can_trade,
+                 can_pay_cash,
+                 can_pay_bank,
+                 status,
+                 categories,
+                 weight,
+                 volume,
+                 materials,
+                 address=None,
+                 image="",
+                 want_to_trade_for=[],
+                 ):
         self.title = title
         self.description = description
         self.is_sell_listing = is_sell_listing
@@ -182,7 +196,8 @@ class Listing(db.Model):
         self.user_id = User.query.filter_by(email=user_email).first().id
 
         if address is None:
-            self.address = User.query.filter_by(email=user_email).first().address
+            self.address = User.query.filter_by(
+                email=user_email).first().address
 
         self.update_categories(categories)
         if self.is_sell_listing:
@@ -259,9 +274,10 @@ class Listing(db.Model):
         db.session.add(self)
         db.session.commit()
 
+
 class Message(db.Model):
     __tablename__ = "messages"
-    
+
     id = db.Column(db.Integer, primary_key=True)
     timestamp = db.Column(db.BigInteger, nullable=False)
     text = db.Column(db.String, nullable=False)
@@ -276,7 +292,7 @@ class Message(db.Model):
         self.text = text
         self.author = author
         self.conversation = conversation
-    
+
     def to_json(self):
         return {
             "id": self.id,
@@ -285,18 +301,21 @@ class Message(db.Model):
             "author": self.author,
             "conversation": self.conversation
         }
-        
+
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
 
 class Conversation(db.Model):
     __tablename__ = "conversation"
 
     id = db.Column(db.Integer, primary_key=True)
     conversation = db.Column(db.String(1000), nullable=False)
-    last_read_first = db.Column(db.Integer, db.ForeignKey("messages.id"), nullable=True)
-    last_read_second = db.Column(db.Integer, db.ForeignKey("messages.id"), nullable=True)
+    last_read_first = db.Column(
+        db.Integer, db.ForeignKey("messages.id"), nullable=True)
+    last_read_second = db.Column(
+        db.Integer, db.ForeignKey("messages.id"), nullable=True)
 
     def __init__(self, conversation, last_read_first=None, last_read_second=None):
         self.conversation = conversation
@@ -305,7 +324,8 @@ class Conversation(db.Model):
 
     def to_json(self):
         return {
-            "id" : self.id,
+            "id": self.id,
+            "conversation": self.conversation,
             "last_read_first": self.last_read_first,
             "last_read_second": self.last_read_second,
         }
@@ -318,12 +338,15 @@ class Conversation(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+
 class TradeOffer(db.Model):
     __tablename__ = "trade_offers"
 
     id = db.Column(db.Integer, primary_key=True)
-    listing_one_id = db.Column(db.Integer, db.ForeignKey("listings.id"), nullable=False)
-    listing_two_id = db.Column(db.Integer, db.ForeignKey("listings.id"), nullable=False)
+    listing_one_id = db.Column(
+        db.Integer, db.ForeignKey("listings.id"), nullable=False)
+    listing_two_id = db.Column(
+        db.Integer, db.ForeignKey("listings.id"), nullable=False)
 
     def __init__(self, listing_one_id, listing_two_id, date_accepted=None, is_accepted=False):
         self.listing_one_id = listing_one_id
@@ -331,9 +354,9 @@ class TradeOffer(db.Model):
 
     def to_json(self):
         return {
-            "id" : self.id,
-            "listing_one_id" : self.listing_one_id,
-            "listing_two_id" : self.listing_two_id,
+            "id": self.id,
+            "listing_one_id": self.listing_one_id,
+            "listing_two_id": self.listing_two_id,
         }
 
     def save(self):

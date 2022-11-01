@@ -1,5 +1,5 @@
 from app import db
-from app.models import Message
+from app.models import Message, Conversation
 
 from ariadne import convert_kwargs_to_snake_case
 
@@ -76,12 +76,13 @@ def updateConversation_resolver(obj, info, id, last_read_first=None, last_read_s
     return payload
 
 @convert_kwargs_to_snake_case
-def getConversation_resolver(obj, info, id):
+def getConversations_resolver(obj, info, involving):
     try:
-        conversation = Conversation.query.get(id)
+        # think this might be potentially fragile, but emails can't have more than 1 @ right?
+        conversations = Conversation.query.filter(Conversation.conversation.contains(involving))
         payload = {
             "success": True,
-            "conversation": conversation.to_json() if conversation else None
+            "conversations": [conversation.to_json() for conversation in conversations]
         }
     except Exception as error:
         payload = {

@@ -5,7 +5,7 @@ from ariadne.constants import PLAYGROUND_HTML
 from flask import request, jsonify
 from flask_socketio import send, emit, join_room
 
-from app.models import User, Message
+from app.models import User, Message, Conversation
 from app.userQueries import *
 from app.listingQueries import *
 from app.tradeOfferQueries import *
@@ -29,7 +29,7 @@ query.set_field("getMaterials", getMaterials_resolver)
 query.set_field("getTradeOffersByUser", getTradeOffersByUser_resolver)
 query.set_field("getFollowing", getFollowing_resolver)
 query.set_field("getFollowingList", getFollowingList_resolver)
-query.set_field("getConversation", getConversation_resolver)
+query.set_field("getConversations", getConversations_resolver)
 query.set_field("getListingsInTradeOffer", getListingsInTradeOffer_resolver)
 query.set_field("getUsersInTradeOffer", getUsersInTradeOffer_resolver)
 
@@ -90,6 +90,7 @@ def hello():
 @app.route("/allUsers")
 def getAllUsers():
     return jsonify([user.to_json() for user in User.query.all()])
+
 
 
 @app.route("/addUser", methods=["POST"])
@@ -160,9 +161,14 @@ def send_message(data):
         db.session.commit()
         emit("to_client", data, to=data['conversation'])
 
-
 @socketio.on('join')
 def on_join(data):
-    print(f"joining room: [{data['conversation']}]")
-    join_room(data['conversation'])
-    # send(username + ' has entered the room.', to=room)
+    conversation = data['conversation']
+    print(f"joining room: [{conversation}]")
+    if len(Conversation.query.filter_by(conversation=conversation).all()) == 0:
+        Conversation(conversation).save()
+    join_room(conversation)
+
+@app.route("/allConversations")
+def getAllConversations():
+    return jsonify([user.to_json() for user in Conversation.query.all()])

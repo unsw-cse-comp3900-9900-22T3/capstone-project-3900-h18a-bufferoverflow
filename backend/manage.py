@@ -43,6 +43,9 @@ def add_data():
     user2 = User(email="user2@gmail.com", username="user2")
     user3 = User(email="user3@gmail.com", username="user3")
 
+    User(email="e@gmail.com", username="e").save()
+
+
     # add diplay images
     user1.add_display_img("https://mui.com/static/images/avatar/1.jpg")
     user2.add_display_img("https://mui.com/static/images/avatar/2.jpg")
