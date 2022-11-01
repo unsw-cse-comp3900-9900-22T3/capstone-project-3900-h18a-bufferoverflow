@@ -44,7 +44,7 @@ const ChatOverview: NextPage = () => {
 
   const { auth } = useStore();
   const [getConversations, { loading, error, data }] =
-    useLazyQuery<ConversationGraphqlProps>(GET_CONVERSATIONS_QUERY);
+    useLazyQuery(GET_CONVERSATIONS_QUERY);
   useEffect(() => {
     if (auth?.email != undefined) {
       getConversations({ variables: { involving: auth?.email } });
@@ -59,6 +59,7 @@ const ChatOverview: NextPage = () => {
     if (conversations != undefined) {
       conversations.forEach((conversation, i) => {
         localChats.push({
+          conversation: conversation.conversation,
           email: conversation.email,
           username: conversation.username,
           avatar: conversation.displayImg,

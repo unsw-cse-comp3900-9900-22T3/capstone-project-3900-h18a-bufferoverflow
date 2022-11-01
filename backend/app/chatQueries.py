@@ -37,7 +37,6 @@ def getMessages_resolver(obj, info, conversation=None):
         }
     return payload
 
-# todo: delete conversation
 # todo: is_inactive
 
 @convert_kwargs_to_snake_case
@@ -160,5 +159,23 @@ def countUnseenMessages_resolver(obj, info, email):
         payload = {
             "success": False,
             "errors": [repr(error)]
+        }
+    return payload
+
+def deleteConversation_resolver(obj, info, conversation):
+    try:
+        conversation_object = Conversation.query.filter_by(conversation=conversation).first()
+        conversation_object.delete()
+        messages = Message.query.filter_by(conversation=conversation).all()
+        for message in messages:
+            message.delete()
+        payload = {
+            "success": True,
+        }
+    except Exception as error:
+        print(f"deleteConversation - {repr(error)}")
+        payload = {
+            "success": False,
+            "errors": [str(error)]
         }
     return payload

@@ -1,11 +1,14 @@
 import { DataArray } from "@mui/icons-material";
 import { Avatar, Chip } from "@mui/material";
 import { Box, Stack } from "@mui/system";
+import { useState } from "react"
+
 
 import Link from "next/link";
 import { DeleteChat } from "./delete-chat";
 
 export interface SingleChatOverviewProps {
+  conversation: string,
   email: string,
   username: string;
   avatar: string;
@@ -41,8 +44,11 @@ export const SingleChatOverview = (props: SingleChatOverviewProps
     }
   }
 
+  const [exists, setExists] = useState(true);
+
   return (
-    <Box
+    <div>
+    {exists == true && <Box
       sx={{
         display: "flex",
         alignItems: "center",
@@ -67,7 +73,9 @@ export const SingleChatOverview = (props: SingleChatOverviewProps
           {props.unread && <Chip label="unread" color="primary" />}
         </Stack>
       </Link>
-      <DeleteChat delHref={`/chat/delete-chat?conversation`} />
+      <DeleteChat conversation={props.conversation} setExists={setExists} />
     </Box>
+    }
+    </div>
   );
 };

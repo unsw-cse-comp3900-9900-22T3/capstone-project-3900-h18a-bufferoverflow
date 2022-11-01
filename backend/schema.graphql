@@ -283,5 +283,5 @@ type Mutation {
     lastReadFirst: ID
     lastReadSecond: ID
   ): ConversationResult!
-  deleteConversation(id: ID!): ConversationResult!
+  deleteConversation(conversation: String!): ConversationResult!
 }

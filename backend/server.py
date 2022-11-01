@@ -49,6 +49,8 @@ mutation.set_field("followUser", followUser_resolver)
 mutation.set_field("unfollowUser", unfollowUser_resolver)
 mutation.set_field("createConversation", createConversation_resolver)
 mutation.set_field("updateConversation", updateConversation_resolver)
+mutation.set_field("deleteConversation", deleteConversation_resolver)
+
 
 # Create schema
 type_defs = load_schema_from_path("schema.graphql")
