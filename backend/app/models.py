@@ -357,16 +357,15 @@ class TradeOffer(db.Model):
     listing_two_id = db.Column(
         db.Integer, db.ForeignKey("listings.id"), nullable=False)
 
-    def __init__(self, listing_one_id, listing_two_id, date_accepted=None, is_accepted=False):
+    def __init__(self, listing_one_id, listing_two_id, is_accepted=False):
         self.listing_one_id = listing_one_id
         self.listing_two_id = listing_two_id
 
     def to_json(self):
         return {
-            "id": self.id,
-            "listing_one_id": self.listing_one_id,
-            "listing_two_id": self.listing_two_id,
-        }
+            "id" : self.id,
+            "listing_one" : Listing.query.get(self.listing_one_id).to_json(),
+            "listing_two" : Listing.query.get(self.listing_two_id).to_json()
 
     def save(self):
         db.session.add(self)
