@@ -62,10 +62,7 @@ interface UserGraphqlProps {
   getUser: {
     success: boolean | null;
     errors: string[] | null;
-    user: {
-      displayImg: string;
-      username: string;
-    } | null;
+    user: User | null;
   };
 }
 
@@ -129,7 +126,7 @@ const Chat: NextPage = () => {
   useEffect(() => {
     if (us_response.data?.getUser.user) {
       const user = us_response.data?.getUser.user;
-      setUs({ username: user.username, displayImg: user.displayImg });
+      setUs({ username: user.username, displayImg: user.displayImg, id: user.id });
     }
   }, [us_response]);
   
@@ -141,7 +138,7 @@ const Chat: NextPage = () => {
   useEffect(() => {
     if (them_response.data?.getUser.user) {
       const user = them_response.data?.getUser.user;
-      setThem({ username: user.username, displayImg: user.displayImg });
+      setThem({ username: user.username, displayImg: user.displayImg, id: user.id });
     }
   }, [them_response]);
   
@@ -228,7 +225,7 @@ const Chat: NextPage = () => {
             <Box
             sx={{
                 display: "grid",
-                justifyItems: message.author == author ? "end" : "start",
+                justifyItems: message.author == us.id ? "end" : "start",
                 padding: 0.5,
               }}
               key={message.timestamp}
@@ -241,7 +238,7 @@ const Chat: NextPage = () => {
                 }}
               >
                 <Stack direction="row">
-                  {!(message.author == author) && (
+                  {!(message.author == us.id) && (
                     <Link href={`/profile/visitor-profile?email=${other}`}>
                       <Tooltip title={them.username}>
                         <Avatar src={them.displayImg} alt={them.username} />

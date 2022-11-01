@@ -163,8 +163,8 @@ def send_message(data):
 def on_join(data):
     conversation = data['conversation']
     print(f"joining room: [{conversation}]")
-    # if len(Conversation.query.filter_by(conversation=conversation).all()) == 0:
-        # Conversation(conversation).save()
+    if len(Conversation.query.filter_by(conversation=conversation).all()) == 0:
+        Conversation(conversation).save()
     join_room(conversation)
 
 @app.route("/allConversations")

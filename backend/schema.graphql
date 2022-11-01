@@ -85,7 +85,7 @@ type Message {
   id: ID!
   timestamp: Date!
   text: String! 
-  author: String!
+  author: ID!
   conversation: String!
 }
 
