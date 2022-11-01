@@ -3,12 +3,11 @@ import { NextPage } from "next";
 import { Avatar, Box, Button, Typography } from "@mui/material";
 import { itemDataToItemCard } from "../../components/feed/ItemCard";
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
-import { GraphqlListing } from "../../components/listing/types";
 import { useRouter } from "next/router";
 
 const Offer: NextPage = () => {
 
-  const swapper: GraphqlListing = {
+  const swapper = {
     title: "asf fds",
     id: 1,
     price: 123,

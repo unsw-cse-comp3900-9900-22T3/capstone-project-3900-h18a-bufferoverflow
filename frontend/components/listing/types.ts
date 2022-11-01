@@ -30,5 +30,4 @@ export interface GraphqlListing {
 
 interface GraphqlUser {
   displayImg: string;
-  email?: string;
 }
