@@ -115,7 +115,7 @@ def countUnseenMessages_resolver(obj, info, email):
             "count": count
         }
     except Exception as error:
-        print(error)
+        print(f'countUnseenMessages - {error}')
         payload = {
             "success": False,
             "errors": [repr(error)]

@@ -366,7 +366,8 @@ class TradeOffer(db.Model):
             "id" : self.id,
             "listing_one" : Listing.query.get(self.listing_one_id).to_json(),
             "listing_two" : Listing.query.get(self.listing_two_id).to_json()
-
+        }
+        
     def save(self):
         db.session.add(self)
         db.session.commit()

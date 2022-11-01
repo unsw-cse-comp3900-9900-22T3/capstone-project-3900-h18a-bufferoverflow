@@ -126,13 +126,11 @@ export const Template = (props: {
   const [toast, setToast] = useState<string>("");
 
   const [ notificationCount, setNotificationCount ] = useState<number>(0);
-  console.log(auth?.email);
   const { data } = useQuery<CountUnseenGraphqlProps>(
     COUNT_UNSEEN_MESSAGES_QUERY,
     { variables: { email: auth?.email || "" }}
   );
   useEffect(() => {
-    console.log(data)
     if (data?.countUnseenMessages) {
       setNotificationCount(data?.countUnseenMessages.count);
     }

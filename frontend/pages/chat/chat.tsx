@@ -168,11 +168,13 @@ const Chat: NextPage = () => {
   });
 
   useEffect(() => {
-    console.log('updating seen', position, seen)
-    if (position) {
-      updateConversation({ variables: { conversation:conversation, lastReadFirst: seen } })
-    } else {
-      updateConversation({ variables: { conversation:conversation, lastReadSecond: seen } })
+    if (seen != -1) {
+      console.log('updating seen', position, seen)
+      if (position) {
+        updateConversation({ variables: { conversation:conversation, lastReadFirst: seen } })
+      } else {
+        updateConversation({ variables: { conversation:conversation, lastReadSecond: seen } })
+      }
     }
   }, [seen])
 
