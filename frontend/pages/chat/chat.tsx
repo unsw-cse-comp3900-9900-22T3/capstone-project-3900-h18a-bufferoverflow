@@ -32,6 +32,7 @@ import { Message } from "../../utils/chat";
 type User = {
   username: string;
   displayImg: string;
+  id: number;
 };
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
@@ -74,6 +75,7 @@ const GET_USER_QUERY = gql`
       errors
       success
       user {
+        id
         displayImg
         username
       }
@@ -199,7 +201,7 @@ const Chat: NextPage = () => {
       socket.emit("send_message", {
         timestamp: Date.now(),
         text: text,
-        author: author,
+        author: us.id,
         conversation: conversation,
       });
       setText("");

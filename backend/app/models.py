@@ -281,8 +281,9 @@ class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     timestamp = db.Column(db.BigInteger, nullable=False)
     text = db.Column(db.String, nullable=False)
-    # todo: should this relational?
-    author = db.Column(db.String(80), nullable=False)
+    author = db.Column(
+        db.Integer, db.ForeignKey("users.id"), nullable=False
+    )
     # since conversation is a two emails joined by a '-',
     # it should be able to hold 80 + 80 + 1 chars
     conversation = db.Column(db.String(161), nullable=False)
@@ -308,7 +309,7 @@ class Message(db.Model):
 
 
 class Conversation(db.Model):
-    __tablename__ = "conversation"
+    __tablename__ = "conversations"
 
     id = db.Column(db.Integer, primary_key=True)
     conversation = db.Column(db.String(1000), nullable=False)

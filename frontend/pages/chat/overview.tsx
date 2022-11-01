@@ -32,9 +32,11 @@ const GET_CONVERSATIONS_QUERY = gql`
         id
         conversation
         lastReadFirst {
+          author
           timestamp
         }
         lastReadSecond {
+          author
           timestamp
         }
       }
