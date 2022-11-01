@@ -2,9 +2,10 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 import { Box, Typography } from "@mui/material";
-import { GraphqlListing, itemDataToItemCard } from "../../components/feed/ItemCard";
+import { itemDataToItemCard } from "../../components/feed/ItemCard";
 import { useRouter } from "next/router";
 import { gql, useQuery } from "@apollo/client";
+import { GraphqlListing } from "../../components/listing/types";
 
 /////////////////////////////////////////////////////////////////////////////
 // Queries

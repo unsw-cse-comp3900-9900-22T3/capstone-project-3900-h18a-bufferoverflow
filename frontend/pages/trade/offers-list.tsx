@@ -3,10 +3,38 @@ import { NextPage } from "next";
 import { Avatar, Box, Typography } from "@mui/material";
 import Link from "next/link";
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import { gql, useQuery } from "@apollo/client";
+import { useStore } from "../../store/store";
 
 /////////////////////////////////////////////////////////////////////////////
-// Mock Data
+// Queries
 /////////////////////////////////////////////////////////////////////////////
+
+const GET_OFFERS = gql`
+  query ($email: String!) {
+    getTradeOffersByUser(userEmail: $email) {
+      errors
+      success
+      tradeOffers {
+        id
+        listingOne {
+          title
+          user {
+            displayImg
+            username
+          }
+        }
+        listingTwo {
+          title
+          user {
+            displayImg
+            username
+          }
+        }
+      }
+    }
+  }
+`
 
 const data = [
   {
@@ -65,6 +93,9 @@ const OfferBar = (props: {
 /////////////////////////////////////////////////////////////////////////////
 
 const OffersList: NextPage = () => {
+
+  const { auth } = useStore()
+  const data1 = useQuery(GET_OFFERS, { variables: { email: auth?.email } }).data?.getTradeOffersByUser.tradeOffers
 
   return (
     <Template title="Offers List">
