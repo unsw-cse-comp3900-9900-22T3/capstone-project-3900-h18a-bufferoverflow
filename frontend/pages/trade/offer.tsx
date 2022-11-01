@@ -4,7 +4,7 @@ import { Avatar, Box, Button, Typography } from "@mui/material";
 import { itemDataToItemCard } from "../../components/feed/ItemCard";
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import { useRouter } from "next/router";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 
 /////////////////////////////////////////////////////////////////////////////
 // Queries
@@ -32,6 +32,15 @@ const GET_OFFER_LISTINGS = gql`
   }
 `
 
+const UPDATE_OFFER = gql`
+  mutation ($id: ID!, $accepted: Boolean!) {
+    updateTradeOffer(id: $id, isAccepted: $accepted) {
+      success
+      errors
+    }
+  }
+`
+
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
 /////////////////////////////////////////////////////////////////////////////
@@ -42,6 +51,7 @@ const Offer: NextPage = () => {
   const { id } = router.query
 
   const data = useQuery(GET_OFFER_LISTINGS, { variables: { id } }).data?.getListingsInTradeOffer.listings
+  const [updateOffer, _] = useMutation(UPDATE_OFFER)
 
   const swapper = data ? data[0] : {}
   const swappee = data ? data[1] : {}
@@ -65,17 +75,25 @@ const Offer: NextPage = () => {
             variant="outlined"
             sx={{ borderRadius: 30, mr: 0.5, width: 300, height: 45 }}
             onClick={async () => {
+              await updateOffer({ variables: { id, accepted: true } })
               router.push(`/trade/success?title=${swappee.title}&price=${swappee.price}&image=${swappee.image}&address=${swappee.address}&avatar=${swappee.user?.displayImg}&email=${swappee.user?.email}`)
             }}
           >
             Accept
           </Button>
-          <Button variant="outlined" sx={{ borderRadius: 30, ml: 0.5, width: 300, height: 45 }}>
+          <Button
+            variant="outlined"
+            sx={{ borderRadius: 30, ml: 0.5, width: 300, height: 45 }}
+            onClick={async () => {
+              await updateOffer({ variables: { id, accepted: false } })
+              router.push('/')
+            }}
+          >
             Decline
           </Button>
         </Box>
       </Box>
-    </Template>
+    </Template >
   );
 };
 
