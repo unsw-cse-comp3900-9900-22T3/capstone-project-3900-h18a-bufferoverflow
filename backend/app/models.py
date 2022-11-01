@@ -299,9 +299,13 @@ class Message(db.Model):
             "id": self.id,
             "timestamp": self.timestamp,
             "text": self.text,
-            "author": self.author,
+            "author": User.query.get(self.author).to_json(),
             "conversation": self.conversation
         }
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
 
     def delete(self):
         db.session.delete(self)
@@ -327,8 +331,8 @@ class Conversation(db.Model):
         return {
             "id": self.id,
             "conversation": self.conversation,
-            "last_read_first": self.last_read_first,
-            "last_read_second": self.last_read_second,
+            "last_read_first": Message.query.get(self.last_read_first).to_json() if self.last_read_first else None,
+            "last_read_second": Message.query.get(self.last_read_second).to_json() if self.last_read_second else None,
         }
 
     def save(self):

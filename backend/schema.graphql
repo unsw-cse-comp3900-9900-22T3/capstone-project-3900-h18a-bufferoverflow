@@ -83,9 +83,14 @@ type ListingsResult {
 
 type Message {
   id: ID!
-  timestamp: Date!
   text: String! 
-  author: ID!
+  # made these 2 fields nullable because getConversations uses these fields
+  # and can have null messages
+  # probably a few ways to avoid this:
+  #   some graphql feature I'm not aware of
+  #   making it so that a chat is only created if there's actually messages there (changes functionality)
+  timestamp: Date
+  author: User
   conversation: String!
 }
 
@@ -248,8 +253,9 @@ type Mutation {
   createConversation(
     conversation: String!
   ): ConversationResult!
+  # searching by a string sucks, but it avoids having to get the actual db object in the frontend
   updateConversation(
-    id: ID!
+    conversation: String!
     lastReadFirst: ID
     lastReadSecond: ID
   ): ConversationResult!

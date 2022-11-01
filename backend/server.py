@@ -154,10 +154,9 @@ def send_message(data):
     # bit hacky - was complaining about no author but it's set on every emit from frontend?
     if 'author' in data.keys():
         print(f'received message and sent back: {data}')
-        db.session.add(
-            Message(data['timestamp'], data['text'], data['author'], data['conversation']))
-        db.session.commit()
-        emit("to_client", data, to=data['conversation'])
+        message = Message(data['timestamp'], data['text'], data['author'], data['conversation'])
+        message.save();
+        emit("to_client", message.to_json(), to=data['conversation'])
 
 @socketio.on('join')
 def on_join(data):
@@ -170,3 +169,7 @@ def on_join(data):
 @app.route("/allConversations")
 def getAllConversations():
     return jsonify([user.to_json() for user in Conversation.query.all()])
+
+@app.route("/allMessages")
+def getAllMessages():
+    return jsonify([user.to_json() for user in Message.query.all()])

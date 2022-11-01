@@ -57,16 +57,18 @@ def createConversation_resolver(obj, info, **kwargs):
     return payload
 
 @convert_kwargs_to_snake_case
-def updateConversation_resolver(obj, info, id, last_read_first=None, last_read_second=None):
+def updateConversation_resolver(obj, info, conversation, last_read_first=None, last_read_second=None):
     try:
-        conversation = Conversation.query.get(id)
+        conversation_object = Conversation.query.filter_by(conversation=conversation).first()
+        print(f"updating conversation with {conversation} {last_read_first} {last_read_second} {conversation_object}")
         if last_read_first is not None:
-            conversation.last_read_first = last_read_first
+            conversation_object.last_read_first = last_read_first
         if last_read_second is not None:
-            conversation.last_read_second = last_read_second
+            conversation_object.last_read_second = last_read_second
+        conversation_object.save()
         payload = {
             "success": True,
-            "conversation": conversation.to_json() if conversation else None
+            "conversation": conversation_object.to_json()
         }
     except Exception as error:
         payload = {

@@ -32,11 +32,17 @@ const GET_CONVERSATIONS_QUERY = gql`
         id
         conversation
         lastReadFirst {
-          author
+          author {
+            username
+            displayImg
+          }
           timestamp
         }
         lastReadSecond {
-          author
+          author {
+            username
+            displayImg
+          }
           timestamp
         }
       }
@@ -63,20 +69,21 @@ const ChatOverview: NextPage = () => {
     let localChats = [];
     if (conversations != undefined) {
       for (let conversation of conversations) {
-        let time;
+        let our_message;
         if (conversation.conversation.startsWith(auth?.email)) {
-          time = conversation.lastReadFirst?.timestamp;
+          our_message = conversation.lastReadFirst;
         } else {
-          time = conversation.lastReadSecond?.timestamp;
+          our_message = conversation.lastReadSecond;
         }
-
+        console.log(conversation.lastReadFirst, conversation.lastReadSecond);
+        
         localChats.push({
           email: conversation.conversation
             .replace(auth?.email, "")
             .replace("-", ""),
-          username: "",
-          avatar: "",
-          lastMessageTime: time,
+          username: our_message?.author.username,
+          avatar: our_message?.author.displayImg,
+          lastMessageTime: our_message?.timestamp,
           unread: true,
           id: conversation.id,
           active: true,
@@ -86,6 +93,7 @@ const ChatOverview: NextPage = () => {
     setChats(localChats);
   }, [conversations]);
 
+  console.log(conversations);
   return (
     <Template title="Chat Overview">
       <Box sx={{ padding: "20px" }}>

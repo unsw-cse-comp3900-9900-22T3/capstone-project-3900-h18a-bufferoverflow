@@ -20,20 +20,15 @@ import CheckIcon from "@mui/icons-material/Check";
 import SendIcon from "@mui/icons-material/Send";
 import StarIcon from "@mui/icons-material/Star";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation , useQuery } from "@apollo/client";
 import styled from "@emotion/styled";
+import { User } from "../../utils/user";
 import { Message } from "../../utils/chat";
 
 // todo
 // Messages should be marked as read when they are…read.
 // don't show to logged out users
 // stop socket breaking on hot reload
-
-type User = {
-  username: string;
-  displayImg: string;
-  id: number;
-};
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
@@ -49,9 +44,12 @@ const GET_CONVERSATION_MESSAGES_QUERY = gql`
   query getConversationMessagesQuery($conversation: String!) {
     getMessages(conversation: $conversation) {
       messages {
+        id
         timestamp
         text
-        author
+        author {
+          id
+        }
         conversation
       }
     }
@@ -79,6 +77,14 @@ const GET_USER_QUERY = gql`
     }
   }
 `;
+
+const UPDATE_CONVERSATION_MUTATION = gql`
+  mutation ($conversation: String!, $lastReadFirst: ID, $lastReadSecond: ID) {
+    updateConversation(conversation: $conversation, lastReadFirst: $lastReadFirst, lastReadSecond: $lastReadSecond) {
+      success
+    }
+  }
+`
 
 const followingIcon = (following: boolean) => {
   if (following) {
@@ -141,10 +147,15 @@ const Chat: NextPage = () => {
       setThem({ username: user.username, displayImg: user.displayImg, id: user.id });
     }
   }, [them_response]);
+
+  // ids start from 1.
+  const [ seen, setSeen] = useState<number>(-1);
+  const [updateConversation, _] = useMutation(UPDATE_CONVERSATION_MUTATION);
+
   
   const rendered = useRef(false);
   useEffect(() => {
-    // apparently useEffect is run 2x by default, avoid this.
+    // since useEffect runs multiple times, but we only want to connect once
     if (!rendered.current) {
       socket = io(url);
       socket.on("connect", () => {
@@ -152,23 +163,35 @@ const Chat: NextPage = () => {
       });
       
       // not the best on slower connections, since your own message 
-      // will dissapear whilst waiting for the server to reply
+      // will disappear whilst waiting for the server to reply
       // makes the logic easier though
-      socket.on("to_client", (message) => {
+      socket.on("to_client", (message: Message) => {
         console.log(message);
         setMessages((oldMessages) => [...oldMessages, message]);
+        setSeen(message.id);
       });
     }
 
     rendered.current = true;
   });
 
+  useEffect(() => {
+    console.log('updating seen')
+    if (position) {
+      updateConversation({ variables: { conversation:conversation, lastReadFirst: seen } })
+    } else {
+      updateConversation({ variables: { conversation:conversation, lastReadSecond: seen } })
+    }
+  }, [seen])
+
   const [conversation, setConversation] = useState("");
+  const [position, setPosition] = useState<boolean>(false);
   useEffect(() => {
     if (author != undefined && other != undefined) {
       // weird but I couldn't get setConversation to have the var set for the socket.emit
       const local_conversation = [author, other].sort().join("-");
       setConversation(local_conversation);
+      setPosition(author < other);
 
       socket.emit("join", { conversation: local_conversation });
       console.log(`joining [${local_conversation}]`);
@@ -194,6 +217,7 @@ const Chat: NextPage = () => {
   }, [messages]);
   
   const sendMessage = async () => {
+    console.log(us.id);
     if (text != "") {
       socket.emit("send_message", {
         timestamp: Date.now(),
@@ -225,7 +249,7 @@ const Chat: NextPage = () => {
             <Box
             sx={{
                 display: "grid",
-                justifyItems: message.author == us.id ? "end" : "start",
+                justifyItems: message.author.id == us.id ? "end" : "start",
                 padding: 0.5,
               }}
               key={message.timestamp}
@@ -238,7 +262,7 @@ const Chat: NextPage = () => {
                 }}
               >
                 <Stack direction="row">
-                  {!(message.author == us.id) && (
+                  {!(message.author.id == us.id) && (
                     <Link href={`/profile/visitor-profile?email=${other}`}>
                       <Tooltip title={them.username}>
                         <Avatar src={them.displayImg} alt={them.username} />
