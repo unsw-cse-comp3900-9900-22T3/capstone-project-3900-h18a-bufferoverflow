@@ -11,8 +11,6 @@ from app.listingQueries import *
 from app.tradeOfferQueries import *
 from app.followQueries import *
 from app.chatQueries import *
-from app.models import User
-
 
 # Create queries
 query = ObjectType("Query")
