@@ -71,6 +71,7 @@ def updateConversation_resolver(obj, info, conversation, last_read_first=None, l
             "conversation": conversation_object.to_json()
         }
     except Exception as error:
+        print(repr(error))
         payload = {
             "success": False,
             "errors": [str(error)]
@@ -90,5 +91,33 @@ def getConversations_resolver(obj, info, involving):
         payload = {
             "success": False,
             "errors": [str(error)]
+        }
+    return payload
+
+'''
+counts the number of conversations which have messages the user hasn't seen
+'''
+def countUnseenMessages_resolver(obj, info, email):
+    try:
+        conversations = Conversation.query.filter(Conversation.conversation.contains(email))
+        count = 0
+        for conversation in conversations:
+            if conversation.conversation.startswith(email):
+                seen = conversation.last_read_first
+            else:
+                seen = conversation.last_read_second
+            messages = Message.query.filter_by(conversation=conversation.conversation).all()
+            if seen:
+                messages = [message for message in messages if message.id > seen.id]
+            count += 1 if len(messages) > 0 else 0
+        payload = {
+            "success": True,
+            "count": count
+        }
+    except Exception as error:
+        print(error)
+        payload = {
+            "success": False,
+            "errors": [repr(error)]
         }
     return payload

@@ -44,6 +44,8 @@ def add_data():
     user3 = User(email="user3@gmail.com", username="user3")
 
     User(email="e@gmail.com", username="e").save()
+    User(email="f@gmail.com", username="f").save()
+
 
 
     # add diplay images

@@ -321,11 +321,14 @@ class Conversation(db.Model):
         db.Integer, db.ForeignKey("messages.id"), nullable=True)
     last_read_second = db.Column(
         db.Integer, db.ForeignKey("messages.id"), nullable=True)
+    latest = db.Column(
+        db.Integer, db.ForeignKey("messages.id"), nullable=True)
 
     def __init__(self, conversation, last_read_first=None, last_read_second=None):
         self.conversation = conversation
         self.last_read_first = last_read_first
         self.last_read_second = last_read_second
+        self.latest = None
 
     def to_json(self):
         return {
@@ -333,6 +336,7 @@ class Conversation(db.Model):
             "conversation": self.conversation,
             "last_read_first": Message.query.get(self.last_read_first).to_json() if self.last_read_first else None,
             "last_read_second": Message.query.get(self.last_read_second).to_json() if self.last_read_second else None,
+            "latest": Message.query.get(self.latest).to_json() if self.latest else None,
         }
 
     def save(self):

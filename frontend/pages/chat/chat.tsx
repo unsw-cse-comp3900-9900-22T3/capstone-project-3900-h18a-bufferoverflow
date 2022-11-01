@@ -168,7 +168,7 @@ const Chat: NextPage = () => {
   });
 
   useEffect(() => {
-    console.log('updating seen')
+    console.log('updating seen', position, seen)
     if (position) {
       updateConversation({ variables: { conversation:conversation, lastReadFirst: seen } })
     } else {
@@ -198,8 +198,13 @@ const Chat: NextPage = () => {
     { variables: { conversation: conversation } }
   );
   useEffect(() => {
-    if (data?.getMessages.messages) {
-      setMessages(data?.getMessages.messages);
+    const messagesData = data?.getMessages.messages
+    if (messagesData) {
+      console.log(messagesData)
+      setMessages(messagesData);
+      if (messagesData.length > 0) {
+        setSeen(messagesData[messagesData.length - 1].id);
+      }
     }
   }, [data]);
   
@@ -228,7 +233,7 @@ const Chat: NextPage = () => {
     socket.emit("send_message", {
       timestamp: Date.now(),
       text: image,
-      author: author,
+      author: us.id,
       conversation: conversation,
     });
   }, [image]);

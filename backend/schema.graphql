@@ -123,6 +123,7 @@ type Conversation {
   conversation: String!
   lastReadFirst: Message
   lastReadSecond: Message
+  latest: Message
 }
 
 type ConversationResult {
@@ -140,6 +141,12 @@ type ConversationsResult {
 type Result {
   success: Boolean!
   errors: [String]
+}
+
+type CountResult {
+  success: Boolean!
+  error: [String]
+  count: Int
 }
 
 type Query {
@@ -161,6 +168,7 @@ type Query {
   getMessages(
     conversation: String
   ): MessageResult!
+  countUnseenMessages(email: String!): CountResult!
   getConversations(involving: String!): ConversationsResult!
   getMaterials: MaterialResult! 
   getTradeOffersByUser(
@@ -253,7 +261,7 @@ type Mutation {
   createConversation(
     conversation: String!
   ): ConversationResult!
-  # searching by a string sucks, but it avoids having to get the actual db object in the frontend
+  # searching by a string not great, but it avoids having to get the actual db object in the frontend
   updateConversation(
     conversation: String!
     lastReadFirst: ID

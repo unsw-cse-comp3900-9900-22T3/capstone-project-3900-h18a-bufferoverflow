@@ -6,24 +6,12 @@ import {
   SingleChatOverview,
   SingleChatOverviewProps,
 } from "../../components/chat/single-chat";
-import { Message, MessageGraphqlProps } from "../../utils/chat";
+import { Message, MessageGraphqlProps, Conversation, ConversationGraphqlProps } from "../../utils/chat";
 import { gql, useLazyQuery } from "@apollo/client";
 import { useStore } from "../../store/store";
 import { Typography } from "@mui/material";
 
-type Conversation = {
-  id: number;
-  conversation: string;
-  lastReadFirst: Message;
-  lastReadSecond: Message;
-};
-interface ConversationGraphqlProps {
-  getConversations: {
-    success: boolean;
-    errors: string[] | null;
-    conversations: Conversation[] | null;
-  };
-}
+
 
 const GET_CONVERSATIONS_QUERY = gql`
   query getConversationsQuery($involving: String!) {

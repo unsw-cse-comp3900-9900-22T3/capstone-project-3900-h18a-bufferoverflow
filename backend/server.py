@@ -23,6 +23,7 @@ query.set_field("userFeed", userFeed_resolver)
 query.set_field("searchListings", searchListings_resolver)
 query.set_field("getCategories", getCategories_resolver)
 query.set_field("getMessages", getMessages_resolver)
+query.set_field("countUnseenMessages", countUnseenMessages_resolver)
 query.set_field("getMaterials", getMaterials_resolver)
 query.set_field("getTradeOffersByUser", getTradeOffersByUser_resolver)
 query.set_field("getFollowing", getFollowing_resolver)
@@ -156,6 +157,10 @@ def send_message(data):
         print(f'received message and sent back: {data}')
         message = Message(data['timestamp'], data['text'], data['author'], data['conversation'])
         message.save();
+        conversation_object = Conversation.query.filter_by(conversation=data['conversation']).first()
+        conversation_object.latest = message.id
+        conversation_object.save()
+
         emit("to_client", message.to_json(), to=data['conversation'])
 
 @socketio.on('join')

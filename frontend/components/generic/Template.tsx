@@ -17,7 +17,7 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Header } from "./Header";
 import Link from "next/link";
 import List from "@mui/material/List";
@@ -38,7 +38,9 @@ import MessageIcon from "@mui/icons-material/Message";
 import StarIcon from "@mui/icons-material/Star";
 import AddIcon from "@mui/icons-material/Add";
 import { useRouter } from "next/router";
-import { useQuery } from "@apollo/client";
+import { gql, useLazyQuery, useQuery } from "@apollo/client";
+import { Conversation, ConversationGraphqlProps } from "../../utils/chat";
+
 
 type SideBarProps = { title: string; icon: Icon; href: string }[];
 
@@ -95,6 +97,22 @@ const theme = createTheme({
   },
 });
 
+const COUNT_UNSEEN_MESSAGES_QUERY = gql`
+  query countUnseenMessagesQuery($email: String!) {
+    countUnseenMessages(email: $email) {
+      count
+    }
+  }
+`;
+
+interface CountUnseenGraphqlProps {
+  countUnseenMessages: {
+    success: boolean;
+    errors: string[] | null;
+    count: number | null;
+  };
+}
+
 //////////////////////////////////////////////////////////////////
 // Main Component
 //////////////////////////////////////////////////////////////////
@@ -108,16 +126,18 @@ export const Template = (props: {
   const [drawer, setDrawer] = useState<boolean>(false);
   const [toast, setToast] = useState<string>("");
 
-  const notification_count = 10;
-  // const { data } = useQuery<ConversationGraphqlProps>(
-  //   GET_CONVERSATION_MESSAGES_QUERY,
-  //   { variables: { conversation: conversation } }
-  // );
-  // useEffect(() => {
-  //   if (data?.getConvesations.messages) {
-  //     setMessages(data?.getMessages.messages);
-  //   }
-  // }, [data]);
+  const [ notificationCount, setNotificationCount ] = useState<number>(0);
+  console.log(auth?.email);
+  const { data } = useQuery<CountUnseenGraphqlProps>(
+    COUNT_UNSEEN_MESSAGES_QUERY,
+    { variables: { email: auth?.email || "" }}
+  );
+  useEffect(() => {
+    console.log(data)
+    if (data?.countUnseenMessages) {
+      setNotificationCount(data?.countUnseenMessages.count);
+    }
+  }, [data]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -152,7 +172,7 @@ export const Template = (props: {
           {auth ? (
             <LoggedIn
               setDrawer={() => setDrawer(true)}
-              notification_count={notification_count}
+              notificationCount={notificationCount}
             />
           ) : (
             <LoggedOut />
@@ -182,7 +202,7 @@ export const Template = (props: {
 
 const LoggedIn = (props: {
   setDrawer: () => void;
-  notification_count: number;
+  notificationCount: number;
 }) => {
   const router = useRouter();
   return (
@@ -215,8 +235,8 @@ const LoggedIn = (props: {
         onClick={() => router.push("/chat/overview")}
         sx={{ color: textColor }}
       >
-        {props.notification_count > 0 ? (
-          <Badge badgeContent={props.notification_count} color="primary">
+        {props.notificationCount > 0 ? (
+          <Badge badgeContent={props.notificationCount} color="primary">
             <MessageIcon />
           </Badge>
         ) : (
