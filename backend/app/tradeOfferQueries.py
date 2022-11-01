@@ -86,7 +86,7 @@ def getTradeOffersByUser_resolver(obj, info, user_email):
 
         payload = {
             "success": True,
-            "tradeOffers": result
+            "trade_offers": result
         }
     except Exception as e:
         payload = {
