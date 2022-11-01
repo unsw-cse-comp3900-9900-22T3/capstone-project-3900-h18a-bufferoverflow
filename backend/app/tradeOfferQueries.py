@@ -11,7 +11,7 @@ def createTradeOffer_resolver(obj, info, **kwargs):
         tradeOffer.save()
         payload = {
             "success": True,
-            "tradeOffer": tradeOffer.to_json()
+            "trade_offer": tradeOffer.to_json()
         }
     except Exception as e:
         payload = {
@@ -34,10 +34,9 @@ def updateTradeOffer_resolver(obj, info, id, is_accepted):
                 if offer.listing_two_id == listing_one.id and offer.listing_one_id == listing_two.id:
                     offer.delete()
                     break
-
+            tradeOffer.delete()
             listing_one.delete()
             listing_two.delete()
-            tradeOffer.delete()
         else:
             tradeOffer.delete()
 
@@ -87,7 +86,7 @@ def getTradeOffersByUser_resolver(obj, info, user_email):
 
         payload = {
             "success": True,
-            "tradeOffers": [result]
+            "trade_offers": result
         }
     except Exception as e:
         payload = {
