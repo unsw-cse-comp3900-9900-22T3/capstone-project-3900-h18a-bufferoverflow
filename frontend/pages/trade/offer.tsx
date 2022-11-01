@@ -4,25 +4,47 @@ import { Avatar, Box, Button, Typography } from "@mui/material";
 import { itemDataToItemCard } from "../../components/feed/ItemCard";
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import { useRouter } from "next/router";
+import { gql, useQuery } from "@apollo/client";
+
+/////////////////////////////////////////////////////////////////////////////
+// Queries
+/////////////////////////////////////////////////////////////////////////////
+
+const GET_OFFER_LISTINGS = gql`
+  query ($id: ID!) {
+    getListingsInTradeOffer(tradeOfferId: $id) {
+      errors
+      success
+      listings {
+        id
+        title
+        price
+        image
+        address
+        user {
+          email
+          username
+          displayImg
+        }
+        isSellListing
+      }
+    }
+  }
+`
+
+/////////////////////////////////////////////////////////////////////////////
+// Primary Components
+/////////////////////////////////////////////////////////////////////////////
 
 const Offer: NextPage = () => {
 
-  const swapper = {
-    title: "asf fds",
-    id: 1,
-    price: 123,
-    image: 'https://images.unsplash.com/photo-1499720565725-bd574541a3ee?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-    address: "34 wonderland",
-    user: {
-      email: "user1@gmail.com",
-      displayImg: 'https://mui.com/static/images/avatar/3.jpg'
-    },
-    isSellListing: false
-  }
-  const swapperAvatar = 'https://mui.com/static/images/avatar/3.jpg'
-
   const router = useRouter()
   const { id } = router.query
+
+  const data = useQuery(GET_OFFER_LISTINGS, { variables: { id } }).data?.getListingsInTradeOffer.listings
+
+  const swapper = data ? data[0] : {}
+  const swappee = data ? data[1] : {}
 
   return (
     <Template title="Offer" center>
@@ -30,19 +52,19 @@ const Offer: NextPage = () => {
         <Typography sx={{ fontWeight: 'bold', fontSize: 17, mb: 2 }}>Trade Offer</Typography>
         <Typography sx={{ mb: 4 }}>Please accept or decline the trade offer from</Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 7 }}>
-          <Avatar src={swapperAvatar} sx={{ mr: 2 }} />
-          <Typography>Bobby</Typography>
+          <Avatar src={swappee.user?.displayImg} sx={{ mr: 2 }} />
+          <Typography>{swappee.user?.username}</Typography>
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 6 }}>
-          {itemDataToItemCard(swapper)}
+          {data ? itemDataToItemCard(swapper) : <></>}
           <SwapHorizIcon sx={{ fontSize: 70 }} />
-          {itemDataToItemCard(swapper)}
+          {data ? itemDataToItemCard(swappee) : <></>}
         </Box>
         <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', mt: 5 }}>
           <Button
             variant="outlined"
             sx={{ borderRadius: 30, mr: 0.5, width: 300, height: 45 }}
-            href={`/trade/success?title=${swapper.title}&price=${swapper.price}&image=${swapper.image}&address=${swapper.address}&avatar=${swapper.user.displayImg}&email=${swapper.user.email}`}
+            href={`/trade/success?title=${swappee.title}&price=${swappee.price}&image=${swappee.image}&address=${swappee.address}&avatar=${swappee.user?.displayImg}&email=${swappee.user?.email}`}
           >
             Accept
           </Button>
