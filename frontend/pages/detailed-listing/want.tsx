@@ -219,7 +219,7 @@ const DetailedWantListing: NextPage = () => {
           <Button
             variant="outlined"
             sx={{ borderRadius: 30, mt: 4, height: 45 }}
-            href={`/trade/propose?email=${itemPosessorEmail}`}
+            href={`/trade/propose?email=${itemPosessorEmail}&id=${id}`}
           >
             Propose Trade
           </Button>

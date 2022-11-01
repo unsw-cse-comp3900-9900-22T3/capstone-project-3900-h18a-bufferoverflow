@@ -319,7 +319,7 @@ class Conversation(db.Model):
         db.session.commit()
 
 class TradeOffer(db.Model):
-    __tablename__ = "trade_offer"
+    __tablename__ = "trade_offers"
 
     id = db.Column(db.Integer, primary_key=True)
     listing_one_id = db.Column(db.Integer, db.ForeignKey("listings.id"), nullable=False)

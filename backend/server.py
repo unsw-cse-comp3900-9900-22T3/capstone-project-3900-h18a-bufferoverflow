@@ -30,6 +30,8 @@ query.set_field("getTradeOffersByUser", getTradeOffersByUser_resolver)
 query.set_field("getFollowing", getFollowing_resolver)
 query.set_field("getFollowingList", getFollowingList_resolver)
 query.set_field("getConversation", getConversation_resolver)
+query.set_field("getListingsInTradeOffer", getListingsInTradeOffer_resolver)
+query.set_field("getUsersInTradeOffer", getUsersInTradeOffer_resolver)
 
 # Create mutations
 mutation = ObjectType("Mutation")
