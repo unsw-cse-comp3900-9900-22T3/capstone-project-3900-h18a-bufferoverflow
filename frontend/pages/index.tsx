@@ -5,7 +5,6 @@ import RecommendedFeed from './feed/recommended'
 
 const Home: NextPage = () => {
   const { auth } = useStore();
-
   return (<>{auth ? <RecommendedFeed /> : <Landing />}</>)
 }
 

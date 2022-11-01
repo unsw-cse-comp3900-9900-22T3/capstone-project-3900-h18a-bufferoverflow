@@ -72,7 +72,6 @@ class User(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-
 listing_material = db.Table('listing_material',
                             db.Column('listing_id', db.Integer, db.ForeignKey(
                                 'listings.id'), primary_key=True),
