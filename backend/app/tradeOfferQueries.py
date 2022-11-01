@@ -11,7 +11,7 @@ def createTradeOffer_resolver(obj, info, **kwargs):
         tradeOffer.save()
         payload = {
             "success": True,
-            "tradeOffer": tradeOffer.to_json()
+            "trade_offer": tradeOffer.to_json()
         }
     except Exception as e:
         payload = {
