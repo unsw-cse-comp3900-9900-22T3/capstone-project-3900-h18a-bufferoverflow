@@ -44,6 +44,7 @@ export const SingleChatOverview = (props: SingleChatOverviewProps
     }
   }
 
+  // not the nicest solution - should really pass this up to the overview component
   const [exists, setExists] = useState(true);
 
   return (
