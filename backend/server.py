@@ -29,6 +29,7 @@ query.set_field("getTradeOffersByUser", getTradeOffersByUser_resolver)
 query.set_field("getFollowing", getFollowing_resolver)
 query.set_field("getFollowingList", getFollowingList_resolver)
 query.set_field("getConversations", getConversations_resolver)
+query.set_field("getConversationsForOverview", getConversationsForOverview_resolver)
 query.set_field("getListingsInTradeOffer", getListingsInTradeOffer_resolver)
 query.set_field("getUsersInTradeOffer", getUsersInTradeOffer_resolver)
 

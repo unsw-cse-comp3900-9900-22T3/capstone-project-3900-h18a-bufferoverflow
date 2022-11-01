@@ -120,10 +120,9 @@ type TradeOfferResult {
 
 type Conversation {
   id: ID!
-  conversation: String!
+  latest: Message
   lastReadFirst: Message
   lastReadSecond: Message
-  latest: Message
 }
 
 type ConversationResult {
@@ -136,6 +135,22 @@ type ConversationsResult {
   success: Boolean!
   errors: [String]
   conversations:[Conversation]
+}
+
+type ConversationOverview {
+  id: ID!
+  conversation: String!
+  username: String!
+  email: String!
+  displayImg: String
+  latest: Message
+  unread: Boolean!
+}
+
+type ConversationsOverviewResult {
+  success: Boolean!
+  errors: [String]
+  conversations: [ConversationOverview]
 }
 
 type Result {
@@ -170,6 +185,7 @@ type Query {
   ): MessageResult!
   countUnseenMessages(email: String!): CountResult!
   getConversations(involving: String!): ConversationsResult!
+  getConversationsForOverview(involving: String!): ConversationsOverviewResult!
   getMaterials: MaterialResult! 
   getTradeOffersByUser(
     userEmail: String!

@@ -1,5 +1,5 @@
 from app import db
-from app.models import Message, Conversation
+from app.models import Message, Conversation, User
 
 from ariadne import convert_kwargs_to_snake_case
 
@@ -83,11 +83,50 @@ def getConversations_resolver(obj, info, involving):
     try:
         # think this might be potentially fragile, but emails can't have more than 1 @ right?
         conversations = Conversation.query.filter(Conversation.conversation.contains(involving))
+
         payload = {
             "success": True,
             "conversations": [conversation.to_json() for conversation in conversations]
         }
     except Exception as error:
+        payload = {
+            "success": False,
+            "errors": [str(error)]
+        }
+    return payload
+
+def getConversationsForOverview_resolver(obj, info, involving):
+    try:
+        # think this might be potentially fragile, but emails can't have more than 1 @ right?
+        conversations = Conversation.query.filter(Conversation.conversation.contains(involving))
+        overview = []
+        for conversation in conversations:
+            them = conversation.conversation.replace(involving, "").replace("-", "")
+            user = User.query.filter_by(email=them).first()
+            seen = None
+            if conversation.conversation.startswith(involving) and conversation.last_read_first != None:
+                seen = Message.query.get(conversation.last_read_first)
+            elif conversation.last_read_second != None:
+                seen = Message.query.get(conversation.last_read_second)
+            messages = Message.query.filter_by(conversation=conversation.conversation).all()
+            if seen:
+                messages = [message for message in messages if message.id > seen.id]
+            unread = 1 if len(messages) > 0 else 0
+            overview.append({
+                "id": conversation.id,
+                "conversation": conversation.conversation,
+                "username": user.username,
+                "email": them,
+                "displayImg": user.display_img,
+                "latest": Message.query.get(conversation.latest) if conversation.latest else None,
+                "unread": unread,
+            })
+        payload = {
+            "success": True,
+            "conversations": overview
+        }
+    except Exception as error:
+        print(f'getCoversationsForOverview {repr(error)}')
         payload = {
             "success": False,
             "errors": [str(error)]
@@ -102,11 +141,13 @@ def countUnseenMessages_resolver(obj, info, email):
         conversations = Conversation.query.filter(Conversation.conversation.contains(email))
         count = 0
         for conversation in conversations:
-            if conversation.conversation.startswith(email):
-                seen = conversation.last_read_first
-            else:
-                seen = conversation.last_read_second
+            seen = None
+            if conversation.conversation.startswith(email) and conversation.last_read_first != None:
+                seen = Message.query.get(conversation.last_read_first)
+            elif conversation.last_read_second != None:
+                seen = Message.query.get(conversation.last_read_second)
             messages = Message.query.filter_by(conversation=conversation.conversation).all()
+
             if seen:
                 messages = [message for message in messages if message.id > seen.id]
             count += 1 if len(messages) > 0 else 0
