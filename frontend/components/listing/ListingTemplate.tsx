@@ -352,7 +352,7 @@ export const ListingTemplate = (props: {
                   }
                   updateListing({ variables: { id, title, image, description, location, categories, status, trade, cash, bank, weight, volume, materials, tradeCategories, price } })
                     .then(() => {
-                      if (!_2.data.updateListing.success) throw Error(_2.data.updateListing.errors)
+                      // if (!_2.data.updateListing.success) throw Error(_2.data.updateListing.errors)
                       setSuccessToast('Successfully updated listing')
                     })
                     .catch(e => setErrorToast('Failed to update listing ' + e))
@@ -366,7 +366,7 @@ export const ListingTemplate = (props: {
                 onClick={() => {
                   deleteListing({ variables: { id } })
                     .then(() => {
-                      if (!_1.data.deleteListing.success) throw Error(_1.data.deleteListing.errors)
+                      // if (!_1.data.deleteListing.success) throw Error(_1.data.deleteListing.errors)
                       router.push('/listing/my-listings')
                     })
                     .catch(e => setErrorToast('Failed to delete listing: ' + e))
@@ -385,7 +385,7 @@ export const ListingTemplate = (props: {
                 }
                 createListing({ variables: { email: auth?.email, sell: !!props.have, title, image, description, location, categories, status, trade, cash, bank, weight, volume, materials, tradeCategories, price } })
                   .then(() => {
-                    if (!_3.data.createListing.success) throw Error(_3.data.createListing.errors)
+                    // if (!_3.data.createListing.success) throw Error(_3.data.createListing.errors)
                     router.push('/listing/my-listings')
                   })
                   .catch(e => setErrorToast("Failed to create listing: " + e))
