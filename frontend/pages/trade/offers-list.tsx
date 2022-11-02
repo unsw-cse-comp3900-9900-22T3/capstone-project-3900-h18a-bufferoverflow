@@ -36,58 +36,6 @@ const GET_OFFERS = gql`
   }
 `
 
-const data = [
-  {
-    avatar: 'https://mui.com/static/images/avatar/3.jpg',
-    name: 'Bobby',
-    item1: 'Used Lego',
-    item2: 'Used shoes',
-    href: '/trade/offer'
-  },
-  {
-    avatar: 'https://mui.com/static/images/avatar/3.jpg',
-    name: 'Robby',
-    item1: 'Used Lego',
-    item2: 'Used shoes',
-    href: '/trade/offer'
-  },
-  {
-    avatar: 'https://mui.com/static/images/avatar/3.jpg',
-    name: 'Bobby',
-    item1: 'Used Lego',
-    item2: 'Used shoes',
-    href: '/trade/offer'
-  }
-]
-
-/////////////////////////////////////////////////////////////////////////////
-// Secondary Components
-/////////////////////////////////////////////////////////////////////////////
-
-const OfferBar = (props: {
-  avatar: string;
-  name: string;
-  item1: string;
-  item2: string;
-  href: string;
-}) => {
-  return (
-    <Link href={props.href}>
-      <Box sx={{ width: '80vw', border: 0.5, display: 'flex', borderRadius: 2, justifyContent: 'space-between', mb: 1 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Avatar src={props.avatar} sx={{ m: 1.5, ml: 3, mr: 3 }} />
-          <Typography>{props.name}</Typography>
-        </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography sx={{ ml: 3, mr: 3 }}>{props.item1}</Typography>
-          <SwapHorizIcon sx={{ fontSize: 35 }} />
-          <Typography sx={{ ml: 3, mr: 3 }}>{props.item2}</Typography>
-        </Box>
-      </Box>
-    </Link>
-  )
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // Primary Component
 /////////////////////////////////////////////////////////////////////////////
@@ -95,7 +43,7 @@ const OfferBar = (props: {
 const OffersList: NextPage = () => {
 
   const { auth } = useStore()
-  const data1 = useQuery(GET_OFFERS, { variables: { email: auth?.email } }).data?.getTradeOffersByUser.tradeOffers
+  const data = useQuery(GET_OFFERS, { variables: { email: auth?.email } }).data?.getTradeOffersByUser.tradeOffers
 
   return (
     <Template title="Offers List">
@@ -107,7 +55,21 @@ const OffersList: NextPage = () => {
           You have received the following offers from traders
         </Typography>
         {
-          data.map(offer => (<OfferBar {...offer} />))
+          data?.map((offer: any) => (
+            <Link href={`/trade/offer?id=${offer.id}`}>
+              <Box sx={{ width: '80vw', border: 0.5, display: 'flex', borderRadius: 2, justifyContent: 'space-between', mb: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Avatar src={offer.listingTwo.user.displayImg} sx={{ m: 1.5, ml: 3, mr: 3 }} />
+                  <Typography>{offer.listingTwo.user.username}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Typography sx={{ ml: 3, mr: 3 }}>{offer.listingTwo.title}</Typography>
+                  <SwapHorizIcon sx={{ fontSize: 35 }} />
+                  <Typography sx={{ ml: 3, mr: 3 }}>{offer.listingTwo.title}</Typography>
+                </Box>
+              </Box>
+            </Link>
+          ))
         }
       </Box>
     </Template>

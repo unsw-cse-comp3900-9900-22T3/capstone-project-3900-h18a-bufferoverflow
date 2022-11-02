@@ -7,6 +7,7 @@ import { Toast } from "../../components/generic/Toast";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import { GraphqlListing } from "../../components/listing/types";
+import { useStore } from "../../store/store";
 
 /////////////////////////////////////////////////////////////////////////////
 // Queries
@@ -45,8 +46,9 @@ const PROPOSE_TRADE = gql`
 const Propose: NextPage = () => {
 
   const router = useRouter()
-  const { email, id } = router.query
-  const data = useQuery(GET_USER_LISTINGS, { variables: { email } }).data?.getListingsByUser.listings as GraphqlListing[]
+  const { auth } = useStore()
+  const { id } = router.query
+  const data = useQuery(GET_USER_LISTINGS, { variables: { email: auth?.email } }).data?.getListingsByUser.listings as GraphqlListing[]
   const [propose, _] = useMutation(PROPOSE_TRADE)
 
   const [successToast, setSuccessToast] = useState<string>('');
@@ -70,7 +72,7 @@ const Propose: NextPage = () => {
                   avatar={item.user.displayImg}
                   {...item}
                   onClick={async () => {
-                    await propose({ variables: { l1: item.id, l2: id } })
+                    await propose({ variables: { l1: id, l2: item.id } })
                     setSuccessToast('Trade Proposed Successfully');
                     router.push('/')
                   }}
