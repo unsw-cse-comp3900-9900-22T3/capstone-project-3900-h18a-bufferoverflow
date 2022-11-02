@@ -43,10 +43,16 @@ class User(db.Model):
             self.following.remove(user)   
             self.save()
 
-    def is_following(self, user):
+    def is_following(self, user=None, user_id=None):
+        # error handling
+        if user is None and user_id is None:
+            return False
+
         followed_users = [followed.to_json() for followed in self.following]
+        # if we were provided an id, use that, otherwise use the user object
+        id_to_check = user_id if user_id is not None else user.id
         for u in followed_users:
-            if u["id"] == user.id:
+            if u["id"] == id_to_check:
                 return True 
         return False
 
