@@ -56,18 +56,12 @@ def defaultFeed_resolver(obj, info):
 def userFeed_resolver(obj, info, user_email):
     try:
         user =  User.query.filter_by(email=user_email).first()
-        print(
-            'hi'
-        )
         feed_listings = []
         for listing in Listing.query.all():
-            print(listing)
             if user.is_following(user_id=listing.user_id):
                 feed_listings.insert(0, listing.to_json())
             else:
                 feed_listings.append(listing.to_json())
-
-        print(feed_listings)
 
         payload = {
             "success": True,
