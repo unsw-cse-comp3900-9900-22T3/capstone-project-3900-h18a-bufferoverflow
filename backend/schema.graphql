@@ -3,7 +3,11 @@ schema {
   mutation: Mutation
 }
 
+# TODO: is this all you need for this custom scalar?
+scalar Date
+
 type User {
+  id: ID!
   username: String!
   email: String!
   preferredDistance: Int!
@@ -77,6 +81,25 @@ type ListingsResult {
   listings: [Listing]
 }
 
+type Message {
+  id: ID!
+  text: String! 
+  # made these 2 fields nullable because getConversations uses these fields
+  # and can have null messages
+  # probably a few ways to avoid this:
+  #   some graphql feature I'm not aware of
+  #   making it so that a chat is only created if there's actually messages there (changes functionality)
+  timestamp: Date
+  author: User
+  conversation: String!
+}
+
+type MessageResult {
+  success: Boolean!
+  errors: [String]
+  messages: [Message]
+}
+
 type TradeOffer {
   id: ID!
   listingOne: Listing!
@@ -95,9 +118,50 @@ type TradeOfferResult {
   tradeOffer: TradeOffer
 }
 
+type Conversation {
+  id: ID!
+  latest: Message
+  lastReadFirst: Message
+  lastReadSecond: Message
+}
+
+type ConversationResult {
+  success: Boolean!
+  errors: [String]
+  conversation: Conversation
+}
+
+type ConversationsResult {
+  success: Boolean!
+  errors: [String]
+  conversations:[Conversation]
+}
+
+type ConversationOverview {
+  id: ID!
+  conversation: String!
+  username: String!
+  email: String!
+  displayImg: String
+  latest: Message
+  unread: Boolean!
+}
+
+type ConversationsOverviewResult {
+  success: Boolean!
+  errors: [String]
+  conversations: [ConversationOverview]
+}
+
 type Result {
   success: Boolean!
   errors: [String]
+}
+
+type CountResult {
+  success: Boolean!
+  error: [String]
+  count: Int
 }
 
 type Query {
@@ -116,6 +180,12 @@ type Query {
     priceMax: Float
   ): ListingsResult!
   getCategories: CategoryResult!
+  getMessages(
+    conversation: String
+  ): MessageResult!
+  countUnseenMessages(email: String!): CountResult!
+  getConversations(involving: String!): ConversationsResult!
+  getConversationsForOverview(involving: String!): ConversationsOverviewResult!
   getMaterials: MaterialResult! 
   getTradeOffersByUser(
     userEmail: String!
@@ -181,6 +251,12 @@ type Mutation {
     image: String
   ): ListingResult!
   deleteListing(id: ID!): ListingResult!
+  createMessage(
+    timestamp: Int!
+    text: String!
+    author: ID!
+    conversation: String!
+  ): MessageResult!
   createTradeOffer(
     listingOneId: ID!
     listingTwoId: ID!
@@ -198,4 +274,14 @@ type Mutation {
     followerEmail: String!
     followedEmail: String!
   ): Result! 
+  createConversation(
+    conversation: String!
+  ): ConversationResult!
+  # searching by a string not great, but it avoids having to get the actual db object in the frontend
+  updateConversation(
+    conversation: String!
+    lastReadFirst: ID
+    lastReadSecond: ID
+  ): ConversationResult!
+  deleteConversation(conversation: String!): ConversationResult!
 }

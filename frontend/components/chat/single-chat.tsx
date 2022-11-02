@@ -1,26 +1,55 @@
-import { Avatar } from "@mui/material"
-import { Box, Stack } from "@mui/system"
+import { DataArray } from "@mui/icons-material";
+import { Avatar, Chip } from "@mui/material";
+import { Box, Stack } from "@mui/system";
+import { useState } from "react"
+
 
 import Link from "next/link";
 import { DeleteChat } from "./delete-chat";
 
 export interface SingleChatOverviewProps {
-  href: string;
-  delHref: string;
+  conversation: string,
+  email: string,
   username: string;
   avatar: string;
-  lastMessageTime: string;
+  lastMessageTime: number | null;
+  unread: boolean;
+  id: number;
+  active: boolean;
 }
 
-export const SingleChatOverview = (props: {
-  href: string;
-  delHref: string;
-  username: string;
-  avatar: string;
-  lastMessageTime: string;
-}) => {
+export const SingleChatOverview = (props: SingleChatOverviewProps
+  ) => {
+  // writing time code myself, I know gross
+  const rtf = new Intl.RelativeTimeFormat("en", {
+    localeMatcher: "best fit",
+    numeric: "always", 
+    style: "long",
+  });
+
+  let time;
+  if (props.lastMessageTime == null) {
+    time = "no messages";
+  } else {
+    const diff = props.lastMessageTime - Date.now();
+    time = rtf.format(Math.round(diff / (1000 * 60 * 60 * 24)), "days");
+    if (diff / (1000 * 60 * 60 * 24) > -1) {
+      rtf.format(Math.round(diff / (1000 * 60 * 60)), "hours");
+    }
+    if (diff / (1000 * 60 * 60) > -1) {
+      time = rtf.format(Math.round(diff / (1000 * 60)), "minutes");
+    }
+    if (diff / (1000 * 60) > -1) {
+      time = rtf.format(Math.round(diff / 1000), "seconds");
+    }
+  }
+
+  // not the nicest solution - should really pass this up to the overview component
+  const [exists, setExists] = useState(true);
+
   return (
-    <Box
+    <div>
+    {exists == true && <Box
       sx={{
         display: "flex",
         alignItems: "center",
@@ -30,7 +59,7 @@ export const SingleChatOverview = (props: {
         paddingLeft: "10px",
       }}
     >
-      <Link href={props.href}>
+      <Link href={`/chat/chat?other=${props.email}`}>
         <Stack
           direction="row"
           spacing={2}
@@ -41,10 +70,13 @@ export const SingleChatOverview = (props: {
         >
           <Avatar src={props.avatar} />
           <h4>{props.username}</h4>
-          <p>{props.lastMessageTime}</p>
+          <p>{time}</p>
+          {props.unread && <Chip label="unread" color="primary" />}
         </Stack>
       </Link>
-      <DeleteChat delHref={props.delHref} />   
+      <DeleteChat conversation={props.conversation} setExists={setExists} />
     </Box>
+    }
+    </div>
   );
 };

@@ -22,7 +22,7 @@ import { convertUserToAuthProps } from '../../store/utils'
 interface ProfileGraphqlProps {
   getUser: {
     success: boolean | null;
-    erorrs: string[] | null;
+    errors: string[] | null;
     user: {
       displayImg: string;
       username: string;

@@ -15,7 +15,7 @@ import { useQuery, gql } from "@apollo/client";
 interface DefaultFeedGraphqlProps {
   defaultFeed: {
     success: boolean | null;
-    erorrs: string[] | null;
+    errors: string[] | null;
     listings: GraphqlListing[] | null;
   };
 }

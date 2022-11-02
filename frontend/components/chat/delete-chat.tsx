@@ -1,20 +1,40 @@
 import {IconButton, Button} from "@mui/material"
 import DeleteForever from "@mui/icons-material/DeleteForever"
-import { useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
+import { gql, useMutation } from "@apollo/client";
+
+const DELETE_CONVERSATION = gql`
+  mutation ($conversation: String!) {
+    deleteConversation(conversation: $conversation) {
+      success
+    }
+  }
+`
+
 export const DeleteChat = (props: {
-    delHref: string
+    conversation: string
+    setExists: Dispatch<SetStateAction<boolean>>
 }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
+    setOpen(false);
+  };
+
+  const [deleteConversation, { loading, error, data }] = useMutation(DELETE_CONVERSATION);
+
+
+  const handleDelete = () => {
+    deleteConversation({ variables: { conversation: props.conversation}});
+    props.setExists(false);
     setOpen(false);
   };
   return (
@@ -56,9 +76,8 @@ export const DeleteChat = (props: {
           <Button
             variant="outlined"
             sx={{ width: 135, mr: 1, borderRadius: 30, mb:1,  height: 45 }}
-            onClick={handleClose}
+            onClick={handleDelete}
             autoFocus
-            href={props.delHref}
           >
             Delete
           </Button>
