@@ -14,5 +14,11 @@ export const uploadFile = async (file: File) => {
 }
 
 export const parseFirebaseError = (error: string): string => {
-  return error
+  let res: string;
+  try {
+    res = error.split('/').at(-1)!.split('-').join(' ')
+  } catch (e) {
+    res = error;
+  }
+  return res;
 }
