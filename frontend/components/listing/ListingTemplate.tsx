@@ -218,7 +218,6 @@ export const ListingTemplate = (props: {
   const router = useRouter()
   const { id } = router.query
 
-  //  const data = useQuery(GET_LISTING, { variables: { id } }).data?.getListing.listing
   const [execQuery, {data}] = useLazyQuery(GET_LISTING);
   const [deleteListing, _1] = useMutation(DELETE_LISTING);
   const [updateListing, _2] = useMutation(UPDATE_LISTING);
