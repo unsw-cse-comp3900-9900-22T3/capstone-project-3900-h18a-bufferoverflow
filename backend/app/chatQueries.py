@@ -94,6 +94,7 @@ def getConversations_resolver(obj, info, involving):
         }
     return payload
 
+@convert_kwargs_to_snake_case
 def getConversationsForOverview_resolver(obj, info, involving):
     try:
         # think this might be potentially fragile, but emails can't have more than 1 @ right?
@@ -111,12 +112,13 @@ def getConversationsForOverview_resolver(obj, info, involving):
             if seen:
                 messages = [message for message in messages if message.id > seen.id]
             unread = 1 if len(messages) > 0 else 0
+            print(user.display_img)
             overview.append({
                 "id": conversation.id,
                 "conversation": conversation.conversation,
                 "username": user.username,
                 "email": them,
-                "displayImg": user.display_img,
+                "display_img": user.display_img,
                 "latest": Message.query.get(conversation.latest) if conversation.latest else None,
                 "unread": unread,
             })

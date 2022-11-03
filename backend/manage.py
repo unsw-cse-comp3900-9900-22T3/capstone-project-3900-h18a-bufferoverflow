@@ -1,7 +1,7 @@
 from flask.cli import FlaskGroup
 
 from app import app, db
-from app.models import User, Category, Material, Listing
+from app.models import User, Category, Material, Listing, Conversation, Message
 from app.config import material_names, category_names
 
 
@@ -37,6 +37,71 @@ def create_db():
 
 @cli.command("add_data")
 def add_data():
+    # chat demo
+    buyer = User(email="buyer@gmail.com", username="buyer")
+    buyer.add_display_img("https://comp3900storage.blob.core.windows.net/files/down.jpg?sv=2021-06-08&ss=bf&srt=sco&sp=rwdlaciytfx&se=2022-12-01T09:33:16Z&st=2022-09-25T02:33:16Z&spr=https&sig=uni0ZKrnnzcEsYL%2BF9Skp%2F%2B3MZmxeko1GZmM87NlA2w%3D")
+    buyer.save()
+
+    seller = User(email="seller@gmail.com", username="seller")
+    seller.add_display_img("https://comp3900storage.blob.core.windows.net/files/housewarming3.jpg?sv=2021-06-08&ss=bf&srt=sco&sp=rwdlaciytfx&se=2022-12-01T09:33:16Z&st=2022-09-25T02:33:16Z&spr=https&sig=uni0ZKrnnzcEsYL%2BF9Skp%2F%2B3MZmxeko1GZmM87NlA2w%3D")
+    seller.save()
+
+    ghosted = User(email="ghosted@gmail.com", username="ghosted")
+    ghosted.save()
+
+    inactiveConversation = Conversation("buyer@gmail.com-ghosted@gmail.com", None, None)
+    inactiveConversation.save()
+
+    old = User(email="old@gmail.com", username="old")
+    old.save()
+
+    oldMessage = Message(1664802000000, "an old message", old.id, "buyer@gmail.com-old@gmail.com")
+    oldMessage.save()
+
+    oldConvo = Conversation("buyer@gmail.com-old@gmail.com", None, None)
+    oldConvo.latest = oldMessage.id
+    oldConvo.last_read_first = oldMessage.id
+    oldConvo.save()
+
+    checkpoint = Listing(
+        user_email="seller@gmail.com",
+        title = "trek checkpoint",
+        description="gravel bike",
+        is_sell_listing=True,
+        price=2000,
+        can_trade=True,
+        can_pay_cash=True,
+        can_pay_bank=True,
+        status="active",
+        categories=["sports"],
+        want_to_trade_for=["sports", "electronics"],
+        weight=10,
+        volume=1.0,
+        materials=["metal"],
+        image = "https://comp3900storage.blob.core.windows.net/files/checkpoint.jpg?sv=2021-06-08&ss=bf&srt=sco&sp=rwdlaciytfx&se=2022-12-01T09:33:16Z&st=2022-09-25T02:33:16Z&spr=https&sig=uni0ZKrnnzcEsYL%2BF9Skp%2F%2B3MZmxeko1GZmM87NlA2w%3D",
+        address = "Kensington"
+    )
+    checkpoint.save()
+
+    diverge = Listing(
+        user_email="buyer@gmail.com",
+        title = "specialised diverge ",
+        description="2014 A1",
+        is_sell_listing=True,
+        price=1000,
+        can_trade=True,
+        can_pay_cash=True,
+        can_pay_bank=True,
+        status="active",
+        categories=["sports"],
+        want_to_trade_for=["sports", "electronics"],
+        weight=10,
+        volume=1.0,
+        materials=["metal"],
+        image = "https://comp3900storage.blob.core.windows.net/files/diverge.jpg?sv=2021-06-08&ss=bf&srt=sco&sp=rwdlaciytfx&se=2022-12-01T09:33:16Z&st=2022-09-25T02:33:16Z&spr=https&sig=uni0ZKrnnzcEsYL%2BF9Skp%2F%2B3MZmxeko1GZmM87NlA2w%3D",
+        address = "Randwick"
+    )
+    diverge.save()
 
     # create users
     user1 = User(email="user1@gmail.com", username="user1")
