@@ -352,10 +352,10 @@ export const ListingTemplate = (props: {
                   }
                   updateListing({ variables: { id, title, image, description, location, categories, status, trade, cash, bank, weight, volume, materials, tradeCategories, price } })
                     .then(() => {
-                      if (!_3.data.updateListing.success) throw Error('Error')
+                      // if (!_2.data.updateListing.success) throw Error(_2.data.updateListing.errors)
                       setSuccessToast('Successfully updated listing')
                     })
-                    .catch(() => setErrorToast('Failed to update listing'))
+                    .catch(e => setErrorToast('Failed to update listing ' + e))
                 }}
               >
                 Update {props.have ? 'Have' : 'Want'} Listing
@@ -365,8 +365,11 @@ export const ListingTemplate = (props: {
                 sx={{ borderRadius: 30, ml: 0.5, width: '50%', height: 45 }}
                 onClick={() => {
                   deleteListing({ variables: { id } })
-                    .then(() => router.push('/listing/my-listings'))
-                    .catch(() => setErrorToast('Failed to delete listing'))
+                    .then(() => {
+                      // if (!_1.data.deleteListing.success) throw Error(_1.data.deleteListing.errors)
+                      router.push('/listing/my-listings')
+                    })
+                    .catch(e => setErrorToast('Failed to delete listing: ' + e))
                 }}
               >
                 Delete Listing
@@ -380,12 +383,12 @@ export const ListingTemplate = (props: {
                   setErrorToast('Required fields are empty')
                   return
                 }
-                createListing({ variables: { email: auth?.email, sell: !!props.have, id, title, image, description, location, categories, status, trade, cash, bank, weight, volume, materials, tradeCategories, price } })
+                createListing({ variables: { email: auth?.email, sell: !!props.have, title, image, description, location, categories, status, trade, cash, bank, weight, volume, materials, tradeCategories, price } })
                   .then(() => {
-                    if (!_3.data.createListing.success) throw Error('Error')
+                    // if (!_3.data.createListing.success) throw Error(_3.data.createListing.errors)
                     router.push('/listing/my-listings')
                   })
-                  .catch((e) => setErrorToast('Failed to create listing'))
+                  .catch(e => setErrorToast("Failed to create listing: " + e))
               }}
             >
               Post {props.have ? 'Have' : 'Want'} Listing
