@@ -1,6 +1,7 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 import { ListingTemplate } from "../../components/listing/ListingTemplate";
+import { Box } from "@mui/material";
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Component
@@ -8,8 +9,10 @@ import { ListingTemplate } from "../../components/listing/ListingTemplate";
 
 const EditWantListing: NextPage = () => {
   return (
-    <Template title="Edit Want Listing" center>
-      <ListingTemplate edit />
+    <Template title="Edit Want Listing">
+      <Box sx={{ mt: 4, mb: 4 }}>
+        <ListingTemplate edit />
+      </Box>
     </Template>
   );
 };

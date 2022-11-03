@@ -1,6 +1,7 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 import { ListingTemplate } from "../../components/listing/ListingTemplate";
+import { Box } from "@mui/material";
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Component
@@ -8,8 +9,10 @@ import { ListingTemplate } from "../../components/listing/ListingTemplate";
 
 const CreateHaveListing: NextPage = () => {
   return (
-    <Template title="Create Have Listing" center>
-      <ListingTemplate have />
+    <Template title="Create Have Listing">
+      <Box sx={{ mt: 4, mb: 4 }}>
+        <ListingTemplate have />
+      </Box>
     </Template >
   );
 };
