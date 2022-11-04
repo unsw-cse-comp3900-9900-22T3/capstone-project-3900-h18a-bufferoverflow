@@ -63,7 +63,7 @@ const OffersList: NextPage = () => {
                   <Typography>{offer.listingTwo.user.username}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Typography sx={{ ml: 3, mr: 3 }}>{offer.listingTwo.title}</Typography>
+                  <Typography sx={{ ml: 3, mr: 3 }}>{offer.listingOne.title}</Typography>
                   <SwapHorizIcon sx={{ fontSize: 35 }} />
                   <Typography sx={{ ml: 3, mr: 3 }}>{offer.listingTwo.title}</Typography>
                 </Box>
