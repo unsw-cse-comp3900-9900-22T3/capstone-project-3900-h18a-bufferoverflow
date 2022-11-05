@@ -100,7 +100,7 @@ const RecommendedFeed: NextPage = () => {
         <Typography
           sx={{ width: "80vw", fontWeight: "bold", mt: 3.5, mb: 2.5 }}
         >
-          {!isSearch ? "RecommendedFeed" : `${numberItems} Search Results`}
+          {!isSearch ? "Recommended Feed" : `${numberItems} Search Results`}
         </Typography>
         <Box
           sx={{
