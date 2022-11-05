@@ -213,10 +213,10 @@ const Chat: NextPage = () => {
   }, [messages]);
   
   const sendMessage = async () => {
-    if (text != "") {
+    if (text.trim() != "") {
       socket.emit("send_message", {
         timestamp: Date.now(),
-        text: text,
+        text: text.trim(),
         author: us.id,
         conversation: conversation,
       });
