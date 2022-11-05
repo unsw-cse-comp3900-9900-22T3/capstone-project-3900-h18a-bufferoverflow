@@ -3,7 +3,7 @@ import { createRef, useEffect, useState } from "react";
 import { ListingProps, StatusType } from "../../components/listing/types";
 import { CategorySearch } from "../../components/feed/CategorySearch";
 import { uploadFile } from "../../utils/utils";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery, useLazyQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import { Toast } from "../generic/Toast";
 import { useStore } from "../../store/store";
@@ -218,27 +218,34 @@ export const ListingTemplate = (props: {
   const router = useRouter()
   const { id } = router.query
 
-  const data = useQuery(GET_LISTING, { variables: { id } }).data?.getListing.listing
+  const [execQuery, {data}] = useLazyQuery(GET_LISTING);
   const [deleteListing, _1] = useMutation(DELETE_LISTING);
   const [updateListing, _2] = useMutation(UPDATE_LISTING);
   const [createListing, _3] = useMutation(CREATE_LISTING);
 
   useEffect(() => {
-    if (data) {
-      setTitle(data.title)
-      setImage(data.image)
-      setDescription(data.description)
-      setLocation(data.address)
-      setCategories(data.categories.map((item: any) => item.type))
-      setStatus(data.status)
-      setTrade(data.canTrade)
-      setCash(data.canPayCash)
-      setBank(data.canPayBank)
-      setWeight(data.weight)
-      setVolume(data.volume)
-      setMaterials(data.materials.map((item: any) => item.type))
-      setTradeCategories(data.wantToTradeFor.map((item: any) => item.type))
-      setPrice(data.price)
+    if (id) {
+      execQuery({ variables: { id } });
+    }
+    if (data && data?.getListing.listing) {
+      setTitle(data.getListing.listing.title);
+      setImage(data.getListing.listing.image);
+      setDescription(data.getListing.listing.description)
+      setLocation(data.getListing.listing.address)
+      setCategories(data.getListing.listing.categories.map((item: any) => item.type))
+      setStatus(data.getListing.listing.status)
+      setTrade(data.getListing.listing.canTrade)
+      setCash(data.getListing.listing.canPayCash)
+      setBank(data.getListing.listing.canPayBank)
+      setWeight(data.getListing.listing.weight);
+      setVolume(data.getListing.listing.volume);
+      setMaterials(
+        data.getListing.listing.materials.map((item: any) => item.type)
+      );
+      setTradeCategories(
+        data.getListing.listing.wantToTradeFor.map((item: any) => item.type)
+      );
+      setPrice(data.getListing.listing.price);
     }
   }, [data])
 
