@@ -13,6 +13,10 @@ assume fuel is ethanol
 
 6,681,360 litres of ethanol burnt = 6,681,360 * 1.5 = 10,021,040 kg of CO2
 
+assume 5000000 deliveries per year
+therefore co2 emission per delivery = 10,021,040 / 5000000 = 2.004 kg of CO2 per delivery
+
+
 methane emission factor = 0.021
 nitrogen oxide emission factor = 0.025
 

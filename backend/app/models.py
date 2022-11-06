@@ -1,5 +1,6 @@
 from app import db
 from app.config import material_names, category_names
+import datetime
 
 user_following = db.Table('user_following',
                           db.Column('follower_id', db.Integer, db.ForeignKey(
@@ -56,8 +57,12 @@ class User(db.Model):
         id_to_check = user_id if user_id is not None else user.id
         for u in followed_users:
             if u["id"] == id_to_check:
-                return True 
+                return True
         return False
+
+    def trade_count(self, year_traded):
+        '''Returns the number of trades this user has made in the year given'''
+        return len(TradedListing.query.filter_by(traded_by=self.id, year_traded=year_traded).all())
 
     def to_json(self):
         return {
@@ -372,7 +377,34 @@ class TradeOffer(db.Model):
             "listing_one" : Listing.query.get(self.listing_one_id).to_json(),
             "listing_two" : Listing.query.get(self.listing_two_id).to_json()
         }
-        
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+class TradedListing(db.Model):
+    __tablename__ = "traded_listings"
+
+    id = db.Column(db.Integer, primary_key=True)
+    traded_by = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    traded_to = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    weight = db.Column(db.Float, nullable=False)
+    volume = db.Column(db.Float, nullable=False)
+    year_traded = db.Column(db.Integer, nullable=False)
+
+
+    def __init__(self, traded_by, traded_to, weight, volume, materials, year_traded):
+        self.traded_by = traded_by
+        self.traded_to = traded_to
+        self.weight = weight
+        self.volume = volume
+        self.materials = materials
+        self.year_traded = year_traded
+
     def save(self):
         db.session.add(self)
         db.session.commit()

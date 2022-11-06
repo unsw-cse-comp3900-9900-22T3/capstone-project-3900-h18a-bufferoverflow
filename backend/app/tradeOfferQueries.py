@@ -1,8 +1,9 @@
 from operator import sub
 from app import db
-from app.models import TradeOffer, Listing, User
-
+from app.models import TradeOffer, Listing, User, TradedListing
 from ariadne import convert_kwargs_to_snake_case
+
+from datetime import datetime
 
 @convert_kwargs_to_snake_case
 def createTradeOffer_resolver(obj, info, **kwargs):
@@ -35,8 +36,34 @@ def updateTradeOffer_resolver(obj, info, id, is_accepted):
                     offer.delete()
                     break
             tradeOffer.delete()
+
+            # add listings to traded listings table
+            traded_listing_one = TradedListing(
+                listing_id=listing_one.id,
+                traded_by=listing_one.user_id,
+                traded_to=listing_two.user_id,
+                weight=listing_one.weight,
+                volume=listing_one.volume,
+                materials=listing_one.materials,
+                year_traded = datetime.now().year,
+            )
+
+            traded_listing_two = TradedListing(
+                listing_id=listing_two.id,
+                traded_by=listing_two.user_id,
+                traded_to=listing_one.user_id,
+                weight = listing_two.weight,
+                volume=listing_two.volume,
+                materials=listing_two.materials,
+                year_traded = datetime.now().year,
+            )
+
             listing_one.delete()
             listing_two.delete()
+
+            traded_listing_one.save()
+            traded_listing_two.save()
+
         else:
             tradeOffer.delete()
 
