@@ -10,7 +10,7 @@ const StatsDisplay = (props: {
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
       <Typography sx={{ fontSize: 40 }}>{props.value}</Typography>
-      <Typography sx={{ fontSize: 17 }}>{props.description}</Typography>
+      <Typography sx={{ fontSize: 13 }}>{props.description}</Typography>
     </Box>
   )
 }
@@ -48,10 +48,10 @@ const Dashboard: NextPage = () => {
         <Avatar src={avatar} sx={{ height: 300, width: 300 }} />
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 9 }}>
-        <Box sx={{ display: 'flex', width: 600, justifyContent: 'space-between' }}>
-          < StatsDisplay value={8} description='trades made' />
-          <StatsDisplay value={8} description='trades made' />
-          <StatsDisplay value={8} description='trades made' />
+        <Box sx={{ display: 'flex', width: 700, justifyContent: 'space-between' }}>
+          <StatsDisplay value={8} description='trades made in total' />
+          <StatsDisplay value={0.3} description='cubic metres landfill reduced' />
+          <StatsDisplay value={3.14} description='units estimated CO2 reduction' />
         </Box>
       </Box>
     </Template >

@@ -139,8 +139,8 @@ const UserProfile: NextPage = () => {
           <Button variant="outlined" sx={{ borderRadius: 30 }} onClick={async () => {
             // We need to post request with modified data later
             let data = { displayImg: image, username, bio, email: auth?.email || '' }
-            if (username.length === 0) {
-              setErrorToast("Username cannot be empty")
+            if (username.trim().length === 0) {
+              setErrorToast("Username cannot be empty or whitespace")
               return
             }
             try {

@@ -218,7 +218,7 @@ export const ListingTemplate = (props: {
   const router = useRouter()
   const { id } = router.query
 
-  const [execQuery, {data}] = useLazyQuery(GET_LISTING);
+  const [execQuery, { data }] = useLazyQuery(GET_LISTING);
   const [deleteListing, _1] = useMutation(DELETE_LISTING);
   const [updateListing, _2] = useMutation(UPDATE_LISTING);
   const [createListing, _3] = useMutation(CREATE_LISTING);
@@ -353,6 +353,10 @@ export const ListingTemplate = (props: {
                 variant="outlined"
                 sx={{ borderRadius: 30, mr: 0.5, width: '50%', height: 45 }}
                 onClick={() => {
+                  if (weight < 0 && volume < 0) {
+                    setErrorToast('Either weight or volume must be greater than 0')
+                    return
+                  }
                   if (!check()) {
                     setErrorToast('Required fields are empty')
                     return
@@ -386,6 +390,10 @@ export const ListingTemplate = (props: {
               variant="outlined"
               sx={{ borderRadius: 30, width: '100%', height: 45 }}
               onClick={() => {
+                if (weight < 0 && volume < 0) {
+                  setErrorToast('Either weight or volume must be greater than 0')
+                  return
+                }
                 if (!check()) {
                   setErrorToast('Required fields are empty')
                   return
