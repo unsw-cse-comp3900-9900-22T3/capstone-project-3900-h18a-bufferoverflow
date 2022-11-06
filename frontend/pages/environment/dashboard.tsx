@@ -1,11 +1,25 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
-import { Box, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
+import { Avatar, Box, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
 import { useState } from "react";
+
+const StatsDisplay = (props: {
+  value: number;
+  description: string;
+}) => {
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+      <Typography sx={{ fontSize: 40 }}>{props.value}</Typography>
+      <Typography sx={{ fontSize: 17 }}>{props.description}</Typography>
+    </Box>
+  )
+}
 
 const Dashboard: NextPage = () => {
 
   const username = "Sean"
+  const avatar = 'https://mui.com/static/images/avatar/3.jpg'
+
   const [year, setYear] = useState('2022');
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -30,7 +44,17 @@ const Dashboard: NextPage = () => {
         </Select>
         <Typography sx={{ fontSize: 35 }}>is</Typography>
       </Box>
-    </Template>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
+        <Avatar src={avatar} sx={{ height: 300, width: 300 }} />
+      </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 9 }}>
+        <Box sx={{ display: 'flex', width: 600, justifyContent: 'space-between' }}>
+          < StatsDisplay value={8} description='trades made' />
+          <StatsDisplay value={8} description='trades made' />
+          <StatsDisplay value={8} description='trades made' />
+        </Box>
+      </Box>
+    </Template >
   );
 };
 
