@@ -40,6 +40,7 @@ const GET_USER_QUERY = gql`
   }
 `
 
+// todo: move following functionality out of this file
 export const GET_FOLLOW = gql`
   query getFollowingQuery($email1: String!, $email2: String!) {
     getFollowing (userEmail: $email1, checkFollowerEmail: $email2){
