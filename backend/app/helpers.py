@@ -25,13 +25,13 @@ co2_emission_per_delivery_kg = 2.004
 
 def get_user_co2_emission_saving(user, year):
 
-    brick_and_mortar_delivery_co2_savings = 0
-    landfill_co2_savings = 0
-    manufacturing_co2_savings = 0
-    cubic_metres_landfill_savings = 0
+    brick_and_mortar_delivery_co2_savings = 0.0
+    landfill_co2_savings = 0.0
+    manufacturing_co2_savings = 0.0
+    cubic_metres_landfill_savings = 0.0
 
-    user_trade_count = user.trade_count(year)
-    user_traded_listings = TradedListing.query.filter_by(traded_by=user_id, year_traded=year).all()
+    user_traded_listings = TradedListing.query.filter_by(traded_by=user.id, year_traded=year).all()
+    user_trade_count = len(user_traded_listings)
 
     # calculate brick and motar delivery savings
     brick_and_mortar_delivery_co2_savings = user_trade_count * co2_emission_per_delivery_kg
@@ -40,11 +40,9 @@ def get_user_co2_emission_saving(user, year):
     for listing in user_traded_listings:
         weight = listing.weight
         cubic_metres_landfill_savings += listing.volume
-        landfill_co2_savings += weight * (methane_emission_factor + nitrogen_oxide_emission_factor)
-        materials = listing.materials
-        for material in materials:
-            manufacturing_co2_savings += 1.35 * weight * material_co2_emission_per_kg[material]
+        landfill_co2_savings += (weight * (methane_emission_factor + nitrogen_oxide_emission_factor))
+        for material in listing.materials:
+            manufacturing_co2_savings += (1.35 * weight) * material_co2_emission_per_kg[material]
 
     total_co2_savings = brick_and_mortar_delivery_co2_savings + landfill_co2_savings + manufacturing_co2_savings
-
-    return (cubic_metres_landfill_savings, total_co2_savings)
+    return user_trade_count, cubic_metres_landfill_savings, total_co2_savings

@@ -154,15 +154,15 @@ type ConversationsOverviewResult {
 }
 
 type UserStats {
-  numTrades: Int!
-  cubicMetreSaving: Float!
-  CO2Saving: Float!
+  numTrades: Int
+  cubicMeterSaving: Float
+  CO2Saving: Float
 }
 
 type UserStatsResult {
   success: Boolean!
   errors: [String]
-  stats: UserStats
+  userStats: UserStats
 }
 
 type Result {

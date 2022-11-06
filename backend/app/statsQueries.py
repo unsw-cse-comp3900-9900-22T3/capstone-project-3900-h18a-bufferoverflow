@@ -8,13 +8,13 @@ from app.helpers import get_user_co2_emission_saving
 def getUserStats_resolver(obj, info, user_email, year):
     try:
         user = User.query.filter_by(email=user_email).first()
-        cubicMetreSaving, CO2Saving = get_user_co2_emission_saving(user, year)
+        user_trade_count, cubicMetreSaving, CO2Saving = get_user_co2_emission_saving(user, year)
         payload = {
             'success' : True,
-            'userStats' : {
-                'numTrades' : user.trade_count(year),
-                'cubicMetreSaving' : cubicMetreSaving,
-                'CO2Saving' : CO2Saving
+            'user_stats' : {
+                'num_trades' : user_trade_count,
+                'cubic_meter_saving' : cubicMetreSaving,
+                'carbon_dioxide_saving' : CO2Saving
             }
         }
     except Exception as e:

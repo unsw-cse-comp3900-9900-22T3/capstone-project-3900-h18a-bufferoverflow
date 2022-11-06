@@ -60,10 +60,6 @@ class User(db.Model):
                 return True
         return False
 
-    def trade_count(self, year_traded):
-        '''Returns the number of trades this user has made in the year given'''
-        return len(TradedListing.query.filter_by(traded_by=self.id, year_traded=year_traded).all())
-
     def to_json(self):
         return {
             "id": self.id,
@@ -395,6 +391,8 @@ class TradedListing(db.Model):
     weight = db.Column(db.Float, nullable=False)
     volume = db.Column(db.Float, nullable=False)
     year_traded = db.Column(db.Integer, nullable=False)
+
+    materials =[]
 
 
     def __init__(self, traded_by, traded_to, weight, volume, materials, year_traded):
