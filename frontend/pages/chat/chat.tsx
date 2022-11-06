@@ -20,10 +20,11 @@ import CheckIcon from "@mui/icons-material/Check";
 import SendIcon from "@mui/icons-material/Send";
 import StarIcon from "@mui/icons-material/Star";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
-import { gql, useMutation , useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import styled from "@emotion/styled";
 import { User } from "../../utils/user";
 import { Message, MessageGraphqlProps } from "../../utils/chat";
+import { GET_FOLLOW, FOLLOW, UNFOLLOW } from "../profile/visitor-profile";
 
 // todo
 // Messages should be marked as read when they are…read.
@@ -72,11 +73,15 @@ const GET_USER_QUERY = gql`
 
 const UPDATE_CONVERSATION_MUTATION = gql`
   mutation ($conversation: String!, $lastReadFirst: ID, $lastReadSecond: ID) {
-    updateConversation(conversation: $conversation, lastReadFirst: $lastReadFirst, lastReadSecond: $lastReadSecond) {
+    updateConversation(
+      conversation: $conversation
+      lastReadFirst: $lastReadFirst
+      lastReadSecond: $lastReadSecond
+    ) {
       success
     }
   }
-`
+`;
 
 const followingIcon = (following: boolean) => {
   if (following) {
@@ -116,7 +121,7 @@ const Chat: NextPage = () => {
   const router = useRouter();
   const author = auth?.email;
   const other = router.query.other;
-  
+
   const [us, setUs] = useState<User>({});
   const us_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
     variables: { email: author || "" },
@@ -124,27 +129,34 @@ const Chat: NextPage = () => {
   useEffect(() => {
     if (us_response.data?.getUser.user) {
       const user = us_response.data?.getUser.user;
-      setUs({ username: user.username, displayImg: user.displayImg, id: user.id });
+      setUs({
+        username: user.username,
+        displayImg: user.displayImg,
+        id: user.id,
+      });
     }
   }, [us_response]);
-  
+
   const [them, setThem] = useState<User>({});
   const them_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
     variables: { email: other || "" },
   });
-  
+
   useEffect(() => {
     if (them_response.data?.getUser.user) {
       const user = them_response.data?.getUser.user;
-      setThem({ username: user.username, displayImg: user.displayImg, id: user.id });
+      setThem({
+        username: user.username,
+        displayImg: user.displayImg,
+        id: user.id,
+      });
     }
   }, [them_response]);
 
   // ids start from 1.
-  const [ seen, setSeen] = useState<number>(-1);
+  const [seen, setSeen] = useState<number>(-1);
   const [updateConversation, _] = useMutation(UPDATE_CONVERSATION_MUTATION);
 
-  
   const rendered = useRef(false);
   useEffect(() => {
     // since useEffect runs multiple times, but we only want to connect once
@@ -153,8 +165,8 @@ const Chat: NextPage = () => {
       socket.on("connect", () => {
         console.log(socket.id);
       });
-      
-      // not the best on slower connections, since your own message 
+
+      // not the best on slower connections, since your own message
       // will disappear whilst waiting for the server to reply
       // makes the logic easier though
       socket.on("to_client", (message: Message) => {
@@ -169,12 +181,16 @@ const Chat: NextPage = () => {
   useEffect(() => {
     if (seen != -1) {
       if (position) {
-        updateConversation({ variables: { conversation:conversation, lastReadFirst: seen } })
+        updateConversation({
+          variables: { conversation: conversation, lastReadFirst: seen },
+        });
       } else {
-        updateConversation({ variables: { conversation:conversation, lastReadSecond: seen } })
+        updateConversation({
+          variables: { conversation: conversation, lastReadSecond: seen },
+        });
       }
     }
-  }, [seen])
+  }, [seen]);
 
   const [conversation, setConversation] = useState("");
   const [position, setPosition] = useState<boolean>(false);
@@ -198,7 +214,7 @@ const Chat: NextPage = () => {
     { variables: { conversation: conversation } }
   );
   useEffect(() => {
-    const messagesData = data?.getMessages.messages
+    const messagesData = data?.getMessages.messages;
     if (messagesData) {
       setMessages(messagesData);
       if (messagesData.length > 0) {
@@ -206,12 +222,11 @@ const Chat: NextPage = () => {
       }
     }
   }, [data]);
-  
-  
+
   useEffect(() => {
     end.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-  
+
   const sendMessage = async () => {
     if (text != "") {
       socket.emit("send_message", {
@@ -223,10 +238,10 @@ const Chat: NextPage = () => {
       setText("");
     }
   };
-  
+
   const imageRef = useRef(null);
   const [image, setImage] = useState("");
-  
+
   useEffect(() => {
     socket.emit("send_message", {
       timestamp: Date.now(),
@@ -235,14 +250,25 @@ const Chat: NextPage = () => {
       conversation: conversation,
     });
   }, [image]);
-  
+
+  const [following, setFollowing] = useState<boolean>(false);
+  const response = useQuery(GET_FOLLOW, {
+    variables: { email1: auth?.email, email2: other },
+  }).data?.getFollowing.success;
+  const [unfollow, _1] = useMutation(UNFOLLOW);
+  const [follow, _2] = useMutation(FOLLOW);
+
+  useEffect(() => {
+    if (response) setFollowing(response);
+  }, [response]);
+
   return (
     <Template title="Chat">
       <ChatDiv>
         <div>
           {messages.map((message) => (
             <Box
-            sx={{
+              sx={{
                 display: "grid",
                 justifyItems: message.author.id == us.id ? "end" : "start",
                 padding: 0.5,
@@ -296,7 +322,21 @@ const Chat: NextPage = () => {
           }}
         >
           {/* todo: make this change based on following state */}
-          <Button>{followingIcon(true)}</Button>
+          <Button
+            onClick={async () => {
+              if (following)
+                await unfollow({
+                  variables: { email1: auth?.email, email2: other },
+                });
+              else
+                await follow({
+                  variables: { email1: auth?.email, email2: other },
+                });
+              setFollowing(!following);
+            }}
+          >
+            {followingIcon(following)}
+          </Button>
           <TextField
             placeholder="Type something..."
             disabled={!rendered.current}
