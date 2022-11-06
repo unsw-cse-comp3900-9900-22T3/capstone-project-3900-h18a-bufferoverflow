@@ -156,7 +156,7 @@ type ConversationsOverviewResult {
 type UserStats {
   numTrades: Int
   cubicMeterSaving: Float
-  CO2Saving: Float
+  carbonDioxideSaving: Float
 }
 
 type UserStatsResult {
