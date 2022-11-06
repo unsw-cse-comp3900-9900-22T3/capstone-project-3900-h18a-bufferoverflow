@@ -23,14 +23,13 @@ methane_emission_factor = 0.021 * 1000
 nitrogen_oxide_emission_factor = 0.025 * 1000
 co2_emission_per_delivery_kg = 2.004
 
-def get_user_co2_emission_saving(user_id, year):
+def get_user_co2_emission_saving(user, year):
 
     brick_and_mortar_delivery_co2_savings = 0
     landfill_co2_savings = 0
     manufacturing_co2_savings = 0
     cubic_metres_landfill_savings = 0
 
-    user = User.query.get(user_id)
     user_trade_count = user.trade_count(year)
     user_traded_listings = TradedListing.query.filter_by(traded_by=user_id, year_traded=year).all()
 

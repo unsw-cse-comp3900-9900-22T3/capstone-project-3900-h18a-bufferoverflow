@@ -11,6 +11,7 @@ from app.listingQueries import *
 from app.tradeOfferQueries import *
 from app.followQueries import *
 from app.chatQueries import *
+from app.statsQueries import *
 
 # Create queries
 query = ObjectType("Query")
@@ -32,6 +33,7 @@ query.set_field("getConversations", getConversations_resolver)
 query.set_field("getConversationsForOverview", getConversationsForOverview_resolver)
 query.set_field("getListingsInTradeOffer", getListingsInTradeOffer_resolver)
 query.set_field("getUsersInTradeOffer", getUsersInTradeOffer_resolver)
+query.set_field("getUserStats", getUserStats_resolver)
 
 # Create mutations
 mutation = ObjectType("Mutation")

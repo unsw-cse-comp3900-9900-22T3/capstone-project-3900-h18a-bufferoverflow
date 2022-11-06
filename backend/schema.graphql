@@ -153,6 +153,18 @@ type ConversationsOverviewResult {
   conversations: [ConversationOverview]
 }
 
+type UserStats {
+  numTrades: Int!
+  cubicMetreSaving: Float!
+  CO2Saving: Float!
+}
+
+type UserStatsResult {
+  success: Boolean!
+  errors: [String]
+  stats: UserStats
+}
+
 type Result {
   success: Boolean!
   errors: [String]
@@ -201,6 +213,10 @@ type Query {
     checkFollowerEmail: String!
   ): Result!
   getFollowingList(userEmail: String!): UsersResult!
+  getUserStats(
+    userEmail: String!
+    year: Int!
+  ): UserStatsResult!
 }
 
 type Mutation {
