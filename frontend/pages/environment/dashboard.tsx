@@ -1,6 +1,6 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
-import { Avatar, Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
+import { Avatar, Box, Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
 import { useState } from "react";
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
@@ -61,8 +61,40 @@ const Dashboard: NextPage = () => {
         <Typography sx={{ fontSize: 35 }}>Thanks for doing your bit for the</Typography>
         <Typography sx={{ fontSize: 35 }}>{community} community!</Typography>
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 9 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
         <ArrowDownwardIcon sx={{ height: 80, width: 80 }} />
+      </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
+        <Typography sx={{ fontSize: 35 }}>{community}'s environmental impact in </Typography>
+        <FormControl sx={{ ml: 3 }}>
+          <InputLabel id="demo-simple-select-label">Year</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={year}
+            label="Year"
+            onChange={handleChange}
+          >
+            {validYears.slice(0).reverse().map(year => (<MenuItem value={year}>{year}</MenuItem>))}
+          </Select>
+        </FormControl>
+
+      </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
+        {/* Replace with map view later*/}
+        <Box sx={{ border: 1, width: 600, height: 400 }} />
+      </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 9 }}>
+        <Box sx={{ display: 'flex', width: 700, justifyContent: 'space-between' }}>
+          <StatsDisplay value={42} description='trades made in total' />
+          <StatsDisplay value={58} description='cubic metres landfill reduced' />
+          <StatsDisplay value={68} description='units estimated CO2 reduction' />
+        </Box>
+      </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 9, mb: 9 }}>
+        <Button variant="outlined" sx={{ p: 1.5, borderRadius: 30 }} href='/environment/methodology'>
+          How do we estimate these stats?
+        </Button>
       </Box>
     </Template >
   );
