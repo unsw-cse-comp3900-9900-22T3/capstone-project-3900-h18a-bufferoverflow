@@ -1,18 +1,24 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 import { Avatar, Box, Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { motion } from "framer-motion"
+import ReactConfetti from "react-confetti";
 
 const StatsDisplay = (props: {
   value: number;
   description: string;
 }) => {
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-      <Typography sx={{ fontSize: 40 }}>{props.value}</Typography>
-      <Typography sx={{ fontSize: 13 }}>{props.description}</Typography>
-    </Box>
+    <motion.div
+      whileHover={{ scale: 1.2, rotate: [30, -30, 30, -30] }}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+        <Typography sx={{ fontSize: 40 }}>{props.value}</Typography>
+        <Typography sx={{ fontSize: 13 }}>{props.description}</Typography>
+      </Box>
+    </motion.div>
   )
 }
 
@@ -24,6 +30,13 @@ const Dashboard: NextPage = () => {
   const validYears = [2020, 2021, 2022]
 
   const [year, setYear] = useState(validYears.at(-1)?.toString());
+  const [height, setHeight] = useState(0)
+  const [width, setHWidth] = useState(0)
+
+  useEffect(() => {
+    if (!height) setHeight(window.innerHeight)
+    if (!width) setHWidth(window.innerWidth)
+  }, [])
 
   const handleChange = (event: SelectChangeEvent) => {
     setYear(event.target.value as string);
@@ -31,6 +44,7 @@ const Dashboard: NextPage = () => {
 
   return (
     <Template title="Dashboard">
+      <ReactConfetti width={width} height={height} />
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
         <Typography sx={{ fontSize: 35 }}>Congrats {username}, your impact made in</Typography>
         <FormControl sx={{ ml: 3, mr: 3 }}>
@@ -62,7 +76,12 @@ const Dashboard: NextPage = () => {
         <Typography sx={{ fontSize: 35 }}>{community} community!</Typography>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
-        <ArrowDownwardIcon sx={{ height: 80, width: 80 }} />
+        <motion.div
+          transition={{ y: { duration: 0.4, yoyo: Infinity, ease: "easeOut" } }}
+          animate={{ backgroundColor: 'white', y: ["30%", "-30%"] }}
+        >
+          <ArrowDownwardIcon sx={{ height: 80, width: 80 }} />
+        </motion.div>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
         <Typography sx={{ fontSize: 35 }}>{community}'s environmental impact in </Typography>
