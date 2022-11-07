@@ -131,7 +131,7 @@ const UserProfile: NextPage = () => {
         {/** Information Section */}
         <Box sx={{ display: 'flex', flexDirection: 'column', width: 300 }}>
           <Typography sx={{ mb: 2 }}>Public Information</Typography>
-          <TextField id='outlined-basic' label='Username' variant='outlined' sx={{ mb: 1 }} value={username} onChange={e => setUsername(e.target.value)} />
+          <TextField id='outlined-basic' label='Username' variant='outlined' sx={{ mb: 1 }} value={username} onChange={e => setUsername(e.target.value.trim())} />
           <TextField id='outlined-basic' label='Community' variant='outlined' sx={{ mb: 3 }} value={community} onChange={e => setCommunity(e.target.value)} />
           <Typography sx={{ mb: 2 }}>Private Information</Typography>
           <TextField placeholder='Bio' multiline rows={4} sx={{ mb: 1 }} value={bio} onChange={e => setBio(e.target.value)} />
