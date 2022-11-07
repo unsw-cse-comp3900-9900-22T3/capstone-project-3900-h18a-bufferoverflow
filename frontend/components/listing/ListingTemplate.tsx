@@ -353,7 +353,7 @@ export const ListingTemplate = (props: {
                 variant="outlined"
                 sx={{ borderRadius: 30, mr: 0.5, width: '50%', height: 45 }}
                 onClick={() => {
-                  if (weight < 0 && volume < 0) {
+                  if (weight <= 0 && volume <= 0) {
                     setErrorToast('Either weight or volume must be greater than 0')
                     return
                   }
@@ -390,7 +390,7 @@ export const ListingTemplate = (props: {
               variant="outlined"
               sx={{ borderRadius: 30, width: '100%', height: 45 }}
               onClick={() => {
-                if (weight < 0 && volume < 0) {
+                if (weight <= 0 && volume <= 0) {
                   setErrorToast('Either weight or volume must be greater than 0')
                   return
                 }
