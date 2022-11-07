@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import { Avatar, Box, Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import { motion } from "framer-motion"
+import { motion, useScroll, useTransform } from "framer-motion"
 import ReactConfetti from "react-confetti";
 
 const StatsDisplay = (props: {
@@ -32,6 +32,9 @@ const Dashboard: NextPage = () => {
   const [year, setYear] = useState(validYears.at(-1)?.toString());
   const [height, setHeight] = useState(0)
   const [width, setHWidth] = useState(0)
+
+  const { scrollYProgress } = useScroll()
+  const scale = useTransform(scrollYProgress, [0, 1], [0.2, 1.1]);
 
   useEffect(() => {
     if (!height) setHeight(window.innerHeight)
@@ -62,7 +65,17 @@ const Dashboard: NextPage = () => {
         <Typography sx={{ fontSize: 35 }}>is</Typography>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
-        <Avatar src={avatar} sx={{ height: 300, width: 300 }} />
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ rotate: 360, scale: 1 }}
+          transition={{
+            type: "spring",
+            stiffness: 260,
+            damping: 20
+          }}
+        >
+          <Avatar src={avatar} sx={{ height: 300, width: 300 }} />
+        </motion.div>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 9 }}>
         <Box sx={{ display: 'flex', width: 700, justifyContent: 'space-between' }}>
@@ -100,8 +113,17 @@ const Dashboard: NextPage = () => {
 
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
-        {/* Replace with map view later*/}
-        <Box sx={{ border: 1, width: 600, height: 400 }} />
+        <motion.div
+          style={{ scale }}
+        >
+          <motion.div
+            style={{
+              scaleY: scrollYProgress
+            }}
+          />
+          {/* Replace with map view later*/}
+          <Box sx={{ border: 1, width: 600, height: 400 }} />
+        </motion.div>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 9 }}>
         <Box sx={{ display: 'flex', width: 700, justifyContent: 'space-between' }}>
