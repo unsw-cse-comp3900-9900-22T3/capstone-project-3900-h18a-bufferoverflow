@@ -2,7 +2,7 @@ import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 import { Avatar, Box, Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { motion, useScroll, useTransform } from "framer-motion"
 import ReactConfetti from "react-confetti";
 
@@ -93,7 +93,7 @@ const Dashboard: NextPage = () => {
           transition={{ y: { duration: 0.4, yoyo: Infinity, ease: "easeOut" } }}
           animate={{ backgroundColor: 'white', y: ["30%", "-30%"] }}
         >
-          <ArrowDownwardIcon sx={{ height: 80, width: 80 }} />
+          <ArrowDropDownIcon sx={{ height: 80, width: 80 }} />
         </motion.div>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
