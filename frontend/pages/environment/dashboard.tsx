@@ -47,7 +47,7 @@ const Dashboard: NextPage = () => {
 
   return (
     <Template title="Dashboard">
-      <ReactConfetti width={width} height={height} />
+      <ReactConfetti width={width} height={height * 2} />
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
         <Typography sx={{ fontSize: 35 }}>Congrats {username}, your impact made in</Typography>
         <FormControl sx={{ ml: 3, mr: 3 }}>
