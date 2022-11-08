@@ -1,7 +1,7 @@
 from flask.cli import FlaskGroup
 
 from app import app, db
-from app.models import User, Category, Material, Listing, TradedListing
+from app.models import *
 from app.config import material_names, category_names
 
 
@@ -37,7 +37,6 @@ def create_db():
 
 @cli.command("add_data")
 def add_data():
-
     # create users
     user1 = User(email="user1@gmail.com", username="user1")
     user2 = User(email="user2@gmail.com", username="user2")

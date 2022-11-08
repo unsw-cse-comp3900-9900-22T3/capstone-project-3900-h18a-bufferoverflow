@@ -40,7 +40,8 @@ const GET_USER_QUERY = gql`
   }
 `
 
-const GET_FOLLOW = gql`
+// todo: move following functionality out of this file
+export const GET_FOLLOW = gql`
   query getFollowingQuery($email1: String!, $email2: String!) {
     getFollowing (userEmail: $email1, checkFollowerEmail: $email2){
       success
@@ -49,7 +50,7 @@ const GET_FOLLOW = gql`
   }
 `
 
-const UNFOLLOW = gql`
+export const UNFOLLOW = gql`
   mutation UnfollowQuery($email1: String!, $email2: String!) {
     unfollowUser(followerEmail: $email1, followedEmail: $email2) {
       success
@@ -58,7 +59,7 @@ const UNFOLLOW = gql`
   }
 `
 
-const FOLLOW = gql`
+export const FOLLOW = gql`
   mutation followQuery($email1: String!, $email2: String!) {
     followUser(followerEmail: $email1, followedEmail: $email2) {
       success

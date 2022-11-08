@@ -65,7 +65,7 @@ const ChatOverview: NextPage = () => {
           lastMessageTime: conversation.latest?.timestamp,
           unread: conversation.unread,
           id: conversation.id,
-          active: conversation.latest ? (Date.now() - conversation.latest?.timestamp) < (1000 * 60 * 60 * 24 * 7) : true, 
+          active: conversation.latest ? (Date.now() - conversation.latest?.timestamp) < (1000 * 60 * 60 * 24 * 7) : false, 
         });
       });
     }
