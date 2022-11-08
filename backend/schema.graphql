@@ -170,7 +170,10 @@ type Query {
   defaultFeed: ListingsResult!
   # TODO: implement machine-learning resolver
   userFeed(userEmail: String!): ListingsResult!
-  getListing(id: ID!): ListingResult!
+  getListing(
+    id: ID!
+    userEmail: String
+  ): ListingResult!
   getListingsByUser(userEmail: String!): ListingsResult!
   searchListings(
     categories: [String]
@@ -178,6 +181,7 @@ type Query {
     isSellListing: Boolean
     priceMin: Float 
     priceMax: Float
+    userEmail: String
   ): ListingsResult!
   getCategories: CategoryResult!
   getMessages(
