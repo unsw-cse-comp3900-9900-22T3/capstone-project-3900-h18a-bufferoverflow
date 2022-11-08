@@ -1,9 +1,9 @@
 from app.config import category_names
-from random import seed, random
+from random import seed, randint
 
-N_USERS = 5
+N_USERS = 30
 
-X_TRADES = 5
+X_TRADES = 40
 Y_SEARCHES = 20 
 Z_CLICKS = 10
 
@@ -17,30 +17,37 @@ def create_empty_categories_dict():
 
 
 # generate n trades 
-def gen_trades(n_trades, trades=create_empty_categories_dict):
+def gen_trades(n_trades, trades):
     if n_trades == 0:
-        return trades 
-
-    # TODO: implement trade generation algorithm
+        return trades
 
     # Start with an equal probaility of generating any category 
     # For each key in trades, increase probability of generating that category?
 
     # Calculate upper bound for rand int 
     upper_bound = len(category_names) - 1
-    for i in trades.items():
+    for i in trades.values():
         upper_bound += i
 
     # Gen rand int 
-    rand_int = random() * upper_bound
+    rand_int = randint(0, upper_bound)
 
     # Check what category we should generate 
+    curr_lower_bound = 0
+    for category_name in trades.keys(): 
+        # Generally, each category should have an even chance of coming up
+        # However, increase the chance for each time that category has been seen already...
+        if curr_lower_bound <= rand_int <= curr_lower_bound + trades[category_name]:
+            trades[category_name] += 1
+            break
 
-    gen_trades(n_trades - 1, trades)
+        curr_lower_bound += 1 + trades[category_name]
+
+    return gen_trades(n_trades - 1, trades)
 
 
 # generate n searches 
-def gen_searches(n_searches, searches=create_empty_categories_dict):
+def gen_searches(n_searches, searches):
     if n_searches == 0:
         return searches 
 
@@ -49,7 +56,7 @@ def gen_searches(n_searches, searches=create_empty_categories_dict):
     gen_searches(n_searches - 1, searches) 
 
 # generate n clicks 
-def gen_clicks(n_clicks, clicks=create_empty_categories_dict):
+def gen_clicks(n_clicks, clicks):
     if n_clicks == 0:
         return clicks 
 
@@ -60,9 +67,9 @@ def gen_clicks(n_clicks, clicks=create_empty_categories_dict):
 def gen_data():
     # generate data for N users 
     for i in range(0, N_USERS):
-        gen_trades(X_TRADES)
-        gen_searches(Y_SEARCHES)
-        gen_clicks(Z_CLICKS)
+        print(gen_trades(X_TRADES, create_empty_categories_dict()))
+        gen_searches(Y_SEARCHES, create_empty_categories_dict())
+        gen_clicks(Z_CLICKS, create_empty_categories_dict())
 
 if __name__ == "__main__": 
     seed()
