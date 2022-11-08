@@ -24,6 +24,9 @@ nitrogen_oxide_emission_factor = 0.025 * 1000
 co2_emission_per_delivery_kg = 2.004
 
 def get_user_co2_emission_saving(user, year):
+    '''
+    Returns the total number of trades, cubic metre saving and CO2 emission saving for a user in a given year
+    '''
 
     brick_and_mortar_delivery_co2_savings = 0.0
     landfill_co2_savings = 0.0

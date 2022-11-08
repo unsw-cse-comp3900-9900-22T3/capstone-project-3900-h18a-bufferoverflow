@@ -217,6 +217,10 @@ type Query {
     userEmail: String!
     year: Int!
   ): UserStatsResult!
+  getCommunityStats(
+    userEmail: String!
+    year: Int!
+  ): UserStatsResult!
 }
 
 type Mutation {
