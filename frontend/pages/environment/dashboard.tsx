@@ -5,6 +5,43 @@ import { useEffect, useState } from "react";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { motion, useScroll, useTransform } from "framer-motion"
 import ReactConfetti from "react-confetti";
+import { gql, useQuery } from "@apollo/client";
+import { useStore } from "../../store/store";
+
+/////////////////////////////////////////////////////////////////////////////
+// Queries
+/////////////////////////////////////////////////////////////////////////////
+
+export const GET_USER_STATS = gql`
+  query ($email: String!, $year: Int!) {
+    getUserStats(userEmail: $email, year: $year) {
+      errors
+      success
+      userStats {
+        numTrades
+        carbonDioxideSaving
+        cubicMeterSaving
+      }
+    }
+  }
+`;
+
+const GET_USER = gql`
+  query ($email: String!) {
+    getUser(email: $email) {
+      errors
+      success
+      user {
+        displayImg
+        username
+      }
+    }
+  }
+`;
+
+/////////////////////////////////////////////////////////////////////////////
+// Secondary Components
+/////////////////////////////////////////////////////////////////////////////
 
 const StatsDisplay = (props: {
   value: number;
@@ -22,9 +59,15 @@ const StatsDisplay = (props: {
   )
 }
 
+/////////////////////////////////////////////////////////////////////////////
+// Primary Component
+/////////////////////////////////////////////////////////////////////////////
+
 const Dashboard: NextPage = () => {
 
-  const username = "Sean"
+  const { auth } = useStore()
+  const user = useQuery(GET_USER, { variables: { email: auth?.email } }).data?.getUser?.user;
+
   const community = "UTS"
   const avatar = 'https://mui.com/static/images/avatar/3.jpg'
   const validYears = [2020, 2021, 2022]
@@ -49,7 +92,7 @@ const Dashboard: NextPage = () => {
     <Template title="Dashboard">
       <ReactConfetti width={width} height={height * 2} />
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
-        <Typography sx={{ fontSize: 35 }}>Congrats {username}, your impact made in</Typography>
+        <Typography sx={{ fontSize: 35 }}>Congrats {user?.username}, your impact made in</Typography>
         <FormControl sx={{ ml: 3, mr: 3 }}>
           <InputLabel id="demo-simple-select-label">Year</InputLabel>
           <Select
