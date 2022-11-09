@@ -26,6 +26,20 @@ const GET_USER_STATS = gql`
   }
 `;
 
+const GET_COMMUNITY_STATS = gql`
+  query ($email: String!, $year: Int!) {
+    getCommunityStats(userEmail: $email, year: $year) {
+      errors
+      success
+      userStats {
+        numTrades
+        carbonDioxideSaving
+        cubicMeterSaving
+      }
+    }
+  }
+`;
+
 const GET_USER = gql`
   query ($email: String!) {
     getUser(email: $email) {
@@ -67,18 +81,20 @@ const Dashboard: NextPage = () => {
 
   const community = "UTS"
   const validYears = [2020, 2021, 2022]
-  
+
   const [year, setYear] = useState(validYears.at(-1)?.toString());
+  const [communityYear, setCommunityYear] = useState(validYears.at(-1)?.toString());
   const [height, setHeight] = useState(0)
   const [width, setHWidth] = useState(0)
-  
+
   const { scrollYProgress } = useScroll()
   const scale = useTransform(scrollYProgress, [0, 1], [0.2, 1.1]);
 
   const { auth } = useStore()
   const user = useQuery(GET_USER, { variables: { email: auth?.email } }).data?.getUser?.user;
   const userStats = useQuery(GET_USER_STATS, { variables: { email: auth?.email, year: parseInt(year || '2022') } }).data?.getUserStats?.userStats;
-  
+  const communityStats = useQuery(GET_COMMUNITY_STATS, { variables: { email: auth?.email, year: parseInt(communityYear || '2022') } }).data?.getCommunityStats?.userStats;
+
   useEffect(() => {
     if (!height) setHeight(window.innerHeight)
     if (!width) setHWidth(window.innerWidth)
@@ -86,6 +102,10 @@ const Dashboard: NextPage = () => {
 
   const handleChange = (event: SelectChangeEvent) => {
     setYear(event.target.value as string);
+  };
+  
+  const handleCommunityChange = (event: SelectChangeEvent) => {
+    setCommunityYear(event.target.value as string);
   };
 
   return (
@@ -146,9 +166,9 @@ const Dashboard: NextPage = () => {
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value={year}
+            value={communityYear}
             label="Year"
-            onChange={handleChange}
+            onChange={handleCommunityChange}
           >
             {validYears.slice(0).reverse().map(year => (<MenuItem value={year}>{year}</MenuItem>))}
           </Select>
@@ -170,9 +190,9 @@ const Dashboard: NextPage = () => {
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 9 }}>
         <Box sx={{ display: 'flex', width: 700, justifyContent: 'space-between' }}>
-          <StatsDisplay value={42} description='trades made in total' />
-          <StatsDisplay value={58} description='cubic metres landfill reduced' />
-          <StatsDisplay value={68} description='units estimated CO2 reduction' />
+          <StatsDisplay value={communityStats?.numTrades} description='trades made in total' />
+          <StatsDisplay value={communityStats?.cubicMeterSaving} description='cubic metres landfill reduced' />
+          <StatsDisplay value={communityStats?.carbonDioxideSaving} description='units estimated CO2 reduction' />
         </Box>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 9, mb: 9 }}>
