@@ -12,7 +12,7 @@ import { useStore } from "../../store/store";
 // Queries
 /////////////////////////////////////////////////////////////////////////////
 
-export const GET_USER_STATS = gql`
+const GET_USER_STATS = gql`
   query ($email: String!, $year: Int!) {
     getUserStats(userEmail: $email, year: $year) {
       errors
@@ -65,20 +65,20 @@ const StatsDisplay = (props: {
 
 const Dashboard: NextPage = () => {
 
-  const { auth } = useStore()
-  const user = useQuery(GET_USER, { variables: { email: auth?.email } }).data?.getUser?.user;
-
   const community = "UTS"
-  const avatar = 'https://mui.com/static/images/avatar/3.jpg'
   const validYears = [2020, 2021, 2022]
-
+  
   const [year, setYear] = useState(validYears.at(-1)?.toString());
   const [height, setHeight] = useState(0)
   const [width, setHWidth] = useState(0)
-
+  
   const { scrollYProgress } = useScroll()
   const scale = useTransform(scrollYProgress, [0, 1], [0.2, 1.1]);
 
+  const { auth } = useStore()
+  const user = useQuery(GET_USER, { variables: { email: auth?.email } }).data?.getUser?.user;
+  const userStats = useQuery(GET_USER_STATS, { variables: { email: auth?.email, year: parseInt(year || '2022') } }).data?.getUserStats?.userStats;
+  
   useEffect(() => {
     if (!height) setHeight(window.innerHeight)
     if (!width) setHWidth(window.innerWidth)
@@ -117,14 +117,14 @@ const Dashboard: NextPage = () => {
             damping: 20
           }}
         >
-          <Avatar src={avatar} sx={{ height: 300, width: 300 }} />
+          <Avatar src={user?.displayImg} sx={{ height: 300, width: 300 }} />
         </motion.div>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 9 }}>
         <Box sx={{ display: 'flex', width: 700, justifyContent: 'space-between' }}>
-          <StatsDisplay value={8} description='trades made in total' />
-          <StatsDisplay value={0.3} description='cubic metres landfill reduced' />
-          <StatsDisplay value={3.14} description='units estimated CO2 reduction' />
+          <StatsDisplay value={userStats?.numTrades} description='trades made in total' />
+          <StatsDisplay value={userStats?.cubicMeterSaving} description='cubic metres landfill reduced' />
+          <StatsDisplay value={userStats?.carbonDioxideSaving} description='units estimated CO2 reduction' />
         </Box>
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8, flexDirection: 'column', alignItems: 'center' }}>
