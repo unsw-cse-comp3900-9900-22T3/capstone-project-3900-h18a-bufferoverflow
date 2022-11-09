@@ -1,7 +1,7 @@
 from flask.cli import FlaskGroup
 
 from app import app, db
-from app.models import User, Category, Material, Listing, Conversation, Message
+from app.models import *
 from app.config import material_names, category_names
 
 
@@ -168,6 +168,19 @@ def add_data():
     listing4.save()
     listing5.save()
     listing6.save()
+
+    # create traded listings
+    traded_listing1 = TradedListing(
+        traded_by=1,
+        traded_to=2,
+        weight=10,
+        volume=200,
+        materials=['wood', 'metal'],
+        year_traded=2022
+    )
+
+    traded_listing1.save()
+
 
 @cli.command("seed_db")
 def seed_db():
