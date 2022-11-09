@@ -6,7 +6,7 @@ from manage import category_names, material_names
 from ariadne import convert_kwargs_to_snake_case
 
 @convert_kwargs_to_snake_case
-def getListing_resolver(obj, info, id):
+def getListing_resolver(obj, info, id, user_email=None):
     try:
         listing = Listing.query.get(id)
         payload = {
@@ -80,7 +80,8 @@ def searchListings_resolver(obi, info,
     distance=None,
     is_sell_listing=None,
     price_min=None,
-    price_max=None
+    price_max=None,
+    user_email=None
 ):
     try:
         result = [listing.to_json() for listing in Listing.query.all()]
