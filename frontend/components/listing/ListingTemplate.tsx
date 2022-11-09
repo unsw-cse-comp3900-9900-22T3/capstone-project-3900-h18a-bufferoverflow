@@ -56,8 +56,8 @@ const CREATE_LISTING = gql`
 `
 
 const GET_LISTING = gql`
-  query ($id: ID!) {
-    getListing(id: $id) {
+  query ($id: ID!, $userEmail: String) {
+    getListing(id: $id, userEmail: $userEmail) {
       listing {
         id
         title
@@ -225,7 +225,7 @@ export const ListingTemplate = (props: {
 
   useEffect(() => {
     if (id) {
-      execQuery({ variables: { id } });
+      execQuery({ variables: { id : id, userEmail: auth?.email } });
     }
     if (data && data?.getListing.listing) {
       setTitle(data.getListing.listing.title);
