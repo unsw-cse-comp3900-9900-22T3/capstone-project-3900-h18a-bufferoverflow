@@ -102,7 +102,7 @@ const DetailedWantListing: NextPage = () => {
   }, [data]);
 
   const redirect = () => {
-    router.push("/login");
+    router.push("/auth/login");
   };
 
   // Create description field given boolean parameters

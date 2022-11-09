@@ -156,7 +156,7 @@ const DetailedHaveListing: NextPage = () => {
   else shippingOptions = 'not applicable'
 
   const redirect = () => {
-    router.push("/login");
+    router.push("/auth/login");
   };
 
   return (
