@@ -155,7 +155,9 @@ const DetailedHaveListing: NextPage = () => {
   else if (!cash && bank) shippingOptions = 'bank transfer on pickup or delivery'
   else shippingOptions = 'not applicable'
 
-  const redirect = () => {router.push("/login")}
+  const redirect = () => {
+    router.push("/login");
+  };
 
   return (
     <Template title="Have Listing" center>
