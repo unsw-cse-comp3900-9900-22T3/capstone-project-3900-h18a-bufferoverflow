@@ -194,6 +194,10 @@ const DetailedHaveListing: NextPage = () => {
   else if (!cash && bank) shippingOptions = 'bank transfer on pickup or delivery'
   else shippingOptions = 'not applicable'
 
+  const redirect = () => {
+    router.push("/auth/login");
+  };
+
   return (
     <Template title="Have Listing" center>
       <Box
@@ -295,7 +299,15 @@ const DetailedHaveListing: NextPage = () => {
           <Button
             variant="outlined"
             sx={{ borderRadius: 30, mt: 4, height: 45 }}
-            href={`/trade/propose?email=${itemPosessorEmail}&id=${id}`}
+            onClick={
+              !auth
+                ? redirect
+                : () => {
+                    router.push(
+                      `/trade/propose?email=${itemPosessorEmail}&id=${id}`
+                    );
+                  }
+            }
           >
             Propose Trade
           </Button>
@@ -303,14 +315,28 @@ const DetailedHaveListing: NextPage = () => {
             <Button
               variant="outlined"
               sx={{ borderRadius: 30, mr: 0.5, width: "50%", height: 45 }}
-              href={`/chat/chat?other=${itemPosessorEmail}`}
+              onClick={
+                !auth
+                  ? redirect
+                  : () => {
+                      router.push(`/chat/chat?other=${itemPosessorEmail}`);
+                    }
+              }
             >
               Message User
             </Button>
             <Button
               variant="outlined"
               sx={{ borderRadius: 30, ml: 0.5, width: "50%", height: 45 }}
-              href={`/profile/visitor-profile?email=${itemPosessorEmail}`}
+              onClick={
+                !auth
+                  ? redirect
+                  : () => {
+                      router.push(
+                        `/profile/visitor-profile?email=${itemPosessorEmail}`
+                      );
+                    }
+              }
             >
               View Trader Profile
             </Button>

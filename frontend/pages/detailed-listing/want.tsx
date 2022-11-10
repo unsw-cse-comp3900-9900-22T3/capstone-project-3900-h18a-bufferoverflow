@@ -111,6 +111,10 @@ const DetailedWantListing: NextPage = () => {
     }
   }, [data]);
 
+  const redirect = () => {
+    router.push("/auth/login");
+  };
+
   // Create description field given boolean parameters
   let rewardOptions = "";
   if ((cash || bank) && !trade) rewardOptions = `reward of $${price}`;
@@ -231,7 +235,15 @@ const DetailedWantListing: NextPage = () => {
           <Button
             variant="outlined"
             sx={{ borderRadius: 30, mt: 4, height: 45 }}
-            href={`/trade/propose?email=${itemPosessorEmail}&id=${id}`}
+            onClick={
+              !auth
+                ? redirect
+                : () => {
+                    router.push(
+                      `/trade/propose?email=${itemPosessorEmail}&id=${id}`
+                    );
+                  }
+            }
           >
             Propose Trade
           </Button>
@@ -239,14 +251,28 @@ const DetailedWantListing: NextPage = () => {
             <Button
               variant="outlined"
               sx={{ borderRadius: 30, mr: 0.5, width: "50%", height: 45 }}
-              href={`/chat/chat?other=${itemPosessorEmail}`}
+              onClick={
+                !auth
+                  ? redirect
+                  : () => {
+                      router.push(`/chat/chat?other=${itemPosessorEmail}`);
+                    }
+              }
             >
               Message User
             </Button>
             <Button
               variant="outlined"
               sx={{ borderRadius: 30, ml: 0.5, width: "50%", height: 45 }}
-              href={`/profile/visitor-profile?email=${itemPosessorEmail}`}
+              onClick={
+                !auth
+                  ? redirect
+                  : () => {
+                      router.push(
+                        `/profile/visitor-profile?email=${itemPosessorEmail}`
+                      );
+                    }
+              }
             >
               View Trader Profile
             </Button>
