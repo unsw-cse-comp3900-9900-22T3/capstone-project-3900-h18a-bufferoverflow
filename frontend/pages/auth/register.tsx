@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   DocumentNode,
   gql,
@@ -19,6 +20,20 @@ import { Toast } from "../../components/generic/Toast";
 import { useStoreUpdate } from "../../store/store";
 import { convertUserToAuthProps } from "../../store/utils";
 import loginTextFieldStyles from "../../styles/style";
+=======
+import { DocumentNode, gql, useLazyQuery, useMutation, useQuery } from "@apollo/client"
+import { Box, Button, Divider, TextField } from "@mui/material"
+import { createUserWithEmailAndPassword, getAuth, updateProfile } from "firebase/auth"
+import { useRouter } from "next/router"
+import { useState } from "react"
+import { AuthCard } from "../../components/auth/AuthCard"
+import { Template } from "../../components/generic/Template"
+import { Toast } from "../../components/generic/Toast"
+import { useStoreUpdate } from "../../store/store"
+import { convertUserToAuthProps } from "../../store/utils"
+import loginTextFieldStyles from "../../styles/style"
+import { parseFirebaseError } from "../../utils/utils"
+>>>>>>> master
 
 /////////////////////////////////////////////////////////////////////////////
 // Query
@@ -107,8 +122,30 @@ export const Register = () => {
         <Box sx={{}}>
           <Button
             variant="outlined"
-            sx={{ width: 100, mr: 1 }}
-            href="/auth/login"
+            sx={{ width: 280, mb: 2, mt: 2 }}
+            onClick={async () => {
+              if (password.length < 6) {
+                setErrorToast('Password must be greater than 6 characters')
+                return
+              }
+              let { data } = await register({ variables: { email, username } })
+              if (!data.createUser.success) {
+                const error = data.createUser.errors
+                if (error.toString().includes('Key (email)')) setErrorToast('Email is already taken')
+                else if (error.toString().includes('Key (username)')) setErrorToast('Username is already taken')
+                else setErrorToast(`Server error: ${error}`)
+                return
+              }
+              await createUserWithEmailAndPassword(getAuth(), email, password)
+                .then(async (res) => {
+                  await updateProfile(res.user, { displayName: username })
+                  setStore({ auth: await convertUserToAuthProps(res.user) })
+                  router.push('/')
+                })
+                .catch(err => {
+                  setErrorToast('Error: ' + parseFirebaseError(err.code))
+                })
+            }}
           >
             Login
           </Button>

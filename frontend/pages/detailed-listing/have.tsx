@@ -15,8 +15,46 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import PersonIcon from "@mui/icons-material/Person";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { useRouter } from "next/router";
-import { useState, createRef, useRef } from "react";
+import { useState, createRef, useRef, useEffect } from "react";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { gql, useQuery } from "@apollo/client";
+import { useStore } from "../../store/store";
+
+/////////////////////////////////////////////////////////////////////////////
+// Queries
+/////////////////////////////////////////////////////////////////////////////
+
+export const GET_DETAILED_LISTING = gql`
+  query ($id: ID!) {
+    getListing(id: $id) {
+      listing {
+        id
+        user {
+          username
+          displayImg
+          email
+        }
+        title
+        categories {
+          type
+        }
+        wantToTradeFor {
+          type
+        }
+        image
+        description
+        address
+        price
+        canTrade
+        canPayCash
+        canPayBank
+      }
+      errors
+      success
+    }
+  }
+`
+
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
 /////////////////////////////////////////////////////////////////////////////
@@ -30,6 +68,7 @@ interface HaveListingProps {
   categories: string[];
   description: string;
   trader: string;
+  email: string;
   cash: boolean;
   trade: boolean;
   bank: boolean;
@@ -70,28 +109,43 @@ const DescriptionBox = (props: { icon: any; description: string }) => {
 
 const DetailedHaveListing: NextPage = () => {
   // Get item name from query params
-  const router = useRouter();
-  const { title } = router.query;
-  
-  const Map = dynamic(() => import("../../components/generic/Map"), {
-    ssr: false
-  });
-  const mapRef = useRef();
+  const router = useRouter()
+  const { id } = router.query;
+  const { auth } = useStore();
+  const data = useQuery(GET_DETAILED_LISTING, { variables: { id } }).data?.getListing
+    .listing;
 
-  function scrollMap() {
-    mapRef.current.scrollIntoView({ behavior: "smooth" });
-  }
-  
-  const image =
-    "https://images.unsplash.com/photo-1499720565725-bd574541a3ee?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80";
-  const categories = ["asdfsadf", "asdfdf", "asdfsa", "asdfsa", "asdfsa"];
-  const trader = "Sean";
-  const cash = true;
-  const trade = true;
-  const bank = true;
-  const price = 453;
-  const location =
-    "The University of New South Wales High St Kensington NSW 2033";
+  const [title, setTitle] = useState<string>("");
+  const [image, setImage] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [location, setLocation] = useState<string>("");
+  const [categories, setCategories] = useState<string[]>([]);
+  const [trade, setTrade] = useState<boolean>(false);
+  const [cash, setCash] = useState<boolean>(false);
+  const [bank, setBank] = useState<boolean>(false);
+  const [tradeCategories, setTradeCategories] = useState<string[]>([]);
+  const [price, setPrice] = useState<number>(0);
+  const [itemPosessor, setItemPossesor] = useState("");
+  const [itemPosessorImageURL, setItemPossesorImageURL] = useState("");
+  const [itemPosessorEmail, setItemPossesorEmail] = useState("");
+
+  useEffect(() => {
+    if (data) {
+      setTitle(data.title);
+      setImage(data.image);
+      setDescription(data.description);
+      setLocation(data.address);
+      setCategories(data.categories.map((item: any) => item.type));
+      setTrade(data.canTrade);
+      setCash(data.canPayCash);
+      setBank(data.canPayBank);
+      setTradeCategories(data.wantToTradeFor.map((item: any) => item.type));
+      setPrice(data.price);
+      setItemPossesor(data.user.username);
+      setItemPossesorImageURL(data.user.displayImg);
+      setItemPossesorEmail(data.user.email);
+    }
+  }, [data]);
 
   // Create description field given boolean parameters
   let purchaseOptions = "";
@@ -102,141 +156,161 @@ const DetailedHaveListing: NextPage = () => {
     purchaseOptions = `acquire by mutual trade`;
   else purchaseOptions = `not available`;
 
-  let itemPosessor = `${trader} has this item`;
+  let shippingOptions = ''
+  if (cash && bank) shippingOptions = 'cash or bank transfer on pickup or delivery'
+  else if (cash && !bank) shippingOptions = 'cash on pickup or delivery'
+  else if (!cash && bank) shippingOptions = 'bank transfer on pickup or delivery'
+  else shippingOptions = 'not applicable'
 
-  let shippingOptions = "";
-  if (cash && bank)
-    shippingOptions = "cash or bank transfer on pickup or delivery";
-  else if (cash && !bank) shippingOptions = "cash on pickup or delivery";
-  else if (!cash && bank)
-    shippingOptions = "bank transfer on pickup or delivery";
-  else shippingOptions = "not applicable";
+  const redirect = () => {
+    router.push("/auth/login");
+  };
 
   return (
-    <Template title="Have Listing" center scrollable>
-      <Stack spacing={4}>
-        <Box>
-
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 40,
-          }}
-        >
-          {/** Item Image Section */}
-          <Box sx={{ display: "flex", flexDirection: "column" }}>
-            <Card
-              variant="outlined"
-              sx={{ height: 280, width: 400, borderRadius: 4 }}
-            >
-              {image ? (
-                <img
-                  src={image}
-                  alt="profile"
-                  style={{ height: 280, width: 400 }}
-                />
-              ) : (
-                <></>
-              )}
-            </Card>
-            <Typography sx={{ p: 3, pl: 4, fontSize: 20, fontWeight: "bold" }}>
-              {title}
-            </Typography>
-            <DescriptionBox
-              icon={<AttachMoneyIcon />}
-              description={purchaseOptions}
-            />
-            <DescriptionBox icon={<PersonIcon />} description={itemPosessor} />
-            <DescriptionBox
-              icon={<LocalShippingIcon />}
-              description={shippingOptions}
-            />
-          </Box>
-
-          {/** Information Section */}
-          <Box sx={{ display: "flex", flexDirection: "column", width: 500 }}>
-            <LabelBox title="Location">
-              <Stack direction="row">
-                <Tooltip title="Show on Map">
-                  <IconButton onClick={scrollMap}>
-                    <LocationOnIcon />
-                  </IconButton>
-                </Tooltip>
-                <Typography fontSize={16} variant="body2">
-                  {location}
-                </Typography>
-              </Stack>
-            </LabelBox>
-            <LabelBox title="Categories">
-              <Box
-                sx={{ display: "flex", flexWrap: "wrap", flexDirection: "row" }}
-              >
-                {categories.map((category) => (
-                  <Box
-                    sx={{
-                      border: 1,
-                      width: 140,
-                      p: 1,
-                      borderRadius: 10,
-                      m: 0.5,
-                      textAlign: "center",
-                      color: "#616161",
-                    }}
-                  >
-                    {category}
-                  </Box>
-                ))}
-              </Box>
-            </LabelBox>
-            <LabelBox title="Description">
-              <Typography fontSize={16} variant="body2">
-                Location askdjfh lkasjdfh lksajdhf lkajsdh flkjsdh fljkash
-                fljkahsd lfjksahd lfjkhsa kfjh lsadkjf hl lsjdf hklsaj hflkjsadh
-                flkajsh f
-              </Typography>
-            </LabelBox>
-            <Button
-              variant="outlined"
-              sx={{ borderRadius: 30, mt: 4, height: 45 }}
-              href={`/trade/propose?user=${trader}`}
-            >
-              Propose Trade
-            </Button>
-            <Box sx={{ display: "flex", mt: 1.5, width: "100%" }}>
-              <Button
-                variant="outlined"
-                sx={{ borderRadius: 30, mr: 0.5, width: "50%", height: 45 }}
-                href={`/chat/chat?user=${trader}`}
-              >
-                Message User
-              </Button>
-              <Button
-                variant="outlined"
-                sx={{ borderRadius: 30, ml: 0.5, width: "50%", height: 45 }}
-                href={`/profile/visitor-profile?user=${trader}`}
-              >
-                View Trader Profile
-              </Button>
-            </Box>
-          </Box>
-        </Box>
-        <Box sx={{
+    <Template title="Have Listing" center>
+      <Box
+        sx={{
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
           alignItems: "center",
-        }}>
-          {/* wrap in a div cos forwarding refs to custom components seems cursed */}
-          <div ref={mapRef}>
-            <Map width={1000} height={600} position={[-33.8688, 151.2093]}/>
-          </div>
+          gap: 40,
+        }}
+      >
+        {/** Item Image Section */}
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <Card
+            variant="outlined"
+            sx={{ height: 280, width: 400, borderRadius: 4 }}
+          >
+            {image ? (
+              <img
+                src={image}
+                alt="profile"
+                style={{ height: 280, width: 400 }}
+              />
+            ) : (
+              <></>
+            )}
+          </Card>
+          <Typography sx={{ p: 3, pl: 4, fontSize: 20, fontWeight: "bold" }}>
+            {title}
+          </Typography>
+          <DescriptionBox
+            icon={<Avatar src={itemPosessorImageURL}></Avatar>}
+            description={`${itemPosessor} has this item`}
+          />
+          <DescriptionBox
+            icon={<AttachMoneyIcon />}
+            description={purchaseOptions}
+          />
+          <DescriptionBox
+            icon={<LocalShippingIcon />}
+            description={shippingOptions}
+          />
         </Box>
-        <Box></Box>
-      </Stack>
+
+        {/** Information Section */}
+        <Box sx={{ display: "flex", flexDirection: "column", width: 500 }}>
+          <LabelBox title="Location">
+            <Typography fontSize={16} variant="body2">
+              {location}
+            </Typography>
+          </LabelBox>
+          <LabelBox title="Categories">
+            <Box
+              sx={{ display: "flex", flexWrap: "wrap", flexDirection: "row" }}
+            >
+              {categories.map((category) => (
+                <Box
+                  sx={{
+                    border: 1,
+                    width: 140,
+                    p: 1,
+                    borderRadius: 10,
+                    m: 0.5,
+                    textAlign: "center",
+                    color: "#616161",
+                  }}
+                >
+                  {category}
+                </Box>
+              ))}
+            </Box>
+          </LabelBox>
+          <LabelBox title="Want to Trade For Categories">
+            <Box
+              sx={{ display: "flex", flexWrap: "wrap", flexDirection: "row" }}
+            >
+              {tradeCategories.map((category) => (
+                <Box
+                  sx={{
+                    border: 1,
+                    width: 140,
+                    p: 1,
+                    borderRadius: 10,
+                    m: 0.5,
+                    textAlign: "center",
+                    color: "#616161",
+                  }}
+                >
+                  {category}
+                </Box>
+              ))}
+            </Box>
+          </LabelBox>
+          <LabelBox title="Description">
+            <Typography fontSize={16} variant="body2">
+              {description}
+            </Typography>
+          </LabelBox>
+          <Button
+            variant="outlined"
+            sx={{ borderRadius: 30, mt: 4, height: 45 }}
+            onClick={
+              !auth
+                ? redirect
+                : () => {
+                    router.push(
+                      `/trade/propose?email=${itemPosessorEmail}&id=${id}`
+                    );
+                  }
+            }
+          >
+            Propose Trade
+          </Button>
+          <Box sx={{ display: "flex", mt: 1.5, width: "100%" }}>
+            <Button
+              variant="outlined"
+              sx={{ borderRadius: 30, mr: 0.5, width: "50%", height: 45 }}
+              onClick={
+                !auth
+                  ? redirect
+                  : () => {
+                      router.push(`/chat/chat?other=${itemPosessorEmail}`);
+                    }
+              }
+            >
+              Message User
+            </Button>
+            <Button
+              variant="outlined"
+              sx={{ borderRadius: 30, ml: 0.5, width: "50%", height: 45 }}
+              onClick={
+                !auth
+                  ? redirect
+                  : () => {
+                      router.push(
+                        `/profile/visitor-profile?email=${itemPosessorEmail}`
+                      );
+                    }
+              }
+            >
+              View Trader Profile
+            </Button>
+          </Box>
+        </Box>
+      </Box>
     </Template>
   );
 };

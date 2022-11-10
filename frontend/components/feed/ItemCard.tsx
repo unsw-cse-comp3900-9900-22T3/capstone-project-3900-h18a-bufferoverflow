@@ -6,6 +6,24 @@ import CardActions from '@mui/material/CardActions'
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
 import Link from 'next/link'
+import { GraphqlListing } from '../listing/types'
+
+export const itemDataToItemCard = (item: GraphqlListing) => {
+    return (
+      <ItemCard
+        title={item.title}
+        price={item.price}
+        image={item.image}
+        avatar={item.user.displayImg}
+        location={item.address}
+        href={
+          item.isSellListing
+            ? `/detailed-listing/have?id=${item.id}`
+            : `/detailed-listing/want?id=${item.id}`
+        }
+      />
+    );
+  };
 
 export interface ItemCardProps {
   title: string;
@@ -22,11 +40,12 @@ export const ItemCard = (props: {
   location: string;
   image: string;
   avatar: string;
-  href: string;
+  href?: string;
+  onClick?: () => void;
 }) => {
   return (
-    <Link href={props.href}>
-      <Card sx={{ maxWidth: 345, margin: '8px' }}>
+    <Link href={props.href || ''}>
+      <Card sx={{ width: 250, margin: '8px' }} onClick={props.onClick}>
         <CardMedia component='img' height='194' image={props.image} alt={props.title} />
         <CardHeader title={props.title} />
         <CardContent>

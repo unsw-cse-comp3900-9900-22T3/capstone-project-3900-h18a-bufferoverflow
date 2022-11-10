@@ -6,10 +6,12 @@ import { Avatar, Button, Card, Typography } from '@mui/material'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useRouter } from 'next/router'
 import { createRef, useEffect, useState } from 'react'
-import { uploadFile } from '../../utils/imageUtils'
+import { uploadFile } from '../../utils/utils'
 import { gql, useMutation, useQuery } from '@apollo/client'
-import { useStore } from '../../store/store'
+import { useStore, useStoreUpdate } from '../../store/store'
 import { Toast } from '../../components/generic/Toast'
+import { getAuth, updateProfile } from 'firebase/auth'
+import { convertUserToAuthProps } from '../../store/utils'
 
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
@@ -20,7 +22,7 @@ import { Toast } from '../../components/generic/Toast'
 interface ProfileGraphqlProps {
   getUser: {
     success: boolean | null;
-    erorrs: string[] | null;
+    errors: string[] | null;
     user: {
       displayImg: string;
       username: string;
@@ -84,10 +86,11 @@ const UserProfile: NextPage = () => {
   const ref = createRef<any>()
   const router = useRouter()
   const { auth } = useStore()
+  const setStore = useStoreUpdate()
 
   // Graphql Query
   const { data } = useQuery<ProfileGraphqlProps>(GET_USER_QUERY, { variables: { email: auth?.email || '' } })
-  const [updateProfile, _] = useMutation(UPDATE_USER_MUTATION)
+  const [updateUserProfile, _] = useMutation(UPDATE_USER_MUTATION)
 
   useEffect(() => {
     // Once data is loaded from graphql query, use useState hook to set the state
@@ -128,7 +131,7 @@ const UserProfile: NextPage = () => {
         {/** Information Section */}
         <Box sx={{ display: 'flex', flexDirection: 'column', width: 300 }}>
           <Typography sx={{ mb: 2 }}>Public Information</Typography>
-          <TextField id='outlined-basic' label='Username' variant='outlined' sx={{ mb: 1 }} value={username} onChange={e => setUsername(e.target.value)} />
+          <TextField id='outlined-basic' label='Username' variant='outlined' sx={{ mb: 1 }} value={username} onChange={e => setUsername(e.target.value.trim())} />
           <TextField id='outlined-basic' label='Community' variant='outlined' sx={{ mb: 3 }} value={community} onChange={e => setCommunity(e.target.value)} />
           <Typography sx={{ mb: 2 }}>Private Information</Typography>
           <TextField placeholder='Bio' multiline rows={4} sx={{ mb: 1 }} value={bio} onChange={e => setBio(e.target.value)} />
@@ -136,11 +139,19 @@ const UserProfile: NextPage = () => {
           <Button variant="outlined" sx={{ borderRadius: 30 }} onClick={async () => {
             // We need to post request with modified data later
             let data = { displayImg: image, username, bio, email: auth?.email || '' }
+            if (username.trim().length === 0) {
+              setErrorToast("Username cannot be empty or whitespace")
+              return
+            }
             try {
-              await updateProfile({ variables: data })
+              const user = getAuth().currentUser!
+              let res = await updateUserProfile({ variables: data })
+              if (!res.data.updateUser.success) throw 'username is already taken'
+              await updateProfile(user, { displayName: username })
+              setStore({ auth: await convertUserToAuthProps(user) })
               setSuccessToast("Updated profile successfully!")
             } catch (e) {
-              setErrorToast("Failed to update profile")
+              setErrorToast("Error: " + e)
             }
           }}>
             Update Profile

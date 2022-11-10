@@ -3,29 +3,17 @@ schema {
   mutation: Mutation
 }
 
-# type State {
-#   name: String!
-# }
-
-# type City {
-#   name: String!
-# }
-
-# type Country {
-#   name: String!
-# }
-
-type Address {
-  place: String!
-}
+# TODO: is this all you need for this custom scalar?
+scalar Date
 
 type User {
+  id: ID!
   username: String!
   email: String!
   preferredDistance: Int!
   bio: String!
   displayImg: String!
-  address: Address
+  address: String!
 }
 
 type UserResult {
@@ -40,13 +28,216 @@ type UsersResult {
   users: [User]
 }
 
+# TODO: category "valid" endpoint?
+type Category {
+  type: String!
+}
+
+type CategoryResult {
+  success: Boolean!
+  errors: [String]
+  categories: [String]!
+}
+
+type Material {
+  type: String 
+}
+
+type MaterialResult {
+  success: Boolean!
+  errors: [String]
+  materials: [String]!
+}
+
+type Listing {
+  id: ID!
+  title: String! 
+  description: String!
+  user: User!
+  isSellListing: Boolean!
+  categories: [Category]!
+  wantToTradeFor: [Category]!
+  price: Float!
+  canTrade: Boolean!
+  canPayCash: Boolean!
+  canPayBank: Boolean!
+  weight: Float!
+  volume: Float!
+  status: String!
+  address: String!
+  image: String
+  materials: [Material]!
+}
+
+type ListingResult {
+  success: Boolean!
+  errors: [String]
+  listing: Listing
+}
+
+type ListingsResult {
+  success: Boolean!
+  errors: [String]
+  listings: [Listing]
+}
+
+type Message {
+  id: ID!
+  text: String! 
+  # made these 2 fields nullable because getConversations uses these fields
+  # and can have null messages
+  # probably a few ways to avoid this:
+  #   some graphql feature I'm not aware of
+  #   making it so that a chat is only created if there's actually messages there (changes functionality)
+  timestamp: Date
+  author: User
+  conversation: String!
+}
+
+type MessageResult {
+  success: Boolean!
+  errors: [String]
+  messages: [Message]
+}
+
+type TradeOffer {
+  id: ID!
+  listingOne: Listing!
+  listingTwo: Listing!
+}
+
+type TradeOffersResult {
+  success: Boolean!
+  errors: [String]
+  tradeOffers: [TradeOffer]
+}
+
+type TradeOfferResult {
+  success: Boolean!
+  errors: [String]
+  tradeOffer: TradeOffer
+}
+
+type Conversation {
+  id: ID!
+  latest: Message
+  lastReadFirst: Message
+  lastReadSecond: Message
+}
+
+type ConversationResult {
+  success: Boolean!
+  errors: [String]
+  conversation: Conversation
+}
+
+type ConversationsResult {
+  success: Boolean!
+  errors: [String]
+  conversations:[Conversation]
+}
+
+type ConversationOverview {
+  id: ID!
+  conversation: String!
+  username: String!
+  email: String!
+  displayImg: String
+  latest: Message
+  unread: Boolean!
+}
+
+type ConversationsOverviewResult {
+  success: Boolean!
+  errors: [String]
+  conversations: [ConversationOverview]
+}
+
+type UserStats {
+  numTrades: Int
+  cubicMeterSaving: Float
+  carbonDioxideSaving: Float
+}
+
+type UserStatsResult {
+  success: Boolean!
+  errors: [String]
+  userStats: UserStats
+}
+
+type CommunityStats {
+  name: String
+  numTrades: Int
+  cubicMeterSaving: Float
+  carbonDioxideSaving: Float
+}
+
+type CommunityStatsResult {
+  success: Boolean!
+  errors: [String]
+  communityStats: CommunityStats
+}
+
+type Result {
+  success: Boolean!
+  errors: [String]
+}
+
+type CountResult {
+  success: Boolean!
+  error: [String]
+  count: Int
+}
+
 type Query {
   listUsers: UsersResult!
   getUser(email: String!): UserResult!
-}
-
-input AddressInput {
-  place: String!
+  defaultFeed: ListingsResult!
+  # TODO: implement machine-learning resolver
+  userFeed(userEmail: String!): ListingsResult!
+  getListing(
+    id: ID!
+    userEmail: String
+  ): ListingResult!
+  getListingsByUser(userEmail: String!): ListingsResult!
+  searchListings(
+    categories: [String]
+    distance: Int 
+    isSellListing: Boolean
+    priceMin: Float 
+    priceMax: Float
+    userEmail: String
+  ): ListingsResult!
+  getCategories: CategoryResult!
+  getMessages(
+    conversation: String
+  ): MessageResult!
+  countUnseenMessages(email: String!): CountResult!
+  getConversations(involving: String!): ConversationsResult!
+  getConversationsForOverview(involving: String!): ConversationsOverviewResult!
+  getMaterials: MaterialResult! 
+  getTradeOffersByUser(
+    userEmail: String!
+  ): TradeOffersResult!
+  getListingsInTradeOffer(
+    tradeOfferId: ID!
+  ): ListingsResult!
+  getUsersInTradeOffer(
+    tradeOfferId: ID!
+  ): UsersResult!
+  getFollowing(
+    userEmail: String!
+    checkFollowerEmail: String!
+  ): Result!
+  getFollowingList(userEmail: String!): UsersResult!
+  getUserStats(
+    userEmail: String!
+    year: Int!
+  ): UserStatsResult!
+  getCommunityStats(
+    userEmail: String!
+    year: Int!
+  ): CommunityStatsResult!
 }
 
 type Mutation {
@@ -57,7 +248,77 @@ type Mutation {
     preferredDistance: Int
     bio: String
     displayImg: String
-    address: AddressInput
+    address: String
   ): UserResult!
   deleteUser(email: String!): UserResult!
+  createListing(
+    userEmail: String! 
+    title: String! 
+    description: String!
+    isSellListing: Boolean!
+    price: Float!
+    canTrade: Boolean!
+    canPayCash: Boolean!
+    canPayBank: Boolean!
+    status: String!
+    categories: [String]!
+    wantToTradeFor: [String]!
+    weight: Float 
+    volume: Float 
+    materials: [String]!
+    address: String!
+    image: String!
+  ): ListingResult!
+  updateListing(
+    id: ID!
+    title: String
+    description: String
+    isSellListing: Boolean
+    price: Float
+    canTrade: Boolean
+    canPayCash: Boolean
+    canPayBank: Boolean
+    status: String
+    categories: [String]
+    wantToTradeFor: [String]
+    weight: Float
+    volume: Float
+    materials: [String]
+    address: String
+    image: String
+  ): ListingResult!
+  deleteListing(id: ID!): ListingResult!
+  createMessage(
+    timestamp: Int!
+    text: String!
+    author: ID!
+    conversation: String!
+  ): MessageResult!
+  createTradeOffer(
+    listingOneId: ID!
+    listingTwoId: ID!
+  ): TradeOfferResult!
+  updateTradeOffer(
+    id: ID!
+    isAccepted: Boolean
+  ): Result!
+  deleteTradeOffer(id: ID!): Result!
+  followUser(
+    followerEmail: String!
+    followedEmail: String!
+  ): Result! 
+  unfollowUser(
+    followerEmail: String!
+    followedEmail: String!
+  ): Result! 
+  createConversation(
+    conversation: String!
+  ): ConversationResult!
+  # searching by a string not great, but it avoids having to get the actual db object in the frontend
+  updateConversation(
+    conversation: String!
+    lastReadFirst: ID
+    lastReadSecond: ID
+  ): ConversationResult!
+  deleteConversation(conversation: String!): ConversationResult!
 }
