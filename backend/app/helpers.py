@@ -21,7 +21,7 @@ material_co2_emission_per_kg = {
 
 methane_emission_factor = 0.021 * 1000
 nitrogen_oxide_emission_factor = 0.025 * 1000
-co2_emission_per_delivery_kg = 2.004
+co2_emission_per_delivery_kg = 0.019
 
 def get_user_co2_emission_saving(user, year):
     '''
