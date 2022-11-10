@@ -5,8 +5,9 @@ import { Avatar, Box, Button, Card, Typography } from "@mui/material";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { useRouter } from "next/router";
-import { GET_DETAILED_LISTING } from "./have"
+import { GET_DETAILED_LISTING , GET_USER_DETAILED_LISTING} from "./have"
 import { useLazyQuery } from "@apollo/client";
+import { useStore } from "../../store/store";
 
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
@@ -62,10 +63,12 @@ const DescriptionBox = (props: { icon: any; description: string }) => {
 const DetailedWantListing: NextPage = () => {
 
   // Get item name from query params
-  const router = useRouter()
-  const { id } = router.query
-  const data = useQuery(GET_DETAILED_LISTING, { variables: { id } }).data
-    ?.getListing.listing;
+  const router = useRouter();
+  const { id } = router.query;
+  const { auth } = useStore();
+  const [execQuery, { data }] = useLazyQuery(
+    auth ? GET_USER_DETAILED_LISTING : GET_DETAILED_LISTING
+  );
 
   const [title, setTitle] = useState<string>("");
   const [image, setImage] = useState<string>("");
@@ -82,20 +85,29 @@ const DetailedWantListing: NextPage = () => {
   const [itemPosessorEmail, setItemPossesorEmail] = useState("");
 
   useEffect(() => {
-    if (data) {
-      setTitle(data.title);
-      setImage(data.image);
-      setDescription(data.description);
-      setLocation(data.address);
-      setCategories(data.categories.map((item: any) => item.type));
-      setTrade(data.canTrade);
-      setCash(data.canPayCash);
-      setBank(data.canPayBank);
-      setTradeCategories(data.wantToTradeFor.map((item: any) => item.type));
-      setPrice(data.price);
-      setItemPossesor(data.user.username);
-      setItemPossesorImageURL(data.user.displayImg);
-      setItemPossesorEmail(data.user.email);
+    if (auth?.email) {
+      execQuery({ variables: { id: id, userEmail: auth?.email } });
+    } else {
+      execQuery({ variables: { id } });
+    }
+    if (data && data?.getListing.listing) {
+      setTitle(data?.getListing.listing.title);
+      setImage(data?.getListing.listing.image);
+      setDescription(data?.getListing.listing.description);
+      setLocation(data?.getListing.listing.address);
+      setCategories(
+        data?.getListing.listing.categories.map((item: any) => item.type)
+      );
+      setTrade(data?.getListing.listing.canTrade);
+      setCash(data?.getListing.listing.canPayCash);
+      setBank(data?.getListing.listing.canPayBank);
+      setTradeCategories(
+        data?.getListing.listing.wantToTradeFor.map((item: any) => item.type)
+      );
+      setPrice(data?.getListing.listing.price);
+      setItemPossesor(data?.getListing.listing.user.username);
+      setItemPossesorImageURL(data?.getListing.listing.user.displayImg);
+      setItemPossesorEmail(data?.getListing.listing.user.email);
     }
   }, [data]);
 
