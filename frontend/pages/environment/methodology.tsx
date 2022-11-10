@@ -16,7 +16,7 @@ const Methodology: NextPage = () => {
           <li>Light commercial vehicles use 12.8L of fuel per 100km, and travel 52,307,000km in a year on average </li>
           <li>Light commercial vehicles total litres of ethanol burnt yearly equates to 6,681,360L</li>
           <li>Light commercial vehicles emit 1.5kg of CO2 per litre of ethanol burnt, equating to 78,460,800kg of CO2 per year</li>
-          <li>Assume 500,000 deliveries occuring in Australia per year</li>
+          <li>Assume 520,000,000 deliveries occuring in Australia per year</li>
           <li>Methane CO2 emission factor is 21kg/kg</li>
           <li>Nitrogen oxide CO2 emission factor is 25kg/kg</li>
         </ul>
@@ -44,6 +44,14 @@ const Methodology: NextPage = () => {
           </p>
         </ul>
       </p>
+      <h1>References</h1>
+      <ul>
+        <li>https://www.budgetdirect.com.au/car-insurance/research/average-fuel-consumption-australia.html</li>
+        <li>https://www.budgetdirect.com.au/car-insurance/research/average-kilometers-driven.html</li>
+        <li>https://www.commonobjective.co/article/fashion-and-waste-an-uneasy-relationship#:~:text=On%20average%2C%2035%25%20of%20all,or%20product%20reaches%20the%20consumer.</li>
+        <li>https://www.patagoniaalliance.org/wp-content/uploads/2014/08/How-much-carbon-dioxide-is-produced-by-burning-gasoline-and-diesel-fuel-FAQ-U.S.-Energy-Information-Administration-EIA.pdf</li>
+        <li>https://www.winnipeg.ca/finance/findata/matmgt/documents/2012/682-2012/682-2012_Appendix_H-WSTP_South_End_Plant_Process_Selection_Report/Appendix%207.pdf</li>
+      </ul>
     </Template>
   );
 };
