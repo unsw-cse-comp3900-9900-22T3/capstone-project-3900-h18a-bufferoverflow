@@ -165,6 +165,19 @@ type UserStatsResult {
   userStats: UserStats
 }
 
+type CommunityStats {
+  name: String
+  numTrades: Int
+  cubicMeterSaving: Float
+  carbonDioxideSaving: Float
+}
+
+type CommunityStatsResult {
+  success: Boolean!
+  errors: [String]
+  communityStats: CommunityStats
+}
+
 type Result {
   success: Boolean!
   errors: [String]
@@ -224,7 +237,7 @@ type Query {
   getCommunityStats(
     userEmail: String!
     year: Int!
-  ): UserStatsResult!
+  ): CommunityStatsResult!
 }
 
 type Mutation {
