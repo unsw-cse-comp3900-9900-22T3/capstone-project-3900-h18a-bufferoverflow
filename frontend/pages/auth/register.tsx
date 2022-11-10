@@ -1,26 +1,3 @@
-<<<<<<< HEAD
-import {
-  DocumentNode,
-  gql,
-  useLazyQuery,
-  useMutation,
-  useQuery,
-} from "@apollo/client";
-import { Box, Button, Divider, TextField } from "@mui/material";
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  updateProfile,
-} from "firebase/auth";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { AuthCard } from "../../components/auth/AuthCard";
-import { Template } from "../../components/generic/Template";
-import { Toast } from "../../components/generic/Toast";
-import { useStoreUpdate } from "../../store/store";
-import { convertUserToAuthProps } from "../../store/utils";
-import loginTextFieldStyles from "../../styles/style";
-=======
 import { DocumentNode, gql, useLazyQuery, useMutation, useQuery } from "@apollo/client"
 import { Box, Button, Divider, TextField } from "@mui/material"
 import { createUserWithEmailAndPassword, getAuth, updateProfile } from "firebase/auth"
@@ -33,7 +10,6 @@ import { useStoreUpdate } from "../../store/store"
 import { convertUserToAuthProps } from "../../store/utils"
 import loginTextFieldStyles from "../../styles/style"
 import { parseFirebaseError } from "../../utils/utils"
->>>>>>> master
 
 /////////////////////////////////////////////////////////////////////////////
 // Query

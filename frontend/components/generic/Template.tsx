@@ -27,10 +27,6 @@ import { useRouter } from "next/router";
 import { gql, useQuery } from "@apollo/client";
 import Image from "next/image";
 
-<<<<<<< HEAD
-
-type SideBarProps = { title: string; icon: Icon, href: string }[]
-=======
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
@@ -46,7 +42,6 @@ import StarIcon from "@mui/icons-material/Star";
 import AddIcon from "@mui/icons-material/Add";
 
 type SideBarProps = { title: string; icon: Icon; href: string }[];
->>>>>>> master
 
 const sideBarTop: SideBarProps = [
   { title: "All Listings", icon: LocalOfferIcon, href: "/feed/default" },
@@ -123,16 +118,10 @@ interface CountUnseenGraphqlProps {
 //////////////////////////////////////////////////////////////////
 
 export const Template = (props: {
-<<<<<<< HEAD
   title: string
   children?: (JSX.Element | string)[] | JSX.Element | string
   center?: boolean
   scrollable?: boolean
-=======
-  title: string;
-  children?: (JSX.Element | string)[] | JSX.Element | string;
-  center?: boolean;
->>>>>>> master
 }) => {
   const { auth } = useStore();
   const [drawer, setDrawer] = useState<boolean>(false);
@@ -213,11 +202,6 @@ export const Template = (props: {
       </AppBar>
       <SideBar drawer={drawer} setDrawer={setDrawer} />
       <ThemeProvider theme={theme}>
-<<<<<<< HEAD
-        <Box sx={mainBoxStyles}>
-            {props.children}
-        </Box>
-=======
         {props.center ? (
           <Box
             sx={{
@@ -232,7 +216,6 @@ export const Template = (props: {
         ) : (
           props.children
         )}
->>>>>>> master
       </ThemeProvider>
     </Box>
   );
