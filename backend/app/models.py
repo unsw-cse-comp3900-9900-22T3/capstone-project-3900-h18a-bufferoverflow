@@ -430,3 +430,21 @@ class SearchedListing(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+class ClickedListing(db.Model):
+    __tablename__ = "clicked_listings"
+
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    categories = []
+
+    def __init__(self, categories, user_id):
+        self.user_id = user_id
+        self.categories = categories
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
