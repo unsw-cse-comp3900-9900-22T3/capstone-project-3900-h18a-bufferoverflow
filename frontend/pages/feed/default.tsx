@@ -45,7 +45,7 @@ export interface SearchGraphqlProps {
   };
 }
 
-const GET_SEARCH_RESULTS = gql`
+export const GET_SEARCH_RESULTS = gql`
   query ($categories: [String], $distance: Int, $isSellListing : Boolean, $priceMin: Float, $priceMax: Float) {
     searchListings(categories: $categories, distance: $distance, isSellListing: $isSellListing, priceMin: $priceMin, priceMax: $priceMax) {
       listings {

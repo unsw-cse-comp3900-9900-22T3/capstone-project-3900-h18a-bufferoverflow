@@ -55,7 +55,7 @@ const CREATE_LISTING = gql`
   }
 `
 
-const GET_LISTING = gql`
+export const GET_LISTING = gql`
   query ($id: ID!) {
     getListing(id: $id) {
       listing {
