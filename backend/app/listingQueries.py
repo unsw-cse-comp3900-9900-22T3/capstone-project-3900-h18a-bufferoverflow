@@ -1,6 +1,6 @@
 from operator import sub
 from app import db
-from app.models import Listing, User
+from app.models import Listing, User, SearchedListing
 from manage import category_names, material_names
 
 from ariadne import convert_kwargs_to_snake_case
@@ -96,6 +96,11 @@ def searchListings_resolver(obi, info,
             result = filter(lambda x: not x["is_sell_listing"], result)
 
         if categories:
+            # get user id 
+            user_id = User.query.filter_by(email=user_email).first().id
+            searched_listing = SearchedListing(categories, user_id)
+            searched_listing.save()
+
             new_result = []
             for listing in result:
                 found_category_match = False
