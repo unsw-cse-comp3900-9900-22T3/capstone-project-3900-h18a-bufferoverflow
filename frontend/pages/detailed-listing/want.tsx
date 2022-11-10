@@ -6,7 +6,7 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { useRouter } from "next/router";
 import { GET_DETAILED_LISTING } from "./have"
-import { useQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
