@@ -37,7 +37,8 @@ def getCommunityStats_resolver(obj, info, user_email, year):
         user_trade_count, cubicMetreSaving, CO2Saving = get_user_co2_emission_saving(user, year)
         payload = {
             'success' : True,
-            'user_stats' : {
+            'community_stats' : {
+                'name' : 'The Best Coomunity',
                 'num_trades' : user_trade_count,
                 'cubic_meter_saving' : cubicMetreSaving,
                 'carbon_dioxide_saving' : CO2Saving
