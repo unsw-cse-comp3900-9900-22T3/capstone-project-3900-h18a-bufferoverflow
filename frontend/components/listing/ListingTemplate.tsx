@@ -282,7 +282,8 @@ export const ListingTemplate = (props: {
   }, [data]);
 
   useEffect(() => {
-    if (!hasSetLocationFromUser) {
+    // set the location from the user's location, when making a new listing
+    if (id == undefined && !hasSetLocationFromUser) {
       const email = auth?.email ? auth.email : ""
       getUserAddress({ variables: { email }})
   
