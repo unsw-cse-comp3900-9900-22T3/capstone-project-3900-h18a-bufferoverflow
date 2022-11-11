@@ -1,7 +1,7 @@
-from operator import sub
 from app import db
-from app.models import Listing, User, SearchedListing, ClickedListing
+from app.models import Listing, User, TradedListing, SearchedListing, ClickedListing
 from manage import category_names, material_names
+from random import random
 
 from ariadne import convert_kwargs_to_snake_case
 
@@ -65,8 +65,39 @@ def userFeed_resolver(obj, info, user_email):
     try:
         user =  User.query.filter_by(email=user_email).first()
         feed_listings = []
+
+        # get all trades that have been traded TO this user 
+        trades = TradedListing.query.filter_by(traded_to=user.id).all()
+
+        # create empty categories dict (TODO: make util function?)
+        categories = {} 
+        categories["total"] = 0 
+        for category_name in category_names:
+            categories[category_name] = 0
+
+        # calculate how many of each category 
+        for trade in trades:
+            for category in trade.categories:
+                categories[category] += 1 
+                categories["total"] += 1
+            
+        # use this as the *probability* that a listing appears early in 
+        # the list 
+        probability = 1
+
         for listing in Listing.query.all():
+            # get probability from categories 
+            probability = 0 
+            for category in listing.categories:
+                category_prob += (categories[category] / categories["total"])
+
+            
             if user.is_following(user_id=listing.user_id):
+                probability += 0.2
+                
+            # generate a random number between 0-1 and check
+            # if our probability is greater...if it is, goes to front of feed
+            if category_prob > random():
                 feed_listings.insert(0, listing.to_json())
             else:
                 feed_listings.append(listing.to_json())
