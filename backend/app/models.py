@@ -19,7 +19,8 @@ class User(db.Model):
     preferred_distance = db.Column(db.Integer, default=100, nullable=False)
     bio = db.Column(db.String(500), default="", nullable=False)
     display_img = db.Column(db.String(500), default="", nullable=False)
-    address = db.Column(db.String(100), default="", nullable=False)
+    address = db.Column(db.String(500), default="", nullable=True)
+    community = db.Column(db.String(100), default="", nullable=True)
 
     # TODO: add foreign keys arg?
     following = db.relationship(
@@ -68,7 +69,8 @@ class User(db.Model):
             "preferred_distance": self.preferred_distance,
             "bio": self.bio,
             "display_img": self.display_img,
-            "address": self.address
+            "address": self.address,
+            "community": self.community
         }
 
     def save(self):

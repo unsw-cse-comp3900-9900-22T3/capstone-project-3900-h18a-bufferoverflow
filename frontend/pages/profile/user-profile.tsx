@@ -44,6 +44,8 @@ const GET_USER_QUERY = gql`
         username
         email
         bio
+        address
+        community
       }
     }
   }
@@ -55,12 +57,16 @@ const UPDATE_USER_MUTATION = gql`
     $username: String
     $bio: String
     $displayImg: String
+    $address: String
+    $community: String
   ) {
     updateUser(
       username: $username
       bio: $bio
       displayImg: $displayImg
       email: $email
+      address: $address
+      community: $community
     ) {
       errors
       success
@@ -108,6 +114,7 @@ const UserProfile: NextPage = () => {
       if (user.community) setCommunity(user.community);
       if (user.bio) setBio(user.bio);
       if (user.address) setAddress(user.address);
+      if (user.community) setCommunity(user.community);
     }
   }, [data]);
 
@@ -203,6 +210,8 @@ const UserProfile: NextPage = () => {
                 username,
                 bio,
                 email: auth?.email || "",
+                address,
+                community,
               };
               if (username.trim().length === 0) {
                 setErrorToast("Username cannot be empty or whitespace");

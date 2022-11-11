@@ -46,11 +46,16 @@ def add_data():
     user1.add_display_img("https://mui.com/static/images/avatar/1.jpg")
     user2.add_display_img("https://mui.com/static/images/avatar/2.jpg")
     user3.add_display_img("https://mui.com/static/images/avatar/3.jpg")
+
+    user1.community= "Randwick"
     
     # save users
     user1.save()
     user2.save()
     user3.save()
+
+    locator = User(email="locator@gmail.com", username="locator")
+    locator.save()
 
     # create listings
     listing1 = Listing(

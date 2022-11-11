@@ -55,7 +55,8 @@ def update_user_resolver(
         preferred_distance=None,
         bio=None,
         display_img=None,
-        address=None
+        address=None,
+        community=None
     ):
     try:
         user = None
@@ -71,6 +72,7 @@ def update_user_resolver(
             user.display_img = display_img if display_img is not None else user.display_img
 
             user.address = address if address is not None else user.address
+            user.community = community if community is not None else user.community
             user.save()
 
         payload = {
