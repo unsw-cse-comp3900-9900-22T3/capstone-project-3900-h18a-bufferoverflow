@@ -186,7 +186,6 @@ const UserProfile: NextPage = () => {
             value={community}
             onChange={(e) => setCommunity(e.target.value)}
           />
-          <Typography sx={{ mb: 2 }}>Private Information</Typography>
           <TextField
             placeholder="Bio"
             multiline
@@ -195,6 +194,7 @@ const UserProfile: NextPage = () => {
             value={bio}
             onChange={(e) => setBio(e.target.value)}
           />
+          <Typography sx={{ mb: 2 }}>Private Information</Typography>
           <AddressSearch
             address={address}
             setAddress={setAddress}
