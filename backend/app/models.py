@@ -416,6 +416,7 @@ class TradedListing(db.Model):
 class SearchedListing(db.Model):
     __tablename__ = "search_listings"
 
+    id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     categories = []
 
@@ -434,6 +435,7 @@ class SearchedListing(db.Model):
 class ClickedListing(db.Model):
     __tablename__ = "clicked_listings"
 
+    id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     categories = []
 
