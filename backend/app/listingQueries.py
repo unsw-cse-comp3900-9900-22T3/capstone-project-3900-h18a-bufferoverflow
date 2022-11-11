@@ -66,8 +66,8 @@ def userFeed_resolver(obj, info, user_email):
         user =  User.query.filter_by(email=user_email).first()
         feed_listings = []
 
-        # get all trades that have been traded TO this user 
-        trades = TradedListing.query.filter_by(traded_to=user.id).all()
+        # get all searches that have been done by this user 
+        searches = SearchedListing.query.filter_by(user_id=user.id).all()
 
         # create empty categories dict (TODO: make util function?)
         categories = {} 
@@ -76,8 +76,8 @@ def userFeed_resolver(obj, info, user_email):
             categories[category_name] = 0
 
         # calculate how many of each category 
-        for trade in trades:
-            for category in trade.categories:
+        for search in searches:
+            for category in searches.categories:
                 categories[category] += 1 
                 categories["total"] += 1
             
