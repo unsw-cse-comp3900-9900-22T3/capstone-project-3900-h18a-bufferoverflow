@@ -251,6 +251,7 @@ export const ListingTemplate = (props: {
   const [updateListing, _2] = useMutation(UPDATE_LISTING);
   const [createListing, _3] = useMutation(CREATE_LISTING);
   const [getUserAddress, userResults] = useLazyQuery(GET_USER_ADDRESS);
+  const [hasSetLocationFromUser, setHasSetLocationFromUser] = useState<boolean>(false);
 
   useEffect(() => {
     if (id) {
@@ -281,12 +282,14 @@ export const ListingTemplate = (props: {
   }, [data]);
 
   useEffect(() => {
-    const email = auth?.email ? auth.email : ""
-    getUserAddress({ variables: { email }})
-    console.log(userResults);
-
-    if (userResults?.data) {
-      setLocation(userResults.data.getUser.user.address)
+    if (!hasSetLocationFromUser) {
+      const email = auth?.email ? auth.email : ""
+      getUserAddress({ variables: { email }})
+  
+      if (userResults?.data) {
+        setLocation(userResults.data.getUser.user.address)
+        setHasSetLocationFromUser(true)
+      }
     }
   }, [auth, userResults])
 
