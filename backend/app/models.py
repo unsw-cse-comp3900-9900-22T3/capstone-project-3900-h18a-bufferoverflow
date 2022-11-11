@@ -100,6 +100,12 @@ listing_want_to_trade_for = db.Table('listing_want_to_trade_for',
                                          'categories.id'), primary_key=True)
                                      )
 
+search_category = db.Table('search_category',
+                                    db.Column('search_id', db.Integer, db.ForeignKey(
+                                        'searched_listings.id'), primary_key=True),
+                                    db.Column('category_id', db.Integer, db.ForeignKey(
+                                        'categories.id'), primary_key=True)
+                                    )
 
 class Category(db.Model):
     __tablename__ = "categories"
@@ -111,6 +117,9 @@ class Category(db.Model):
         'Listing', secondary=listing_category, backref='categories')
     want_to_trade_for_to = db.relationship(
         'Listing', secondary=listing_want_to_trade_for, backref='want_to_trade_for')
+
+    search_category_to = db.relationship(
+        'SearchedListing', secondary=search_category, backref='categories')
 
     def __init__(self, type):
         self.type = type
@@ -414,15 +423,29 @@ class TradedListing(db.Model):
 
 
 class SearchedListing(db.Model):
-    __tablename__ = "search_listings"
+    __tablename__ = "searched_listings"
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    categories = []
+
+    def update_categories(self, categories):
+        if categories is not None:
+            # to successfully remove all previous want_to_trade_for
+            for category_name in category_names:
+                category = Category.query.filter_by(type=category_name).first()
+                try:
+                    category.search_category_to.remove(self)
+                except:
+                    pass
+
+            for category_name in categories:
+                category = Category.query.filter_by(type=category_name).first()
+                category.search_category_to.append(self)
+                category.save()
 
     def __init__(self, categories, user_id):
         self.user_id = user_id
-        self.categories = categories
+        self.update_categories(categories)
 
     def save(self):
         db.session.add(self)
@@ -437,11 +460,26 @@ class ClickedListing(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    categories = []
+
+    # TODO: update
+    # def update_categories(self, categories):
+    #     if categories is not None:
+    #         # to successfully remove all previous want_to_trade_for
+    #         for category_name in category_names:
+    #             category = Category.query.filter_by(type=category_name).first()
+    #             try:
+    #                 category.search_category_to.remove(self)
+    #             except:
+    #                 pass
+
+    #         for category_name in categories:
+    #             category = Category.query.filter_by(type=category_name).first()
+    #             category.search_category_to.append(self)
+    #             category.save()
 
     def __init__(self, categories, user_id):
         self.user_id = user_id
-        self.categories = categories
+        # self.update_categories(categories)
 
     def save(self):
         db.session.add(self)
