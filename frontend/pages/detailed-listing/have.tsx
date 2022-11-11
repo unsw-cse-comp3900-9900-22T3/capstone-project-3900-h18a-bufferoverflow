@@ -1,6 +1,5 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
-import dynamic from "next/dynamic";
 import {
   Avatar,
   Box,
