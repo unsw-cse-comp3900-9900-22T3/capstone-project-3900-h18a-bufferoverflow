@@ -75,21 +75,27 @@ def userFeed_resolver(obj, info, user_email):
         for category_name in category_names:
             categories[category_name] = 0
 
+        print('searches:', searches)
+
         # calculate how many of each category 
         for search in searches:
-            for category in searches.categories:
+            for category in search.categories:
+                print('search categories: ', category)
                 categories[category] += 1 
                 categories["total"] += 1
             
         # use this as the *probability* that a listing appears early in 
         # the list 
-        probability = 1
+        probability = 0
 
         for listing in Listing.query.all():
             # get probability from categories 
             probability = 0 
-            for category in listing.categories:
-                category_prob += (categories[category] / categories["total"])
+            # check if categories searched for is 0 to alleviate div by 0 error 
+            if categories["total"] != 0:
+                for category in listing.categories:
+                    print('listing categories: ', category)
+                    probability += (categories[category.type] / categories["total"])
 
             
             if user.is_following(user_id=listing.user_id):
@@ -97,7 +103,7 @@ def userFeed_resolver(obj, info, user_email):
                 
             # generate a random number between 0-1 and check
             # if our probability is greater...if it is, goes to front of feed
-            if category_prob > random():
+            if probability > random():
                 feed_listings.insert(0, listing.to_json())
             else:
                 feed_listings.append(listing.to_json())
