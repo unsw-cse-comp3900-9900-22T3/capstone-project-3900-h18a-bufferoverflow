@@ -199,6 +199,7 @@ const UserProfile: NextPage = () => {
           <Typography sx={{ mb: 2 }}>Private Information</Typography>
           <AddressSearch
             address={address}
+            placeholder={"address"}
             setAddress={setAddress}
             setCommunity={setCommunity}
             marginBottom={3}

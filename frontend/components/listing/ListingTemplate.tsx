@@ -167,6 +167,18 @@ const GET_CATEGORIES = gql`
   }
 `;
 
+const GET_USER_ADDRESS = gql`
+  query getUserAddressQuery($email: String!) {
+    getUser(email: $email) {
+      errors
+      success
+      user {
+        address
+      }
+    }
+  }
+`;
+
 /////////////////////////////////////////////////////////////////////////////
 // Secondary Components and Constants
 /////////////////////////////////////////////////////////////////////////////
@@ -238,6 +250,7 @@ export const ListingTemplate = (props: {
   const [deleteListing, _1] = useMutation(DELETE_LISTING);
   const [updateListing, _2] = useMutation(UPDATE_LISTING);
   const [createListing, _3] = useMutation(CREATE_LISTING);
+  const [getUserAddress, userResults] = useLazyQuery(GET_USER_ADDRESS);
 
   useEffect(() => {
     if (id) {
@@ -266,6 +279,16 @@ export const ListingTemplate = (props: {
       setPrice(data.getListing.listing.price);
     }
   }, [data]);
+
+  useEffect(() => {
+    const email = auth?.email ? auth.email : ""
+    getUserAddress({ variables: { email }})
+    console.log(userResults);
+
+    if (userResults?.data) {
+      setLocation(userResults.data.getUser.user.address)
+    }
+  }, [auth, userResults])
 
   const check = () => {
     return (
