@@ -57,6 +57,7 @@ export const AddressSearch = (props: {
     geoCode(address);
   }, 1000);
 
+  // possible refactor - use autocomplete instead here
   return (
     <Stack sx={{ mb: 3 }}>
       <TextField
