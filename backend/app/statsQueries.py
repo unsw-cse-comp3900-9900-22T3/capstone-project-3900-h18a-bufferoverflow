@@ -40,6 +40,7 @@ def getCommunityStats_resolver(obj, info, user_email, year):
         user_trade_count, cubicMetreSaving, CO2Saving = get_user_co2_emission_saving(
             user, year)
         # todo: retrieve stats for everyone else in the community here
+        print(user)
         payload = {
             'success': True,
             'community_stats': {

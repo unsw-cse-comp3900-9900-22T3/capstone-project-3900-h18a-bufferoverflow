@@ -34,7 +34,7 @@ query.set_field("getConversationsForOverview", getConversationsForOverview_resol
 query.set_field("getListingsInTradeOffer", getListingsInTradeOffer_resolver)
 query.set_field("getUsersInTradeOffer", getUsersInTradeOffer_resolver)
 query.set_field("getUserStats", getUserStats_resolver)
-query.set_field("getCommunityStats", getUserStats_resolver)
+query.set_field("getCommunityStats", getCommunityStats_resolver)
 
 # Create mutations
 mutation = ObjectType("Mutation")
