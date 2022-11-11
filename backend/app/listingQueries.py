@@ -66,7 +66,6 @@ def userFeed_resolver(obj, info, user_email):
         user =  User.query.filter_by(email=user_email).first()
         feed_listings = []
 
-        print(user.id)
         # get all searches that have been done by this user 
         searches = SearchedListing.query.filter_by(user_id=user.id).all()
 
@@ -76,13 +75,9 @@ def userFeed_resolver(obj, info, user_email):
         for category_name in category_names:
             categories[category_name] = 0
 
-        print('searches:', searches)
-
         # calculate how many of each category 
         for search in searches:
-            print('search categories: ', search.categories)
             for category in search.categories:
-                print('category: ', category)
                 categories[category.type] += 1 
                 categories["total"] += 1
             
@@ -96,7 +91,6 @@ def userFeed_resolver(obj, info, user_email):
             # check if categories searched for is 0 to alleviate div by 0 error 
             if categories["total"] != 0:
                 for category in listing.categories:
-                    print('listing categories: ', category)
                     probability += (categories[category.type] / categories["total"])
 
             
@@ -146,9 +140,7 @@ def searchListings_resolver(obi, info,
             # if search was done by user, save it in the db
             if user_email:
                 # get user id 
-                print('yep, got a user email')
                 user_id = User.query.filter_by(email=user_email).first().id
-                print(user_id)
                 searched_listing = SearchedListing(categories, user_id)
                 searched_listing.save()
 
