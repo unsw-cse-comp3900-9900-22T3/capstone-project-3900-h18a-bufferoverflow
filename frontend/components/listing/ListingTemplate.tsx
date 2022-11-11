@@ -341,15 +341,14 @@ export const ListingTemplate = (props: {
           onChange={(e) => setDescription(e.target.value)}
         />
         <Typography sx={{ fontSize: 16, fontWeight: "bold", mb: 1.5, ml: 0.5 }}>
-          Location
+          Location 
         </Typography>
-        <TextField
-          value={location}
-          label="Location"
-          variant="outlined"
-          sx={{ mb: 1.5 }}
-          onChange={(e) => setLocation(e.target.value)}
-        />
+        <AddressSearch
+            address={location}
+            setAddress={setLocation}
+            placeholder={"location"}
+            marginBottom={1.5}
+          />
         <CategorySearch
           categories={categories || undefined}
           setCategories={setCategories}

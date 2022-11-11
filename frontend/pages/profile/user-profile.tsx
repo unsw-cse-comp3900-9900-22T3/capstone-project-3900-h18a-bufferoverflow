@@ -201,6 +201,9 @@ const UserProfile: NextPage = () => {
             address={address}
             setAddress={setAddress}
             setCommunity={setCommunity}
+            marginBottom={3}
+            rows={4}
+            multiline={true}
           />
           <Button
             variant="outlined"
