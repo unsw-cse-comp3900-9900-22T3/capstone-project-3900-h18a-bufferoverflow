@@ -54,9 +54,6 @@ def add_data():
     user2.save()
     user3.save()
 
-    locator = User(email="locator@gmail.com", username="locator")
-    locator.save()
-
     # create listings
     listing1 = Listing(
         user_email="user1@gmail.com",
