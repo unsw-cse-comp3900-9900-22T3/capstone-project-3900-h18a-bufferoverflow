@@ -1,18 +1,9 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  IconButton,
-  Stack,
-  Tooltip,
-  Typography,
-} from "@mui/material";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import PersonIcon from "@mui/icons-material/Person";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import { useState, useEffect } from "react";
+import { Avatar, Box, Button, Card, Typography } from "@mui/material";
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { useRouter } from "next/router";
 import { gql, useLazyQuery } from "@apollo/client";
 import { useStore } from "../../store/store";
@@ -112,30 +103,37 @@ const LabelBox = (props: {
   children?: JSX.Element | JSX.Element[];
 }) => {
   return (
-    <Box sx={{ mb: 2, display: "flex" }}>
+    <Box sx={{ mb: 2, display: 'flex' }}>
       <Box sx={{ width: 350 }}>
-        <Typography sx={{ fontWeight: "bold" }}>{props.title}</Typography>
+        <Typography sx={{ fontWeight: 'bold' }}>{props.title}</Typography>
       </Box>
-      <Box sx={{ width: 600 }}>{props.children}</Box>
+      <Box sx={{ width: 600 }}>
+        {props.children}
+      </Box>
     </Box>
-  );
-};
+  )
+}
 
-const DescriptionBox = (props: { icon: any; description: string }) => {
+const DescriptionBox = (props: {
+  icon: any;
+  description: string;
+}) => {
   return (
-    <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-      <Avatar sx={{ ml: 2, mr: 2 }}>{props.icon}</Avatar>
+    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+      <Avatar sx={{ ml: 2, mr: 2 }}>
+        {props.icon}
+      </Avatar>
       <Typography>{props.description}</Typography>
     </Box>
-  );
-};
-
+  )
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
 /////////////////////////////////////////////////////////////////////////////
 
 const DetailedHaveListing: NextPage = () => {
+
   // Get item name from query params
   const router = useRouter()
   const { id } = router.query
@@ -184,13 +182,11 @@ const DetailedHaveListing: NextPage = () => {
   }, [data]);
 
   // Create description field given boolean parameters
-  let purchaseOptions = "";
-  if ((cash || bank) && !trade) purchaseOptions = `purchase for $${price}`;
-  else if ((cash || bank) && trade)
-    purchaseOptions = `purchase for $${price} or by mutual trade`;
-  else if (!(cash || bank) && trade)
-    purchaseOptions = `acquire by mutual trade`;
-  else purchaseOptions = `not available`;
+  let purchaseOptions = ''
+  if ((cash || bank) && !trade) purchaseOptions = `purchase for $${price}`
+  else if ((cash || bank) && trade) purchaseOptions = `purchase for $${price} or by mutual trade`
+  else if (!(cash || bank) && trade) purchaseOptions = `acquire by mutual trade`
+  else purchaseOptions = `not available`
 
   let shippingOptions = ''
   if (cash && bank) shippingOptions = 'cash or bank transfer on pickup or delivery'
@@ -351,4 +347,4 @@ const DetailedHaveListing: NextPage = () => {
   );
 };
 
-export default DetailedHaveListing;
+export default DetailedHaveListing

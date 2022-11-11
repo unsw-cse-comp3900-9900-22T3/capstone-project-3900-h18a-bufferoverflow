@@ -23,7 +23,7 @@ const Login: NextPage = () => {
   const setStore = useStoreUpdate()
 
   return (
-    <Template title="Login" center>
+    <Template title="Login">
       <Toast toast={errorToast} setToast={setErrorToast} type='warning' />
       <AuthCard title="Login">
         <TextField
