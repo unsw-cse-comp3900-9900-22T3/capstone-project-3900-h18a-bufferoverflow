@@ -21,6 +21,9 @@ class User(db.Model):
     display_img = db.Column(db.String(500), default="", nullable=False)
     address = db.Column(db.String(500), default="", nullable=True)
     community = db.Column(db.String(100), default="", nullable=True)
+    lattitude = db.Column(db.Float, nullable=True)
+    longitude = db.Column(db.Float, nullable=True)
+
 
     # TODO: add foreign keys arg?
     following = db.relationship(
@@ -70,7 +73,9 @@ class User(db.Model):
             "bio": self.bio,
             "display_img": self.display_img,
             "address": self.address,
-            "community": self.community
+            "community": self.community,
+            "lattitude": self.lattitude,
+            "longitude": self.longitude
         }
 
     def save(self):

@@ -3,6 +3,7 @@ from app.models import User
 
 from ariadne import convert_kwargs_to_snake_case
 
+
 def listUsers_resolver(obj, info):
     try:
         users = [user.to_json() for user in User.query.all()]
@@ -17,6 +18,7 @@ def listUsers_resolver(obj, info):
         }
     return payload
 
+
 def getUser_resolver(obj, info, email):
     try:
         user = User.query.filter_by(email=email).first()
@@ -30,6 +32,7 @@ def getUser_resolver(obj, info, email):
             "errors": [str(e)]
         }
     return payload
+
 
 def create_user_resolver(obj, info, username, email):
     try:
@@ -46,18 +49,21 @@ def create_user_resolver(obj, info, username, email):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def update_user_resolver(
-        obj, 
-        info, 
-        email,
-        username=None,
-        preferred_distance=None,
-        bio=None,
-        display_img=None,
-        address=None,
-        community=None
-    ):
+    obj,
+    info,
+    email,
+    username=None,
+    preferred_distance=None,
+    bio=None,
+    display_img=None,
+    address=None,
+    community=None,
+    lattitude=None,
+    longitude=None,
+):
     try:
         user = None
         try:
@@ -65,7 +71,7 @@ def update_user_resolver(
         except:
             user = User.query.filter_by(username=username).first()
         if user:
-            user.email = email 
+            user.email = email
             user.username = username if username is not None else user.username
             user.preferred_distance = preferred_distance if preferred_distance is not None else user.preferred_distance
             user.bio = bio if bio is not None else user.bio
@@ -73,13 +79,14 @@ def update_user_resolver(
 
             user.address = address if address is not None else user.address
             user.community = community if community is not None else user.community
+            user.lattitude = lattitude if lattitude is not None else user.lattitude
+            user.longitude = longitude if longitude is not None else user.longitude
             user.save()
 
         payload = {
             "success": True,
             "user": user.to_json()
         }
-        
 
     except Exception as e:
         payload = {
@@ -87,6 +94,7 @@ def update_user_resolver(
             "errors": [str(e)]
         }
     return payload
+
 
 def delete_user_resolver(obj, info, email):
     try:

@@ -2,8 +2,10 @@ from operator import sub
 from app import db
 from app.models import Listing, User, SearchedListing, ClickedListing
 from manage import category_names, material_names
+import haversine
 
 from ariadne import convert_kwargs_to_snake_case
+
 
 @convert_kwargs_to_snake_case
 def getListing_resolver(obj, info, id, user_email=None):
@@ -12,7 +14,7 @@ def getListing_resolver(obj, info, id, user_email=None):
 
         # if click on listing was done by user, save it in the db
         if user_email:
-            # get user id 
+            # get user id
             user_id = User.query.filter_by(email=user_email).first().id
             clicked_listing = ClickedListing(listing.categories, user_id)
             clicked_listing.save()
@@ -28,11 +30,13 @@ def getListing_resolver(obj, info, id, user_email=None):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def getListingsByUser_resolver(obj, info, user_email):
     try:
         user_id = User.query.filter_by(email=user_email).first().id
-        listings = [listing.to_json() for listing in Listing.query.all() if listing.user_id == user_id]
+        listings = [listing.to_json() for listing in Listing.query.all()
+                    if listing.user_id == user_id]
 
         payload = {
             "success": True,
@@ -44,6 +48,7 @@ def getListingsByUser_resolver(obj, info, user_email):
             "errors": [str(e)]
         }
     return payload
+
 
 @convert_kwargs_to_snake_case
 def defaultFeed_resolver(obj, info):
@@ -60,10 +65,11 @@ def defaultFeed_resolver(obj, info):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def userFeed_resolver(obj, info, user_email):
     try:
-        user =  User.query.filter_by(email=user_email).first()
+        user = User.query.filter_by(email=user_email).first()
         feed_listings = []
         for listing in Listing.query.all():
             if user.is_following(user_id=listing.user_id):
@@ -82,15 +88,16 @@ def userFeed_resolver(obj, info, user_email):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def searchListings_resolver(obi, info,
-    categories=None,
-    distance=None,
-    is_sell_listing=None,
-    price_min=None,
-    price_max=None,
-    user_email=None
-):
+                            categories=None,
+                            distance=None,
+                            is_sell_listing=None,
+                            price_min=None,
+                            price_max=None,
+                            user_email=None
+                            ):
     try:
         result = [listing.to_json() for listing in Listing.query.all()]
         if price_min:
@@ -103,12 +110,13 @@ def searchListings_resolver(obi, info,
         elif is_sell_listing == False:
             result = filter(lambda x: not x["is_sell_listing"], result)
 
+        if user_email:
+            user = User.query.filter_by(email=user_email).first()
+
         if categories:
             # if search was done by user, save it in the db
             if user_email:
-                # get user id 
-                user_id = User.query.filter_by(email=user_email).first().id
-                searched_listing = SearchedListing(categories, user_id)
+                searched_listing = SearchedListing(categories, user.id)
                 searched_listing.save()
 
             new_result = []
@@ -127,6 +135,9 @@ def searchListings_resolver(obi, info,
             # finished looping. set result = new_result
             result = new_result
 
+        if distance and user_email:
+            results = filter(lambda listing: haversine([user.lattitude, user.longitude], [
+                             listing.lattude, listing.longitude]), results)
 
         payload = {
             "success": True,
@@ -141,27 +152,25 @@ def searchListings_resolver(obi, info,
     return payload
 
 
-
-
-@convert_kwargs_to_snake_case
+@ convert_kwargs_to_snake_case
 def create_listing_resolver(obj, info,
-        user_email,
-        title,
-        description,
-        is_sell_listing,
-        price,
-        can_trade,
-        can_pay_cash,
-        can_pay_bank,
-        status,
-        categories,
-        want_to_trade_for,
-        weight,
-        volume,
-        materials,
-        address,
-        image
-    ):
+                            user_email,
+                            title,
+                            description,
+                            is_sell_listing,
+                            price,
+                            can_trade,
+                            can_pay_cash,
+                            can_pay_bank,
+                            status,
+                            categories,
+                            want_to_trade_for,
+                            weight,
+                            volume,
+                            materials,
+                            address,
+                            image
+                            ):
     try:
         listing = Listing(
             user_email,
@@ -193,25 +202,26 @@ def create_listing_resolver(obj, info,
         }
     return payload
 
-@convert_kwargs_to_snake_case
+
+@ convert_kwargs_to_snake_case
 def update_listing_resolver(obj, info,
-        id,
-        title = None,
-        description = None,
-        is_sell_listing = None,
-        price = None,
-        can_trade = None,
-        can_pay_cash = None,
-        can_pay_bank = None,
-        status = None,
-        categories = None,
-        want_to_trade_for = None,
-        weight = None,
-        volume = None,
-        materials = None,
-        address = None,
-        image = None,
-    ):
+                            id,
+                            title=None,
+                            description=None,
+                            is_sell_listing=None,
+                            price=None,
+                            can_trade=None,
+                            can_pay_cash=None,
+                            can_pay_bank=None,
+                            status=None,
+                            categories=None,
+                            want_to_trade_for=None,
+                            weight=None,
+                            volume=None,
+                            materials=None,
+                            address=None,
+                            image=None,
+                            ):
     try:
         listing = Listing.query.get(id)
         listing.title = title if title is not None else listing.title
@@ -241,7 +251,8 @@ def update_listing_resolver(obj, info,
         }
     return payload
 
-@convert_kwargs_to_snake_case
+
+@ convert_kwargs_to_snake_case
 def delete_listing_resolver(obj, info, id):
     try:
         listing = Listing.query.get(id)
@@ -257,7 +268,8 @@ def delete_listing_resolver(obj, info, id):
         }
     return payload
 
-@convert_kwargs_to_snake_case
+
+@ convert_kwargs_to_snake_case
 def getCategories_resolver(obj, info):
     try:
         payload = {
@@ -271,7 +283,8 @@ def getCategories_resolver(obj, info):
         }
     return payload
 
-@convert_kwargs_to_snake_case
+
+@ convert_kwargs_to_snake_case
 def getMaterials_resolver(obj, info):
     try:
         payload = {

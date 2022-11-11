@@ -251,6 +251,8 @@ type Mutation {
     displayImg: String
     address: String
     community: String
+    lattitude: Float
+    longitude: Float
   ): UserResult!
   deleteUser(email: String!): UserResult!
   createListing(
