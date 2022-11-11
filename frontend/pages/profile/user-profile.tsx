@@ -4,7 +4,7 @@ import { AddressSearch } from "../../components/location/AddressSearch";
 import { NextPage } from "next";
 import { Box } from "@mui/system";
 import TextField from "@mui/material/TextField/TextField";
-import { Avatar, Button, Card, Typography } from "@mui/material";
+import { Avatar, Button, Card, Tooltip, Typography } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useRouter } from "next/router";
 import { createRef, useEffect, useState } from "react";
@@ -178,14 +178,16 @@ const UserProfile: NextPage = () => {
             value={username}
             onChange={(e) => setUsername(e.target.value.trim())}
           />
+          <Tooltip title="Community is set from your address">
           <TextField
             id="outlined-basic"
             label="Community"
             variant="outlined"
-            sx={{ mb: 3 }}
+            sx={{ mb: 1 }}
             value={community}
-            onChange={(e) => setCommunity(e.target.value)}
+            disabled={true}
           />
+          </Tooltip>
           <TextField
             placeholder="Bio"
             multiline
