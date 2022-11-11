@@ -392,16 +392,54 @@ class TradedListing(db.Model):
     volume = db.Column(db.Float, nullable=False)
     year_traded = db.Column(db.Integer, nullable=False)
 
-    materials =[]
+    materials = []
+    categories = []
 
-
-    def __init__(self, traded_by, traded_to, weight, volume, materials, year_traded):
+    def __init__(self, traded_by, traded_to, weight, volume, materials, categories, year_traded):
         self.traded_by = traded_by
         self.traded_to = traded_to
         self.weight = weight
         self.volume = volume
         self.materials = materials
+        self.categories = categories
         self.year_traded = year_traded
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+
+class SearchedListing(db.Model):
+    __tablename__ = "search_listings"
+
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    categories = []
+
+    def __init__(self, categories, user_id):
+        self.user_id = user_id
+        self.categories = categories
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+class ClickedListing(db.Model):
+    __tablename__ = "clicked_listings"
+
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    categories = []
+
+    def __init__(self, categories, user_id):
+        self.user_id = user_id
+        self.categories = categories
 
     def save(self):
         db.session.add(self)

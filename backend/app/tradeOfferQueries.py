@@ -45,6 +45,7 @@ def updateTradeOffer_resolver(obj, info, id, is_accepted):
                 weight=listing_one.weight,
                 volume=listing_one.volume,
                 materials=listing_one.materials,
+                categories=listing_one.categories,
                 year_traded = datetime.now().year,
             )
 
@@ -55,6 +56,7 @@ def updateTradeOffer_resolver(obj, info, id, is_accepted):
                 weight = listing_two.weight,
                 volume=listing_two.volume,
                 materials=listing_two.materials,
+                categories=listing_two.categories,
                 year_traded = datetime.now().year,
             )
 
