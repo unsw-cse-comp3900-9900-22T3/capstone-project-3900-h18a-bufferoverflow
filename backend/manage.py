@@ -181,6 +181,7 @@ def add_data():
         weight=10,
         volume=200,
         materials=['wood', 'metal'],
+        categories=['toys'],
         year_traded=2022
     )
 

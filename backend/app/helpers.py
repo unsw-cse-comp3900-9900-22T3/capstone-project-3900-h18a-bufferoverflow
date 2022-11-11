@@ -21,7 +21,7 @@ material_co2_emission_per_kg = {
 
 methane_emission_factor = 0.021 * 1000
 nitrogen_oxide_emission_factor = 0.025 * 1000
-co2_emission_per_delivery_kg = 2.004
+co2_emission_per_delivery_kg = 0.019
 
 def get_user_co2_emission_saving(user, year):
     '''
@@ -44,8 +44,13 @@ def get_user_co2_emission_saving(user, year):
         weight = listing.weight
         cubic_metres_landfill_savings += listing.volume
         landfill_co2_savings += (weight * (methane_emission_factor + nitrogen_oxide_emission_factor))
+
+        # get average material co2 emission per kg for each material
+        average_material_co2_emission = 0.0
         for material in listing.materials:
-            manufacturing_co2_savings += (1.35 * weight) * material_co2_emission_per_kg[material]
+            average_material_co2_emission += material_co2_emission_per_kg[material.name]
+        average_material_co2_emission /= len(listing.materials)
+        manufacturing_co2_savings += (1.35 * weight) * average_material_co2_emission
 
     total_co2_savings = brick_and_mortar_delivery_co2_savings + landfill_co2_savings + manufacturing_co2_savings
     return user_trade_count, cubic_metres_landfill_savings, total_co2_savings

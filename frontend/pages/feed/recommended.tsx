@@ -5,7 +5,7 @@ import { itemDataToItemCard } from "../../components/feed/ItemCard";
 import { GraphqlListing } from '../../components/listing/types';
 import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar';
 import { Template } from '../../components/generic/Template'
-import { SearchGraphqlProps, GET_SEARCH_RESULTS } from './default';
+import { SearchGraphqlProps } from './default';
 import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals';
 import { useQuery, gql } from "@apollo/client"
 import { useStore } from '../../store/store';
@@ -39,6 +39,38 @@ const GET_USER_FEED = gql`
   }
 `;
 
+const GET_USER_SEARCH_RESULTS = gql`
+  query (
+    $categories: [String]
+    $distance: Int
+    $isSellListing: Boolean
+    $priceMin: Float
+    $priceMax: Float
+    $userEmail: String
+  ) {
+    searchListings(
+      categories: $categories
+      distance: $distance
+      isSellListing: $isSellListing
+      priceMin: $priceMin
+      priceMax: $priceMax
+      userEmail: $userEmail
+    ) {
+      listings {
+        title
+        address
+        price
+        image
+        user {
+          displayImg
+        }
+        isSellListing
+        id
+      }
+    }
+  }
+`;
+
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
 /////////////////////////////////////////////////////////////////////////////
@@ -59,13 +91,14 @@ const RecommendedFeed: NextPage = () => {
 
   const [numberItems , setNumberItems ] = useState(0);
 
-  const { data, refetch } = useQuery<SearchGraphqlProps>(GET_SEARCH_RESULTS, {
+  const { data, refetch } = useQuery<SearchGraphqlProps>(GET_USER_SEARCH_RESULTS, {
     variables: {
       categories: search.categories,
       distance: search.distance,
       isSellListing: search.listing === "have",
       priceMin: search.price.min,
       priceMax: search.price.max,
+      userEmail: auth?.email
     },
   });
   

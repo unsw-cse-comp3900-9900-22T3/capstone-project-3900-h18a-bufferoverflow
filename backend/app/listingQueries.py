@@ -1,6 +1,6 @@
 from operator import sub
 from app import db
-from app.models import Listing, User
+from app.models import Listing, User, SearchedListing, ClickedListing
 from manage import category_names, material_names
 
 from ariadne import convert_kwargs_to_snake_case
@@ -9,6 +9,14 @@ from ariadne import convert_kwargs_to_snake_case
 def getListing_resolver(obj, info, id, user_email=None):
     try:
         listing = Listing.query.get(id)
+
+        # if click on listing was done by user, save it in the db
+        if user_email:
+            # get user id 
+            user_id = User.query.filter_by(email=user_email).first().id
+            clicked_listing = ClickedListing(listing.categories, user_id)
+            clicked_listing.save()
+
         payload = {
             "success": True,
             "listing": listing.to_json()
@@ -96,6 +104,13 @@ def searchListings_resolver(obi, info,
             result = filter(lambda x: not x["is_sell_listing"], result)
 
         if categories:
+            # if search was done by user, save it in the db
+            if user_email:
+                # get user id 
+                user_id = User.query.filter_by(email=user_email).first().id
+                searched_listing = SearchedListing(categories, user_id)
+                searched_listing.save()
+
             new_result = []
             for listing in result:
                 found_category_match = False
