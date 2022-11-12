@@ -1,6 +1,3 @@
-# from ariadne import load_schema_from_path, make_executable_schema, \
-#     graphql_sync, snake_case_fallback_resolvers, ObjectType
-
 from app.api.queries import userQueries, listingQueries, tradeOfferQueries, followQueries, chatQueries, statsQueries
 import ariadne
 
