@@ -66,9 +66,11 @@ def add_users():
     user4 = User(email="user4@gmail.com", username="Sally")
 
     # add diplay images
-    user2.add_display_img("https://mui.com/static/images/avatar/1.jpg")
-    user3.add_display_img("https://mui.com/static/images/avatar/2.jpg")
-    user4.add_display_img("https://mui.com/static/images/avatar/3.jpg")
+    user1.add_display_img("https://mui.com/static/images/avatar/1.jpg")
+    user2.add_display_img("https://mui.com/static/images/avatar/2.jpg")
+    user3.add_display_img("https://mui.com/static/images/avatar/3.jpg")
+    
+    user2.community= "Randwick"
 
     # save users
     user2.save()
