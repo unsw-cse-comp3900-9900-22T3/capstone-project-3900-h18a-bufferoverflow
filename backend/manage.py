@@ -57,6 +57,9 @@ def add_data():
         # create traded listings
         add_traded_listings_data()
 
+        # create clicked and searched listings
+        add_clicked_and_searched_listings_data()
+
 
 @cli.command("add_users")
 def add_users():
@@ -284,6 +287,42 @@ def add_traded_listings_data():
     traded_listing5.save()
     traded_listing6.save()
 
+@cli.method("add_clicked_and_searched_listings_data")
+def add_clicked_and_searched_listings_data():
+    """Add clicked and searched listings data """
+    # clicked listings
+    clicked_listing1 = ClickedListing(
+        user_id=1,
+        categories=['toys', 'electronics'],
+    )
+    clicked_listing2 = ClickedListing(
+        user_id=1,
+        categories=['sports', 'books'],
+    )
+    clicked_listing3 = ClickedListing(
+        user_id=1,
+        categories=['automotive', 'electronics'],
+    )
+    clicked_listing1.save()
+    clicked_listing2.save()
+    clicked_listing3.save()
+
+    searched_listing1 = SearchedListing(
+        user_id=1,
+        categories=['beauty', 'furniture'],
+    )
+    searched_listing1 = SearchedListing(
+        user_id=1,
+        categories=['kitchen and dining', 'electronics'],
+    )
+    searched_listing1 = SearchedListing(
+        user_id=1,
+        categories=['tools', 'electronics'],
+    )
+
+    searched_listing1.save()
+    searched_listing2.save()
+    searched_listing3.save()
 
 
 if __name__ == "__main__":
