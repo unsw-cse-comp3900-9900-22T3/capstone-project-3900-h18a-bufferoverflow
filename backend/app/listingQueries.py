@@ -81,7 +81,7 @@ def userFeed_resolver(obj, info, user_email):
         # calculate how many of each category 
         fill_categories_dict(search_categories, searches)
         fill_categories_dict(traded_categories, trades)
-        fill_categories_dict(clicked_categories, trades)
+        fill_categories_dict(clicked_categories, clicks)
             
         # use this as the *probability* that a listing appears early in 
         # the list 
@@ -92,7 +92,12 @@ def userFeed_resolver(obj, info, user_email):
             search_probability = generate_categories_probability(listing, search_categories)
             trade_probability = generate_categories_probability(listing, traded_categories)
             click_probability = generate_categories_probability(listing, click_probability)
+
+            # take a weighted average of the previous probabilities
+            # we favour trades the most, then clicks, then searches
+            probability += (0.5 * trade_probability) + (0.35 * click_probability) + (0.15 * search_probability)
             
+            # if the user is following someone, that should bump the probability up
             if user.is_following(user_id=listing.user_id):
                 probability += 0.2
                 
