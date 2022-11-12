@@ -85,6 +85,11 @@ def generate_categories_probability(listing, categories_count):
     (could be searched, clicked, etc.) based on previous data...
     '''
     probability = 0
+
+    # check for div by zero 
+    if categories_count["total"] == 0:
+        return probability
+
     for category in listing.categories:
         probability += (categories_count[category.type] / categories_count["total"])
 

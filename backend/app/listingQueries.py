@@ -91,7 +91,7 @@ def userFeed_resolver(obj, info, user_email):
             probability = 0 
             search_probability = generate_categories_probability(listing, search_categories)
             trade_probability = generate_categories_probability(listing, traded_categories)
-            click_probability = generate_categories_probability(listing, click_probability)
+            click_probability = generate_categories_probability(listing, clicked_categories)
 
             # take a weighted average of the previous probabilities
             # we favour trades the most, then clicks, then searches
