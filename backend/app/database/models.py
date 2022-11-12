@@ -9,6 +9,19 @@ user_following = db.Table('user_following',
 
 
 class User(db.Model):
+    """ User Model for storing user related details
+
+    Attributes:
+        id (int): User id
+        username (str): User name
+        email (str): User email
+        preffered_distance (int): User preferred distance
+        bio (str): User bio
+        display_img (str): User display image
+        address (str): User address
+    """
+
+
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -19,7 +32,6 @@ class User(db.Model):
     display_img = db.Column(db.String(500), default="", nullable=False)
     address = db.Column(db.String(100), default="", nullable=False)
 
-    # TODO: add foreign keys arg?
     following = db.relationship(
         'User',
         secondary=user_following,
@@ -100,6 +112,13 @@ listing_want_to_trade_for = db.Table('listing_want_to_trade_for',
 
 
 class Category(db.Model):
+    """ Category Model for storing category related details
+
+    Attributes:
+        id (int): Category id
+        type (str): Category type
+    """
+
     __tablename__ = "categories"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -124,6 +143,13 @@ class Category(db.Model):
 
 
 class Material(db.Model):
+    """ Material Model for storing material related details
+
+    Attributes:
+        id (int): Material id
+        type (str): Material type
+    """
+
     __tablename__ = "materials"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -146,6 +172,25 @@ class Material(db.Model):
 
 
 class Listing(db.Model):
+    """ Listing Model for storing listing related details
+
+    Attributes:
+        id (int): Listing id
+        title (str): Listing title
+        description (str): Listing description
+        user_id (int): Listing user id
+        is_sell_listing (bool): Listing type
+        price (float): Listing price
+        can_trade (bool): Listing can trade
+        can_pay_cash (bool): Listing can pay cash
+        can_pay_bank (bool): Listing can pay bank transfer
+        weight (float): Listing weight
+        volume (float): Listing volume
+        status (str): Listing status
+        address (str): Listing address
+        images (str): Listing image
+    """
+
     __tablename__ = "listings"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -280,6 +325,16 @@ class Listing(db.Model):
 
 
 class Message(db.Model):
+    """ Message Model for storing message related details
+
+    Attributes:
+        id (int): Message id
+        timestamp (datetime): Message timestamp
+        text (str): Message text
+        author (int): Message author id
+        conversation (str): Message conversation string
+    """
+
     __tablename__ = "messages"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -317,6 +372,16 @@ class Message(db.Model):
 
 
 class Conversation(db.Model):
+    """ Conversation Model for storing conversation related details
+
+    Attributes:
+        id (int): Conversation id
+        conversation (str): Conversation string
+        last_read_first (int): First last read message id
+        last_read_second (int): Second last read message id
+        latest_message (int): Latest message id
+    """
+
     __tablename__ = "conversations"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -353,6 +418,14 @@ class Conversation(db.Model):
 
 
 class TradeOffer(db.Model):
+    """ TradeOffer Model for storing trade offer related details
+
+    Attributes:
+        id (int): TradeOffer id
+        listing_one_id (int): Listing one id
+        listing_two_id (int): Listing two id
+    """
+
     __tablename__ = "trade_offers"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -381,6 +454,19 @@ class TradeOffer(db.Model):
         db.session.commit()
 
 class TradedListing(db.Model):
+    """ TradedListing Model for storing traded listing related details
+
+    Attributes:
+        id (int): TradedListing id
+        traded_by (int): TradedListing traded by id
+        traded_to (int): TradedListing traded to id
+        weight (int): TradedListing weight
+        volume (int): TradedListing volume
+        year_traded (int): TradedListing year traded
+        materials (list): TradedListing materials
+        categories (list): TradedListing categories
+    """
+
     __tablename__ = "traded_listings"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -412,6 +498,14 @@ class TradedListing(db.Model):
 
 
 class SearchedListing(db.Model):
+    """ SearchedListing Model for storing searched listing related details
+
+    Attributes:
+        id (int): SearchedListing id
+        user_id (int): SearchedListing user id
+        categories (list): SearchedListing categories
+    """
+
     __tablename__ = "search_listings"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -431,6 +525,14 @@ class SearchedListing(db.Model):
         db.session.commit()
 
 class ClickedListing(db.Model):
+    """ ClickedListing Model for storing clicked listing related details
+
+    Attributes:
+        id (int): ClickedListing id
+        user_id (int): ClickedListing user id
+        categories (list): ClickedListing categories
+    """
+
     __tablename__ = "clicked_listings"
 
     id = db.Column(db.Integer, primary_key=True)
