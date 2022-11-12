@@ -61,25 +61,25 @@ def add_data():
 @cli.command("add_users")
 def add_users():
     # create users
-    user1 = User(email="user1@gmail.com", username="Steven123")
-    user2 = User(email="user2@gmail.com", username="Frankie")
-    user3 = User(email="user3@gmail.com", username="Sally")
+    user2 = User(email="user2@gmail.com", username="Steven123")
+    user3 = User(email="user3@gmail.com", username="Frankie")
+    user4 = User(email="user4@gmail.com", username="Sally")
 
     # add diplay images
-    user1.add_display_img("https://mui.com/static/images/avatar/1.jpg")
-    user2.add_display_img("https://mui.com/static/images/avatar/2.jpg")
-    user3.add_display_img("https://mui.com/static/images/avatar/3.jpg")
+    user2.add_display_img("https://mui.com/static/images/avatar/1.jpg")
+    user3.add_display_img("https://mui.com/static/images/avatar/2.jpg")
+    user4.add_display_img("https://mui.com/static/images/avatar/3.jpg")
 
     # save users
-    user1.save()
     user2.save()
     user3.save()
+    user4.save()
 
 @cli.command("add_listings")
 def add_listings():
     """Add listings to database."""
     listing1 = Listing(
-        user_email="user1@gmail.com",
+        user_email="user2@gmail.com",
         title = "Hunger Games Trilogy",
         description="The Hunger Games trilogy is a series of young adult dystopian novels written by American novelist Suzanne Collins.",
         is_sell_listing=True,
@@ -97,7 +97,7 @@ def add_listings():
         address = "9 Beagle St, Sydney, NSW 2039"
     )
     listing2 = Listing(
-        user_email="user2@gmail.com",
+        user_email="user3@gmail.com",
         title = "Batman Figurine",
         description="Batman is a fictional superhero appearing in American comic books published by DC Comics. The character was created by artist Bob Kane and writer Bill Finger, and first appeared in Detective Comics #27 (May 1939).",
         is_sell_listing=True,
@@ -114,7 +114,7 @@ def add_listings():
         address = "27 Main St, Australia, WA 6057"
     )
     listing3 = Listing(
-        user_email="user3@gmail.com",
+        user_email="user4@gmail.com",
         title = "iPhone 12",
         description="Hi there, i would love to buy your iPhone 12 Pro Max. I am willing to pay $1000 cash. Please contact me if you are interested.",
         is_sell_listing=False,
@@ -132,7 +132,7 @@ def add_listings():
     )
 
     listing4 = Listing(
-        user_email="user3@gmail.com",
+        user_email="user4@gmail.com",
         title="Hydro Flask 32oz",
         description="The hydro flask is a great water bottle. It keeps your water cold for 24 hours and hot for 12 hours. It is made of stainless steel and is BPA free. It is a great water bottle for the gym or for work.",
         is_sell_listing=True,
@@ -150,7 +150,7 @@ def add_listings():
     )
 
     listing5 = Listing(
-        user_email="user2@gmail.com",
+        user_email="user3@gmail.com",
         title="Ray Ban Sunglasses",
         description="The Ray Ban sunglasses are a great pair of sunglasses. They are polarized and have UV protection. They are a great pair of sunglasses for the beach or for everyday use.",
         is_sell_listing=True,
@@ -168,7 +168,7 @@ def add_listings():
     )
 
     listing6 = Listing(
-        user_email="user2@gmail.com",
+        user_email="user3@gmail.com",
         title="Airpods Pro",
         description="The Airpods Pro are a great pair of earbuds. They are wireless and have noise cancellation. They are a great pair of earbuds for the gym or for everyday use.",
         is_sell_listing=True,
@@ -207,7 +207,7 @@ def create_trade_offer_and_conversation():
     )
     trade_offer1.save()
 
-    message = Message(1664802000000, "Hi there, i would like to trade this with you thanks", 2, "testUser@gmail.com-user2@gmail.com")
+    message = Message(1664802000000, "Hi there, i would like to trade this with you thanks", 3, "testUser@gmail.com-user2@gmail.com")
     message.save()
     conversation = Conversation("testUser@gmail.com-user2@gmail.com", None, None)
     conversation.latest = message.id
