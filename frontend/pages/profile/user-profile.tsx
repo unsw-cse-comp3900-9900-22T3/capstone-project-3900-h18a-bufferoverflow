@@ -12,26 +12,11 @@ import { useStore, useStoreUpdate } from '../../store/store'
 import { Toast } from '../../components/generic/Toast'
 import { getAuth, updateProfile } from 'firebase/auth'
 import { convertUserToAuthProps } from '../../store/utils'
+import { ProfileGraphqlProps } from '../../@types/pages.types'
 
 /////////////////////////////////////////////////////////////////////////////
-// Data Types
+// Queries
 /////////////////////////////////////////////////////////////////////////////
-
-// We should define the structure of the response from API as a type @frontend team
-
-interface ProfileGraphqlProps {
-  getUser: {
-    success: boolean | null;
-    errors: string[] | null;
-    user: {
-      displayImg: string;
-      username: string;
-      community: string;
-      bio: string;
-      address: string;
-    } | null;
-  }
-}
 
 const GET_USER_QUERY = gql`
   query getUserQuery($email: String!) {

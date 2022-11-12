@@ -7,23 +7,11 @@ import StarIcon from '@mui/icons-material/Star';
 import DoneIcon from '@mui/icons-material/Done';
 import { useEffect, useState } from "react";
 import { useStore } from "../../store/store";
+import { ProfileGraphqlProps } from "../../@types/pages.types";
 
 /////////////////////////////////////////////////////////////////////////////
 // Data Types
 /////////////////////////////////////////////////////////////////////////////
-
-interface ProfileGraphqlProps {
-  getUser: {
-    success: boolean | null;
-    erorrs: string[] | null;
-    user: {
-      displayImg: string;
-      username: string;
-      bio: string;
-      address: string;
-    } | null;
-  }
-}
 
 const GET_USER_QUERY = gql`
   query getUserQuery($email: String!) {

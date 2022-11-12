@@ -59,3 +59,23 @@ export interface MyListingsGraphqlProps {
     listings: GraphqlListing[] | null;
   };
 }
+
+export interface FollowingTraderProps {
+  displayImg: string;
+  username: string;
+  email: string;
+}
+
+export interface ProfileGraphqlProps {
+  getUser: {
+    success: boolean | null;
+    errors: string[] | null;
+    user: {
+      displayImg: string;
+      username: string;
+      community: string;
+      bio: string;
+      address: string;
+    } | null;
+  }
+}

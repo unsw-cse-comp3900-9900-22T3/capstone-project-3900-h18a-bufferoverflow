@@ -6,9 +6,10 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { useStore } from "../../store/store";
+import { FollowingTraderProps } from "../../@types/pages.types";
 
 /////////////////////////////////////////////////////////////////////////////
-// Query and Types
+// Queries
 /////////////////////////////////////////////////////////////////////////////
 
 const GET_FOLLOWING = gql`
@@ -31,12 +32,6 @@ const UNFOLLOW = gql`
     }
   }
 `
-
-interface FollowingTraderProps {
-  displayImg: string;
-  username: string;
-  email: string;
-}
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
