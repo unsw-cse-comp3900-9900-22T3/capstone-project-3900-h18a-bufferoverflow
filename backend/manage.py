@@ -290,7 +290,7 @@ def add_traded_listings_data():
     traded_listing5.save()
     traded_listing6.save()
 
-@cli.method("add_clicked_and_searched_listings_data")
+@cli.command("add_clicked_and_searched_listings_data")
 def add_clicked_and_searched_listings_data():
     """Add clicked and searched listings data """
     # clicked listings
