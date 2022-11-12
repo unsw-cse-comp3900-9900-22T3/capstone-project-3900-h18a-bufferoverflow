@@ -55,17 +55,8 @@ def add_data():
         add_listings()
 
         # create traded listings
-        traded_listing1 = TradedListing(
-            traded_by=1,
-            traded_to=2,
-            weight=10,
-            volume=200,
-            materials=['wood', 'metal'],
-            categories=['toys'],
-            year_traded=2022
-        )
+        add_traded_listings_data()
 
-        traded_listing1.save()
 
 @cli.command("add_users")
 def add_users():
@@ -222,6 +213,74 @@ def create_trade_offer_and_conversation():
     conversation.latest = message.id
     conversation.last_read_first = message.id
     conversation.save()
+
+
+@cli.command("add_traded_listings_data")
+def add_traded_listings_data():
+    """Add traded listings data """
+    # trades which have happend in 2022
+    traded_listing1 = TradedListing(
+            traded_by=1,
+            traded_to=2,
+            weight=10,
+            volume=200,
+            materials=['wood', 'metal'],
+            categories=['toys'],
+            year_traded=2022
+    )
+    traded_listing2 = TradedListing(
+            traded_by=1,
+            traded_to=2,
+            weight=10,
+            volume=200,
+            materials=['wood', 'metal'],
+            categories=['toys'],
+            year_traded=2022
+    )
+    traded_listing3 = TradedListing(
+            traded_by=1,
+            traded_to=2,
+            weight=5,
+            volume=200,
+            materials=['metal', 'cermamic'],
+            categories=['toys'],
+            year_traded=2022
+    )
+    traded_listing1.save()
+    traded_listing2.save()
+    traded_listing3.save()
+
+    # trades which have happend in 2021
+    traded_listing4 = TradedListing(
+            traded_by=1,
+            traded_to=2,
+            weight=10,
+            volume=5,
+            materials=['wool', 'cotton'],
+            categories=['beauty'],
+            year_traded=2021
+    )
+    traded_listing5 = TradedListing(
+            traded_by=1,
+            traded_to=2,
+            weight=10,
+            volume=200,
+            materials=['polyester', 'plastic'],
+            categories=['electronics'],
+            year_traded=2021
+    )
+    traded_listing6 = TradedListing(
+            traded_by=1,
+            traded_to=2,
+            weight=5,
+            volume=200,
+            materials=['wood'],
+            categories=['books'],
+            year_traded=2021
+    )
+    traded_listing4.save()
+    traded_listing5.save()
+    traded_listing6.save()
 
 
 
