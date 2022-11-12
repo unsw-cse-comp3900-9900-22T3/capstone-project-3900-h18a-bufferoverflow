@@ -1,6 +1,4 @@
-from operator import sub
-from app import db
-from app.models import TradeOffer, Listing, User, TradedListing
+from app.database.models import TradeOffer, Listing, User, TradedListing
 from ariadne import convert_kwargs_to_snake_case
 
 from datetime import datetime

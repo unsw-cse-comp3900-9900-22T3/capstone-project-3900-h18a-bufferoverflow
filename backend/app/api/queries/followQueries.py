@@ -1,5 +1,4 @@
-from app import db
-from app.models import User
+from app.database.models import User
 from ariadne import convert_kwargs_to_snake_case
 
 @convert_kwargs_to_snake_case
@@ -58,7 +57,7 @@ def getFollowing_resolver(obj, info, user_email, check_follower_email):
             "success": False,
             "errors": [str(e)]
         }
-    return payload    
+    return payload
 
 @convert_kwargs_to_snake_case
 def getFollowingList_resolver(obj, info, user_email):
@@ -74,7 +73,6 @@ def getFollowingList_resolver(obj, info, user_email):
             "success": False,
             "errors": [str(e)]
         }
-    return payload    
+    return payload
 
 
-    

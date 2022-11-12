@@ -1,5 +1,4 @@
-from app import db
-from app.models import Message, Conversation, User
+from app.database.models import Message, Conversation, User
 
 from ariadne import convert_kwargs_to_snake_case
 

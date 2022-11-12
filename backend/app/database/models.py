@@ -1,6 +1,4 @@
-from app import db
-from app.config import material_names, category_names
-import datetime
+from app.database import db, material_names, category_names
 
 user_following = db.Table('user_following',
                           db.Column('follower_id', db.Integer, db.ForeignKey(

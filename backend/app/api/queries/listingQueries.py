@@ -1,6 +1,4 @@
-from operator import sub
-from app import db
-from app.models import Listing, User, SearchedListing, ClickedListing
+from app.database.models import Listing, User, SearchedListing, ClickedListing
 from manage import category_names, material_names
 
 from ariadne import convert_kwargs_to_snake_case
@@ -12,7 +10,7 @@ def getListing_resolver(obj, info, id, user_email=None):
 
         # if click on listing was done by user, save it in the db
         if user_email:
-            # get user id 
+            # get user id
             user_id = User.query.filter_by(email=user_email).first().id
             clicked_listing = ClickedListing(listing.categories, user_id)
             clicked_listing.save()
@@ -106,7 +104,7 @@ def searchListings_resolver(obi, info,
         if categories:
             # if search was done by user, save it in the db
             if user_email:
-                # get user id 
+                # get user id
                 user_id = User.query.filter_by(email=user_email).first().id
                 searched_listing = SearchedListing(categories, user_id)
                 searched_listing.save()
