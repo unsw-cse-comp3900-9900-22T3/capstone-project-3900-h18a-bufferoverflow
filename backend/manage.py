@@ -24,58 +24,55 @@ def create_categories():
 
 @cli.command("create_db")
 def create_db():
-    # drop all tables in db in dependency order if they exist
-    tables_in_dependency_order = reversed(db.metadata.sorted_tables)
-    for table in tables_in_dependency_order:
-        # if table in database, delete
-        if table.exists(db.engine):
-            table.drop(db.engine)
+    # if no data in db, create default data
+    if not Material.query.all():
+        add_data()
 
-    # create all tables in db
     db.session.commit()
     db.create_all()
     db.session.commit()
 
 
-
 @cli.command("add_data")
 def add_data():
+    # create materials and categories
+    create_materials()
+    create_categories()
 
-    # add data is there is only one user
-    if User.query.count() == 1:
+    # create users
+    add_users()
 
-        # create materials and categories
-        create_materials()
-        create_categories()
+    # create listings
+    add_listings()
 
-        # create users
-        add_users()
+    # create traded listings
+    add_traded_listings_data()
 
-        # create listings
-        add_listings()
+    # create clicked and searched listings
+    add_clicked_and_searched_listings_data()
 
-        # create traded listings
-        add_traded_listings_data()
-
-        # create clicked and searched listings
-        add_clicked_and_searched_listings_data()
+    # create some trade offers, old and active conversations
+    create_trade_offer_and_conversation()
 
 
 @cli.command("add_users")
 def add_users():
     # create users
+    franksAccount = User(email="z5231701@ad.unsw.edu.au", username="Frank")
     user2 = User(email="user2@gmail.com", username="Steven123")
     user3 = User(email="user3@gmail.com", username="Frankie")
     user4 = User(email="user4@gmail.com", username="Sally")
 
     # add diplay images
-    user1.add_display_img("https://mui.com/static/images/avatar/1.jpg")
-    user2.add_display_img("https://mui.com/static/images/avatar/2.jpg")
-    user3.add_display_img("https://mui.com/static/images/avatar/3.jpg")
-    
+    user2.add_display_img("https://mui.com/static/images/avatar/1.jpg")
+    user3.add_display_img("https://mui.com/static/images/avatar/2.jpg")
+    user4.add_display_img("https://mui.com/static/images/avatar/3.jpg")
+    franksAccount.add_display_img("https://mui.com/static/images/avatar/4.jpg")
+
     user2.community= "Randwick"
 
     # save users
+    franksAccount.save()
     user2.save()
     user3.save()
     user4.save()
@@ -212,14 +209,14 @@ def create_trade_offer_and_conversation():
     )
     trade_offer1.save()
 
-    message = Message(1664802000000, "Hi there, i would like to trade this with you thanks", 3, "testUser@gmail.com-user3@gmail.com")
+    message = Message(1664802000000, "Hi there, i would like to trade this with you thanks", 3, "z5231701@ad.unsw.edu.au-user3@gmail.com")
     message.save()
-    conversation = Conversation("testUser@gmail.com-user3@gmail.com", None, None)
+    conversation = Conversation("z5231701@ad.unsw.edu.au-user3@gmail.com", None, None)
     conversation.latest = message.id
     conversation.last_read_first = message.id
     conversation.save()
 
-    inactiveConversation = Conversation("testUser@gmail.com-user2@gmail.com", None, None)
+    inactiveConversation = Conversation("z5231701@ad.unsw.edu.au-user2@gmail.com", None, None)
     inactiveConversation.save()
 
 
