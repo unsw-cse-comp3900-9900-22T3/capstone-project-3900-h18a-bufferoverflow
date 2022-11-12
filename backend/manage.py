@@ -219,6 +219,9 @@ def create_trade_offer_and_conversation():
     conversation.last_read_first = message.id
     conversation.save()
 
+    inactiveConversation = Conversation("testUser@gmail.com-user2@gmail.com", None, None)
+    inactiveConversation.save()
+
 
 @cli.command("add_traded_listings_data")
 def add_traded_listings_data():
