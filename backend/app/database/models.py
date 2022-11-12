@@ -601,8 +601,6 @@ class SearchedListing(BaseDataModel, db.Model):
         user_id (int): SearchedListing user id
         categories (list): SearchedListing categories
     """
-
-class SearchedListing(db.Model):
     __tablename__ = "searched_listings"
 
     id = db.Column(db.Integer, primary_key=True)
