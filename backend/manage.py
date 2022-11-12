@@ -26,11 +26,9 @@ def create_categories():
 def create_db():
     # if no data in db, create default data
     if not Material.query.all():
+        db.create_all()
+        db.session.commit()
         add_data()
-
-    db.session.commit()
-    db.create_all()
-    db.session.commit()
 
 
 @cli.command("add_data")
