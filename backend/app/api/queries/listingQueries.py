@@ -1,9 +1,7 @@
-from operator import sub
-from app import db
-from app.models import Listing, User, SearchedListing, ClickedListing
+from app.database.models import Listing, User, SearchedListing, ClickedListing
 from manage import category_names, material_names
-
 from ariadne import convert_kwargs_to_snake_case
+
 
 @convert_kwargs_to_snake_case
 def getListing_resolver(obj, info, id, user_email=None):
@@ -12,9 +10,13 @@ def getListing_resolver(obj, info, id, user_email=None):
 
         # if click on listing was done by user, save it in the db
         if user_email:
-            # get user id 
+            # get user id
             user_id = User.query.filter_by(email=user_email).first().id
-            clicked_listing = ClickedListing(listing.categories, user_id)
+            # Need to change listing.categories to a list of strings
+            # to work with the ClickedListing constructor
+            categories_list = change_db_categories_to_list(listing)
+            
+            clicked_listing = ClickedListing(categories_list, user_id)
             clicked_listing.save()
 
         payload = {
@@ -27,6 +29,7 @@ def getListing_resolver(obj, info, id, user_email=None):
             "errors": [str(e)]
         }
     return payload
+
 
 @convert_kwargs_to_snake_case
 def getListingsByUser_resolver(obj, info, user_email):
@@ -45,6 +48,7 @@ def getListingsByUser_resolver(obj, info, user_email):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def defaultFeed_resolver(obj, info):
     try:
@@ -60,13 +64,49 @@ def defaultFeed_resolver(obj, info):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def userFeed_resolver(obj, info, user_email):
     try:
         user =  User.query.filter_by(email=user_email).first()
         feed_listings = []
+
+        # get all searches that have been done by this user 
+        searches = SearchedListing.query.filter_by(user_id=user.id).all()
+        trades = TradedListing.query.filter_by(traded_to=user.id).all()
+        clicks = ClickedListing.query.filter_by(user_id=user.id).all()
+        
+        # initialise all "count" dictionaries
+        search_categories = generate_categories_dict()
+        traded_categories = generate_categories_dict() 
+        clicked_categories = generate_categories_dict()
+
+        # calculate how many of each category 
+        fill_categories_dict(search_categories, searches)
+        fill_categories_dict(traded_categories, trades)
+        fill_categories_dict(clicked_categories, clicks)
+            
+        # use this as the *probability* that a listing appears early in 
+        # the list 
+        probability = 0
+
         for listing in Listing.query.all():
+            probability = 0 
+            search_probability = generate_categories_probability(listing, search_categories)
+            trade_probability = generate_categories_probability(listing, traded_categories)
+            click_probability = generate_categories_probability(listing, clicked_categories)
+
+            # take a weighted average of the previous probabilities
+            # we favour trades the most, then clicks, then searches
+            probability += (0.5 * trade_probability) + (0.35 * click_probability) + (0.15 * search_probability)
+            
+            # if the user is following someone, that should bump the probability up
             if user.is_following(user_id=listing.user_id):
+                probability += 0.2
+                
+            # generate a random number between 0-1 and check
+            # if our probability is greater...if it is, goes to front of feed
+            if probability > random():
                 feed_listings.insert(0, listing.to_json())
             else:
                 feed_listings.append(listing.to_json())
@@ -81,6 +121,7 @@ def userFeed_resolver(obj, info, user_email):
             "errors": [str(error)]
         }
     return payload
+
 
 @convert_kwargs_to_snake_case
 def searchListings_resolver(obi, info,
@@ -106,7 +147,7 @@ def searchListings_resolver(obi, info,
         if categories:
             # if search was done by user, save it in the db
             if user_email:
-                # get user id 
+                # get user id
                 user_id = User.query.filter_by(email=user_email).first().id
                 searched_listing = SearchedListing(categories, user_id)
                 searched_listing.save()
@@ -139,8 +180,6 @@ def searchListings_resolver(obi, info,
             "errors": [str(error)]
         }
     return payload
-
-
 
 
 @convert_kwargs_to_snake_case
@@ -193,6 +232,7 @@ def create_listing_resolver(obj, info,
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def update_listing_resolver(obj, info,
         id,
@@ -241,6 +281,7 @@ def update_listing_resolver(obj, info,
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def delete_listing_resolver(obj, info, id):
     try:
@@ -257,6 +298,7 @@ def delete_listing_resolver(obj, info, id):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def getCategories_resolver(obj, info):
     try:
@@ -270,6 +312,7 @@ def getCategories_resolver(obj, info):
             "errors": [str(error)]
         }
     return payload
+
 
 @convert_kwargs_to_snake_case
 def getMaterials_resolver(obj, info):

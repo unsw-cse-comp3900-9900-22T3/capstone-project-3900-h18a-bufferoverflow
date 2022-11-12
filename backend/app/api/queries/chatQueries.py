@@ -1,7 +1,6 @@
-from app import db
-from app.models import Message, Conversation, User
-
+from app.database.models import Message, Conversation, User
 from ariadne import convert_kwargs_to_snake_case
+
 
 def create_message_resolver(obj, info, timestamp, text, author, conversation):
     try:
@@ -17,6 +16,7 @@ def create_message_resolver(obj, info, timestamp, text, author, conversation):
             "errors": [str(error)]
         }
     return payload
+
 
 def getMessages_resolver(obj, info, conversation=None):
     try:
@@ -37,7 +37,6 @@ def getMessages_resolver(obj, info, conversation=None):
         }
     return payload
 
-# todo: is_inactive
 
 @convert_kwargs_to_snake_case
 def createConversation_resolver(obj, info, **kwargs):
@@ -54,6 +53,7 @@ def createConversation_resolver(obj, info, **kwargs):
             "errors": [str(error)]
         }
     return payload
+
 
 @convert_kwargs_to_snake_case
 def updateConversation_resolver(obj, info, conversation, last_read_first=None, last_read_second=None):
@@ -77,6 +77,7 @@ def updateConversation_resolver(obj, info, conversation, last_read_first=None, l
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def getConversations_resolver(obj, info, involving):
     try:
@@ -93,6 +94,7 @@ def getConversations_resolver(obj, info, involving):
             "errors": [str(error)]
         }
     return payload
+
 
 @convert_kwargs_to_snake_case
 def getConversationsForOverview_resolver(obj, info, involving):
@@ -163,6 +165,7 @@ def countUnseenMessages_resolver(obj, info, email):
             "errors": [repr(error)]
         }
     return payload
+
 
 def deleteConversation_resolver(obj, info, conversation):
     try:

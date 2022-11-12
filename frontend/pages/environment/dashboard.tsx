@@ -5,6 +5,58 @@ import { useEffect, useState } from "react";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { motion, useScroll, useTransform } from "framer-motion"
 import ReactConfetti from "react-confetti";
+import { gql, useQuery } from "@apollo/client";
+import { useStore } from "../../store/store";
+
+/////////////////////////////////////////////////////////////////////////////
+// Queries
+/////////////////////////////////////////////////////////////////////////////
+
+const GET_USER_STATS = gql`
+  query ($email: String!, $year: Int!) {
+    getUserStats(userEmail: $email, year: $year) {
+      errors
+      success
+      userStats {
+        numTrades
+        carbonDioxideSaving
+        cubicMeterSaving
+      }
+    }
+  }
+`;
+
+const GET_COMMUNITY_STATS = gql`
+  query ($email: String!, $year: Int!) {
+    getCommunityStats(userEmail: $email, year: $year) {
+      errors
+      success
+      communityStats {
+        name
+        numTrades
+        carbonDioxideSaving
+        cubicMeterSaving
+      }
+    }
+  }
+`;
+
+const GET_USER = gql`
+  query ($email: String!) {
+    getUser(email: $email) {
+      errors
+      success
+      user {
+        displayImg
+        username
+      }
+    }
+  }
+`;
+
+/////////////////////////////////////////////////////////////////////////////
+// Secondary Components
+/////////////////////////////////////////////////////////////////////////////
 
 const StatsDisplay = (props: {
   value: number;
@@ -22,19 +74,26 @@ const StatsDisplay = (props: {
   )
 }
 
+/////////////////////////////////////////////////////////////////////////////
+// Primary Component
+/////////////////////////////////////////////////////////////////////////////
+
 const Dashboard: NextPage = () => {
 
-  const username = "Sean"
-  const community = "UTS"
-  const avatar = 'https://mui.com/static/images/avatar/3.jpg'
   const validYears = [2020, 2021, 2022]
 
   const [year, setYear] = useState(validYears.at(-1)?.toString());
+  const [communityYear, setCommunityYear] = useState(validYears.at(-1)?.toString());
   const [height, setHeight] = useState(0)
   const [width, setHWidth] = useState(0)
 
   const { scrollYProgress } = useScroll()
   const scale = useTransform(scrollYProgress, [0, 1], [0.2, 1.1]);
+
+  const { auth } = useStore()
+  const user = useQuery(GET_USER, { variables: { email: auth?.email } }).data?.getUser?.user;
+  const userStats = useQuery(GET_USER_STATS, { variables: { email: auth?.email, year: parseInt(year || '2022') } }).data?.getUserStats?.userStats;
+  const communityStats = useQuery(GET_COMMUNITY_STATS, { variables: { email: auth?.email, year: parseInt(communityYear || '2022') } }).data?.getCommunityStats?.communityStats;
 
   useEffect(() => {
     if (!height) setHeight(window.innerHeight)
@@ -44,12 +103,18 @@ const Dashboard: NextPage = () => {
   const handleChange = (event: SelectChangeEvent) => {
     setYear(event.target.value as string);
   };
+  
+  const handleCommunityChange = (event: SelectChangeEvent) => {
+    setCommunityYear(event.target.value as string);
+  };
 
   return (
     <Template title="Dashboard">
       <ReactConfetti width={width} height={height * 2} />
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
-        <Typography sx={{ fontSize: 35 }}>Congrats {username}, your impact made in</Typography>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 8 }}>
+        <Typography sx={{ fontSize: 35 }}>
+          Congrats {user?.username}, your impact made in
+        </Typography>
         <FormControl sx={{ ml: 3, mr: 3 }}>
           <InputLabel id="demo-simple-select-label">Year</InputLabel>
           <Select
@@ -59,85 +124,132 @@ const Dashboard: NextPage = () => {
             label="Year"
             onChange={handleChange}
           >
-            {validYears.slice(0).reverse().map(year => (<MenuItem value={year}>{year}</MenuItem>))}
+            {validYears
+              .slice(0)
+              .reverse()
+              .map((year) => (
+                <MenuItem value={year}>{year}</MenuItem>
+              ))}
           </Select>
         </FormControl>
         <Typography sx={{ fontSize: 35 }}>is</Typography>
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 8 }}>
         <motion.div
           initial={{ scale: 0 }}
           animate={{ rotate: 360, scale: 1 }}
           transition={{
             type: "spring",
             stiffness: 260,
-            damping: 20
+            damping: 20,
           }}
         >
-          <Avatar src={avatar} sx={{ height: 300, width: 300 }} />
+          <Avatar src={user?.displayImg} sx={{ height: 300, width: 300 }} />
         </motion.div>
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 9 }}>
-        <Box sx={{ display: 'flex', width: 700, justifyContent: 'space-between' }}>
-          <StatsDisplay value={8} description='trades made in total' />
-          <StatsDisplay value={0.3} description='cubic metres landfill reduced' />
-          <StatsDisplay value={3.14} description='units estimated CO2 reduction' />
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 9 }}>
+        <Box
+          sx={{ display: "flex", width: 700, justifyContent: "space-between" }}
+        >
+          <StatsDisplay
+            value={userStats?.numTrades}
+            description="trades made in total"
+          />
+          <StatsDisplay
+            value={userStats?.cubicMeterSaving}
+            description="cubic metres landfill reduced"
+          />
+          <StatsDisplay
+            value={userStats?.carbonDioxideSaving}
+            description="units estimated CO2 reduction"
+          />
         </Box>
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8, flexDirection: 'column', alignItems: 'center' }}>
-        <Typography sx={{ fontSize: 35 }}>Thanks for doing your bit for the</Typography>
-        <Typography sx={{ fontSize: 35 }}>{community} community!</Typography>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          mt: 8,
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Typography sx={{ fontSize: 35 }}>
+          Thanks for doing your bit for the
+        </Typography>
+        <Typography sx={{ fontSize: 35 }}>
+          {communityStats?.name} community!
+        </Typography>
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 8 }}>
         <motion.div
           transition={{ y: { duration: 0.4, yoyo: Infinity, ease: "easeOut" } }}
-          animate={{ backgroundColor: 'white', y: ["30%", "-30%"] }}
+          animate={{ backgroundColor: "white", y: ["30%", "-30%"] }}
         >
           <ArrowDropDownIcon sx={{ height: 80, width: 80 }} />
         </motion.div>
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
-        <Typography sx={{ fontSize: 35 }}>{community}'s environmental impact in </Typography>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 8 }}>
+        <Typography sx={{ fontSize: 35 }}>
+          {communityStats?.name}'s environmental impact in{" "}
+        </Typography>
         <FormControl sx={{ ml: 3 }}>
           <InputLabel id="demo-simple-select-label">Year</InputLabel>
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value={year}
+            value={communityYear}
             label="Year"
-            onChange={handleChange}
+            onChange={handleCommunityChange}
           >
-            {validYears.slice(0).reverse().map(year => (<MenuItem value={year}>{year}</MenuItem>))}
+            {validYears
+              .slice(0)
+              .reverse()
+              .map((year) => (
+                <MenuItem value={year}>{year}</MenuItem>
+              ))}
           </Select>
         </FormControl>
-
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
-        <motion.div
-          style={{ scale }}
-        >
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 8 }}>
+        <motion.div style={{ scale }}>
           <motion.div
             style={{
-              scaleY: scrollYProgress
+              scaleY: scrollYProgress,
             }}
           />
           {/* Replace with map view later*/}
           <Box sx={{ border: 1, width: 600, height: 400 }} />
         </motion.div>
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 9 }}>
-        <Box sx={{ display: 'flex', width: 700, justifyContent: 'space-between' }}>
-          <StatsDisplay value={42} description='trades made in total' />
-          <StatsDisplay value={58} description='cubic metres landfill reduced' />
-          <StatsDisplay value={68} description='units estimated CO2 reduction' />
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 9 }}>
+        <Box
+          sx={{ display: "flex", width: 700, justifyContent: "space-between" }}
+        >
+          <StatsDisplay
+            value={communityStats?.numTrades}
+            description="trades made in total"
+          />
+          <StatsDisplay
+            value={communityStats?.cubicMeterSaving}
+            description="cubic metres landfill reduced"
+          />
+          <StatsDisplay
+            value={communityStats?.carbonDioxideSaving}
+            description="units estimated CO2 reduction"
+          />
         </Box>
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 9, mb: 9 }}>
-        <Button variant="outlined" sx={{ p: 1.5, borderRadius: 30 }} href='/environment/methodology'>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 9, mb: 9 }}>
+        <Button
+          variant="outlined"
+          sx={{ p: 1.5, borderRadius: 30 }}
+          href="/environment/methodology"
+        >
           How do we estimate these stats?
         </Button>
       </Box>
-    </Template >
+    </Template>
   );
 };
 
