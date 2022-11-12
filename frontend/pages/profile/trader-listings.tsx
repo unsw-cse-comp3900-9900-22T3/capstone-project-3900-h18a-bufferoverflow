@@ -5,7 +5,7 @@ import { Box, Typography } from "@mui/material";
 import { itemDataToItemCard } from "../../components/feed/ItemCard";
 import { useRouter } from "next/router";
 import { gql, useQuery } from "@apollo/client";
-import { GraphqlListing } from "../../components/listing/types";
+import { GraphqlListing } from "../../@types/component.types";
 
 /////////////////////////////////////////////////////////////////////////////
 // Queries

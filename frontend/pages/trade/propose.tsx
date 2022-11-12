@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 import { Toast } from "../../components/generic/Toast";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import { GraphqlListing } from "../../components/listing/types";
 import { useStore } from "../../store/store";
+import { GraphqlListing } from "../../@types/component.types";
 
 /////////////////////////////////////////////////////////////////////////////
 // Queries

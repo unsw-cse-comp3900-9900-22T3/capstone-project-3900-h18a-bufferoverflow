@@ -1,12 +1,12 @@
 import { Template } from '../../components/generic/Template'
 import { NextPage } from 'next'
 import { itemDataToItemCard } from '../../components/feed/ItemCard'
-import { GraphqlListing } from '../../components/listing/types'
 import { Box, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar'
 import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals'
 import { useQuery, gql } from "@apollo/client";
+import { GraphqlListing } from '../../@types/component.types'
 
 /////////////////////////////////////////////////////////////////////////////
 // Data

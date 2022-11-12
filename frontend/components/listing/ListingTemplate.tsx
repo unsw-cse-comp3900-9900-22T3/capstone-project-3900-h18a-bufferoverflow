@@ -1,12 +1,12 @@
 import { Box, Button, Card, Checkbox, FormControl, FormControlLabel, FormGroup, InputAdornment, Tab, Tabs, TextField, Typography } from "@mui/material";
 import { createRef, useEffect, useState } from "react";
-import { ListingProps, StatusType } from "../../components/listing/types";
 import { CategorySearch } from "../../components/feed/CategorySearch";
 import { uploadFile } from "../../utils/utils";
 import { gql, useMutation, useQuery, useLazyQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import { Toast } from "../generic/Toast";
 import { useStore } from "../../store/store";
+import { ListingProps, StatusType } from "../../@types/component.types";
 
 /////////////////////////////////////////////////////////////////////////////
 // Queries
