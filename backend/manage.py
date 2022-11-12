@@ -207,7 +207,7 @@ def add_listings():
 def create_trade_offer_and_conversation():
     """Create trade offers
 
-    Assume the admin user has made a listing with id 7
+    Assume the test user has made a listing with id 7
 
     """
     trade_offer1 = TradeOffer(
