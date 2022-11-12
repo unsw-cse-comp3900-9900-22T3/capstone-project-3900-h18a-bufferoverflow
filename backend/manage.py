@@ -212,9 +212,9 @@ def create_trade_offer_and_conversation():
     )
     trade_offer1.save()
 
-    message = Message(1664802000000, "Hi there, i would like to trade this with you thanks", 3, "testUser@gmail.com-user2@gmail.com")
+    message = Message(1664802000000, "Hi there, i would like to trade this with you thanks", 3, "testUser@gmail.com-user3@gmail.com")
     message.save()
-    conversation = Conversation("testUser@gmail.com-user2@gmail.com", None, None)
+    conversation = Conversation("testUser@gmail.com-user3@gmail.com", None, None)
     conversation.latest = message.id
     conversation.last_read_first = message.id
     conversation.save()
