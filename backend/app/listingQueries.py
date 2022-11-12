@@ -2,7 +2,7 @@ from app import db
 from app.models import Listing, User, TradedListing, SearchedListing, ClickedListing
 from manage import category_names, material_names
 from random import random
-from helpers import generate_categories_dict
+from app.helpers import generate_categories_dict, generate_categories_probability
 
 from ariadne import convert_kwargs_to_snake_case
 
@@ -70,26 +70,26 @@ def userFeed_resolver(obj, info, user_email):
         # get all searches that have been done by this user 
         searches = SearchedListing.query.filter_by(user_id=user.id).all()
 
-        categories = generate_categories_dict()
+        search_categories = generate_categories_dict()
+        traded_categories = generate_categories_dict() 
+        clicked_categories = generate_categories_dict()
 
         # calculate how many of each category 
+        fill_categories_dict(search_categories, searches)
         for search in searches:
             for category in search.categories:
-                categories[category.type] += 1 
-                categories["total"] += 1
+                search_categories[category.type] += 1 
+                search_categories["total"] += 1
             
         # use this as the *probability* that a listing appears early in 
         # the list 
         probability = 0
 
         for listing in Listing.query.all():
-            # get probability from categories 
             probability = 0 
-            # check if categories searched for is 0 to alleviate div by 0 error 
-            if categories["total"] != 0:
-                for category in listing.categories:
-                    probability += (categories[category.type] / categories["total"])
-
+            search_probability = generate_categories_probability(listing, search_categories)
+            trade_probability = generate_categories_probability(listing, traded_categories)
+            click_probability = generate_categories_probability(listing, click_probability)
             
             if user.is_following(user_id=listing.user_id):
                 probability += 0.2

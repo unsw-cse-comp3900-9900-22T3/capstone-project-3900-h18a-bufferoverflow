@@ -69,6 +69,16 @@ def generate_categories_dict():
 
     return categories
 
+def fill_categories_dict(categories_count, query_results):
+    '''
+    Fills a pre-initialised dictionary with a count of how many times each 
+    category appears in a given query
+    '''
+    for result in query_results:
+        for category in result.categories:
+            categories_count[category.type] += 1 
+            categories_count["total"] += 1
+
 def generate_categories_probability(listing, categories_count): 
     '''
     Generates the probability that a given category would be accessed 
