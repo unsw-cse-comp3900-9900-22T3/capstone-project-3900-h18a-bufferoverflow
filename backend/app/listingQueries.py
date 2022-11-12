@@ -3,7 +3,7 @@ from app.models import Listing, User, TradedListing, SearchedListing, ClickedLis
 from manage import category_names, material_names
 from random import random
 from app.helpers import generate_categories_dict, generate_categories_probability, \
-    fill_categories_dict
+    fill_categories_dict, change_db_categories_to_list
 
 from ariadne import convert_kwargs_to_snake_case
 
@@ -18,9 +18,7 @@ def getListing_resolver(obj, info, id, user_email=None):
             user_id = User.query.filter_by(email=user_email).first().id
             # Need to change listing.categories to a list of strings
             # to work with the ClickedListing constructor
-            categories_list = []
-            for category in listing.categories:
-                categories_list.append(category.type)
+            categories_list = change_db_categories_to_list(listing)
             
             clicked_listing = ClickedListing(categories_list, user_id)
             clicked_listing.save()

@@ -94,3 +94,12 @@ def generate_categories_probability(listing, categories_count):
         probability += (categories_count[category.type] / categories_count["total"])
 
     return probability
+
+def change_db_categories_to_list(listing):
+    '''
+    Takes in a listing, and returns it's categories as a list of strings
+    '''
+    categories_list = []
+    for category in listing.categories:
+        categories_list.append(category.type)
+    return categories_list
