@@ -50,7 +50,7 @@ def add_data():
     add_clicked_and_searched_listings_data()
 
     # create some trade offers, old and active conversations
-    create_trade_offer_and_conversation()
+    create_conversations()
 
 
 @cli.command("add_users")
@@ -194,20 +194,10 @@ def add_listings():
     listing6.save()
 
 
-@cli.command("create_trade_offer_and_conversation")
-def create_trade_offer_and_conversation():
-    """Create trade offers
-
-    Assume the test user has made a listing with id 7
-
-    """
-    trade_offer1 = TradeOffer(
-        listing_one_id=7,
-        listing_two_id=5,
-    )
-    trade_offer1.save()
-
-    message = Message(1664802000000, "Hi there, i would like to trade this with you thanks", 3, "z5231701@ad.unsw.edu.au-user3@gmail.com")
+@cli.command("create_conversations")
+def create_conversations():
+    """Create conversations"""
+    message = Message(1664802000000, "Hi there, I would like to trade with you", 3, "z5231701@ad.unsw.edu.au-user3@gmail.com")
     message.save()
     conversation = Conversation("z5231701@ad.unsw.edu.au-user3@gmail.com", None, None)
     conversation.latest = message.id
