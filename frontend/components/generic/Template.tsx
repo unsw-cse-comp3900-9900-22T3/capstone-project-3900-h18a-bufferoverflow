@@ -132,7 +132,7 @@ export const Template = (props: {
   );
   useEffect(() => {
     if (data?.countUnseenMessages) {
-      setNotificationCount(data?.countUnseenMessages.count);
+      setNotificationCount(data?.countUnseenMessages.count || 0);
     }
   }, [data]);
 
