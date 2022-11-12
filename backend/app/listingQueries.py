@@ -2,7 +2,8 @@ from app import db
 from app.models import Listing, User, TradedListing, SearchedListing, ClickedListing
 from manage import category_names, material_names
 from random import random
-from app.helpers import generate_categories_dict, generate_categories_probability
+from app.helpers import generate_categories_dict, generate_categories_probability, \
+    fill_categories_dict
 
 from ariadne import convert_kwargs_to_snake_case
 
@@ -69,17 +70,18 @@ def userFeed_resolver(obj, info, user_email):
 
         # get all searches that have been done by this user 
         searches = SearchedListing.query.filter_by(user_id=user.id).all()
-
+        trades = TradedListing.query.filter_by(traded_to=user.id).all()
+        clicks = ClickedListing.query.filter_by(user_id=user.id).all()
+        
+        # initialise all "count" dictionaries
         search_categories = generate_categories_dict()
         traded_categories = generate_categories_dict() 
         clicked_categories = generate_categories_dict()
 
         # calculate how many of each category 
         fill_categories_dict(search_categories, searches)
-        for search in searches:
-            for category in search.categories:
-                search_categories[category.type] += 1 
-                search_categories["total"] += 1
+        fill_categories_dict(traded_categories, trades)
+        fill_categories_dict(clicked_categories, trades)
             
         # use this as the *probability* that a listing appears early in 
         # the list 
