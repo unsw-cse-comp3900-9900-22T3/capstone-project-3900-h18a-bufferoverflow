@@ -3,10 +3,10 @@ import { NextPage } from "next";
 import { useState, useEffect } from "react";
 import { Stack, Box } from "@mui/system";
 import { SingleChatOverview, SingleChatOverviewProps } from "../../components/chat/single-chat";
-import { Message } from "../../utils/chat";
 import { gql, useLazyQuery } from "@apollo/client";
 import { useStore } from "../../store/store";
 import { Typography } from "@mui/material";
+import { Message } from "../../@types/pages.types";
 
 const GET_CONVERSATIONS_QUERY = gql`
   query getConversationsQuery($involving: String!) {

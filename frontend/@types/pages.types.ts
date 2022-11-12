@@ -1,4 +1,8 @@
-import { User } from "./user";
+export type User = {
+  username: string;
+  displayImg: string;
+  id: number;
+};
 
 export type Message = {
   id: number;

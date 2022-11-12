@@ -22,9 +22,8 @@ import StarIcon from "@mui/icons-material/Star";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import styled from "@emotion/styled";
-import { User } from "../../utils/user";
-import { Message, MessageGraphqlProps } from "../../utils/chat";
 import { GET_FOLLOW, FOLLOW, UNFOLLOW } from "../profile/visitor-profile";
+import { Message, MessageGraphqlProps, User } from "../../@types/pages.types";
 
 // todo
 // Messages should be marked as read when they are…read.
