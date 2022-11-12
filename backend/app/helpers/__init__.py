@@ -45,3 +45,52 @@ def get_user_co2_emission_saving(user, year):
 
     total_co2_savings = brick_and_mortar_delivery_co2_savings + landfill_co2_savings + manufacturing_co2_savings
     return user_trade_count, cubic_metres_landfill_savings, total_co2_savings
+
+def generate_categories_dict(): 
+    '''
+    Generates a dictionary with the keys being all item categories, with all 
+    values initialised to 0
+    '''
+    categories = {} 
+    # it is important to track the total number of times each category appears
+    categories["total"] = 0 
+    for category_name in category_names:
+        categories[category_name] = 0
+
+    return categories
+
+def fill_categories_dict(categories_count, query_results):
+    '''
+    Fills a pre-initialised dictionary with a count of how many times each 
+    category appears in a given query
+    '''
+    for result in query_results:
+        for category in result.categories:
+            categories_count[category.type] += 1 
+            categories_count["total"] += 1
+
+def generate_categories_probability(listing, categories_count): 
+    '''
+    Generates the probability that a given category would be accessed 
+    (could be searched, clicked, etc.) based on previous data...
+    '''
+    probability = 0
+
+    # check for div by zero 
+    if categories_count["total"] == 0:
+        return probability
+
+    for category in listing.categories:
+        probability += (categories_count[category.type] / categories_count["total"])
+
+    return probability
+
+def change_db_categories_to_list(listing):
+    '''
+    Takes in a listing, and returns it's categories as a list of strings
+    '''
+    categories_list = []
+    for category in listing.categories:
+        categories_list.append(category.type)
+    return categories_list
+

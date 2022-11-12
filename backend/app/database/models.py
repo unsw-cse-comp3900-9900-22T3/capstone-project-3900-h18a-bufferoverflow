@@ -154,8 +154,28 @@ listing_want_to_trade_for = db.Table('listing_want_to_trade_for',
                                          'listings.id'), primary_key=True),
                                      db.Column('category_id', db.Integer, db.ForeignKey(
                                          'categories.id'), primary_key=True)
-                                     )
+                                    )
 
+search_category = db.Table('search_category',
+                            db.Column('search_id', db.Integer, db.ForeignKey(
+                                'searched_listings.id'), primary_key=True),
+                            db.Column('category_id', db.Integer, db.ForeignKey(
+                                'categories.id'), primary_key=True)
+                          )
+
+traded_category = db.Table('traded_category',
+                            db.Column('traded_id', db.Integer, db.ForeignKey(
+                                'traded_listings.id'), primary_key=True),
+                            db.Column('category_id', db.Integer, db.ForeignKey(
+                                'categories.id'), primary_key=True)
+                          )
+
+clicked_category = db.Table('clicked_category',
+                            db.Column('traded_id', db.Integer, db.ForeignKey(
+                                'clicked_listings.id'), primary_key=True),
+                            db.Column('category_id', db.Integer, db.ForeignKey(
+                                'categories.id'), primary_key=True)
+                           )
 
 class Category(BaseDataModel, db.Model):
     """ Category Model for storing category related details
@@ -174,6 +194,13 @@ class Category(BaseDataModel, db.Model):
         'Listing', secondary=listing_category, backref='categories')
     want_to_trade_for_to = db.relationship(
         'Listing', secondary=listing_want_to_trade_for, backref='want_to_trade_for')
+
+    search_category_to = db.relationship(
+        'SearchedListing', secondary=search_category, backref='categories')
+    traded_category_to = db.relationship(
+        'TradedListing', secondary=traded_category, backref='categories')
+    clicked_category_to = db.relationship(
+        'ClickedListing', secondary=clicked_category, backref='categories')
 
     def __init__(self, type):
         """ Initialize category with type """
@@ -539,7 +566,21 @@ class TradedListing(BaseDataModel, db.Model):
     year_traded = db.Column(db.Integer, nullable=False)
 
     materials = []
-    categories = []
+
+    def update_categories(self, categories):
+        if categories is not None:
+            # to successfully remove all previous want_to_trade_for
+            for category_name in category_names:
+                category = Category.query.filter_by(type=category_name).first()
+                try:
+                    category.traded_category_to.remove(self)
+                except:
+                    pass
+
+            for category_name in categories:
+                category = Category.query.filter_by(type=category_name).first()
+                category.traded_category_to.append(self)
+                category.save()
 
     def __init__(self, traded_by, traded_to, weight, volume, materials, categories, year_traded):
         """ Initialize traded listing with traded_by, traded_to, weight, volume, materials, categories, year_traded """
@@ -548,8 +589,8 @@ class TradedListing(BaseDataModel, db.Model):
         self.weight = weight
         self.volume = volume
         self.materials = materials
-        self.categories = categories
         self.year_traded = year_traded
+        self.update_categories(categories)
 
 
 class SearchedListing(BaseDataModel, db.Model):
@@ -561,16 +602,31 @@ class SearchedListing(BaseDataModel, db.Model):
         categories (list): SearchedListing categories
     """
 
-    __tablename__ = "search_listings"
+class SearchedListing(db.Model):
+    __tablename__ = "searched_listings"
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    categories = []
+
+    def update_categories(self, categories):
+        if categories is not None:
+            # to successfully remove all previous want_to_trade_for
+            for category_name in category_names:
+                category = Category.query.filter_by(type=category_name).first()
+                try:
+                    category.search_category_to.remove(self)
+                except:
+                    pass
+
+            for category_name in categories:
+                category = Category.query.filter_by(type=category_name).first()
+                category.search_category_to.append(self)
+                category.save()
 
     def __init__(self, categories, user_id):
         """ Initialize searched listing with categories, user_id """
         self.user_id = user_id
-        self.categories = categories
+        self.update_categories(categories)
 
 
 class ClickedListing(BaseDataModel, db.Model):
@@ -586,9 +642,24 @@ class ClickedListing(BaseDataModel, db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    categories = []
+
+    def update_categories(self, categories):
+        if categories is not None:
+            # to successfully remove all previous want_to_trade_for
+            for category_name in category_names:
+                category = Category.query.filter_by(type=category_name).first()
+                try:
+                    category.clicked_category_to.remove(self)
+                except:
+                    pass
+
+            for category_name in categories:
+                category = Category.query.filter_by(type=category_name).first()
+                category.clicked_category_to.append(self)
+                category.save()
 
     def __init__(self, categories, user_id):
         """ Initialize clicked listing with categories, user_id """
         self.user_id = user_id
         self.categories = categories
+        self.update_categories(categories)
