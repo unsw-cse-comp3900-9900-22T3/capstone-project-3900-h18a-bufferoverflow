@@ -37,6 +37,7 @@ def send_message(data):
 
         emit("to_client", message.to_json(), to=data['conversation'])
 
+
 @socketio.on('join')
 def on_join(data):
     conversation = data['conversation']

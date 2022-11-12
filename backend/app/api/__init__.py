@@ -1,6 +1,7 @@
 from app.api.queries import userQueries, listingQueries, tradeOfferQueries, followQueries, chatQueries, statsQueries
 import ariadne
 
+
 # Create queries
 query = ariadne.ObjectType("Query")
 query.set_field("listUsers", userQueries.listUsers_resolver)
@@ -23,6 +24,7 @@ query.set_field("getListingsInTradeOffer", tradeOfferQueries.getListingsInTradeO
 query.set_field("getUsersInTradeOffer", tradeOfferQueries.getUsersInTradeOffer_resolver)
 query.set_field("getUserStats", statsQueries.getUserStats_resolver)
 query.set_field("getCommunityStats", statsQueries.getUserStats_resolver)
+
 
 # Create mutations
 mutation = ariadne.ObjectType("Mutation")

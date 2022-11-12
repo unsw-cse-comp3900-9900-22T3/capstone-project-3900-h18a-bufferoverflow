@@ -1,6 +1,6 @@
 from app.database.models import User
-
 from ariadne import convert_kwargs_to_snake_case
+
 
 def listUsers_resolver(obj, info):
     try:
@@ -16,6 +16,7 @@ def listUsers_resolver(obj, info):
         }
     return payload
 
+
 def getUser_resolver(obj, info, email):
     try:
         user = User.query.filter_by(email=email).first()
@@ -29,6 +30,7 @@ def getUser_resolver(obj, info, email):
             "errors": [str(e)]
         }
     return payload
+
 
 def create_user_resolver(obj, info, username, email):
     try:
@@ -44,6 +46,7 @@ def create_user_resolver(obj, info, username, email):
             "errors": [str(error)]
         }
     return payload
+
 
 @convert_kwargs_to_snake_case
 def update_user_resolver(
@@ -84,6 +87,7 @@ def update_user_resolver(
             "errors": [str(e)]
         }
     return payload
+
 
 def delete_user_resolver(obj, info, email):
     try:

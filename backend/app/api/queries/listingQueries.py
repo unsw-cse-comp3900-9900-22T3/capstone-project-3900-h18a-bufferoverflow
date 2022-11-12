@@ -1,7 +1,7 @@
 from app.database.models import Listing, User, SearchedListing, ClickedListing
 from manage import category_names, material_names
-
 from ariadne import convert_kwargs_to_snake_case
+
 
 @convert_kwargs_to_snake_case
 def getListing_resolver(obj, info, id, user_email=None):
@@ -26,6 +26,7 @@ def getListing_resolver(obj, info, id, user_email=None):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def getListingsByUser_resolver(obj, info, user_email):
     try:
@@ -43,6 +44,7 @@ def getListingsByUser_resolver(obj, info, user_email):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def defaultFeed_resolver(obj, info):
     try:
@@ -57,6 +59,7 @@ def defaultFeed_resolver(obj, info):
             "errors": [str(error)]
         }
     return payload
+
 
 @convert_kwargs_to_snake_case
 def userFeed_resolver(obj, info, user_email):
@@ -79,6 +82,7 @@ def userFeed_resolver(obj, info, user_email):
             "errors": [str(error)]
         }
     return payload
+
 
 @convert_kwargs_to_snake_case
 def searchListings_resolver(obi, info,
@@ -139,8 +143,6 @@ def searchListings_resolver(obi, info,
     return payload
 
 
-
-
 @convert_kwargs_to_snake_case
 def create_listing_resolver(obj, info,
         user_email,
@@ -191,6 +193,7 @@ def create_listing_resolver(obj, info,
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def update_listing_resolver(obj, info,
         id,
@@ -239,6 +242,7 @@ def update_listing_resolver(obj, info,
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def delete_listing_resolver(obj, info, id):
     try:
@@ -255,6 +259,7 @@ def delete_listing_resolver(obj, info, id):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def getCategories_resolver(obj, info):
     try:
@@ -268,6 +273,7 @@ def getCategories_resolver(obj, info):
             "errors": [str(error)]
         }
     return payload
+
 
 @convert_kwargs_to_snake_case
 def getMaterials_resolver(obj, info):

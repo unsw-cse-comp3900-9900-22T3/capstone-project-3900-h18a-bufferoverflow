@@ -2,6 +2,7 @@ from app.database.models import User
 from ariadne import convert_kwargs_to_snake_case
 import app.helpers as helpers
 
+
 @convert_kwargs_to_snake_case
 def getUserStats_resolver(obj, info, user_email, year):
     '''
@@ -24,6 +25,7 @@ def getUserStats_resolver(obj, info, user_email, year):
             "errors": [str(e)]
         }
     return payload
+
 
 @convert_kwargs_to_snake_case
 def getCommunityStats_resolver(obj, info, user_email, year):

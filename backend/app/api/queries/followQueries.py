@@ -1,6 +1,7 @@
 from app.database.models import User
 from ariadne import convert_kwargs_to_snake_case
 
+
 @convert_kwargs_to_snake_case
 def followUser_resolver(obj, info,
     follower_email,
@@ -20,6 +21,7 @@ def followUser_resolver(obj, info,
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def unfollowUser_resolver(obj, info,
     follower_email,
@@ -38,6 +40,7 @@ def unfollowUser_resolver(obj, info,
             "errors": [str(error)]
         }
     return payload
+
 
 @convert_kwargs_to_snake_case
 def getFollowing_resolver(obj, info, user_email, check_follower_email):
@@ -59,6 +62,7 @@ def getFollowing_resolver(obj, info, user_email, check_follower_email):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def getFollowingList_resolver(obj, info, user_email):
     try:
@@ -74,5 +78,3 @@ def getFollowingList_resolver(obj, info, user_email):
             "errors": [str(e)]
         }
     return payload
-
-
