@@ -26,7 +26,6 @@ def graphql_server():
 
 @socketio.on('send_message')
 def send_message(data):
-    # bit hacky - was complaining about no author but it's set on every emit from frontend?
     if 'author' in data.keys():
         print(f'received message and sent back: {data}')
         message = models.Message(data['timestamp'], data['text'], data['author'], data['conversation'])
@@ -34,7 +33,6 @@ def send_message(data):
         conversation_object = models.Conversation.query.filter_by(conversation=data['conversation']).first()
         conversation_object.latest = message.id
         conversation_object.save()
-
         emit("to_client", message.to_json(), to=data['conversation'])
 
 
