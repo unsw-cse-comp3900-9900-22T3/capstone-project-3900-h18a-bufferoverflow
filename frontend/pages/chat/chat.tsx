@@ -122,7 +122,7 @@ const Chat: NextPage = () => {
   const author = auth?.email;
   const other = router.query.other;
 
-  const [us, setUs] = useState<User>({});
+  const [us, setUs] = useState<User>({ username: '', displayImg: '', id: 1 });
   const us_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
     variables: { email: author || "" },
   });
@@ -137,7 +137,7 @@ const Chat: NextPage = () => {
     }
   }, [us_response]);
 
-  const [them, setThem] = useState<User>({});
+  const [them, setThem] = useState<User>({ username: '', displayImg: '', id: 1 });
   const them_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
     variables: { email: other || "" },
   });
@@ -224,6 +224,7 @@ const Chat: NextPage = () => {
   }, [data]);
 
   useEffect(() => {
+    // @ts-ignore
     end.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
@@ -239,7 +240,7 @@ const Chat: NextPage = () => {
     }
   };
 
-  const imageRef = useRef(null);
+  const imageRef = useRef<any>(null);
   const [image, setImage] = useState("");
 
   useEffect(() => {
