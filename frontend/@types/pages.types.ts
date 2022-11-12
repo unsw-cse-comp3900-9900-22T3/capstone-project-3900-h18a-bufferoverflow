@@ -1,3 +1,5 @@
+import { GraphqlListing } from "./component.types";
+
 export type User = {
   username: string;
   displayImg: string;
@@ -31,5 +33,21 @@ export interface ConversationGraphqlProps {
     success: boolean;
     errors: string[] | null;
     conversations: Conversation[] | null;
+  };
+}
+
+export interface DefaultFeedGraphqlProps {
+  defaultFeed: {
+    success: boolean | null;
+    errors: string[] | null;
+    listings: GraphqlListing[] | null;
+  };
+}
+
+export interface SearchGraphqlProps {
+  searchListings: {
+    success: boolean | null;
+    erorrs: string[] | null;
+    listings: GraphqlListing[];
   };
 }

@@ -6,19 +6,11 @@ import { useEffect, useState } from 'react'
 import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar'
 import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals'
 import { useQuery, gql } from "@apollo/client";
-import { GraphqlListing } from '../../@types/component.types'
+import { DefaultFeedGraphqlProps, SearchGraphqlProps } from '../../@types/pages.types'
 
 /////////////////////////////////////////////////////////////////////////////
-// Data
+// Queries
 /////////////////////////////////////////////////////////////////////////////
-
-interface DefaultFeedGraphqlProps {
-  defaultFeed: {
-    success: boolean | null;
-    errors: string[] | null;
-    listings: GraphqlListing[] | null;
-  };
-}
 
 export const GET_DEFAULT_FEED = gql`
   query {
@@ -37,13 +29,6 @@ export const GET_DEFAULT_FEED = gql`
     }
   }
 `;
-export interface SearchGraphqlProps {
-  searchListings: {
-    success: boolean | null;
-    erorrs: string[] | null;
-    listings: GraphqlListing[];
-  };
-}
 
 export const GET_SEARCH_RESULTS = gql`
   query ($categories: [String], $distance: Int, $isSellListing : Boolean, $priceMin: Float, $priceMax: Float) {
