@@ -1,10 +1,8 @@
-from operator import sub
-from app import db
-from app.models import TradeOffer, Listing, User, TradedListing
+from app.database.models import TradeOffer, Listing, User, TradedListing
 from app.helpers import change_db_categories_to_list
 from ariadne import convert_kwargs_to_snake_case
-
 from datetime import datetime
+
 
 @convert_kwargs_to_snake_case
 def createTradeOffer_resolver(obj, info, **kwargs):
@@ -21,6 +19,7 @@ def createTradeOffer_resolver(obj, info, **kwargs):
             "errors": [str(e)]
         }
     return payload
+
 
 @convert_kwargs_to_snake_case
 def updateTradeOffer_resolver(obj, info, id, is_accepted):
@@ -82,6 +81,7 @@ def updateTradeOffer_resolver(obj, info, id, is_accepted):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def deleteTradeOffer_resolver(obj, info, id):
     try:
@@ -127,6 +127,7 @@ def getTradeOffersByUser_resolver(obj, info, user_email):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def getListingsInTradeOffer_resolver(obj, info, trade_offer_id):
     try:
@@ -144,6 +145,7 @@ def getListingsInTradeOffer_resolver(obj, info, trade_offer_id):
             "errors": [str(e)]
         }
     return payload
+
 
 @convert_kwargs_to_snake_case
 def getUsersInTradeOffer_resolver(obj, info, trade_offer_id):

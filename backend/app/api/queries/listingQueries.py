@@ -1,11 +1,7 @@
-from app import db
-from app.models import Listing, User, TradedListing, SearchedListing, ClickedListing
+from app.database.models import Listing, User, SearchedListing, ClickedListing
 from manage import category_names, material_names
-from random import random
-from app.helpers import generate_categories_dict, generate_categories_probability, \
-    fill_categories_dict, change_db_categories_to_list
-
 from ariadne import convert_kwargs_to_snake_case
+
 
 @convert_kwargs_to_snake_case
 def getListing_resolver(obj, info, id, user_email=None):
@@ -14,7 +10,7 @@ def getListing_resolver(obj, info, id, user_email=None):
 
         # if click on listing was done by user, save it in the db
         if user_email:
-            # get user id 
+            # get user id
             user_id = User.query.filter_by(email=user_email).first().id
             # Need to change listing.categories to a list of strings
             # to work with the ClickedListing constructor
@@ -34,6 +30,7 @@ def getListing_resolver(obj, info, id, user_email=None):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def getListingsByUser_resolver(obj, info, user_email):
     try:
@@ -51,6 +48,7 @@ def getListingsByUser_resolver(obj, info, user_email):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def defaultFeed_resolver(obj, info):
     try:
@@ -65,6 +63,7 @@ def defaultFeed_resolver(obj, info):
             "errors": [str(error)]
         }
     return payload
+
 
 @convert_kwargs_to_snake_case
 def userFeed_resolver(obj, info, user_email):
@@ -123,6 +122,7 @@ def userFeed_resolver(obj, info, user_email):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def searchListings_resolver(obi, info,
     categories=None,
@@ -147,7 +147,7 @@ def searchListings_resolver(obi, info,
         if categories:
             # if search was done by user, save it in the db
             if user_email:
-                # get user id 
+                # get user id
                 user_id = User.query.filter_by(email=user_email).first().id
                 searched_listing = SearchedListing(categories, user_id)
                 searched_listing.save()
@@ -180,8 +180,6 @@ def searchListings_resolver(obi, info,
             "errors": [str(error)]
         }
     return payload
-
-
 
 
 @convert_kwargs_to_snake_case
@@ -234,6 +232,7 @@ def create_listing_resolver(obj, info,
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def update_listing_resolver(obj, info,
         id,
@@ -282,6 +281,7 @@ def update_listing_resolver(obj, info,
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def delete_listing_resolver(obj, info, id):
     try:
@@ -298,6 +298,7 @@ def delete_listing_resolver(obj, info, id):
         }
     return payload
 
+
 @convert_kwargs_to_snake_case
 def getCategories_resolver(obj, info):
     try:
@@ -311,6 +312,7 @@ def getCategories_resolver(obj, info):
             "errors": [str(error)]
         }
     return payload
+
 
 @convert_kwargs_to_snake_case
 def getMaterials_resolver(obj, info):

@@ -1,8 +1,7 @@
-from operator import sub
-from app import db
-from app.models import User
+from app.database.models import User
 from ariadne import convert_kwargs_to_snake_case
-from app.helpers import get_user_co2_emission_saving
+import app.helpers as helpers
+
 
 @convert_kwargs_to_snake_case
 def getUserStats_resolver(obj, info, user_email, year):
@@ -11,7 +10,7 @@ def getUserStats_resolver(obj, info, user_email, year):
     '''
     try:
         user = User.query.filter_by(email=user_email).first()
-        user_trade_count, cubicMetreSaving, CO2Saving = get_user_co2_emission_saving(user, year)
+        user_trade_count, cubicMetreSaving, CO2Saving = helpers.get_user_co2_emission_saving(user, year)
         payload = {
             'success' : True,
             'user_stats' : {
@@ -26,6 +25,7 @@ def getUserStats_resolver(obj, info, user_email, year):
             "errors": [str(e)]
         }
     return payload
+
 
 @convert_kwargs_to_snake_case
 def getCommunityStats_resolver(obj, info, user_email, year):

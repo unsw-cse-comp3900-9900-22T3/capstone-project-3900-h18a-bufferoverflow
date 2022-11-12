@@ -1,14 +1,4 @@
-from app.models import *
-from manage import category_names
-
-'''
-Sources:    https://www.budgetdirect.com.au/car-insurance/research/average-fuel-consumption-australia.html
-            https://www.budgetdirect.com.au/car-insurance/research/average-kilometers-driven.html
-            https://www.commonobjective.co/article/fashion-and-waste-an-uneasy-relationship#:~:text=On%20average%2C%2035%25%20of%20all,or%20product%20reaches%20the%20consumer.
-            https://www.patagoniaalliance.org/wp-content/uploads/2014/08/How-much-carbon-dioxide-is-produced-by-burning-gasoline-and-diesel-fuel-FAQ-U.S.-Energy-Information-Administration-EIA.pdf
-            https://www.winnipeg.ca/finance/findata/matmgt/documents/2012/682-2012/682-2012_Appendix_H-WSTP_South_End_Plant_Process_Selection_Report/Appendix%207.pdf
-'''
-
+from app.database.models import *
 
 material_co2_emission_per_kg = {
     'wood': 0.11,
@@ -103,3 +93,4 @@ def change_db_categories_to_list(listing):
     for category in listing.categories:
         categories_list.append(category.type)
     return categories_list
+
