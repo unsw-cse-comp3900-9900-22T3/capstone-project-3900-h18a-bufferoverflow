@@ -1,6 +1,7 @@
 from operator import sub
 from app import db
 from app.models import TradeOffer, Listing, User, TradedListing
+from app.helpers import change_db_categories_to_list
 from ariadne import convert_kwargs_to_snake_case
 
 from datetime import datetime
@@ -37,6 +38,7 @@ def updateTradeOffer_resolver(obj, info, id, is_accepted):
                     break
             tradeOffer.delete()
 
+            traded_listing_one_categories = change_db_categories_to_list(listing_one)
             # add listings to traded listings table
             traded_listing_one = TradedListing(
                 listing_id=listing_one.id,
@@ -45,10 +47,11 @@ def updateTradeOffer_resolver(obj, info, id, is_accepted):
                 weight=listing_one.weight,
                 volume=listing_one.volume,
                 materials=listing_one.materials,
-                categories=listing_one.categories,
+                categories=traded_listing_one_categories,
                 year_traded = datetime.now().year,
             )
 
+            traded_listing_two_categories = change_db_categories_to_list(listing_two)
             traded_listing_two = TradedListing(
                 listing_id=listing_two.id,
                 traded_by=listing_two.user_id,
@@ -56,7 +59,7 @@ def updateTradeOffer_resolver(obj, info, id, is_accepted):
                 weight = listing_two.weight,
                 volume=listing_two.volume,
                 materials=listing_two.materials,
-                categories=listing_two.categories,
+                categories=traded_listing_two_categories,
                 year_traded = datetime.now().year,
             )
 
