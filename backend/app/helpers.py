@@ -1,4 +1,5 @@
 from app.models import *
+from manage import category_names
 
 '''
 Sources:    https://www.budgetdirect.com.au/car-insurance/research/average-fuel-consumption-australia.html
@@ -54,3 +55,15 @@ def get_user_co2_emission_saving(user, year):
 
     total_co2_savings = brick_and_mortar_delivery_co2_savings + landfill_co2_savings + manufacturing_co2_savings
     return user_trade_count, cubic_metres_landfill_savings, total_co2_savings
+
+def generate_categories_dict(): 
+    '''
+    Generates a dictionary with the keys being all item categories, with all 
+    values initialised to 0
+    '''
+    # create empty categories dict (TODO: make util function?)
+    categories = {} 
+    categories["total"] = 0 
+    for category_name in category_names:
+        categories[category_name] = 0
+    return categories

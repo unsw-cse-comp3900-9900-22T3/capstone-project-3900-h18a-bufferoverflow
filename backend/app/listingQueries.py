@@ -2,6 +2,7 @@ from app import db
 from app.models import Listing, User, TradedListing, SearchedListing, ClickedListing
 from manage import category_names, material_names
 from random import random
+from helpers import generate_categories_dict
 
 from ariadne import convert_kwargs_to_snake_case
 
@@ -69,11 +70,7 @@ def userFeed_resolver(obj, info, user_email):
         # get all searches that have been done by this user 
         searches = SearchedListing.query.filter_by(user_id=user.id).all()
 
-        # create empty categories dict (TODO: make util function?)
-        categories = {} 
-        categories["total"] = 0 
-        for category_name in category_names:
-            categories[category_name] = 0
+        categories = generate_categories_dict()
 
         # calculate how many of each category 
         for search in searches:
