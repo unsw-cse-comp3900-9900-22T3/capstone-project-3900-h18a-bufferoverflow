@@ -51,3 +51,11 @@ export interface SearchGraphqlProps {
     listings: GraphqlListing[];
   };
 }
+
+export interface MyListingsGraphqlProps {
+  getListingsByUser: {
+    success: boolean | null;
+    erorrs: string[] | null;
+    listings: GraphqlListing[] | null;
+  };
+}
