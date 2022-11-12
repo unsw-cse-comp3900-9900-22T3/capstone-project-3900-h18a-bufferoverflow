@@ -2,11 +2,8 @@ import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 import { useState, useEffect } from "react";
 import { Stack, Box } from "@mui/system";
-import {
-  SingleChatOverview,
-  SingleChatOverviewProps,
-} from "../../components/chat/single-chat";
-import { Message, ConversationGraphqlProps } from "../../utils/chat";
+import { SingleChatOverview, SingleChatOverviewProps } from "../../components/chat/single-chat";
+import { Message } from "../../utils/chat";
 import { gql, useLazyQuery } from "@apollo/client";
 import { useStore } from "../../store/store";
 import { Typography } from "@mui/material";
@@ -52,9 +49,9 @@ const ChatOverview: NextPage = () => {
     }
   }, [auth, data]);
 
-  const [chats, setChats] = useState<Array<SingleChatOverviewProps>>([]);
+  const [chats, setChats] = useState<SingleChatOverviewProps[]>([]);
   useEffect(() => {
-    let localChats = [];
+    let localChats: SingleChatOverviewProps[] = [];
     if (conversations != undefined) {
       conversations.forEach((conversation, i) => {
         localChats.push({
@@ -65,7 +62,7 @@ const ChatOverview: NextPage = () => {
           lastMessageTime: conversation.latest?.timestamp,
           unread: conversation.unread,
           id: conversation.id,
-          active: conversation.latest ? (Date.now() - conversation.latest?.timestamp) < (1000 * 60 * 60 * 24 * 7) : false, 
+          active: conversation.latest ? (Date.now() - conversation.latest?.timestamp) < (1000 * 60 * 60 * 24 * 7) : false,
         });
       });
     }
