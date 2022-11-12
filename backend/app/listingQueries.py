@@ -15,14 +15,13 @@ def getListing_resolver(obj, info, id, user_email=None):
         # if click on listing was done by user, save it in the db
         if user_email:
             # get user id 
-            print('user email time')
             user_id = User.query.filter_by(email=user_email).first().id
             # Need to change listing.categories to a list of strings
             # to work with the ClickedListing constructor
             categories_list = []
             for category in listing.categories:
-                categories_list.append(category["type"])
-
+                categories_list.append(category.type)
+            
             clicked_listing = ClickedListing(categories_list, user_id)
             clicked_listing.save()
 
@@ -108,12 +107,9 @@ def userFeed_resolver(obj, info, user_email):
             if user.is_following(user_id=listing.user_id):
                 probability += 0.2
                 
-            print('prob', probability)
             # generate a random number between 0-1 and check
             # if our probability is greater...if it is, goes to front of feed
-            rand = random()
-            print('rand', rand)
-            if probability > rand:
+            if probability > random():
                 feed_listings.insert(0, listing.to_json())
             else:
                 feed_listings.append(listing.to_json())
