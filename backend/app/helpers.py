@@ -61,9 +61,21 @@ def generate_categories_dict():
     Generates a dictionary with the keys being all item categories, with all 
     values initialised to 0
     '''
-    # create empty categories dict (TODO: make util function?)
     categories = {} 
+    # it is important to track the total number of times each category appears
     categories["total"] = 0 
     for category_name in category_names:
         categories[category_name] = 0
+
     return categories
+
+def generate_categories_probability(listing, categories_count): 
+    '''
+    Generates the probability that a given category would be accessed 
+    (could be searched, clicked, etc.) based on previous data...
+    '''
+    probability = 0
+    for category in listing.categories:
+        probability += (categories_count[category.type] / categories_count["total"])
+
+    return probability
