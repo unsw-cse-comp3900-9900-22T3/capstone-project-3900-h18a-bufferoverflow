@@ -67,7 +67,7 @@ def add_users():
     user3.add_display_img("https://mui.com/static/images/avatar/2.jpg")
     user4.add_display_img("https://mui.com/static/images/avatar/3.jpg")
     franksAccount.add_display_img("https://mui.com/static/images/avatar/4.jpg")
-    cecesAccount.add_display_img("https://mui.com/static/images/avatar/4.jpg")
+    cecesAccount.add_display_img("https://mui.com/static/images/avatar/5.jpg")
 
     user2.community = "Randwick"
     cecesAccount.community = "Randwick"
