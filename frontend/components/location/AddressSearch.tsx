@@ -32,12 +32,12 @@ export const AddressSearch = (props: {
 
   function geoCode(address = "") {
     address = address.trim();
-    if (address.length == 0) {
+    if (address.length === 0) {
       setResults([]);
       return;
     }
 
-    if (results.length == 0) {
+    if (results.length === 0) {
       setLoading(true);
     }
 
@@ -87,7 +87,7 @@ export const AddressSearch = (props: {
 
                 // kinda jank - but allows someone to either search for a
                 // suburb name or an actual address
-                if (result.type == "administrative") {
+                if (result.type === "administrative") {
                   props.setCommunity?.(result.display_name.split(",")[0]);
                 } else {
                   props.setCommunity?.(result.display_name.split(",")[2]);
