@@ -2,7 +2,7 @@ from operator import sub
 from app import db
 from app.models import Listing, User, SearchedListing, ClickedListing
 from manage import category_names, material_names
-import haversine
+from haversine import haversine
 
 from ariadne import convert_kwargs_to_snake_case
 
@@ -136,8 +136,12 @@ def searchListings_resolver(obi, info,
             result = new_result
 
         if distance and user_email:
-            results = filter(lambda listing: haversine([user.lattitude, user.longitude], [
-                             listing.lattude, listing.longitude]) < distance, results)
+            first = list(result)[0]
+            between = haversine([user.lattitude, user.longitude], [first['lattitude'], first['longitude']])
+            print(distance, between, between < distance)
+            # print(user.lattitude, user.longitude, results)
+            result = filter(lambda listing: haversine([user.lattitude, user.longitude], [
+                             listing['lattitude'], listing['longitude']]) < distance, result)
 
         payload = {
             "success": True,
@@ -145,6 +149,7 @@ def searchListings_resolver(obi, info,
         }
 
     except Exception as error:
+        print(f'ahhh {error}')
         payload = {
             "success": False,
             "errors": [str(error)]

@@ -44,6 +44,10 @@ def create_db():
 def add_data():
 
     locator = User(email="jack@gmail.com", username="jack")
+    locator.address = "Tathra, Bega Valley Shire Council, New South Wales, 2550, Australia"
+    locator.community = "Tathra"
+    locator.lattitude = -36.7284498
+    locator.longitude = 149.9850271
     locator.save()
 
     # create users
