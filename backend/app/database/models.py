@@ -68,6 +68,14 @@ class User(BaseDataModel, db.Model):
         """
         self.display_img = display_img
 
+    def add_community(self, community):
+        """ Add community to user
+
+        Args:
+            community (str): User community
+        """
+        self.community = community
+
     def add_following(self, followed):
         """ Add followed user to following list
 

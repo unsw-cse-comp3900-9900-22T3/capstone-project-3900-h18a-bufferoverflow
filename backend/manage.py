@@ -22,16 +22,6 @@ def create_categories():
         new_category.save()
 
 
-@cli.command("create_db")
-def create_db():
-    # if no data in db, create default data
-    if not Material.query.all():
-        db.create_all()
-        db.session.commit()
-        add_data()
-
-
-@cli.command("add_data")
 def add_data():
     # create materials and categories
     create_materials()
@@ -53,7 +43,6 @@ def add_data():
     create_conversations()
 
 
-@cli.command("add_users")
 def add_users():
     # create users
     franksAccount = User(email="z5231701@ad.unsw.edu.au", username="Frank")
@@ -69,8 +58,8 @@ def add_users():
     franksAccount.add_display_img("https://mui.com/static/images/avatar/4.jpg")
     cecesAccount.add_display_img("https://mui.com/static/images/avatar/5.jpg")
 
-    user2.community = "Randwick"
-    cecesAccount.community = "Randwick"
+    user2.add_community("Randwick")
+    cecesAccount.add_community("Randwick")
 
     # save users
     franksAccount.save()
@@ -79,7 +68,7 @@ def add_users():
     user4.save()
     cecesAccount.save()
 
-@cli.command("add_listings")
+
 def add_listings():
     """Add listings to database."""
     listing1 = Listing(
@@ -198,7 +187,6 @@ def add_listings():
     listing6.save()
 
 
-@cli.command("create_conversations")
 def create_conversations():
     """Create conversations"""
     message = Message(1664802000000, "Hi there, I would like to trade with you", 3, "z5231701@ad.unsw.edu.au-user3@gmail.com")
@@ -212,7 +200,7 @@ def create_conversations():
     inactiveConversation.save()
 
 
-@cli.command("add_traded_listings_data")
+
 def add_traded_listings_data():
     """Add traded listings data """
     # trades which have happend in 2022
@@ -279,7 +267,7 @@ def add_traded_listings_data():
     traded_listing5.save()
     traded_listing6.save()
 
-@cli.command("add_clicked_and_searched_listings_data")
+
 def add_clicked_and_searched_listings_data():
     """Add clicked and searched listings data """
     # clicked listings
@@ -316,6 +304,16 @@ def add_clicked_and_searched_listings_data():
     searched_listing2.save()
     searched_listing3.save()
 
+
+@cli.command("create_db")
+def create_db():
+    # if no data in db, create default data
+    try:
+        Material.query.all() # Raises an exception if no data in db
+    except:
+        db.create_all()
+        db.session.commit()
+        add_data()
 
 if __name__ == "__main__":
     cli()
