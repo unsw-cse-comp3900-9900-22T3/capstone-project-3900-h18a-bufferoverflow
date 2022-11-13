@@ -112,14 +112,16 @@ interface CountUnseenGraphqlProps {
   };
 }
 
+
 //////////////////////////////////////////////////////////////////
 // Main Component
 //////////////////////////////////////////////////////////////////
 
 export const Template = (props: {
-  title: string;
-  children?: (JSX.Element | string)[] | JSX.Element | string;
-  center?: boolean;
+  title: string
+  children?: (JSX.Element | string)[] | JSX.Element | string
+  center?: boolean
+  scrollable?: boolean
 }) => {
   const { auth } = useStore();
   const [drawer, setDrawer] = useState<boolean>(false);
@@ -135,6 +137,28 @@ export const Template = (props: {
       setNotificationCount(data?.countUnseenMessages.count);
     }
   }, [data]);
+
+
+  // scrollable means there's a scrollbar, so needs to disable the height restriction 
+  // I tried doing this with styled components, but couldn't get it to work.
+
+  // very jank 
+  const mainBoxStyles = {
+    display: '',
+    justifyContent: '',
+    alignItems: '',
+    height: ''
+  };
+  if (props.center) {
+    mainBoxStyles.display = 'flex';
+    mainBoxStyles.justifyContent = 'center';
+    mainBoxStyles.alignItems = 'center';
+  }
+
+  if (props.center && !props.scrollable) {
+    mainBoxStyles.height = 'calc(100vh - 64px)';
+  }
+  
 
   return (
     <Box sx={{ flexGrow: 1 }}>

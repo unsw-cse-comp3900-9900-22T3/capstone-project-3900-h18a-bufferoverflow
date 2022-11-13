@@ -13,7 +13,8 @@ type User {
   preferredDistance: Int!
   bio: String!
   displayImg: String!
-  address: String!
+  address: String
+  community: String
 }
 
 type UserResult {
@@ -249,6 +250,7 @@ type Mutation {
     bio: String
     displayImg: String
     address: String
+    community: String
   ): UserResult!
   deleteUser(email: String!): UserResult!
   createListing(

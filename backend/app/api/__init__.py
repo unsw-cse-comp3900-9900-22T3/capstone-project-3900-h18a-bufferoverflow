@@ -23,7 +23,7 @@ query.set_field("getConversationsForOverview", chatQueries.getConversationsForOv
 query.set_field("getListingsInTradeOffer", tradeOfferQueries.getListingsInTradeOffer_resolver)
 query.set_field("getUsersInTradeOffer", tradeOfferQueries.getUsersInTradeOffer_resolver)
 query.set_field("getUserStats", statsQueries.getUserStats_resolver)
-query.set_field("getCommunityStats", statsQueries.getUserStats_resolver)
+query.set_field("getCommunityStats", statsQueries.getCommunityStats_resolver)
 
 
 # Create mutations
