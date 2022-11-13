@@ -121,7 +121,7 @@ const Chat: NextPage = () => {
   const author = auth?.email;
   const other = router.query.other;
 
-  const [us, setUs] = useState<User>({ username: '', displayImg: '', id: 1 });
+  const [us, setUs] = useState<User>({ username: '', displayImg: '', id: -1 });
   const us_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
     variables: { email: author || "" },
   });
@@ -136,7 +136,7 @@ const Chat: NextPage = () => {
     }
   }, [us_response]);
 
-  const [them, setThem] = useState<User>({ username: '', displayImg: '', id: 1 });
+  const [them, setThem] = useState<User>({ username: '', displayImg: '', id: -1 });
   const them_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
     variables: { email: other || "" },
   });
