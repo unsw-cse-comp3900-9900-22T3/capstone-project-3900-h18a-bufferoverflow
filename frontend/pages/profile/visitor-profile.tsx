@@ -23,6 +23,7 @@ const GET_USER_QUERY = gql`
         username
         email
         bio
+        community
       }
     }
   }
@@ -115,7 +116,7 @@ const VisitorProfile: NextPage = () => {
           </Card>
           <Typography sx={{ mb: 2.5, ml: 1 }}>Trader Location</Typography>
           <Card variant="outlined" sx={{ display: 'flex', alignItems: 'center', minHeight: 45, p: 1.5, mb: 5 }}>
-            <Typography>{user?.address}</Typography>
+            <Typography>{user?.community}</Typography>
           </Card>
           <Button variant="outlined" sx={{ borderRadius: 3 }} href={`/profile/trader-listings?email=${email}`}>
             View trader listings

@@ -4,6 +4,7 @@ from app import app, socketio
 from flask import request, jsonify
 from ariadne import graphql_sync
 from ariadne.constants import PLAYGROUND_HTML
+from flask_socketio import emit, join_room
 
 
 @app.route("/graphql", methods=["GET"])
