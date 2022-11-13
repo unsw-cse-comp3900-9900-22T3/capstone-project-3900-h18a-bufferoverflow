@@ -137,7 +137,7 @@ def searchListings_resolver(obi, info,
 
         if distance and user_email:
             results = filter(lambda listing: haversine([user.lattitude, user.longitude], [
-                             listing.lattude, listing.longitude]), results)
+                             listing.lattude, listing.longitude]) < distance, results)
 
         payload = {
             "success": True,

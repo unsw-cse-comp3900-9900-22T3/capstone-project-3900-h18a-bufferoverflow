@@ -152,6 +152,7 @@ export const SearchBar = (props: {
   data: SearchBarProps
   setData: (arg: SearchBarProps) => void;
   onSearch: () => void;
+  distanceAllowed?: boolean;
 }) => {
   const validSearchCategories = useQuery<CategoriesGraphqlProps>(GET_CATEGORIES).data?.getCategories.categories;
 
@@ -177,7 +178,11 @@ export const SearchBar = (props: {
           validCategories={validSearchCategories}
           width={'60vw'}
         />
-        <DistanceDropdown distance={props.data.distance} setDistance={setDistance} />
+        { props.distanceAllowed ? (<DistanceDropdown distance={props.data.distance} setDistance={setDistance} /> ) : (<FormControl fullWidth sx={{ width: 200, ml: 2 }}>
+      <InputLabel id="demo-simple-select-label">Must be logged in and have an address set to filter by distance</InputLabel>
+      <Select>
+      </Select>
+    </FormControl>)}
         <ListingDropdown listing={props.data.listing} setListing={setListing} />
         <PriceDropdown price={props.data.price} setPrice={setPrice} />
       </Box>

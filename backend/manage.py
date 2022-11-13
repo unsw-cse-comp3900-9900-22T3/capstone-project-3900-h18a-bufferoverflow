@@ -43,7 +43,7 @@ def create_db():
 @cli.command("add_data")
 def add_data():
 
-    locator = User(email="locator@gmail.com", username="locator")
+    locator = User(email="jack@gmail.com", username="jack")
     locator.save()
 
     # create users

@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar'
 import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals'
 import { useQuery, gql } from "@apollo/client";
+import { useStore } from '../../store/store';
 
 /////////////////////////////////////////////////////////////////////////////
 // Data
@@ -63,11 +64,24 @@ export const GET_SEARCH_RESULTS = gql`
   }
 `;
 
+const GET_USER_QUERY = gql`
+  query getUserQuery($email: String!) {
+    getUser(email: $email) {
+      errors
+      success
+      user {
+        address
+      }
+    }
+  }
+`;
+
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
 /////////////////////////////////////////////////////////////////////////////
 
 const DefaultFeed: NextPage = () => {
+  const { auth } = useStore();
 
   const feed = useQuery<DefaultFeedGraphqlProps>(GET_DEFAULT_FEED).data;
   const [isSearch, setIsSearch] = useState(false);
@@ -102,11 +116,27 @@ const DefaultFeed: NextPage = () => {
 
   }, [data, feed])
 
+  const [user, setUser] = useState<User>({});
+  const us_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
+    variables: { email: author || "" },
+  });
+  useEffect(() => {
+    if (us_response.data?.getUser.user) {
+      const user = us_response.data?.getUser.user;
+      setUs({
+        username: user.username,
+        displayImg: user.displayImg,
+        id: user.id,
+      });
+    }
+  }, [us_response]);
+
   return (
     <Template title="Swapr">
       <SearchBar
         data={search}
         setData={setSearch}
+        distanceAllowed={ auth != undefined && auth?.email != "" && user}
         onSearch={() => {
           setIsSearch(true);
           refetch({
