@@ -60,7 +60,7 @@ def add_users():
     user2 = User(email="user2@gmail.com", username="Steven123")
     user3 = User(email="user3@gmail.com", username="Frankie")
     user4 = User(email="user4@gmail.com", username="Sally")
-    cecesAccount = User(email="z3332330@unsw.edu.au", username="Cece")
+    cecesAccount = User(email="z3332330@ad.unsw.edu.au", username="Cece")
 
     # add diplay images
     user2.add_display_img("https://mui.com/static/images/avatar/1.jpg")
