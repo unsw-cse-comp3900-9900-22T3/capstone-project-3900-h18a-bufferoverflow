@@ -9,6 +9,7 @@ import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from "../../utils/globals";
 import { useQuery, gql } from "@apollo/client";
 import { useStore } from "../../store/store";
 import { User, UserGraphqlProps } from "../../utlis/user";
+import { GET_USER_QUERY } from "../../utils/feed";
 
 /////////////////////////////////////////////////////////////////////////////
 // Data
@@ -72,18 +73,6 @@ export const GET_SEARCH_RESULTS = gql`
         }
         isSellListing
         id
-      }
-    }
-  }
-`;
-
-const GET_USER_QUERY = gql`
-  query getUserQuery($email: String!) {
-    getUser(email: $email) {
-      errors
-      success
-      user {
-        address
       }
     }
   }

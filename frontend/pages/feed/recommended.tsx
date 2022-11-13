@@ -9,6 +9,8 @@ import { SearchGraphqlProps } from './default';
 import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals';
 import { useQuery, gql } from "@apollo/client"
 import { useStore } from '../../store/store';
+import { User, UserGraphqlProps } from "../../utlis/user";
+import { GET_USER_QUERY } from "../../utils/feed";
 
 /////////////////////////////////////////////////////////////////////////////
 // Data
@@ -108,12 +110,24 @@ const RecommendedFeed: NextPage = () => {
     }
   }, [data, feed]);
 
+  const [user, setUser] = useState<User>({});
+  const user_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
+    variables: { email: auth?.email || "" },
+  });
+  useEffect(() => {
+    if (user_response.data?.getUser.user) {
+      setUser({
+        address: user_response.data?.getUser.user.address
+      });
+    }
+  }, [user_response]);
+
   return (
     <Template title="Swapr">
       <SearchBar
         data={search}
         setData={setSearch}
-        distanceAllowed={ auth?.email != ""}
+        distanceAllowed={auth != undefined && auth?.email != "" && user.address}
         onSearch={() => {
           setIsSearch(true);
           refetch({
