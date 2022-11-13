@@ -19,21 +19,25 @@ interface NominatimResult {
 
 export const AddressSearch = (props: {
   address: String;
+  placeholder: String;
   setAddress: (address: string) => void;
   setCommunity?: (community: string) => void;
   setPosition?: (position: Array<number>) => void;
+  marginBottom?: number;
+  multiline?: boolean;
+  rows?: number;
 }) => {
   const [results, setResults] = useState<Array<NominatimResult>>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   function geoCode(address = "") {
     address = address.trim();
-    if (address.length == 0) {
+    if (address.length === 0) {
       setResults([]);
       return;
     }
 
-    if (results.length == 0) {
+    if (results.length === 0) {
       setLoading(true);
     }
 
@@ -57,13 +61,15 @@ export const AddressSearch = (props: {
     geoCode(address);
   }, 1000);
 
+  // possible refactor - use autocomplete instead here
   return (
-    <Stack sx={{ mb: 3 }}>
+    <Stack sx={{ mb: props.marginBottom }}>
       <TextField
-        placeholder="Address"
-        multiline
+        placeholder={props.placeholder}
+        label={props.placeholder}
+        multiline={props.multiline}
         //   might have to make the next few lines to be passed in from context
-        rows={4}
+        rows={props.rows != undefined ? props.rows : 1}
         value={props.address}
         onChange={(e) => {
           props.setAddress(e.target.value);
@@ -79,12 +85,12 @@ export const AddressSearch = (props: {
               onClick={() => {
                 props.setAddress(result.display_name);
 
-                // kinda jank - but allows someone to either search for a 
+                // kinda jank - but allows someone to either search for a
                 // suburb name or an actual address
-                if (result.type == "administrative") {
-                    props.setCommunity?.(result.display_name.split(',')[0]);
+                if (result.type === "administrative") {
+                  props.setCommunity?.(result.display_name.split(",")[0]);
                 } else {
-                    props.setCommunity?.(result.display_name.split(',')[2]);
+                  props.setCommunity?.(result.display_name.split(",")[2]);
                 }
 
                 props.setPosition?.([result.lat, result.lon].map(parseFloat));

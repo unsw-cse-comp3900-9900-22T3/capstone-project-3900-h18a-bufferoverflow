@@ -286,7 +286,7 @@ class Listing(BaseDataModel, db.Model):
     volume = db.Column(db.Float, nullable=True)
 
     status = db.Column(db.String(16), nullable=False)
-    address = db.Column(db.String(100), nullable=False)
+    address = db.Column(db.String(500), nullable=False)
     image = db.Column(db.String(500), default="", nullable=False)
 
     def __init__(self,
