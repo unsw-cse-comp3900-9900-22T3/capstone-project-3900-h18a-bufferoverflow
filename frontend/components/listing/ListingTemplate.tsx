@@ -595,6 +595,8 @@ export const ListingTemplate = (props: {
                   materials,
                   tradeCategories,
                   price,
+                  lattitude: position.length == 2 ? position[0] : null,
+                  longitude: position.length == 2 ? position[1] : null,
                 },
               })
                 .then(() => {

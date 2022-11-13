@@ -191,11 +191,11 @@ class Listing(db.Model):
                  weight,
                  volume,
                  materials,
-                 address=None,
-                 image="",
-                 want_to_trade_for=[],
+                 address,
                  lattitude,
                  longitude,
+                 image="",
+                 want_to_trade_for=[],
                  ):
         self.title = title
         self.description = description
@@ -213,12 +213,9 @@ class Listing(db.Model):
         # handle relational data
         self.user_id = User.query.filter_by(email=user_email).first().id
 
-        if address is None:
-            self.address = User.query.filter_by(
-                email=user_email).first().address
-        else:
-            self.lattitude = lattitude
-            self.longitude = longitude
+        self.address = address
+        self.lattitude = lattitude
+        self.longitude = longitude
 
         self.update_categories(categories)
         if self.is_sell_listing:

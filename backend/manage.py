@@ -8,16 +8,20 @@ from app.config import material_names, category_names
 cli = FlaskGroup(app)
 
 # helper functions
+
+
 def create_materials():
 
     for material in material_names:
         new_material = Material(material)
         new_material.save()
 
+
 def create_categories():
     for category in category_names:
         new_category = Category(category)
         new_category.save()
+
 
 @cli.command("create_db")
 def create_db():
@@ -35,6 +39,7 @@ def create_db():
     create_materials()
     create_categories()
 
+
 @cli.command("add_data")
 def add_data():
 
@@ -51,8 +56,8 @@ def add_data():
     user2.add_display_img("https://mui.com/static/images/avatar/2.jpg")
     user3.add_display_img("https://mui.com/static/images/avatar/3.jpg")
 
-    user1.community= "Randwick"
-    
+    user1.community = "Randwick"
+
     # save users
     user1.save()
     user2.save()
@@ -61,7 +66,7 @@ def add_data():
     # create listings
     listing1 = Listing(
         user_email="user1@gmail.com",
-        title = "listing1",
+        title="listing1",
         description="listing1 description",
         is_sell_listing=True,
         price=100.0,
@@ -73,13 +78,15 @@ def add_data():
         want_to_trade_for=["furniture", "electronics"],
         weight=1.0,
         volume=1.0,
+        address="Bathurst Library, Keppel Street, Bathurst, Bathurst Regional Council, New South Wales, 2795, Australia",
+        lattitude=-33.4225722,
+        longitude=149.5795843,
         materials=["wood", "metal"],
-        image = "https://images.unsplash.com/photo-1666475877254-235b2f5fd4b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-        address = "9 Beagle St, Sydney, NSW 2039"
+        image="https://images.unsplash.com/photo-1666475877254-235b2f5fd4b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
     )
     listing2 = Listing(
         user_email="user2@gmail.com",
-        title = "listing2",
+        title="listing2",
         description="listing2 description",
         is_sell_listing=False,
         price=199.0,
@@ -90,13 +97,15 @@ def add_data():
         categories=["books", "furniture"],
         weight=.5,
         volume=2.0,
+        address="Bathurst Library, Keppel Street, Bathurst, Bathurst Regional Council, New South Wales, 2795, Australia",
+        lattitude=-33.4225722,
+        longitude=149.5795843,
         materials=["ceramic"],
-        image = "https://images.unsplash.com/photo-1666475877254-235b2f5fd4b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-        address = "27 Main St, Australia, WA 6057"
+        image="https://images.unsplash.com/photo-1666475877254-235b2f5fd4b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
     )
     listing3 = Listing(
         user_email="user3@gmail.com",
-        title = "listing3",
+        title="listing3",
         description="listing3 description",
         is_sell_listing=False,
         price=20.0,
@@ -107,9 +116,11 @@ def add_data():
         categories=["clothes", "toys"],
         weight=.75,
         volume=10.0,
+        address="Bathurst Library, Keppel Street, Bathurst, Bathurst Regional Council, New South Wales, 2795, Australia",
+        lattitude=-33.4225722,
+        longitude=149.5795843,
         materials=["wood", "polyester"],
-        image = "https://images.unsplash.com/photo-1666475877254-235b2f5fd4b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-        address = "19 Penshurt St, Willoughby, NSW 2068"
+        image="https://images.unsplash.com/photo-1666475877254-235b2f5fd4b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
     )
 
     listing4 = Listing(
@@ -126,8 +137,10 @@ def add_data():
         weight=1.0,
         volume=1.0,
         materials=["plastic"],
-        image = "https://images.unsplash.com/photo-1666475877254-235b2f5fd4b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-        address = "19 Coora St, Sale, NSW 1111"
+        image="https://images.unsplash.com/photo-1666475877254-235b2f5fd4b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+        address="Bathurst Library, Keppel Street, Bathurst, Bathurst Regional Council, New South Wales, 2795, Australia",
+        lattitude=-33.4225722,
+        longitude=149.5795843,
     )
 
     listing5 = Listing(
@@ -144,8 +157,10 @@ def add_data():
         weight=1.0,
         volume=1.0,
         materials=["cotton"],
-        image = "https://images.unsplash.com/photo-1666475877254-235b2f5fd4b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-        address = "39 Kuul St, Chatswood, NSW 1234"
+        image="https://images.unsplash.com/photo-1666475877254-235b2f5fd4b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+        address="Bathurst Library, Keppel Street, Bathurst, Bathurst Regional Council, New South Wales, 2795, Australia",
+        lattitude=-33.4225722,
+        longitude=149.5795843,
     )
 
     listing6 = Listing(
@@ -162,10 +177,11 @@ def add_data():
         weight=1.0,
         volume=1.0,
         materials=["cotton", "metal"],
-        image = "https://images.unsplash.com/photo-1666475877254-235b2f5fd4b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
-        address = "17 BigBoy Ave, Heaven, NSW 7777"
+        image="https://images.unsplash.com/photo-1666475877254-235b2f5fd4b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+        address="Bathurst Library, Keppel Street, Bathurst, Bathurst Regional Council, New South Wales, 2795, Australia",
+        lattitude=-33.4225722,
+        longitude=149.5795843,
     )
-
 
     # save listings
     listing1.save()
@@ -194,16 +210,18 @@ def seed_db():
     db.session.add(User(email="lukebanicevic@gmail.com", username="luke"))
     db.session.commit()
 
+
 @cli.command("query_db")
 def query_db():
     print(User.query.all())
     print(User.query.all()[0].id)
     print(User.query.all()[0].email)
 
+
 @cli.command("show_db")
 def show_db():
     print(db)
 
+
 if __name__ == "__main__":
     cli()
-

@@ -169,6 +169,8 @@ def create_listing_resolver(obj, info,
                             volume,
                             materials,
                             address,
+                            lattitude,
+                            longitude,
                             image
                             ):
     try:
@@ -187,6 +189,8 @@ def create_listing_resolver(obj, info,
             volume,
             materials,
             address,
+            lattitude,
+            longitude,
             image,
             want_to_trade_for=want_to_trade_for
         )
