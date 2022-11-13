@@ -34,7 +34,7 @@ def getCommunityStats_resolver(obj, info, user_email, year):
     '''
     try:
         user = User.query.filter_by(email=user_email).first()
-        user_trade_count, cubicMetreSaving, CO2Saving = get_user_co2_emission_saving(user, year)
+        user_trade_count, cubicMetreSaving, CO2Saving = helpers.get_user_co2_emission_saving(user, year)
         payload = {
             'success' : True,
             'community_stats' : {
