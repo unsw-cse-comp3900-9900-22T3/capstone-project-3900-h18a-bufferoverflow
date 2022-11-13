@@ -661,5 +661,4 @@ class ClickedListing(BaseDataModel, db.Model):
     def __init__(self, categories, user_id):
         """ Initialize clicked listing with categories, user_id """
         self.user_id = user_id
-        self.categories = categories
         self.update_categories(categories)
