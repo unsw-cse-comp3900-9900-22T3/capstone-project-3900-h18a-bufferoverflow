@@ -221,6 +221,8 @@ def update_listing_resolver(obj, info,
                             materials=None,
                             address=None,
                             image=None,
+                            lattitude=None,
+                            longitude=None
                             ):
     try:
         listing = Listing.query.get(id)
@@ -239,6 +241,8 @@ def update_listing_resolver(obj, info,
         listing.update_materials(materials)
         listing.address = address if address is not None else listing.address
         listing.image = image if image is not None else listing.image
+        listing.lattitude = lattitude if lattitude is not None else listing.lattitude
+        listing.longitude = longitude if longitude is not None else listing.longitude
         listing.save()
         payload = {
             "success": True,

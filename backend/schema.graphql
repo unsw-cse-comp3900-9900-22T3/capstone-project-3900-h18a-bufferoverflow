@@ -272,6 +272,8 @@ type Mutation {
     materials: [String]!
     address: String!
     image: String!
+    longitude: Float
+    lattitude: Float
   ): ListingResult!
   updateListing(
     id: ID!
@@ -290,6 +292,8 @@ type Mutation {
     materials: [String]
     address: String
     image: String
+    lattitude: Float
+    longitude: Float
   ): ListingResult!
   deleteListing(id: ID!): ListingResult!
   createMessage(

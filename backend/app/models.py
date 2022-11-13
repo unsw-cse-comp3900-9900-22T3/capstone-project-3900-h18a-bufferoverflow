@@ -24,7 +24,6 @@ class User(db.Model):
     lattitude = db.Column(db.Float, nullable=True)
     longitude = db.Column(db.Float, nullable=True)
 
-
     # TODO: add foreign keys arg?
     following = db.relationship(
         'User',
@@ -85,6 +84,7 @@ class User(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
 
 listing_material = db.Table('listing_material',
                             db.Column('listing_id', db.Integer, db.ForeignKey(
@@ -174,6 +174,9 @@ class Listing(db.Model):
     address = db.Column(db.String(500), nullable=False)
     image = db.Column(db.String(500), default="", nullable=False)
 
+    lattitude = db.Column(db.Float, nullable=True)
+    longitude = db.Column(db.Float, nullable=True)
+
     def __init__(self,
                  user_email,
                  title,
@@ -191,6 +194,8 @@ class Listing(db.Model):
                  address=None,
                  image="",
                  want_to_trade_for=[],
+                 lattitude,
+                 longitude,
                  ):
         self.title = title
         self.description = description
@@ -211,6 +216,9 @@ class Listing(db.Model):
         if address is None:
             self.address = User.query.filter_by(
                 email=user_email).first().address
+        else:
+            self.lattitude = lattitude
+            self.longitude = longitude
 
         self.update_categories(categories)
         if self.is_sell_listing:
@@ -280,7 +288,9 @@ class Listing(db.Model):
             "status": self.status,
             "address": self.address,
             "image": self.image,
-            "materials": [mat.to_json() for mat in self.materials]
+            "materials": [mat.to_json() for mat in self.materials],
+            "lattitude": self.lattitude,
+            "longitude": self.longitude
         }
 
     def save(self):
@@ -376,9 +386,9 @@ class TradeOffer(db.Model):
 
     def to_json(self):
         return {
-            "id" : self.id,
-            "listing_one" : Listing.query.get(self.listing_one_id).to_json(),
-            "listing_two" : Listing.query.get(self.listing_two_id).to_json()
+            "id": self.id,
+            "listing_one": Listing.query.get(self.listing_one_id).to_json(),
+            "listing_two": Listing.query.get(self.listing_two_id).to_json()
         }
 
     def save(self):
@@ -389,12 +399,15 @@ class TradeOffer(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+
 class TradedListing(db.Model):
     __tablename__ = "traded_listings"
 
     id = db.Column(db.Integer, primary_key=True)
-    traded_by = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    traded_to = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    traded_by = db.Column(
+        db.Integer, db.ForeignKey("users.id"), nullable=False)
+    traded_to = db.Column(
+        db.Integer, db.ForeignKey("users.id"), nullable=False)
     weight = db.Column(db.Float, nullable=False)
     volume = db.Column(db.Float, nullable=False)
     year_traded = db.Column(db.Integer, nullable=False)
@@ -438,6 +451,7 @@ class SearchedListing(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
 
 class ClickedListing(db.Model):
     __tablename__ = "clicked_listings"
