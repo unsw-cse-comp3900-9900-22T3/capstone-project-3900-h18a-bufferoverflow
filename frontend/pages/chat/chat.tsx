@@ -121,7 +121,7 @@ const Chat: NextPage = () => {
   const author = auth?.email;
   const other = router.query.other;
 
-  const [us, setUs] = useState<User>({ username: '', displayImg: '', id: -1 });
+  const [us, setUs] = useState<User>();
   const us_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
     variables: { email: author || "" },
   });
@@ -136,7 +136,7 @@ const Chat: NextPage = () => {
     }
   }, [us_response]);
 
-  const [them, setThem] = useState<User>({ username: '', displayImg: '', id: -1 });
+  const [them, setThem] = useState<User>();
   const them_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
     variables: { email: other || "" },
   });
@@ -232,7 +232,7 @@ const Chat: NextPage = () => {
       socket.emit("send_message", {
         timestamp: Date.now(),
         text: text.trim(),
-        author: us.id,
+        author: us?.id,
         conversation: conversation,
       });
       setText("");
@@ -246,7 +246,7 @@ const Chat: NextPage = () => {
     socket.emit("send_message", {
       timestamp: Date.now(),
       text: image,
-      author: us.id,
+      author: us?.id,
       conversation: conversation,
     });
   }, [image]);
@@ -270,7 +270,7 @@ const Chat: NextPage = () => {
             <Box
               sx={{
                 display: "grid",
-                justifyItems: message.author.id == us.id ? "end" : "start",
+                justifyItems: message.author.id == us?.id ? "end" : "start",
                 padding: 0.5,
               }}
               key={message.timestamp}
@@ -283,10 +283,10 @@ const Chat: NextPage = () => {
                 }}
               >
                 <Stack direction="row">
-                  {!(message.author.id == us.id) && (
+                  {!(message.author.id == us?.id) && (
                     <Link href={`/profile/visitor-profile?email=${other}`}>
-                      <Tooltip title={them.username}>
-                        <Avatar src={them.displayImg} alt={them.username} />
+                      <Tooltip title={them?.username}>
+                        <Avatar src={them?.displayImg} alt={them?.username} />
                       </Tooltip>
                     </Link>
                   )}
