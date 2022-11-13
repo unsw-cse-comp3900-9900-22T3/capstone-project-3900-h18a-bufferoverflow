@@ -1,4 +1,4 @@
-import { User } from "./user";
+import { User, UserGraphqlProps } from "./user";
 
 export type Message = {
   id: number;
