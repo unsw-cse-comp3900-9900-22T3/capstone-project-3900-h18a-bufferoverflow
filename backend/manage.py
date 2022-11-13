@@ -189,6 +189,7 @@ def add_listings():
 
 def create_conversations():
     """Create conversations"""
+
     message = Message(1664802000000, "Hi there, I would like to trade with you", 3, "z5231701@ad.unsw.edu.au-user3@gmail.com")
     message.save()
     conversation = Conversation("z5231701@ad.unsw.edu.au-user3@gmail.com", None, None)
@@ -196,9 +197,17 @@ def create_conversations():
     conversation.last_read_first = message.id
     conversation.save()
 
+
     inactiveConversation = Conversation("z5231701@ad.unsw.edu.au-user2@gmail.com", None, None)
     inactiveConversation.save()
 
+
+    messageTest = Message(1664820000000, "Hey Cece this is frank hows it going", 1, "z5231701@ad.unsw.edu.au-z3332330@ad.unsw.edu.au")
+    messageTest.save()
+    conversationWithFrankAndCece = Conversation("z5231701@ad.unsw.edu.au-z3332330@ad.unsw.edu.au", None, None)
+    conversationWithFrankAndCece.latest = messageTest.id
+    conversationWithFrankAndCece.last_read_first = messageTest.id
+    conversationWithFrankAndCece.save()
 
 
 def add_traded_listings_data():
@@ -227,7 +236,7 @@ def add_traded_listings_data():
             traded_to=2,
             weight=5,
             volume=200,
-            materials=['metal', 'cermamic'],
+            materials=['metal', 'ceramic'],
             categories=['toys'],
             year_traded=2022
     )
@@ -291,11 +300,11 @@ def add_clicked_and_searched_listings_data():
         user_id=1,
         categories=['beauty', 'furniture'],
     )
-    searched_listing1 = SearchedListing(
+    searched_listing2 = SearchedListing(
         user_id=1,
         categories=['kitchen and dining', 'electronics'],
     )
-    searched_listing1 = SearchedListing(
+    searched_listing3 = SearchedListing(
         user_id=1,
         categories=['tools', 'electronics'],
     )

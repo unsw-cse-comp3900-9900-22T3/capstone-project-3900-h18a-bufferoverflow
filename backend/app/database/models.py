@@ -135,15 +135,6 @@ class User(BaseDataModel, db.Model):
             "community": self.community
         }
 
-    def save(self):
-        """ Save user to database """
-        db.session.add(self)
-        db.session.commit()
-
-    def delete(self):
-        """ Delete user from database """
-        db.session.delete(self)
-        db.session.commit()
 
 listing_material = db.Table('listing_material',
                             db.Column('listing_id', db.Integer, db.ForeignKey(
@@ -178,6 +169,13 @@ traded_category = db.Table('traded_category',
                                 'traded_listings.id'), primary_key=True),
                             db.Column('category_id', db.Integer, db.ForeignKey(
                                 'categories.id'), primary_key=True)
+                          )
+
+traded_material = db.Table('traded_material',
+                            db.Column('traded_id', db.Integer, db.ForeignKey(
+                                'traded_listings.id'), primary_key=True),
+                            db.Column('material_id', db.Integer, db.ForeignKey(
+                                'materials.id'), primary_key=True)
                           )
 
 clicked_category = db.Table('clicked_category',
@@ -242,6 +240,9 @@ class Material(BaseDataModel, db.Model):
 
     material_to = db.relationship(
         'Listing', secondary=listing_material, backref='materials')
+
+    traded_material_to = db.relationship(
+        'TradedListing', secondary=traded_material, backref='materials')
 
     def __init__(self, type):
         """ Initialize material with type """
@@ -575,8 +576,6 @@ class TradedListing(BaseDataModel, db.Model):
     volume = db.Column(db.Float, nullable=False)
     year_traded = db.Column(db.Integer, nullable=False)
 
-    materials = []
-
     def update_categories(self, categories):
         if categories is not None:
             # to successfully remove all previous want_to_trade_for
@@ -592,14 +591,29 @@ class TradedListing(BaseDataModel, db.Model):
                 category.traded_category_to.append(self)
                 category.save()
 
+    def update_materials(self, materials):
+        if materials is not None:
+            # to successfully remove all previous want_to_trade_for
+            for material_name in material_names:
+                material = Material.query.filter_by(type=material_name).first()
+                try:
+                    material.traded_material_to.remove(self)
+                except:
+                    pass
+
+            for material_name in materials:
+                material = Material.query.filter_by(type=material_name).first()
+                material.traded_material_to.append(self)
+                material.save()
+
     def __init__(self, traded_by, traded_to, weight, volume, materials, categories, year_traded):
         """ Initialize traded listing with traded_by, traded_to, weight, volume, materials, categories, year_traded """
         self.traded_by = traded_by
         self.traded_to = traded_to
         self.weight = weight
         self.volume = volume
-        self.materials = materials
         self.year_traded = year_traded
+        self.update_materials(materials)
         self.update_categories(categories)
 
 
@@ -669,5 +683,4 @@ class ClickedListing(BaseDataModel, db.Model):
     def __init__(self, categories, user_id):
         """ Initialize clicked listing with categories, user_id """
         self.user_id = user_id
-        self.categories = categories
         self.update_categories(categories)

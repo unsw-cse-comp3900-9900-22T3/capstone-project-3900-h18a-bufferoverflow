@@ -5,6 +5,7 @@ from flask import request, jsonify
 from ariadne import graphql_sync
 from ariadne.constants import PLAYGROUND_HTML
 from flask_socketio import emit, join_room
+from app.database.models import *
 
 
 @app.route("/graphql", methods=["GET"])
@@ -44,3 +45,11 @@ def on_join(data):
     if len(models.Conversation.query.filter_by(conversation=conversation).all()) == 0:
         models.Conversation(conversation).save()
     join_room(conversation)
+
+@app.route("/allConversations")
+def getAllConversations():
+    return jsonify([user.to_json() for user in Conversation.query.all()])
+
+@app.route("/allMessages")
+def getAllMessages():
+    return jsonify([user.to_json() for user in Message.query.all()])
