@@ -1,6 +1,4 @@
-from app import db
-from app.models import User
-
+from app.database.models import User
 from ariadne import convert_kwargs_to_snake_case
 
 

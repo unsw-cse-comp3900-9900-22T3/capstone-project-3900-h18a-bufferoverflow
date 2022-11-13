@@ -1,6 +1,18 @@
-from app import db
-from app.config import material_names, category_names
-import datetime
+from app.database import db, material_names, category_names
+
+
+class BaseDataModel():
+
+    def save(self):
+        """ Save the current instance to the database """
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        """ Delete the current instance from the database """
+        db.session.delete(self)
+        db.session.commit()
+
 
 user_following = db.Table('user_following',
                           db.Column('follower_id', db.Integer, db.ForeignKey(
@@ -10,7 +22,20 @@ user_following = db.Table('user_following',
                           )
 
 
-class User(db.Model):
+class User(BaseDataModel, db.Model):
+    """ User Model for storing user related details
+
+    Attributes:
+        id (int): User id
+        username (str): User name
+        email (str): User email
+        preffered_distance (int): User preferred distance
+        bio (str): User bio
+        display_img (str): User display image
+        address (str): User address
+    """
+
+
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -24,7 +49,6 @@ class User(db.Model):
     lattitude = db.Column(db.Float, nullable=True)
     longitude = db.Column(db.Float, nullable=True)
 
-    # TODO: add foreign keys arg?
     following = db.relationship(
         'User',
         secondary=user_following,
@@ -34,23 +58,48 @@ class User(db.Model):
     )
 
     def __init__(self, email, username):
+        """ Initialize user with email and username """
         self.username = username
         self.email = email
 
     def add_display_img(self, display_img):
+        """ Add display image to user
+
+        Args:
+            display_img (str): Display image url
+        """
         self.display_img = display_img
 
     def add_following(self, followed):
+        """ Add followed user to following list
+
+        Args:
+            followed (User): User to follow
+        """
         if not self.is_following(followed):
             self.following.append(followed)
             self.save()
 
     def remove_following(self, user):
+        """ Remove followed user from following list
+
+        Args:
+            user (User): User to unfollow
+        """
         if self.is_following(user):
             self.following.remove(user)
             self.save()
 
     def is_following(self, user=None, user_id=None):
+        """ Check if user is following another user
+
+        Args:
+            user (User): User to check if following
+            user_id (int): User id to check if following
+
+        Returns:
+            bool: True if following, False if not
+        """
         # error handling
         if user is None and user_id is None:
             return False
@@ -64,6 +113,11 @@ class User(db.Model):
         return False
 
     def to_json(self):
+        """ Return user as json
+
+        Returns:
+            dict: User as json
+        """
         return {
             "id": self.id,
             "email": self.email,
@@ -78,10 +132,12 @@ class User(db.Model):
         }
 
     def save(self):
+        """ Save user to database """
         db.session.add(self)
         db.session.commit()
 
     def delete(self):
+        """ Delete user from database """
         db.session.delete(self)
         db.session.commit()
 
@@ -105,10 +161,37 @@ listing_want_to_trade_for = db.Table('listing_want_to_trade_for',
                                          'listings.id'), primary_key=True),
                                      db.Column('category_id', db.Integer, db.ForeignKey(
                                          'categories.id'), primary_key=True)
-                                     )
+                                    )
 
+search_category = db.Table('search_category',
+                            db.Column('search_id', db.Integer, db.ForeignKey(
+                                'searched_listings.id'), primary_key=True),
+                            db.Column('category_id', db.Integer, db.ForeignKey(
+                                'categories.id'), primary_key=True)
+                          )
 
-class Category(db.Model):
+traded_category = db.Table('traded_category',
+                            db.Column('traded_id', db.Integer, db.ForeignKey(
+                                'traded_listings.id'), primary_key=True),
+                            db.Column('category_id', db.Integer, db.ForeignKey(
+                                'categories.id'), primary_key=True)
+                          )
+
+clicked_category = db.Table('clicked_category',
+                            db.Column('traded_id', db.Integer, db.ForeignKey(
+                                'clicked_listings.id'), primary_key=True),
+                            db.Column('category_id', db.Integer, db.ForeignKey(
+                                'categories.id'), primary_key=True)
+                           )
+
+class Category(BaseDataModel, db.Model):
+    """ Category Model for storing category related details
+
+    Attributes:
+        id (int): Category id
+        type (str): Category type
+    """
+
     __tablename__ = "categories"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -119,20 +202,36 @@ class Category(db.Model):
     want_to_trade_for_to = db.relationship(
         'Listing', secondary=listing_want_to_trade_for, backref='want_to_trade_for')
 
+    search_category_to = db.relationship(
+        'SearchedListing', secondary=search_category, backref='categories')
+    traded_category_to = db.relationship(
+        'TradedListing', secondary=traded_category, backref='categories')
+    clicked_category_to = db.relationship(
+        'ClickedListing', secondary=clicked_category, backref='categories')
+
     def __init__(self, type):
+        """ Initialize category with type """
         self.type = type
 
     def to_json(self):
+        """ Return category as json
+
+        Returns:
+            dict: Category as json
+        """
         return {
             "type": self.type
         }
 
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
 
+class Material(BaseDataModel, db.Model):
+    """ Material Model for storing material related details
 
-class Material(db.Model):
+    Attributes:
+        id (int): Material id
+        type (str): Material type
+    """
+
     __tablename__ = "materials"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -142,19 +241,40 @@ class Material(db.Model):
         'Listing', secondary=listing_material, backref='materials')
 
     def __init__(self, type):
+        """ Initialize material with type """
         self.type = type
 
     def to_json(self):
+        """ Return material as json
+
+        Returns:
+            dict: Material as json
+        """
         return {
             "type": self.type
         }
 
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
 
+class Listing(BaseDataModel, db.Model):
+    """ Listing Model for storing listing related details
 
-class Listing(db.Model):
+    Attributes:
+        id (int): Listing id
+        title (str): Listing title
+        description (str): Listing description
+        user_id (int): Listing user id
+        is_sell_listing (bool): Listing type
+        price (float): Listing price
+        can_trade (bool): Listing can trade
+        can_pay_cash (bool): Listing can pay cash
+        can_pay_bank (bool): Listing can pay bank transfer
+        weight (float): Listing weight
+        volume (float): Listing volume
+        status (str): Listing status
+        address (str): Listing address
+        images (str): Listing image
+    """
+
     __tablename__ = "listings"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -197,6 +317,7 @@ class Listing(db.Model):
                  image="",
                  want_to_trade_for=[],
                  ):
+        """ Initialize listing with title, description, user_id, is_sell_listing, price, can_trade, can_pay_cash, can_pay_bank, status, address, image """
         self.title = title
         self.description = description
         self.is_sell_listing = is_sell_listing
@@ -223,6 +344,11 @@ class Listing(db.Model):
         self.update_materials(materials)
 
     def update_categories(self, categories):
+        """ Update listing categories
+
+        Args:
+            categories (list): List of categories
+        """
         if categories is not None:
             # to successfully remove all previous want_to_trade_for
             for category_name in category_names:
@@ -238,6 +364,11 @@ class Listing(db.Model):
                 category.save()
 
     def update_want_to_trade_for(self, want_to_trade_for):
+        """ Update listing want_to_trade_for
+
+        Args:
+            want_to_trade_for (list): List of want_to_trade_for
+        """
         if want_to_trade_for is not None:
             # to successfully remove all previous want_to_trade_for
             for category_name in category_names:
@@ -253,6 +384,11 @@ class Listing(db.Model):
                 category.save()
 
     def update_materials(self, materials):
+        """ Update listing materials
+
+        Args:
+            materials (list): List of materials
+        """
         if materials is not None:
             # to successfully remove all previous materials
             for material_name in material_names:
@@ -268,6 +404,11 @@ class Listing(db.Model):
                 material.save()
 
     def to_json(self):
+        """ Return listing as json
+
+        Returns:
+            dict: Listing as json
+        """
         return {
             "id": self.id,
             "title": self.title,
@@ -290,12 +431,18 @@ class Listing(db.Model):
             "longitude": self.longitude
         }
 
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
 
+class Message(BaseDataModel, db.Model):
+    """ Message Model for storing message related details
 
-class Message(db.Model):
+    Attributes:
+        id (int): Message id
+        timestamp (datetime): Message timestamp
+        text (str): Message text
+        author (int): Message author id
+        conversation (str): Message conversation string
+    """
+
     __tablename__ = "messages"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -309,12 +456,18 @@ class Message(db.Model):
     conversation = db.Column(db.String(161), nullable=False)
 
     def __init__(self, timestamp, text, author, conversation):
+        """ Initialize message with timestamp, text, author, conversation """
         self.timestamp = timestamp
         self.text = text
         self.author = author
         self.conversation = conversation
 
     def to_json(self):
+        """ Return message as json
+
+        Returns:
+            dict: Message as json
+        """
         return {
             "id": self.id,
             "timestamp": self.timestamp,
@@ -323,16 +476,18 @@ class Message(db.Model):
             "conversation": self.conversation
         }
 
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
 
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
+class Conversation(BaseDataModel, db.Model):
+    """ Conversation Model for storing conversation related details
 
+    Attributes:
+        id (int): Conversation id
+        conversation (str): Conversation string
+        last_read_first (int): First last read message id
+        last_read_second (int): Second last read message id
+        latest_message (int): Latest message id
+    """
 
-class Conversation(db.Model):
     __tablename__ = "conversations"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -345,12 +500,18 @@ class Conversation(db.Model):
         db.Integer, db.ForeignKey("messages.id"), nullable=True)
 
     def __init__(self, conversation, last_read_first=None, last_read_second=None):
+        """ Initialize conversation with conversation, last_read_first, last_read_second """
         self.conversation = conversation
         self.last_read_first = last_read_first
         self.last_read_second = last_read_second
         self.latest = None
 
     def to_json(self):
+        """ Return conversation as json
+
+        Returns:
+            dict: Conversation as json
+        """
         return {
             "id": self.id,
             "conversation": self.conversation,
@@ -359,16 +520,16 @@ class Conversation(db.Model):
             "latest": Message.query.get(self.latest).to_json() if self.latest else None,
         }
 
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
 
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
+class TradeOffer(BaseDataModel, db.Model):
+    """ TradeOffer Model for storing trade offer related details
 
+    Attributes:
+        id (int): TradeOffer id
+        listing_one_id (int): Listing one id
+        listing_two_id (int): Listing two id
+    """
 
-class TradeOffer(db.Model):
     __tablename__ = "trade_offers"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -378,26 +539,37 @@ class TradeOffer(db.Model):
         db.Integer, db.ForeignKey("listings.id"), nullable=False)
 
     def __init__(self, listing_one_id, listing_two_id, is_accepted=False):
+        """ Initialize trade offer with listing_one_id, listing_two_id """
         self.listing_one_id = listing_one_id
         self.listing_two_id = listing_two_id
 
     def to_json(self):
+        """ Return trade offer as json
+
+        Returns:
+            dict: Trade offer as json
+        """
         return {
             "id": self.id,
             "listing_one": Listing.query.get(self.listing_one_id).to_json(),
             "listing_two": Listing.query.get(self.listing_two_id).to_json()
         }
 
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
 
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
+class TradedListing(BaseDataModel, db.Model):
+    """ TradedListing Model for storing traded listing related details
 
+    Attributes:
+        id (int): TradedListing id
+        traded_by (int): TradedListing traded by id
+        traded_to (int): TradedListing traded to id
+        weight (int): TradedListing weight
+        volume (int): TradedListing volume
+        year_traded (int): TradedListing year traded
+        materials (list): TradedListing materials
+        categories (list): TradedListing categories
+    """
 
-class TradedListing(db.Model):
     __tablename__ = "traded_listings"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -410,56 +582,101 @@ class TradedListing(db.Model):
     year_traded = db.Column(db.Integer, nullable=False)
 
     materials = []
-    categories = []
+
+    def update_categories(self, categories):
+        if categories is not None:
+            # to successfully remove all previous want_to_trade_for
+            for category_name in category_names:
+                category = Category.query.filter_by(type=category_name).first()
+                try:
+                    category.traded_category_to.remove(self)
+                except:
+                    pass
+
+            for category_name in categories:
+                category = Category.query.filter_by(type=category_name).first()
+                category.traded_category_to.append(self)
+                category.save()
 
     def __init__(self, traded_by, traded_to, weight, volume, materials, categories, year_traded):
+        """ Initialize traded listing with traded_by, traded_to, weight, volume, materials, categories, year_traded """
         self.traded_by = traded_by
         self.traded_to = traded_to
         self.weight = weight
         self.volume = volume
         self.materials = materials
-        self.categories = categories
         self.year_traded = year_traded
-
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
-
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
+        self.update_categories(categories)
 
 
-class SearchedListing(db.Model):
-    __tablename__ = "search_listings"
+class SearchedListing(BaseDataModel, db.Model):
+    """ SearchedListing Model for storing searched listing related details
+
+    Attributes:
+        id (int): SearchedListing id
+        user_id (int): SearchedListing user id
+        categories (list): SearchedListing categories
+    """
+    __tablename__ = "searched_listings"
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    categories = []
+
+    def update_categories(self, categories):
+        if categories is not None:
+            # to successfully remove all previous want_to_trade_for
+            for category_name in category_names:
+                category = Category.query.filter_by(type=category_name).first()
+                try:
+                    category.search_category_to.remove(self)
+                except:
+                    pass
+
+            for category_name in categories:
+                category = Category.query.filter_by(type=category_name).first()
+                category.search_category_to.append(self)
+                category.save()
 
     def __init__(self, categories, user_id):
+        """ Initialize searched listing with categories, user_id """
         self.user_id = user_id
-        self.categories = categories
-
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
-
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
+        self.update_categories(categories)
 
 
-class ClickedListing(db.Model):
+class ClickedListing(BaseDataModel, db.Model):
+    """ ClickedListing Model for storing clicked listing related details
+
+    Attributes:
+        id (int): ClickedListing id
+        user_id (int): ClickedListing user id
+        categories (list): ClickedListing categories
+    """
+
     __tablename__ = "clicked_listings"
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    categories = []
+
+    def update_categories(self, categories):
+        if categories is not None:
+            # to successfully remove all previous want_to_trade_for
+            for category_name in category_names:
+                category = Category.query.filter_by(type=category_name).first()
+                try:
+                    category.clicked_category_to.remove(self)
+                except:
+                    pass
+
+            for category_name in categories:
+                category = Category.query.filter_by(type=category_name).first()
+                category.clicked_category_to.append(self)
+                category.save()
 
     def __init__(self, categories, user_id):
+        """ Initialize clicked listing with categories, user_id """
         self.user_id = user_id
         self.categories = categories
+        self.update_categories(categories)
 
     def save(self):
         db.session.add(self)

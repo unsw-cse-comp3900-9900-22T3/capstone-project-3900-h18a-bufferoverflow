@@ -1,8 +1,9 @@
 from flask.cli import FlaskGroup
 
-from app import app, db
-from app.models import *
-from app.config import material_names, category_names
+from app.database import db
+from app.database.models import *
+from app.database import category_names, material_names
+from app import app
 
 
 cli = FlaskGroup(app)
