@@ -1,8 +1,12 @@
-from app.database.models import Listing, User, SearchedListing, ClickedListing
+from app.database.models import Listing, User, SearchedListing, ClickedListing, \
+    TradedListing
+from app.helpers import change_db_categories_to_list, generate_categories_dict, \
+    fill_categories_dict, generate_categories_probability
 from manage import category_names, material_names
 from haversine import haversine
 
 from ariadne import convert_kwargs_to_snake_case
+from random import random
 
 
 @convert_kwargs_to_snake_case

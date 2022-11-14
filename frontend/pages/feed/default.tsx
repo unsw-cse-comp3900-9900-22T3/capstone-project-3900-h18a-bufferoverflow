@@ -1,27 +1,23 @@
+import { useStore } from "../../store/store";
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 import { itemDataToItemCard } from "../../components/feed/ItemCard";
-import { GraphqlListing } from "../../components/listing/types";
 import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { SearchBar, SearchBarProps } from "../../components/feed/SearchBar";
 import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from "../../utils/globals";
 import { useQuery, gql } from "@apollo/client";
-import { useStore } from "../../store/store";
-import { User, UserGraphqlProps } from "../../utils/user";
-import { GET_USER_QUERY } from "../../utils/feed";
+import {
+  DefaultFeedGraphqlProps,
+  SearchGraphqlProps,
+  User,
+  UserGraphqlProps,
+} from "../../@types/pages.types";
+import { GET_USER_QUERY } from "../../utils/queries";
 
 /////////////////////////////////////////////////////////////////////////////
-// Data
+// Queries
 /////////////////////////////////////////////////////////////////////////////
-
-interface DefaultFeedGraphqlProps {
-  defaultFeed: {
-    success: boolean | null;
-    errors: string[] | null;
-    listings: GraphqlListing[] | null;
-  };
-}
 
 export const GET_DEFAULT_FEED = gql`
   query {
@@ -40,13 +36,6 @@ export const GET_DEFAULT_FEED = gql`
     }
   }
 `;
-export interface SearchGraphqlProps {
-  searchListings: {
-    success: boolean | null;
-    erorrs: string[] | null;
-    listings: GraphqlListing[];
-  };
-}
 
 export const GET_SEARCH_RESULTS = gql`
   query (

@@ -1,23 +1,16 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 import { Box, Typography } from "@mui/material";
-import { GraphqlListing } from "../../components/listing/types";
 import { itemDataToUserItemCard } from "../../components/listing/UserItemCard";
 import { useEffect, useState } from "react";
 import { gql, useQuery } from "@apollo/client";
 import { useStore } from "../../store/store";
+import { GraphqlListing } from "../../@types/component.types";
+import { MyListingsGraphqlProps } from "../../@types/pages.types";
 
 /////////////////////////////////////////////////////////////////////////////
-// Data
+// Queries
 /////////////////////////////////////////////////////////////////////////////
-
-export interface MyListingsGraphqlProps {
-  getListingsByUser: {
-    success: boolean | null;
-    erorrs: string[] | null;
-    listings: GraphqlListing[] | null;
-  };
-}
 
 const GET_USER_LISTINGS = gql`
   query ($userEmail: String!) {
@@ -36,7 +29,6 @@ const GET_USER_LISTINGS = gql`
     }
   }
 `;
-
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
