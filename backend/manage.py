@@ -346,7 +346,5 @@ def create_db():
         jack.longitude=149.857050
         jack.save()
 
-
-
 if __name__ == "__main__":
     cli()

@@ -5,7 +5,7 @@ import { Avatar, Box, Button, Card, Typography } from "@mui/material";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { useRouter } from "next/router";
-import { GET_DETAILED_LISTING , GET_USER_DETAILED_LISTING } from "./have"
+import { GET_DETAILED_LISTING , GET_USER_DETAILED_LISTING } from "../../utils/queries"
 import { useLazyQuery } from "@apollo/client";
 import { useStore } from "../../store/store";
 
