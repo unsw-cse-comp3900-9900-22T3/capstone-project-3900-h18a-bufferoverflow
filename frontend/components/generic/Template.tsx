@@ -43,7 +43,9 @@ import AddIcon from "@mui/icons-material/Add";
 
 type SideBarProps = { title: string; icon: Icon; href: string }[];
 
-const sideBarTop: SideBarProps = [
+/**************** LOGGED IN *****************/
+
+const sideBarTopLoggedIn: SideBarProps = [
   { title: "All Listings", icon: LocalOfferIcon, href: "/" },
   {
     title: "Methodology",
@@ -51,8 +53,6 @@ const sideBarTop: SideBarProps = [
     href: "/environment/methodology",
   },
 ];
-
-/**************** LOGGED IN *****************/
 
 const sideBarBottomLoggedIn: SideBarProps = [
   { title: "Profile", icon: PersonIcon, href: "/profile/user-profile" },
@@ -67,6 +67,15 @@ const sideBarBottomLoggedIn: SideBarProps = [
 ];
 
 /*************** LOGGED OUT *****************/
+
+const sideBarTopLoggedOut: SideBarProps = [
+  { title: "All Listings", icon: LocalOfferIcon, href: "/feed/default" },
+  {
+    title: "Methodology",
+    icon: DescriptionIcon,
+    href: "/environment/methodology",
+  },
+];
 
 const sideBarBottomLoggedOut: SideBarProps = [
   { title: "Login", icon: LockIcon, href: "/auth/login" },
@@ -300,6 +309,7 @@ const SideBar = (props: {
   const { auth } = useStore();
   const setStore = useStoreUpdate();
   const router = useRouter();
+  const sideBarTop = auth ? sideBarTopLoggedIn : sideBarTopLoggedOut;
   const sideBarBottom = auth ? sideBarBottomLoggedIn : sideBarBottomLoggedOut;
 
   return (
