@@ -17,7 +17,7 @@ def getListing_resolver(obj, info, id, user_email=None):
             # Need to change listing.categories to a list of strings
             # to work with the ClickedListing constructor
             categories_list = change_db_categories_to_list(listing)
-            
+
             clicked_listing = ClickedListing(categories_list, user_id)
             clicked_listing.save()
 
@@ -74,39 +74,43 @@ def userFeed_resolver(obj, info, user_email):
         user = User.query.filter_by(email=user_email).first()
         feed_listings = []
 
-        # get all searches that have been done by this user 
+        # get all searches that have been done by this user
         searches = SearchedListing.query.filter_by(user_id=user.id).all()
         trades = TradedListing.query.filter_by(traded_to=user.id).all()
         clicks = ClickedListing.query.filter_by(user_id=user.id).all()
-        
+
         # initialise all "count" dictionaries
         search_categories = generate_categories_dict()
-        traded_categories = generate_categories_dict() 
+        traded_categories = generate_categories_dict()
         clicked_categories = generate_categories_dict()
 
-        # calculate how many of each category 
+        # calculate how many of each category
         fill_categories_dict(search_categories, searches)
         fill_categories_dict(traded_categories, trades)
         fill_categories_dict(clicked_categories, clicks)
-            
-        # use this as the *probability* that a listing appears early in 
-        # the list 
+
+        # use this as the *probability* that a listing appears early in
+        # the list
         probability = 0
 
         for listing in Listing.query.all():
-            probability = 0 
-            search_probability = generate_categories_probability(listing, search_categories)
-            trade_probability = generate_categories_probability(listing, traded_categories)
-            click_probability = generate_categories_probability(listing, clicked_categories)
+            probability = 0
+            search_probability = generate_categories_probability(
+                listing, search_categories)
+            trade_probability = generate_categories_probability(
+                listing, traded_categories)
+            click_probability = generate_categories_probability(
+                listing, clicked_categories)
 
             # take a weighted average of the previous probabilities
             # we favour trades the most, then clicks, then searches
-            probability += (0.5 * trade_probability) + (0.35 * click_probability) + (0.15 * search_probability)
-            
+            probability += (0.5 * trade_probability) + (0.35 *
+                                                        click_probability) + (0.15 * search_probability)
+
             # if the user is following someone, that should bump the probability up
             if user.is_following(user_id=listing.user_id):
                 probability += 0.2
-                
+
             # generate a random number between 0-1 and check
             # if our probability is greater...if it is, goes to front of feed
             if probability > random():
@@ -174,11 +178,12 @@ def searchListings_resolver(obi, info,
 
         if distance and user_email:
             first = list(result)[0]
-            between = haversine([user.lattitude, user.longitude], [first['lattitude'], first['longitude']])
+            between = haversine([user.lattitude, user.longitude], [
+                                first['lattitude'], first['longitude']])
             print(distance, between, between < distance)
             # print(user.lattitude, user.longitude, results)
             result = filter(lambda listing: haversine([user.lattitude, user.longitude], [
-                             listing['lattitude'], listing['longitude']]) < distance, result)
+                listing['lattitude'], listing['longitude']]) < distance, result)
 
         payload = {
             "success": True,
@@ -186,7 +191,6 @@ def searchListings_resolver(obi, info,
         }
 
     except Exception as error:
-        print(f'ahhh {error}')
         payload = {
             "success": False,
             "errors": [str(error)]

@@ -677,11 +677,3 @@ class ClickedListing(BaseDataModel, db.Model):
         self.user_id = user_id
         self.categories = categories
         self.update_categories(categories)
-
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
-
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
