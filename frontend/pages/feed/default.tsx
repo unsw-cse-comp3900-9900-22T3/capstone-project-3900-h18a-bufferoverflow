@@ -44,6 +44,7 @@ export const GET_SEARCH_RESULTS = gql`
     $isSellListing: Boolean
     $priceMin: Float
     $priceMax: Float
+    $userEmail: String
   ) {
     searchListings(
       categories: $categories
@@ -51,6 +52,7 @@ export const GET_SEARCH_RESULTS = gql`
       isSellListing: $isSellListing
       priceMin: $priceMin
       priceMax: $priceMax
+      userEmail: $userEmail
     ) {
       listings {
         title
@@ -93,6 +95,7 @@ const DefaultFeed: NextPage = () => {
       isSellListing: search.listing === "have",
       priceMin: search.price.min,
       priceMax: search.price.max,
+      userEmail: auth?.email
     },
   });
 

@@ -45,7 +45,7 @@ const UPDATE_USER_MUTATION = gql`
     $displayImg: String
     $address: String
     $community: String
-    $lattitude: Float
+    $latitude: Float
     $longitude: Float
   ) {
     updateUser(
@@ -55,7 +55,7 @@ const UPDATE_USER_MUTATION = gql`
       email: $email
       address: $address
       community: $community
-      lattitude: $lattitude 
+      latitude: $latitude 
       longitude: $longitude
     ) {
       errors
@@ -219,7 +219,7 @@ const UserProfile: NextPage = () => {
                 let res = await updateUserProfile({
                   variables: {
                     ...data,
-                    lattitude: position[0],
+                    latitude: position[0],
                     longitude: position[1],
                   },
                 });

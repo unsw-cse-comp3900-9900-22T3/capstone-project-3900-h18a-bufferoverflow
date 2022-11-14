@@ -46,7 +46,7 @@ class User(BaseDataModel, db.Model):
     display_img = db.Column(db.String(500), default="", nullable=False)
     address = db.Column(db.String(500), default="", nullable=True)
     community = db.Column(db.String(100), default="", nullable=True)
-    lattitude = db.Column(db.Float, nullable=True)
+    latitude = db.Column(db.Float, nullable=True)
     longitude = db.Column(db.Float, nullable=True)
 
     following = db.relationship(
@@ -135,7 +135,7 @@ class User(BaseDataModel, db.Model):
             "display_img": self.display_img,
             "address": self.address,
             "community": self.community,
-            "lattitude": self.lattitude,
+            "latitude": self.latitude,
             "longitude": self.longitude
         }
 
@@ -303,7 +303,7 @@ class Listing(BaseDataModel, db.Model):
     address = db.Column(db.String(500), nullable=False)
     image = db.Column(db.String(500), default="", nullable=False)
 
-    lattitude = db.Column(db.Float, nullable=True)
+    latitude = db.Column(db.Float, nullable=True)
     longitude = db.Column(db.Float, nullable=True)
 
     def __init__(self,
@@ -321,7 +321,7 @@ class Listing(BaseDataModel, db.Model):
                  volume,
                  materials,
                  address,
-                 lattitude,
+                 latitude,
                  longitude,
                  image="",
                  want_to_trade_for=[],
@@ -344,7 +344,7 @@ class Listing(BaseDataModel, db.Model):
         self.user_id = User.query.filter_by(email=user_email).first().id
 
         self.address = address
-        self.lattitude = lattitude
+        self.latitude = latitude
         self.longitude = longitude
 
         self.update_categories(categories)
@@ -436,7 +436,7 @@ class Listing(BaseDataModel, db.Model):
             "address": self.address,
             "image": self.image,
             "materials": [mat.to_json() for mat in self.materials],
-            "lattitude": self.lattitude,
+            "latitude": self.latitude,
             "longitude": self.longitude
         }
 

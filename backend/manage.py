@@ -88,7 +88,7 @@ def add_listings():
         weight=5.0,
         volume=1.0,
         address="Bathurst Library, Keppel Street, Bathurst, Bathurst Regional Council, New South Wales, 2795, Australia",
-        lattitude=-33.4225722,
+        latitude=-33.4225722,
         longitude=149.5795843,
         materials=["wood", "polyester"],
         image="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=873&q=80",
@@ -106,7 +106,7 @@ def add_listings():
         weight=.5,
         volume=2.0,
         address="Bathurst Library, Keppel Street, Bathurst, Bathurst Regional Council, New South Wales, 2795, Australia",
-        lattitude=-33.4225722,
+        latitude=-33.4225722,
         longitude=149.5795843,
         categories=["toys", "electronics"],
         materials=["plastic"],
@@ -125,7 +125,7 @@ def add_listings():
         categories=["electronics"],
         weight=.75,
         address="Bathurst Library, Keppel Street, Bathurst, Bathurst Regional Council, New South Wales, 2795, Australia",
-        lattitude=-33.4225722,
+        latitude=-33.4225722,
         longitude=149.5795843,
         volume=.2,
         materials=["plastic", "metal"],
@@ -146,7 +146,7 @@ def add_listings():
         weight=1.0,
         volume=1.0,
         address="Bathurst Library, Keppel Street, Bathurst, Bathurst Regional Council, New South Wales, 2795, Australia",
-        lattitude=-33.4225722,
+        latitude=-33.4225722,
         longitude=149.5795843,
         materials=["metal"],
         image="https://images.unsplash.com/photo-1616740540792-3daec604777d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80",
@@ -163,7 +163,7 @@ def add_listings():
         can_trade=True,
         status="active",
         address="Bathurst Library, Keppel Street, Bathurst, Bathurst Regional Council, New South Wales, 2795, Australia",
-        lattitude=-33.4225722,
+        latitude=-33.4225722,
         longitude=149.5795843,
         categories=["clothes"],
         weight=.2,
@@ -183,7 +183,7 @@ def add_listings():
         can_trade=True,
         status="active",
         address="Bathurst Library, Keppel Street, Bathurst, Bathurst Regional Council, New South Wales, 2795, Australia",
-        lattitude=-33.4225722,
+        latitude=-33.4225722,
         longitude=149.5795843,
         categories=["electronics"],
         weight=.2,
@@ -341,6 +341,9 @@ def create_db():
         db.session.commit()
         add_data()
         jack = User(email="jack@robbers.net.au", username="jackrobbers")
+        jack.address = "ahhh"
+        jack.latitude=-33.704110
+        jack.longitude=149.857050
         jack.save()
 
 

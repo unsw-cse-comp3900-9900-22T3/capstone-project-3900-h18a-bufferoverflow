@@ -180,15 +180,11 @@ def searchListings_resolver(obi, info,
             # finished looping. set result = new_result
             result = new_result
 
+        print("aaaaaa", distance, user_email)
         if distance and user_email:
-            first = list(result)[0]
-            between = haversine([user.lattitude, user.longitude], [
-                                first['lattitude'], first['longitude']])
-            print(distance, between, between < distance)
-            # print(user.lattitude, user.longitude, results)
-            result = filter(lambda listing: haversine([user.lattitude, user.longitude], [
-                listing['lattitude'], listing['longitude']]) < distance, result)
-
+            result = [listing for listing in result if haversine([user.latitude, user.longitude], [
+                listing['latitude'], listing['longitude']]) < distance]
+                
         payload = {
             "success": True,
             "listings": result
@@ -219,7 +215,7 @@ def create_listing_resolver(obj, info,
                             volume,
                             materials,
                             address,
-                            lattitude,
+                            latitude,
                             longitude,
                             image
                             ):
@@ -239,7 +235,7 @@ def create_listing_resolver(obj, info,
             volume,
             materials,
             address,
-            lattitude,
+            latitude,
             longitude,
             image,
             want_to_trade_for=want_to_trade_for
@@ -275,7 +271,7 @@ def update_listing_resolver(obj, info,
                             materials=None,
                             address=None,
                             image=None,
-                            lattitude=None,
+                            latitude=None,
                             longitude=None
                             ):
     try:
@@ -295,7 +291,7 @@ def update_listing_resolver(obj, info,
         listing.update_materials(materials)
         listing.address = address if address is not None else listing.address
         listing.image = image if image is not None else listing.image
-        listing.lattitude = lattitude if lattitude is not None else listing.lattitude
+        listing.latitude = latitude if latitude is not None else listing.latitude
         listing.longitude = longitude if longitude is not None else listing.longitude
         listing.save()
         payload = {

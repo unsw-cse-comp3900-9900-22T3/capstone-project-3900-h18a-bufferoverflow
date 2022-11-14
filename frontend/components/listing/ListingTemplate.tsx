@@ -45,7 +45,7 @@ const CREATE_LISTING = gql`
     $materials: [String]!
     $location: String!
     $image: String!
-    $lattitude: Float
+    $latitude: Float
     $longitude: Float
   ) {
     createListing(
@@ -65,7 +65,7 @@ const CREATE_LISTING = gql`
       materials: $materials
       address: $location
       image: $image
-      lattitude: $lattitude
+      latitude: $latitude
       longitude: $longitude
     ) {
       errors
@@ -123,7 +123,7 @@ const UPDATE_LISTING = gql`
     $materials: [String]
     $location: String
     $image: String
-    $lattitude: Float
+    $latitude: Float
     $longitude: Float
   ) {
     updateListing(
@@ -142,7 +142,7 @@ const UPDATE_LISTING = gql`
       materials: $materials
       address: $location
       image: $image
-      lattitude: $lattitude
+      latitude: $latitude
       longitude: $longitude
     ) {
       errors
@@ -534,7 +534,7 @@ export const ListingTemplate = (props: {
                     materials,
                     tradeCategories,
                     price,
-                    lattitude: position.length == 2 ? position[0] : null,
+                    latitude: position.length == 2 ? position[0] : null,
                     longitude: position.length == 2 ? position[1] : null,
                   },
                 })
@@ -595,7 +595,7 @@ export const ListingTemplate = (props: {
                   materials,
                   tradeCategories,
                   price,
-                  lattitude: position.length == 2 ? position[0] : null,
+                  latitude: position.length == 2 ? position[0] : null,
                   longitude: position.length == 2 ? position[1] : null,
                 },
               })

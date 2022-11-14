@@ -251,7 +251,7 @@ type Mutation {
     displayImg: String
     address: String
     community: String
-    lattitude: Float
+    latitude: Float
     longitude: Float
   ): UserResult!
   deleteUser(email: String!): UserResult!
@@ -273,7 +273,7 @@ type Mutation {
     address: String!
     image: String!
     longitude: Float
-    lattitude: Float
+    latitude: Float
   ): ListingResult!
   updateListing(
     id: ID!
@@ -292,7 +292,7 @@ type Mutation {
     materials: [String]
     address: String
     image: String
-    lattitude: Float
+    latitude: Float
     longitude: Float
   ): ListingResult!
   deleteListing(id: ID!): ListingResult!

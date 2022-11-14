@@ -59,7 +59,7 @@ def update_user_resolver(
     display_img=None,
     address=None,
     community=None,
-    lattitude=None,
+    latitude=None,
     longitude=None,
 ):
     try:
@@ -77,7 +77,7 @@ def update_user_resolver(
 
             user.address = address if address is not None else user.address
             user.community = community if community is not None else user.community
-            user.lattitude = lattitude if lattitude is not None else user.lattitude
+            user.latitude = latitude if latitude is not None else user.latitude
             user.longitude = longitude if longitude is not None else user.longitude
             user.save()
 
