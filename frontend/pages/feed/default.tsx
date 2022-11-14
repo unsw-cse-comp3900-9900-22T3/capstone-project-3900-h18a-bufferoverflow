@@ -1,4 +1,3 @@
-import { useStore } from "../../store/store";
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 import { itemDataToItemCard } from "../../components/feed/ItemCard";
@@ -74,8 +73,6 @@ export const GET_SEARCH_RESULTS = gql`
 /////////////////////////////////////////////////////////////////////////////
 
 const DefaultFeed: NextPage = () => {
-  const { auth } = useStore();
-
   const feed = useQuery<DefaultFeedGraphqlProps>(GET_DEFAULT_FEED).data;
   const [isSearch, setIsSearch] = useState(false);
   const [search, setSearch] = useState<SearchBarProps>({
@@ -95,7 +92,6 @@ const DefaultFeed: NextPage = () => {
       isSellListing: search.listing === "have",
       priceMin: search.price.min,
       priceMax: search.price.max,
-      userEmail: auth?.email
     },
   });
 
@@ -109,22 +105,12 @@ const DefaultFeed: NextPage = () => {
     }
   }, [data, feed]);
 
-  const [user, setUser] = useState<User>({});
-  const user_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
-    variables: { email: auth?.email || "" },
-  });
-  useEffect(() => {
-    if (user_response.data?.getUser.user) {
-      setUser(user_response.data?.getUser.user);
-    }
-  }, [user_response]);
-
   return (
     <Template title="Swapr">
       <SearchBar
         data={search}
         setData={setSearch}
-        distanceAllowed={auth && auth?.email !== "" && user.address}
+        distanceAllowed={false}
         onSearch={() => {
           setIsSearch(true);
           refetch({

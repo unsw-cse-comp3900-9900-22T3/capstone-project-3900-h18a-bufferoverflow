@@ -340,8 +340,6 @@ def create_db():
         db.create_all()
         db.session.commit()
         add_data()
-        jack = User(email="jack@robbers.net.au", username="jackrobbers")
-        jack.save()
 
 if __name__ == "__main__":
     cli()
