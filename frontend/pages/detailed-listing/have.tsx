@@ -1,9 +1,19 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
-import { useState, useEffect } from "react";
-import { Avatar, Box, Button, Card, Stack, Typography } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useRouter } from "next/router";
 import { useLazyQuery } from "@apollo/client";
 import { useStore } from "../../store/store";
@@ -122,6 +132,12 @@ const DetailedHaveListing: NextPage = () => {
     ssr: false,
   });
 
+  const mapRef = useRef();
+
+  function scrollMap() {
+    mapRef.current.scrollIntoView({ behavior: "smooth" });
+  }
+
   return (
     <Template title="Have Listing" center scrollable>
       <Stack direction={"column"}>
@@ -170,9 +186,16 @@ const DetailedHaveListing: NextPage = () => {
           {/** Information Section */}
           <Box sx={{ display: "flex", flexDirection: "column", width: 500 }}>
             <LabelBox title="Location">
-              <Typography fontSize={16} variant="body2">
-                {location}
-              </Typography>
+              <Stack direction="row">
+                <Tooltip title="Show on Map">
+                  <IconButton onClick={scrollMap}>
+                    <LocationOnIcon />
+                  </IconButton>
+                </Tooltip>
+                <Typography fontSize={16} variant="body2">
+                  {location}
+                </Typography>
+              </Stack>
             </LabelBox>
             <LabelBox title="Categories">
               <Box
@@ -268,7 +291,9 @@ const DetailedHaveListing: NextPage = () => {
             </Box>
           </Box>
         </Box>
-        <Map width={800} height={600} position={[54, 34]}></Map>
+        <div ref={mapRef}>
+          <Map width={800} height={600} position={[54, 34]} />
+        </div>
       </Stack>
     </Template>
   );
