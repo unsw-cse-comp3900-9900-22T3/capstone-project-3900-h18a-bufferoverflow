@@ -39,12 +39,25 @@ def get_user_co2_emission_saving(user, year):
         # get average material co2 emission per kg for each material
         average_material_co2_emission = 0.0
         for material in listing.materials:
-            average_material_co2_emission += material_co2_emission_per_kg[material.name]
+            average_material_co2_emission += material_co2_emission_per_kg[material.type]
         average_material_co2_emission /= len(listing.materials)
         manufacturing_co2_savings += (1.35 * weight) * average_material_co2_emission
 
     total_co2_savings = brick_and_mortar_delivery_co2_savings + landfill_co2_savings + manufacturing_co2_savings
     return user_trade_count, cubic_metres_landfill_savings, total_co2_savings
+
+def get_community_co2_emission_saving(user, year):
+    """ Gets the community co2 emission saving for a given user and year """
+    total_co2_savings = 0.0
+    total_cube_metres_savings = 0.0
+    total_trades = 0
+    for u in User.query.all():
+        if u.community == user.community:
+            user_trade_count, cubicMetreSaving, CO2Saving = get_user_co2_emission_saving(u, year)
+            total_co2_savings += CO2Saving
+            total_cube_metres_savings += cubicMetreSaving
+            total_trades += user_trade_count
+    return total_trades, total_cube_metres_savings, total_co2_savings
 
 def generate_categories_dict(): 
     '''
