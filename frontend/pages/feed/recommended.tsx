@@ -1,29 +1,27 @@
-import { Box, Typography } from '@mui/material'
-import { NextPage } from 'next'
-import { useState , useEffect } from 'react';
+import { useStore } from "../../store/store";
+import { Template } from "../../components/generic/Template";
+import { NextPage } from "next";
 import { itemDataToItemCard } from "../../components/feed/ItemCard";
-import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar';
-import { Template } from '../../components/generic/Template'
-import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals';
-import { useQuery, gql } from "@apollo/client"
-import { useStore } from '../../store/store';
-import { GraphqlListing } from '../../@types/component.types';
-import { SearchGraphqlProps } from '../../@types/pages.types';
+import { Box, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { SearchBar, SearchBarProps } from "../../components/feed/SearchBar";
+import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from "../../utils/globals";
+import { useQuery, gql } from "@apollo/client";
+import {
+  RecommendedFeedGraphqlProps,
+  SearchGraphqlProps,
+  User,
+  UserGraphqlProps,
+} from "../../@types/pages.types";
+import { GET_USER_QUERY } from "../../utils/queries";
 
 /////////////////////////////////////////////////////////////////////////////
 // Data
 /////////////////////////////////////////////////////////////////////////////
-export interface RecommendedFeedGraphqlProps {
-  userFeed: {
-    success: boolean | null;
-    errors: string[] | null;
-    listings: GraphqlListing[] | null;
-  };
-}
 
 const GET_USER_FEED = gql`
-  query($userEmail : String!) {
-    userFeed(userEmail : $userEmail) {
+  query ($userEmail: String!) {
+    userFeed(userEmail: $userEmail) {
       listings {
         id
         title
@@ -77,7 +75,9 @@ const GET_USER_SEARCH_RESULTS = gql`
 
 const RecommendedFeed: NextPage = () => {
   const { auth } = useStore();
-  const feed = useQuery<RecommendedFeedGraphqlProps>(GET_USER_FEED, { variables: { userEmail: auth?.email || '' } }).data;
+  const feed = useQuery<RecommendedFeedGraphqlProps>(GET_USER_FEED, {
+    variables: { userEmail: auth?.email || "" },
+  }).data;
   const [isSearch, setIsSearch] = useState(false);
   const [search, setSearch] = useState<SearchBarProps>({
     categories: [],
@@ -85,34 +85,48 @@ const RecommendedFeed: NextPage = () => {
       max: MAX_PRICE,
       min: MIN_PRICE,
     },
-    listing: 'have',
-    distance: MAX_DISTANCE
-  })
-
-  const [numberItems , setNumberItems ] = useState(0);
-
-  const { data, refetch } = useQuery<SearchGraphqlProps>(GET_USER_SEARCH_RESULTS, {
-    variables: {
-      categories: search.categories,
-      distance: search.distance,
-      isSellListing: search.listing === "have",
-      priceMin: search.price.min,
-      priceMax: search.price.max,
-      userEmail: auth?.email
-    },
+    listing: "have",
+    distance: MAX_DISTANCE,
   });
-  
+
+  const [numberItems, setNumberItems] = useState(0);
+
+  const { data, refetch } = useQuery<SearchGraphqlProps>(
+    GET_USER_SEARCH_RESULTS,
+    {
+      variables: {
+        categories: search.categories,
+        distance: search.distance,
+        isSellListing: search.listing === "have",
+        priceMin: search.price.min,
+        priceMax: search.price.max,
+        userEmail: auth?.email,
+      },
+    }
+  );
+
   useEffect(() => {
     if (!isSearch && feed?.userFeed?.listings) {
       setNumberItems(feed?.userFeed?.listings.length);
     }
   }, [data, feed]);
 
+  const [user, setUser] = useState<User>({});
+  const user_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
+    variables: { email: auth?.email || "" },
+  });
+  useEffect(() => {
+    if (user_response.data?.getUser.user) {
+      setUser(user_response.data?.getUser.user);
+    }
+  }, [user_response]);
+
   return (
     <Template title="Swapr">
       <SearchBar
         data={search}
         setData={setSearch}
+        distanceAllowed={auth && auth?.email != "" && user.address}
         onSearch={() => {
           setIsSearch(true);
           refetch({
@@ -158,6 +172,6 @@ const RecommendedFeed: NextPage = () => {
       </Box>
     </Template>
   );
-}
+};
 
-export default RecommendedFeed
+export default RecommendedFeed;

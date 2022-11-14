@@ -48,14 +48,6 @@ const GET_CONVERSATION_MESSAGES_QUERY = gql`
   }
 `;
 
-interface UserGraphqlProps {
-  getUser: {
-    success: boolean | null;
-    errors: string[] | null;
-    user: User | null;
-  };
-}
-
 const GET_USER_QUERY = gql`
   query getUserQuery($email: String!) {
     getUser(email: $email) {

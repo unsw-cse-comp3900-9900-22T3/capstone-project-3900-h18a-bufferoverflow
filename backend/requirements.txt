@@ -5,3 +5,4 @@ psycopg2-binary
 ariadne
 flask-cors
 flask-socketio
+haversine
