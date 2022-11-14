@@ -340,13 +340,6 @@ def create_db():
         db.create_all()
         db.session.commit()
         add_data()
-        jack = User(email="jack@robbers.net.au", username="jackrobbers")
-        jack.address = "ahhh"
-        jack.latitude=-33.704110
-        jack.longitude=149.857050
-        jack.save()
-
-
 
 if __name__ == "__main__":
     cli()
