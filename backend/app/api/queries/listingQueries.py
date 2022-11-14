@@ -180,7 +180,6 @@ def searchListings_resolver(obi, info,
             # finished looping. set result = new_result
             result = new_result
 
-        print("aaaaaa", distance, user_email)
         if distance and user_email:
             result = [listing for listing in result if haversine([user.latitude, user.longitude], [
                 listing['latitude'], listing['longitude']]) < distance]
