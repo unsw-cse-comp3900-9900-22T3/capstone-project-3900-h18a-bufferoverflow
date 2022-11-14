@@ -45,7 +45,7 @@ class User(BaseDataModel, db.Model):
     bio = db.Column(db.String(500), default="", nullable=False)
     display_img = db.Column(db.String(500), default="", nullable=False)
     address = db.Column(db.String(500), default="", nullable=True)
-    community = db.Column(db.String(100), default="global", nullable=False)
+    community = db.Column(db.String(100), default="Global", nullable=False)
     latitude = db.Column(db.Float, nullable=True)
     longitude = db.Column(db.Float, nullable=True)
 

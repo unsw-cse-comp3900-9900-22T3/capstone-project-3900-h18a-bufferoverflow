@@ -65,6 +65,15 @@ const GET_USER = gql`
   }
 `;
 
+// by default, nominatim weighs larger things first in results, however
+// we specifically want towns or suburbs.
+// in particular this helps with places that are also councils - e.g randwick
+const PLACE_WEIGHTS = {
+  municipality: 2,
+  suburb: 1,
+  town: 1,
+};
+
 /////////////////////////////////////////////////////////////////////////////
 // Secondary Components
 /////////////////////////////////////////////////////////////////////////////
@@ -114,6 +123,34 @@ const Dashboard: NextPage = () => {
     if (!height) setHeight(window.innerHeight);
     if (!width) setHWidth(window.innerWidth);
   }, []);
+
+  useEffect(() => {
+    if (communityStats?.name) {
+      const nominatim = `https://nominatim.openstreetmap.org/search?format=json&city=${communityStats.name}&countrycodes=au&extratags=1`;
+      fetch(nominatim)
+        .then((response) => response.json())
+        .then((places) => {
+          if (places.length > 0) {
+            places.sort((a, b) => {
+              let aWeight = 10;
+              let bWeight = 10;
+              if (a.extratags.place in PLACE_WEIGHTS) {
+                aWeight = PLACE_WEIGHTS[a.extratags.place];
+              }
+              if (b.extratags.place in PLACE_WEIGHTS) {
+                bWeight = PLACE_WEIGHTS[b.extratags.place];
+              }
+              return aWeight - bWeight;
+            });
+            console.log(places);
+            const place = places[0];
+            setPosition([place.lat, place.lon]);
+          }
+        });
+        
+        `{communityStats?.name}'s environmental impact in `
+    }
+  }, [communityStats, communityStats?.name]);
 
   const handleChange = (event: SelectChangeEvent) => {
     setYear(event.target.value as string);
@@ -210,7 +247,9 @@ const Dashboard: NextPage = () => {
       </Box>
       <Box sx={{ display: "flex", justifyContent: "center", mt: 8 }}>
         <Typography sx={{ fontSize: 35 }}>
-          {communityStats?.name}'s environmental impact in{" "}
+          {communityStats?.name != "Global"
+            ? `${communityStats?.name}'s environmental impact in `
+            : `The Swapr community's environmental impact in `}
         </Typography>
         <FormControl sx={{ ml: 3 }}>
           <InputLabel id="demo-simple-select-label">Year</InputLabel>
@@ -237,7 +276,12 @@ const Dashboard: NextPage = () => {
               scaleY: scrollYProgress,
             }}
           />
-          <Map width={600} height={400} position={position}></Map>
+          <Map
+            width={600}
+            height={400}
+            position={position}
+            zoom={communityStats?.name === "Global" ? 1 : 14}
+          ></Map>
         </motion.div>
       </Box>
       <Box sx={{ display: "flex", justifyContent: "center", mt: 9 }}>

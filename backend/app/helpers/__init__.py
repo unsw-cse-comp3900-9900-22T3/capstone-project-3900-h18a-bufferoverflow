@@ -52,7 +52,7 @@ def get_community_co2_emission_saving(user, year):
     total_cube_metres_savings = 0.0
     total_trades = 0
     for u in User.query.all():
-        if u.community == user.community:
+        if u.community == user.community or user.community == "Global":
             user_trade_count, cubicMetreSaving, CO2Saving = get_user_co2_emission_saving(u, year)
             total_co2_savings += CO2Saving
             total_cube_metres_savings += cubicMetreSaving
