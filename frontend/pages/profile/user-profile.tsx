@@ -1,38 +1,24 @@
-import { Template } from "../../components/generic/Template";
-import { Toast } from "../../components/generic/Toast";
-import { AddressSearch } from "../../components/location/AddressSearch";
-import { NextPage } from "next";
-import { Box } from "@mui/system";
-import TextField from "@mui/material/TextField/TextField";
-import { Avatar, Button, Card, Tooltip, Typography } from "@mui/material";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { useRouter } from "next/router";
-import { createRef, useEffect, useState } from "react";
-import { uploadFile } from "../../utils/utils";
-import { gql, useMutation, useQuery } from "@apollo/client";
-import { useStore, useStoreUpdate } from "../../store/store";
-import { getAuth, updateProfile } from "firebase/auth";
-import { convertUserToAuthProps } from "../../store/utils";
-import dynamic from "next/dynamic";
-/////////////////////////////////////////////////////////////////////////////
-// Data Types
-/////////////////////////////////////////////////////////////////////////////
+import { Template } from '../../components/generic/Template'
+import { NextPage } from 'next'
+import { Box } from '@mui/system'
+import TextField from '@mui/material/TextField/TextField'
+import { Avatar, Button, Card, Tooltip, Typography } from '@mui/material'
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { useRouter } from 'next/router'
+import { createRef, useEffect, useState } from 'react'
+import { uploadFile } from '../../utils/utils'
+import { gql, useMutation, useQuery } from '@apollo/client'
+import { useStore, useStoreUpdate } from '../../store/store'
+import { Toast } from '../../components/generic/Toast'
+import { getAuth, updateProfile } from 'firebase/auth'
+import { convertUserToAuthProps } from '../../store/utils'
+import { ProfileGraphqlProps } from '../../@types/pages.types'
+import dynamic from 'next/dynamic'
+import { AddressSearch } from '../../components/location/AddressSearch'
 
-// We should define the structure of the response from API as a type @frontend team
-
-interface ProfileGraphqlProps {
-  getUser: {
-    success: boolean | null;
-    errors: string[] | null;
-    user: {
-      displayImg: string;
-      username: string;
-      community: string;
-      bio: string;
-      address: string;
-    } | null;
-  };
-}
+/////////////////////////////////////////////////////////////////////////////
+// Queries
+/////////////////////////////////////////////////////////////////////////////
 
 const GET_USER_QUERY = gql`
   query getUserQuery($email: String!) {
