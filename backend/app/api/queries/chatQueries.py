@@ -3,6 +3,7 @@ from ariadne import convert_kwargs_to_snake_case
 
 
 def create_message_resolver(obj, info, timestamp, text, author, conversation):
+    """ Creates a new message """
     try:
         message = Message(timestamp, text, author, conversation)
         message.save()
@@ -19,6 +20,7 @@ def create_message_resolver(obj, info, timestamp, text, author, conversation):
 
 
 def getMessages_resolver(obj, info, conversation=None):
+    """ Gets all messages in a conversation """
     try:
         if conversation is not None:
             messages = Message.query.filter_by(conversation=conversation)
@@ -40,6 +42,7 @@ def getMessages_resolver(obj, info, conversation=None):
 
 @convert_kwargs_to_snake_case
 def createConversation_resolver(obj, info, **kwargs):
+    """ Creates a new conversation """
     try:
         conversation = Conversation(**kwargs)
         conversation.save()
@@ -57,6 +60,7 @@ def createConversation_resolver(obj, info, **kwargs):
 
 @convert_kwargs_to_snake_case
 def updateConversation_resolver(obj, info, conversation, last_read_first=None, last_read_second=None):
+    """ Updates a conversation """
     try:
         conversation_object = Conversation.query.filter_by(conversation=conversation).first()
         print(f"updating conversation with {conversation} {last_read_first} {last_read_second} {conversation_object}")
@@ -80,6 +84,7 @@ def updateConversation_resolver(obj, info, conversation, last_read_first=None, l
 
 @convert_kwargs_to_snake_case
 def getConversations_resolver(obj, info, involving):
+    """ Gets all conversations involving a user """
     try:
         # think this might be potentially fragile, but emails can't have more than 1 @ right?
         conversations = Conversation.query.filter(Conversation.conversation.contains(involving))
@@ -98,6 +103,7 @@ def getConversations_resolver(obj, info, involving):
 
 @convert_kwargs_to_snake_case
 def getConversationsForOverview_resolver(obj, info, involving):
+    """ Gets all conversations involving a user for overview """
     try:
         # think this might be potentially fragile, but emails can't have more than 1 @ right?
         conversations = Conversation.query.filter(Conversation.conversation.contains(involving))
@@ -136,10 +142,9 @@ def getConversationsForOverview_resolver(obj, info, involving):
         }
     return payload
 
-'''
-counts the number of conversations which have messages the user hasn't seen
-'''
+
 def countUnseenMessages_resolver(obj, info, email):
+    """ Counts the number of unseen messages for a user """
     try:
         conversations = Conversation.query.filter(Conversation.conversation.contains(email))
         count = 0
@@ -168,6 +173,7 @@ def countUnseenMessages_resolver(obj, info, email):
 
 
 def deleteConversation_resolver(obj, info, conversation):
+    """ Deletes a conversation """
     try:
         conversation_object = Conversation.query.filter_by(conversation=conversation).first()
         conversation_object.delete()

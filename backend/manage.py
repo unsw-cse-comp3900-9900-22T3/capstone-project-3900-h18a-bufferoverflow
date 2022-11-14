@@ -5,24 +5,25 @@ from app.database.models import *
 from app.database import category_names, material_names
 from app import app
 
-
 cli = FlaskGroup(app)
 
 # helper functions
 def create_materials():
-
+    """ Create materials """
     for material in material_names:
         new_material = Material(material)
         new_material.save()
 
 
 def create_categories():
+    """ Create categories """
     for category in category_names:
         new_category = Category(category)
         new_category.save()
 
 
 def add_data():
+    """ Add data to database """
     # create materials and categories
     create_materials()
     create_categories()
@@ -44,6 +45,7 @@ def add_data():
 
 
 def add_users():
+    """ Add users data """
     # create users
     franksAccount = User(email="z5231701@ad.unsw.edu.au", username="Frank")
     user2 = User(email="user2@gmail.com", username="Steven123")
@@ -189,7 +191,6 @@ def add_listings():
 
 def create_conversations():
     """Create conversations"""
-
     message = Message(1664802000000, "Hi there, I would like to trade with you", 3, "z5231701@ad.unsw.edu.au-user3@gmail.com")
     message.save()
     conversation = Conversation("z5231701@ad.unsw.edu.au-user3@gmail.com", None, None)
@@ -197,10 +198,8 @@ def create_conversations():
     conversation.last_read_first = message.id
     conversation.save()
 
-
     inactiveConversation = Conversation("z5231701@ad.unsw.edu.au-user2@gmail.com", None, None)
     inactiveConversation.save()
-
 
     messageTest = Message(1664820000000, "Hey Cece this is frank hows it going", 1, "z5231701@ad.unsw.edu.au-z3332330@ad.unsw.edu.au")
     messageTest.save()
@@ -316,6 +315,7 @@ def add_clicked_and_searched_listings_data():
 
 @cli.command("create_db")
 def create_db():
+    """ Create database """
     # if no data in db, create default data
     try:
         Material.query.all() # Raises an exception if no data in db
@@ -323,6 +323,7 @@ def create_db():
         db.create_all()
         db.session.commit()
         add_data()
+
 
 if __name__ == "__main__":
     cli()

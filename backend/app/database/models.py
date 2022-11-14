@@ -2,6 +2,7 @@ from app.database import db, material_names, category_names
 
 
 class BaseDataModel():
+    """ Base data model for all objects """
 
     def save(self):
         """ Save the current instance to the database """
@@ -34,7 +35,6 @@ class User(BaseDataModel, db.Model):
         display_img (str): User display image
         address (str): User address
     """
-
 
     __tablename__ = "users"
 
