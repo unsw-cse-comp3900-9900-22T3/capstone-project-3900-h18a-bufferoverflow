@@ -35,17 +35,14 @@ def getCommunityStats_resolver(obj, info, user_email, year):
     '''
     try:
         user = User.query.filter_by(email=user_email).first()
-        user_trade_count, cubicMetreSaving, CO2Saving = get_user_co2_emission_saving(
-            user, year)
-        # todo: retrieve stats for everyone else in the community here
-        print(user)
+        total_user_trade_count, total_cubicMetreSaving, total_CO2Saving = helpers.get_community_co2_emission_saving(user, year)
         payload = {
             'success': True,
             'community_stats': {
                 'name': user.community,
-                'num_trades': user_trade_count,
-                'cubic_meter_saving': cubicMetreSaving,
-                'carbon_dioxide_saving': CO2Saving
+                'num_trades': total_user_trade_count,
+                'cubic_meter_saving': total_cubicMetreSaving,
+                'carbon_dioxide_saving': total_CO2Saving
             }
         }
     except Exception as e:
