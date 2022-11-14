@@ -90,8 +90,8 @@ def add_listings():
         address="Bathurst Library, Keppel Street, Bathurst, Bathurst Regional Council, New South Wales, 2795, Australia",
         lattitude=-33.4225722,
         longitude=149.5795843,
-        materials=["wood", "metal"],
-        image="https://images.unsplash.com/photo-1666475877254-235b2f5fd4b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80",
+        materials=["wood", "polyester"],
+        image="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=873&q=80",
     )
     listing2 = Listing(
         user_email="user3@gmail.com",
@@ -340,6 +340,9 @@ def create_db():
         db.create_all()
         db.session.commit()
         add_data()
+        jack = User(email="jack@robbers.net.au", username="jackrobbers")
+        jack.save()
+
 
 
 if __name__ == "__main__":

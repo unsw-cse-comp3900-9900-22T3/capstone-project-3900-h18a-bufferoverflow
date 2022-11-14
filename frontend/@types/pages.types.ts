@@ -52,6 +52,14 @@ export interface DefaultFeedGraphqlProps {
   };
 }
 
+export interface RecommendedFeedGraphqlProps {
+  userFeed: {
+    success: boolean | null;
+    errors: string[] | null;
+    listings: GraphqlListing[] | null;
+  };
+}
+
 export interface SearchGraphqlProps {
   searchListings: {
     success: boolean | null;

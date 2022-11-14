@@ -16,6 +16,7 @@ export const itemDataToItemCard = (item: GraphqlListing) => {
         image={item.image}
         avatar={item.user.displayImg}
         location={item.address}
+        key={item.id}
         href={
           item.isSellListing
             ? `/detailed-listing/have?id=${item.id}`

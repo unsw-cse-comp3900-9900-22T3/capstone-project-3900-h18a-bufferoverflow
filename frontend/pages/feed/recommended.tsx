@@ -8,7 +8,7 @@ import { SearchBar, SearchBarProps } from "../../components/feed/SearchBar";
 import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from "../../utils/globals";
 import { useQuery, gql } from "@apollo/client";
 import {
-  DefaultFeedGraphqlProps,
+  RecommendedFeedGraphqlProps,
   SearchGraphqlProps,
   User,
   UserGraphqlProps,
@@ -18,13 +18,6 @@ import { GET_USER_QUERY } from "../../utils/queries";
 /////////////////////////////////////////////////////////////////////////////
 // Data
 /////////////////////////////////////////////////////////////////////////////
-export interface RecommendedFeedGraphqlProps {
-  userFeed: {
-    success: boolean | null;
-    errors: string[] | null;
-    listings: GraphqlListing[] | null;
-  };
-}
 
 const GET_USER_FEED = gql`
   query ($userEmail: String!) {

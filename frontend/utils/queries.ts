@@ -8,7 +8,7 @@ export const GET_USER_QUERY = gql`
       success
       user {
         username
-        display_img
+        displayImg
         id
         address
       }
