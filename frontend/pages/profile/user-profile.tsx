@@ -13,7 +13,6 @@ import { Toast } from '../../components/generic/Toast'
 import { getAuth, updateProfile } from 'firebase/auth'
 import { convertUserToAuthProps } from '../../store/utils'
 import { ProfileGraphqlProps } from '../../@types/pages.types'
-import dynamic from 'next/dynamic'
 import { AddressSearch } from '../../components/location/AddressSearch'
 
 /////////////////////////////////////////////////////////////////////////////
@@ -84,10 +83,6 @@ const UserProfile: NextPage = () => {
   const router = useRouter();
   const { auth } = useStore();
   const setStore = useStoreUpdate();
-
-  const Map = dynamic(() => import("../../components/location/Map"), {
-    ssr: false,
-  });
 
   // Graphql Query
   const { data } = useQuery<ProfileGraphqlProps>(GET_USER_QUERY, {

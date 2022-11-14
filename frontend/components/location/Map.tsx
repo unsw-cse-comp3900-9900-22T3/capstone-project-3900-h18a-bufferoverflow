@@ -7,12 +7,13 @@ export default function Map(props: {
   height: number;
   position: LatLngTuple;
   radius?: number;
+  zoom?: number
 }) {
   return (
     <Box sx={{ width: props.width, height: props.height }}>
       <MapContainer
         center={props.position}
-        zoom={14}
+        zoom={props.zoom ? props.zoom : 10}
         scrollWheelZoom={false}
         style={{ height: "100%", width: "100%" }}
       >
@@ -20,10 +21,9 @@ export default function Map(props: {
           url={`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`}
           attribution="© OpenSteetMap contributors"
         />
-        <Circle
-          center={props.position}
-          radius={props.radius ? props.radius : 2000}
-        ></Circle>
+        {props.radius ? (
+          <Circle center={props.position} radius={props.radius} />
+        ) : null}
       </MapContainer>
     </Box>
   );

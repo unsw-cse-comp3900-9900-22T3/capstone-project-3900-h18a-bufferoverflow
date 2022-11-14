@@ -66,6 +66,8 @@ type Listing {
   volume: Float!
   status: String!
   address: String!
+  latitude: Float!
+  longitude: Float!
   image: String
   materials: [Material]!
 }
