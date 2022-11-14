@@ -294,9 +294,9 @@ const DetailedHaveListing: NextPage = () => {
             </Box>
           </Box>
         </Box>
-        <div ref={mapRef}>
+        <Box ref={mapRef} sx={{ display: "flex", justifyContent: "center", marginBottom: 2}}>
           <Map width={800} height={600} position={position} />
-        </div>
+        </Box>
       </Stack>
     </Template>
   );

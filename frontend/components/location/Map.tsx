@@ -20,10 +20,9 @@ export default function Map(props: {
           url={`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`}
           attribution="© OpenSteetMap contributors"
         />
-        <Circle
-          center={props.position}
-          radius={props.radius ? props.radius : 2000}
-        ></Circle>
+        {props.radius ? (
+          <Circle center={props.position} radius={props.radius} />
+        ) : null}
       </MapContainer>
     </Box>
   );
