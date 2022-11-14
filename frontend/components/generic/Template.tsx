@@ -44,7 +44,7 @@ import AddIcon from "@mui/icons-material/Add";
 type SideBarProps = { title: string; icon: Icon; href: string }[];
 
 const sideBarTop: SideBarProps = [
-  { title: "All Listings", icon: LocalOfferIcon, href: "/feed/default" },
+  { title: "All Listings", icon: LocalOfferIcon, href: "/" },
   {
     title: "Methodology",
     icon: DescriptionIcon,
