@@ -76,6 +76,7 @@ const DetailedHaveListing: NextPage = () => {
   const [itemPosessor, setItemPossesor] = useState("");
   const [itemPosessorImageURL, setItemPossesorImageURL] = useState("");
   const [itemPosessorEmail, setItemPossesorEmail] = useState("");
+  const [position, setPosition] = useState<number[]>([0, 0]);
 
   useEffect(() => {
     console.log(id);
@@ -87,23 +88,25 @@ const DetailedHaveListing: NextPage = () => {
       }
     }
     if (data && data?.getListing.listing) {
-      setTitle(data?.getListing.listing.title);
-      setImage(data?.getListing.listing.image);
-      setDescription(data?.getListing.listing.description);
-      setLocation(data?.getListing.listing.address);
+      const listing = data?.getListing.listing;
+      setTitle(listing.title);
+      setImage(listing.image);
+      setDescription(listing.description);
+      setLocation(listing.address);
       setCategories(
-        data?.getListing.listing.categories.map((item: any) => item.type)
+        listing.categories.map((item: any) => item.type)
       );
-      setTrade(data?.getListing.listing.canTrade);
-      setCash(data?.getListing.listing.canPayCash);
-      setBank(data?.getListing.listing.canPayBank);
+      setTrade(listing.canTrade);
+      setCash(listing.canPayCash);
+      setBank(listing.canPayBank);
       setTradeCategories(
-        data?.getListing.listing.wantToTradeFor.map((item: any) => item.type)
+        listing.wantToTradeFor.map((item: any) => item.type)
       );
-      setPrice(data?.getListing.listing.price);
-      setItemPossesor(data?.getListing.listing.user.username);
-      setItemPossesorImageURL(data?.getListing.listing.user.displayImg);
-      setItemPossesorEmail(data?.getListing.listing.user.email);
+      setPrice(listing.price);
+      setItemPossesor(listing.user.username);
+      setItemPossesorImageURL(listing.user.displayImg);
+      setItemPossesorEmail(listing.user.email);
+      setPosition([listing.latitude, listing.longitude]);
     }
   }, [data, id]);
 
@@ -292,7 +295,7 @@ const DetailedHaveListing: NextPage = () => {
           </Box>
         </Box>
         <div ref={mapRef}>
-          <Map width={800} height={600} position={[54, 34]} />
+          <Map width={800} height={600} position={position} />
         </div>
       </Stack>
     </Template>

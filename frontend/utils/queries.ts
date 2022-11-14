@@ -40,6 +40,8 @@ export const GET_DETAILED_LISTING = gql`
         canTrade
         canPayCash
         canPayBank
+        latitude
+        longitude
       }
       errors
       success
@@ -71,6 +73,8 @@ export const GET_USER_DETAILED_LISTING = gql`
         canTrade
         canPayCash
         canPayBank
+        latitude
+        longitude
       }
       errors
       success
