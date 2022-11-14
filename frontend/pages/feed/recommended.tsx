@@ -9,7 +9,7 @@ import { SearchGraphqlProps } from './default';
 import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals';
 import { useQuery, gql } from "@apollo/client"
 import { useStore } from '../../store/store';
-import { User, UserGraphqlProps } from "../../utlis/user";
+import { User, UserGraphqlProps } from "../../utils/user";
 import { GET_USER_QUERY } from "../../utils/feed";
 
 /////////////////////////////////////////////////////////////////////////////

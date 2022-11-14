@@ -5,7 +5,7 @@ export type User = {
   address: string;
 };
 
-interface UserGraphqlProps {
+export interface UserGraphqlProps {
   getUser: {
     success: boolean | null;
     errors: string[] | null;
