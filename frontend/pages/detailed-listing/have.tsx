@@ -5,9 +5,10 @@ import { Avatar, Box, Button, Card, Typography } from "@mui/material";
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { useRouter } from "next/router";
-import { gql, useLazyQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { useStore } from "../../store/store";
 import { GET_DETAILED_LISTING , GET_USER_DETAILED_LISTING } from "../../utils/queries"
+import dynamic from 'next/dynamic'
 
 /////////////////////////////////////////////////////////////////////////////
 // Secondary Components
@@ -70,10 +71,13 @@ const DetailedHaveListing: NextPage = () => {
   const [itemPosessorEmail, setItemPossesorEmail] = useState("");
 
   useEffect(() => {
-    if (auth?.email) {
-      execQuery({ variables: { id : id, userEmail: auth?.email} });
-    } else {
-      execQuery({ variables: { id } });
+    console.log(id)
+    if (id) {
+      if (auth?.email) {
+        execQuery({ variables: { id : id, userEmail: auth?.email} });
+      } else {
+        execQuery({ variables: { id } });
+      }
     }
     if (data && data?.getListing.listing) {
       setTitle(data?.getListing.listing.title);
@@ -94,7 +98,7 @@ const DetailedHaveListing: NextPage = () => {
       setItemPossesorImageURL(data?.getListing.listing.user.displayImg);
       setItemPossesorEmail(data?.getListing.listing.user.email);
     }
-  }, [data]);
+  }, [data, id]);
 
   // Create description field given boolean parameters
   let purchaseOptions = ''
@@ -113,8 +117,12 @@ const DetailedHaveListing: NextPage = () => {
     router.push("/auth/login");
   };
 
+  const Map = dynamic(() => import("../../components/location/Map"), {
+    ssr: false,
+  });
+
   return (
-    <Template title="Have Listing" center>
+    <Template title="Have Listing" center scrollable>
       <Box
         sx={{
           display: "flex",
@@ -258,6 +266,7 @@ const DetailedHaveListing: NextPage = () => {
           </Box>
         </Box>
       </Box>
+      <Map></Map>
     </Template>
   );
 };

@@ -65,10 +65,12 @@ const DetailedWantListing: NextPage = () => {
   const [itemPosessorEmail, setItemPossesorEmail] = useState("");
 
   useEffect(() => {
-    if (auth?.email) {
-      execQuery({ variables: { id: id, userEmail: auth?.email } });
-    } else {
-      execQuery({ variables: { id } });
+    if (id) {
+      if (auth?.email) {
+        execQuery({ variables: { id: id, userEmail: auth?.email } });
+      } else {
+        execQuery({ variables: { id } });
+      }
     }
     if (data && data?.getListing.listing) {
       setTitle(data?.getListing.listing.title);
@@ -89,7 +91,7 @@ const DetailedWantListing: NextPage = () => {
       setItemPossesorImageURL(data?.getListing.listing.user.displayImg);
       setItemPossesorEmail(data?.getListing.listing.user.email);
     }
-  }, [data]);
+  }, [data, id]);
 
   const redirect = () => {
     router.push("/auth/login");
