@@ -247,7 +247,7 @@ const Dashboard: NextPage = () => {
       </Box>
       <Box sx={{ display: "flex", justifyContent: "center", mt: 8 }}>
         <Typography sx={{ fontSize: 35 }}>
-          {communityStats?.name != "Global"
+          {communityStats?.name !== "Global"
             ? `${communityStats?.name}'s environmental impact in `
             : `The Swapr community's environmental impact in `}
         </Typography>
