@@ -139,15 +139,15 @@ export const Template = (props: {
   }, [data]);
 
 
-  // scrollable means there's a scrollbar, so needs to disable the height restriction 
   // I tried doing this with styled components, but couldn't get it to work.
-
+  
   // very jank 
   const mainBoxStyles = {
     display: '',
     justifyContent: '',
     alignItems: '',
-    height: ''
+    height: '',
+    marginTop: 0,
   };
   if (props.center) {
     mainBoxStyles.display = 'flex';
@@ -155,7 +155,10 @@ export const Template = (props: {
     mainBoxStyles.alignItems = 'center';
   }
 
-  if (props.center && !props.scrollable) {
+  // scrollable means there's a scrollbar, so needs to disable the height restriction 
+  if (props.scrollable) {
+    mainBoxStyles.marginTop = 2
+  } else {
     mainBoxStyles.height = 'calc(100vh - 64px)';
   }
   
@@ -173,7 +176,7 @@ export const Template = (props: {
             aria-label="menu"
             sx={{ mr: 2, color: textColor }}
             onClick={() => setDrawer(true)}
-          >
+            >
             <MenuIcon />
           </IconButton>
 
@@ -204,12 +207,7 @@ export const Template = (props: {
       <ThemeProvider theme={theme}>
         {props.center ? (
           <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "calc(100vh - 64px)",
-            }}
+            sx={mainBoxStyles}
           >
             {props.children}
           </Box>

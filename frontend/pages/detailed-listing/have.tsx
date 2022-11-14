@@ -1,14 +1,17 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
 import { useState, useEffect } from "react";
-import { Avatar, Box, Button, Card, Typography } from "@mui/material";
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import { Avatar, Box, Button, Card, Stack, Typography } from "@mui/material";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import { useRouter } from "next/router";
 import { useLazyQuery } from "@apollo/client";
 import { useStore } from "../../store/store";
-import { GET_DETAILED_LISTING , GET_USER_DETAILED_LISTING } from "../../utils/queries"
-import dynamic from 'next/dynamic'
+import {
+  GET_DETAILED_LISTING,
+  GET_USER_DETAILED_LISTING,
+} from "../../utils/queries";
+import dynamic from "next/dynamic";
 
 /////////////////////////////////////////////////////////////////////////////
 // Secondary Components
@@ -19,42 +22,36 @@ const LabelBox = (props: {
   children?: JSX.Element | JSX.Element[];
 }) => {
   return (
-    <Box sx={{ mb: 2, display: 'flex' }}>
+    <Box sx={{ mb: 2, display: "flex" }}>
       <Box sx={{ width: 350 }}>
-        <Typography sx={{ fontWeight: 'bold' }}>{props.title}</Typography>
+        <Typography sx={{ fontWeight: "bold" }}>{props.title}</Typography>
       </Box>
-      <Box sx={{ width: 600 }}>
-        {props.children}
-      </Box>
+      <Box sx={{ width: 600 }}>{props.children}</Box>
     </Box>
-  )
-}
+  );
+};
 
-const DescriptionBox = (props: {
-  icon: any;
-  description: string;
-}) => {
+const DescriptionBox = (props: { icon: any; description: string }) => {
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-      <Avatar sx={{ ml: 2, mr: 2 }}>
-        {props.icon}
-      </Avatar>
+    <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+      <Avatar sx={{ ml: 2, mr: 2 }}>{props.icon}</Avatar>
       <Typography>{props.description}</Typography>
     </Box>
-  )
-}
+  );
+};
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
 /////////////////////////////////////////////////////////////////////////////
 
 const DetailedHaveListing: NextPage = () => {
-
   // Get item name from query params
-  const router = useRouter()
-  const { id } = router.query
+  const router = useRouter();
+  const { id } = router.query;
   const { auth } = useStore();
-  const [execQuery, { data }] = useLazyQuery(auth? GET_USER_DETAILED_LISTING : GET_DETAILED_LISTING);
+  const [execQuery, { data }] = useLazyQuery(
+    auth ? GET_USER_DETAILED_LISTING : GET_DETAILED_LISTING
+  );
 
   const [title, setTitle] = useState<string>("");
   const [image, setImage] = useState<string>("");
@@ -71,10 +68,10 @@ const DetailedHaveListing: NextPage = () => {
   const [itemPosessorEmail, setItemPossesorEmail] = useState("");
 
   useEffect(() => {
-    console.log(id)
+    console.log(id);
     if (id) {
       if (auth?.email) {
-        execQuery({ variables: { id : id, userEmail: auth?.email} });
+        execQuery({ variables: { id: id, userEmail: auth?.email } });
       } else {
         execQuery({ variables: { id } });
       }
@@ -101,17 +98,21 @@ const DetailedHaveListing: NextPage = () => {
   }, [data, id]);
 
   // Create description field given boolean parameters
-  let purchaseOptions = ''
-  if ((cash || bank) && !trade) purchaseOptions = `purchase for $${price}`
-  else if ((cash || bank) && trade) purchaseOptions = `purchase for $${price} or by mutual trade`
-  else if (!(cash || bank) && trade) purchaseOptions = `acquire by mutual trade`
-  else purchaseOptions = `not available`
+  let purchaseOptions = "";
+  if ((cash || bank) && !trade) purchaseOptions = `purchase for $${price}`;
+  else if ((cash || bank) && trade)
+    purchaseOptions = `purchase for $${price} or by mutual trade`;
+  else if (!(cash || bank) && trade)
+    purchaseOptions = `acquire by mutual trade`;
+  else purchaseOptions = `not available`;
 
-  let shippingOptions = ''
-  if (cash && bank) shippingOptions = 'cash or bank transfer on pickup or delivery'
-  else if (cash && !bank) shippingOptions = 'cash on pickup or delivery'
-  else if (!cash && bank) shippingOptions = 'bank transfer on pickup or delivery'
-  else shippingOptions = 'not applicable'
+  let shippingOptions = "";
+  if (cash && bank)
+    shippingOptions = "cash or bank transfer on pickup or delivery";
+  else if (cash && !bank) shippingOptions = "cash on pickup or delivery";
+  else if (!cash && bank)
+    shippingOptions = "bank transfer on pickup or delivery";
+  else shippingOptions = "not applicable";
 
   const redirect = () => {
     router.push("/auth/login");
@@ -123,152 +124,154 @@ const DetailedHaveListing: NextPage = () => {
 
   return (
     <Template title="Have Listing" center scrollable>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: 40,
-        }}
-      >
-        {/** Item Image Section */}
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <Card
-            variant="outlined"
-            sx={{ height: 280, width: 400, borderRadius: 4 }}
-          >
-            {image ? (
-              <img
-                src={image}
-                alt="profile"
-                style={{ height: 280, width: 400 }}
-              />
-            ) : (
-              <></>
-            )}
-          </Card>
-          <Typography sx={{ p: 3, pl: 4, fontSize: 20, fontWeight: "bold" }}>
-            {title}
-          </Typography>
-          <DescriptionBox
-            icon={<Avatar src={itemPosessorImageURL}></Avatar>}
-            description={`${itemPosessor} has this item`}
-          />
-          <DescriptionBox
-            icon={<AttachMoneyIcon />}
-            description={purchaseOptions}
-          />
-          <DescriptionBox
-            icon={<LocalShippingIcon />}
-            description={shippingOptions}
-          />
-        </Box>
+      <Stack direction={"column"}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 40,
+          }}
+        >
+          {/** Item Image Section */}
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
+            <Card
+              variant="outlined"
+              sx={{ height: 280, width: 400, borderRadius: 4 }}
+            >
+              {image ? (
+                <img
+                  src={image}
+                  alt="profile"
+                  style={{ height: 280, width: 400 }}
+                />
+              ) : (
+                <></>
+              )}
+            </Card>
+            <Typography sx={{ p: 3, pl: 4, fontSize: 20, fontWeight: "bold" }}>
+              {title}
+            </Typography>
+            <DescriptionBox
+              icon={<Avatar src={itemPosessorImageURL}></Avatar>}
+              description={`${itemPosessor} has this item`}
+            />
+            <DescriptionBox
+              icon={<AttachMoneyIcon />}
+              description={purchaseOptions}
+            />
+            <DescriptionBox
+              icon={<LocalShippingIcon />}
+              description={shippingOptions}
+            />
+          </Box>
 
-        {/** Information Section */}
-        <Box sx={{ display: "flex", flexDirection: "column", width: 500 }}>
-          <LabelBox title="Location">
-            <Typography fontSize={16} variant="body2">
-              {location}
-            </Typography>
-          </LabelBox>
-          <LabelBox title="Categories">
-            <Box
-              sx={{ display: "flex", flexWrap: "wrap", flexDirection: "row" }}
-            >
-              {categories.map((category) => (
-                <Box
-                  sx={{
-                    border: 1,
-                    width: 140,
-                    p: 1,
-                    borderRadius: 10,
-                    m: 0.5,
-                    textAlign: "center",
-                    color: "#616161",
-                  }}
-                >
-                  {category}
-                </Box>
-              ))}
-            </Box>
-          </LabelBox>
-          <LabelBox title="Want to Trade For Categories">
-            <Box
-              sx={{ display: "flex", flexWrap: "wrap", flexDirection: "row" }}
-            >
-              {tradeCategories.map((category) => (
-                <Box
-                  sx={{
-                    border: 1,
-                    width: 140,
-                    p: 1,
-                    borderRadius: 10,
-                    m: 0.5,
-                    textAlign: "center",
-                    color: "#616161",
-                  }}
-                >
-                  {category}
-                </Box>
-              ))}
-            </Box>
-          </LabelBox>
-          <LabelBox title="Description">
-            <Typography fontSize={16} variant="body2">
-              {description}
-            </Typography>
-          </LabelBox>
-          <Button
-            variant="outlined"
-            sx={{ borderRadius: 30, mt: 4, height: 45 }}
-            onClick={
-              !auth
-                ? redirect
-                : () => {
-                    router.push(
-                      `/trade/propose?email=${itemPosessorEmail}&id=${id}`
-                    );
-                  }
-            }
-          >
-            Propose Trade
-          </Button>
-          <Box sx={{ display: "flex", mt: 1.5, width: "100%" }}>
+          {/** Information Section */}
+          <Box sx={{ display: "flex", flexDirection: "column", width: 500 }}>
+            <LabelBox title="Location">
+              <Typography fontSize={16} variant="body2">
+                {location}
+              </Typography>
+            </LabelBox>
+            <LabelBox title="Categories">
+              <Box
+                sx={{ display: "flex", flexWrap: "wrap", flexDirection: "row" }}
+              >
+                {categories.map((category) => (
+                  <Box
+                    sx={{
+                      border: 1,
+                      width: 140,
+                      p: 1,
+                      borderRadius: 10,
+                      m: 0.5,
+                      textAlign: "center",
+                      color: "#616161",
+                    }}
+                  >
+                    {category}
+                  </Box>
+                ))}
+              </Box>
+            </LabelBox>
+            <LabelBox title="Want to Trade For Categories">
+              <Box
+                sx={{ display: "flex", flexWrap: "wrap", flexDirection: "row" }}
+              >
+                {tradeCategories.map((category) => (
+                  <Box
+                    sx={{
+                      border: 1,
+                      width: 140,
+                      p: 1,
+                      borderRadius: 10,
+                      m: 0.5,
+                      textAlign: "center",
+                      color: "#616161",
+                    }}
+                  >
+                    {category}
+                  </Box>
+                ))}
+              </Box>
+            </LabelBox>
+            <LabelBox title="Description">
+              <Typography fontSize={16} variant="body2">
+                {description}
+              </Typography>
+            </LabelBox>
             <Button
               variant="outlined"
-              sx={{ borderRadius: 30, mr: 0.5, width: "50%", height: 45 }}
-              onClick={
-                !auth
-                  ? redirect
-                  : () => {
-                      router.push(`/chat/chat?other=${itemPosessorEmail}`);
-                    }
-              }
-            >
-              Message User
-            </Button>
-            <Button
-              variant="outlined"
-              sx={{ borderRadius: 30, ml: 0.5, width: "50%", height: 45 }}
+              sx={{ borderRadius: 30, mt: 4, height: 45 }}
               onClick={
                 !auth
                   ? redirect
                   : () => {
                       router.push(
-                        `/profile/visitor-profile?email=${itemPosessorEmail}`
+                        `/trade/propose?email=${itemPosessorEmail}&id=${id}`
                       );
                     }
               }
             >
-              View Trader Profile
+              Propose Trade
             </Button>
+            <Box sx={{ display: "flex", mt: 1.5, width: "100%" }}>
+              <Button
+                variant="outlined"
+                sx={{ borderRadius: 30, mr: 0.5, width: "50%", height: 45 }}
+                onClick={
+                  !auth
+                    ? redirect
+                    : () => {
+                        router.push(`/chat/chat?other=${itemPosessorEmail}`);
+                      }
+                }
+              >
+                Message User
+              </Button>
+              <Button
+                variant="outlined"
+                sx={{ borderRadius: 30, ml: 0.5, width: "50%", height: 45 }}
+                onClick={
+                  !auth
+                    ? redirect
+                    : () => {
+                        router.push(
+                          `/profile/visitor-profile?email=${itemPosessorEmail}`
+                        );
+                      }
+                }
+              >
+                View Trader Profile
+              </Button>
+            </Box>
           </Box>
         </Box>
-      </Box>
-      <Map></Map>
+        <Map width={800} height={600} position={[54, 34]}></Map>
+      </Stack>
     </Template>
   );
 };
 
-export default DetailedHaveListing
+export default DetailedHaveListing;
