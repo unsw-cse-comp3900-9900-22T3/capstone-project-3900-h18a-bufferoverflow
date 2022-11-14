@@ -10,26 +10,6 @@ import { useLazyQuery } from "@apollo/client";
 import { useStore } from "../../store/store";
 
 /////////////////////////////////////////////////////////////////////////////
-// Data Types
-/////////////////////////////////////////////////////////////////////////////
-
-// We should define the structure of the response from API as a type @frontend team
-
-interface WantListingProps {
-  location: string;
-  title: string;
-  image: string;
-  categories: string[];
-  description: string;
-  trader: string;
-  email: string;
-  cash: boolean;
-  trade: boolean;
-  bank: boolean;
-  price: boolean;
-}
-
-/////////////////////////////////////////////////////////////////////////////
 // Secondary Components
 /////////////////////////////////////////////////////////////////////////////
 

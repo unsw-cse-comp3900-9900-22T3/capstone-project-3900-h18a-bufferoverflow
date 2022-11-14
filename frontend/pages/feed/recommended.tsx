@@ -2,13 +2,13 @@ import { Box, Typography } from '@mui/material'
 import { NextPage } from 'next'
 import { useState , useEffect } from 'react';
 import { itemDataToItemCard } from "../../components/feed/ItemCard";
-import { GraphqlListing } from '../../components/listing/types';
 import { SearchBar, SearchBarProps } from '../../components/feed/SearchBar';
 import { Template } from '../../components/generic/Template'
-import { SearchGraphqlProps } from './default';
 import { MAX_DISTANCE, MAX_PRICE, MIN_PRICE } from '../../utils/globals';
 import { useQuery, gql } from "@apollo/client"
 import { useStore } from '../../store/store';
+import { GraphqlListing } from '../../@types/component.types';
+import { SearchGraphqlProps } from '../../@types/pages.types';
 
 /////////////////////////////////////////////////////////////////////////////
 // Data

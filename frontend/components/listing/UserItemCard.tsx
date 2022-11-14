@@ -5,7 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
-import { GraphqlListing } from "./types";
+import { GraphqlListing } from "../../@types/component.types";
 
 export const itemDataToUserItemCard = (item: GraphqlListing) => {
   return (

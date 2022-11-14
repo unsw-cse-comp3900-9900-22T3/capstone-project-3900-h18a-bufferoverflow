@@ -13,7 +13,6 @@ import {
   Typography,
 } from "@mui/material";
 import { createRef, useEffect, useState } from "react";
-import { ListingProps, StatusType } from "../../components/listing/types";
 import { CategorySearch } from "../../components/feed/CategorySearch";
 import { AddressSearch } from "../../components/location/AddressSearch";
 
@@ -22,6 +21,7 @@ import { gql, useMutation, useQuery, useLazyQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import { Toast } from "../generic/Toast";
 import { useStore } from "../../store/store";
+import { ListingProps, StatusType } from "../../@types/component.types";
 
 /////////////////////////////////////////////////////////////////////////////
 // Queries

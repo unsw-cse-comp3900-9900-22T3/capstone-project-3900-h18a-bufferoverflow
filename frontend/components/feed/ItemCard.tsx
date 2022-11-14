@@ -6,7 +6,7 @@ import CardActions from '@mui/material/CardActions'
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
 import Link from 'next/link'
-import { GraphqlListing } from '../listing/types'
+import { GraphqlListing } from '../../@types/component.types'
 
 export const itemDataToItemCard = (item: GraphqlListing) => {
     return (
