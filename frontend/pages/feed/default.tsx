@@ -123,9 +123,7 @@ const DefaultFeed: NextPage = () => {
   });
   useEffect(() => {
     if (user_response.data?.getUser.user) {
-      setUser({
-        address: user_response.data?.getUser.user.address
-      });
+      setUser(user_response.data?.getUser.user);
     }
   }, [user_response]);
 
@@ -134,7 +132,7 @@ const DefaultFeed: NextPage = () => {
       <SearchBar
         data={search}
         setData={setSearch}
-        distanceAllowed={auth && auth?.email != "" && user.address}
+        distanceAllowed={auth && auth?.email !== "" && user.address}
         onSearch={() => {
           setIsSearch(true);
           refetch({

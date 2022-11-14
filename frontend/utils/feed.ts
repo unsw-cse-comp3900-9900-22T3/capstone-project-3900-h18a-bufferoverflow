@@ -7,6 +7,9 @@ export const GET_USER_QUERY = gql`
       errors
       success
       user {
+        username
+        display_img
+        id
         address
       }
     }
