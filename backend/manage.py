@@ -342,6 +342,7 @@ def create_db():
         add_data()
         jack = User(email="jack@robbers.net.au", username="jackrobbers")
         jack.address = "ahhh"
+        jack.community = "Oberon"
         jack.latitude=-33.704110
         jack.longitude=149.857050
         jack.save()

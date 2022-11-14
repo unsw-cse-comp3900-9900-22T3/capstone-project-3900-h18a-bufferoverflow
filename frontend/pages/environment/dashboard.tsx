@@ -1,12 +1,23 @@
 import { Template } from "../../components/generic/Template";
 import { NextPage } from "next";
-import { Avatar, Box, Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Typography,
+} from "@mui/material";
 import { useEffect, useState } from "react";
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { motion, useScroll, useTransform } from "framer-motion"
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { motion, useScroll, useTransform } from "framer-motion";
 import ReactConfetti from "react-confetti";
 import { gql, useQuery } from "@apollo/client";
 import { useStore } from "../../store/store";
+import dynamic from "next/dynamic";
 
 /////////////////////////////////////////////////////////////////////////////
 // Queries
@@ -58,55 +69,63 @@ const GET_USER = gql`
 // Secondary Components
 /////////////////////////////////////////////////////////////////////////////
 
-const StatsDisplay = (props: {
-  value: number;
-  description: string;
-}) => {
+const StatsDisplay = (props: { value: number; description: string }) => {
   return (
-    <motion.div
-      whileHover={{ scale: 1.2, rotate: [30, -30, 30, -30] }}
-    >
-      <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+    <motion.div whileHover={{ scale: 1.2, rotate: [30, -30, 30, -30] }}>
+      <Box
+        sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}
+      >
         <Typography sx={{ fontSize: 40 }}>{props.value}</Typography>
         <Typography sx={{ fontSize: 13 }}>{props.description}</Typography>
       </Box>
     </motion.div>
-  )
-}
+  );
+};
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Component
 /////////////////////////////////////////////////////////////////////////////
 
 const Dashboard: NextPage = () => {
-
-  const validYears = [2020, 2021, 2022]
+  const validYears = [2020, 2021, 2022];
 
   const [year, setYear] = useState(validYears.at(-1)?.toString());
-  const [communityYear, setCommunityYear] = useState(validYears.at(-1)?.toString());
-  const [height, setHeight] = useState(0)
-  const [width, setHWidth] = useState(0)
+  const [communityYear, setCommunityYear] = useState(
+    validYears.at(-1)?.toString()
+  );
+  const [height, setHeight] = useState(0);
+  const [width, setHWidth] = useState(0);
+  const [position, setPosition] = useState<number[]>([0, 0]);
 
-  const { scrollYProgress } = useScroll()
+  const { scrollYProgress } = useScroll();
   const scale = useTransform(scrollYProgress, [0, 1], [0.2, 1.1]);
 
-  const { auth } = useStore()
-  const user = useQuery(GET_USER, { variables: { email: auth?.email } }).data?.getUser?.user;
-  const userStats = useQuery(GET_USER_STATS, { variables: { email: auth?.email, year: parseInt(year || '2022') } }).data?.getUserStats?.userStats;
-  const communityStats = useQuery(GET_COMMUNITY_STATS, { variables: { email: auth?.email, year: parseInt(communityYear || '2022') } }).data?.getCommunityStats?.communityStats;
+  const { auth } = useStore();
+  const user = useQuery(GET_USER, { variables: { email: auth?.email } }).data
+    ?.getUser?.user;
+  const userStats = useQuery(GET_USER_STATS, {
+    variables: { email: auth?.email, year: parseInt(year || "2022") },
+  }).data?.getUserStats?.userStats;
+  const communityStats = useQuery(GET_COMMUNITY_STATS, {
+    variables: { email: auth?.email, year: parseInt(communityYear || "2022") },
+  }).data?.getCommunityStats?.communityStats;
 
   useEffect(() => {
-    if (!height) setHeight(window.innerHeight)
-    if (!width) setHWidth(window.innerWidth)
-  }, [])
+    if (!height) setHeight(window.innerHeight);
+    if (!width) setHWidth(window.innerWidth);
+  }, []);
 
   const handleChange = (event: SelectChangeEvent) => {
     setYear(event.target.value as string);
   };
-  
+
   const handleCommunityChange = (event: SelectChangeEvent) => {
     setCommunityYear(event.target.value as string);
   };
+
+  const Map = dynamic(() => import("../../components/location/Map"), {
+    ssr: false,
+  });
 
   return (
     <Template title="Dashboard">
@@ -161,7 +180,7 @@ const Dashboard: NextPage = () => {
           />
           <StatsDisplay
             value={userStats?.carbonDioxideSaving}
-            description="units estimated CO2 reduction"
+            description="kg estimated CO2 reduction"
           />
         </Box>
       </Box>
@@ -218,8 +237,7 @@ const Dashboard: NextPage = () => {
               scaleY: scrollYProgress,
             }}
           />
-          {/* Replace with map view later*/}
-          <Box sx={{ border: 1, width: 600, height: 400 }} />
+          <Map width={600} height={400} position={position}></Map>
         </motion.div>
       </Box>
       <Box sx={{ display: "flex", justifyContent: "center", mt: 9 }}>
@@ -236,7 +254,7 @@ const Dashboard: NextPage = () => {
           />
           <StatsDisplay
             value={communityStats?.carbonDioxideSaving}
-            description="units estimated CO2 reduction"
+            description="kg estimated CO2 reduction"
           />
         </Box>
       </Box>
@@ -253,4 +271,4 @@ const Dashboard: NextPage = () => {
   );
 };
 
-export default Dashboard
+export default Dashboard;
