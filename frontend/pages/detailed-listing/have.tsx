@@ -79,7 +79,6 @@ const DetailedHaveListing: NextPage = () => {
   const [position, setPosition] = useState<number[]>([0, 0]);
 
   useEffect(() => {
-    console.log(id);
     if (id) {
       if (auth?.email) {
         execQuery({ variables: { id: id, userEmail: auth?.email } });
@@ -110,6 +109,10 @@ const DetailedHaveListing: NextPage = () => {
     }
   }, [data, id]);
 
+  const redirect = () => {
+    router.push("/auth/login");
+  };
+
   // Create description field given boolean parameters
   let purchaseOptions = "";
   if ((cash || bank) && !trade) purchaseOptions = `purchase for $${price}`;
@@ -126,10 +129,6 @@ const DetailedHaveListing: NextPage = () => {
   else if (!cash && bank)
     shippingOptions = "bank transfer on pickup or delivery";
   else shippingOptions = "not applicable";
-
-  const redirect = () => {
-    router.push("/auth/login");
-  };
 
   const Map = dynamic(() => import("../../components/location/Map"), {
     ssr: false,
