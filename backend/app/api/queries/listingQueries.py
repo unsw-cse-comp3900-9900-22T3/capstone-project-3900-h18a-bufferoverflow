@@ -190,7 +190,6 @@ def searchListings_resolver(obi, info,
         }
 
     except Exception as error:
-        print(error)
         payload = {
             "success": False,
             "errors": [str(error)]
