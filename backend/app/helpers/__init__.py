@@ -1,5 +1,5 @@
 from app.database.models import *
-from math import round
+from math import floor
 
 material_co2_emission_per_kg = {
     'wood': 0.11,
@@ -45,7 +45,7 @@ def get_user_co2_emission_saving(user, year):
         manufacturing_co2_savings += (1.35 * weight) * average_material_co2_emission
 
     total_co2_savings = brick_and_mortar_delivery_co2_savings + landfill_co2_savings + manufacturing_co2_savings
-    return user_trade_count, round(cubic_metres_landfill_savings), round(total_co2_savings)
+    return user_trade_count, floor(cubic_metres_landfill_savings), floor(total_co2_savings)
 
 def get_community_co2_emission_saving(user, year):
     """ Gets the community co2 emission saving for a given user and year """
@@ -58,7 +58,7 @@ def get_community_co2_emission_saving(user, year):
             total_co2_savings += CO2Saving
             total_cube_metres_savings += cubicMetreSaving
             total_trades += user_trade_count
-    return total_trades, round(total_cube_metres_savings), round(total_co2_savings)
+    return total_trades, floor(total_cube_metres_savings), floor(total_co2_savings)
 
 def generate_categories_dict(): 
     '''
