@@ -262,7 +262,7 @@ const Chat: NextPage = () => {
             <Box
               sx={{
                 display: "grid",
-                justifyItems: message.author.id == us?.id ? "end" : "start",
+                justifyItems: message.author.id === us?.id ? "end" : "start",
                 padding: 0.5,
               }}
               key={message.timestamp}
@@ -275,7 +275,7 @@ const Chat: NextPage = () => {
                 }}
               >
                 <Stack direction="row">
-                  {!(message.author.id == us?.id) && (
+                  {!(message.author.id === us?.id) && (
                     <Link href={`/profile/visitor-profile?email=${other}`}>
                       <Tooltip title={them?.username}>
                         <Avatar src={them?.displayImg} alt={them?.username} />
@@ -335,7 +335,7 @@ const Chat: NextPage = () => {
             sx={{ width: 0.9 }}
             onChange={(e) => setText(e.target.value)}
             onKeyPress={(e) => {
-              if (e.key == "Enter") {
+              if (e.key === "Enter") {
                 sendMessage();
                 e.preventDefault();
               }

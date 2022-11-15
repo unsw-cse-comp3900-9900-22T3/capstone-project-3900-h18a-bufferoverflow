@@ -293,7 +293,7 @@ export const ListingTemplate = (props: {
 
   useEffect(() => {
     // set the location from the user's location, when making a new listing
-    if (id == undefined && !hasSetLocationFromUser) {
+    if (id === undefined && !hasSetLocationFromUser) {
       const email = auth?.email ? auth.email : "";
       getUserAddress({ variables: { email } });
 
@@ -534,8 +534,8 @@ export const ListingTemplate = (props: {
                     materials,
                     tradeCategories,
                     price,
-                    latitude: position.length == 2 ? position[0] : null,
-                    longitude: position.length == 2 ? position[1] : null,
+                    latitude: position.length === 2 ? position[0] : null,
+                    longitude: position.length === 2 ? position[1] : null,
                   },
                 })
                   .then(() => {
@@ -595,8 +595,8 @@ export const ListingTemplate = (props: {
                   materials,
                   tradeCategories,
                   price,
-                  latitude: position.length == 2 ? position[0] : null,
-                  longitude: position.length == 2 ? position[1] : null,
+                  latitude: position.length === 2 ? position[0] : null,
+                  longitude: position.length === 2 ? position[1] : null,
                 },
               })
                 .then(() => {

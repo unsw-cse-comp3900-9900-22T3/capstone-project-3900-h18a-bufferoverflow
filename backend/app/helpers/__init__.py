@@ -1,5 +1,4 @@
 from app.database.models import *
-from math import round
 
 material_co2_emission_per_kg = {
     'wood': 0.11,

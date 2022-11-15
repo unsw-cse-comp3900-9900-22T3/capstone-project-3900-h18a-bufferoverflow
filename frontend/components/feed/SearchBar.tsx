@@ -56,7 +56,8 @@ const GET_CATEGORIES = gql`
 const DistanceDropdown = (props: {
   distance: number;
   setDistance: (arg: number) => void;
-  distanceAllowed?: boolean;
+  loggedIn: boolean;
+  hasAddress: boolean
 }) => {
   const contents = (
     <FormControl fullWidth sx={{ width: 200, ml: 2 }}>
@@ -67,7 +68,7 @@ const DistanceDropdown = (props: {
         value={props.distance}
         label="Distance"
         onChange={(e) => props.setDistance(e.target.value as number)}
-        disabled={!props.distanceAllowed}
+        disabled={!(props.loggedIn && props.hasAddress)}
       >
         <MenuItem value={10}>Within 10 km</MenuItem>
         <MenuItem value={25}>Within 25 km</MenuItem>
@@ -77,10 +78,12 @@ const DistanceDropdown = (props: {
       </Select>
     </FormControl>
   );
-  if (props.distanceAllowed) {
-    return contents
+  if (!props.loggedIn) {
+    return <Tooltip title="Must be logged in to search by distance">{contents}</Tooltip>;
+  } else if (!props.hasAddress) {
+    return <Tooltip title="Must set an address to search by distance">{contents}</Tooltip>;
   } else {
-    return <Tooltip title="Must be logged in and have an address set to search by distance">{contents}</Tooltip>;
+    return contents
   }
 };
 
@@ -178,7 +181,8 @@ export const SearchBar = (props: {
   data: SearchBarProps;
   setData: (arg: SearchBarProps) => void;
   onSearch: () => void;
-  distanceAllowed?: boolean;
+  loggedIn: boolean;
+  hasAddress: boolean;
 }) => {
   const validSearchCategories =
     useQuery<CategoriesGraphqlProps>(GET_CATEGORIES).data?.getCategories
@@ -219,7 +223,8 @@ export const SearchBar = (props: {
         <DistanceDropdown
           distance={props.data.distance}
           setDistance={setDistance}
-          distanceAllowed={props.distanceAllowed}
+          loggedIn={props.loggedIn}
+          hasAddress={props.hasAddress}
         />
         <ListingDropdown listing={props.data.listing} setListing={setListing} />
         <PriceDropdown price={props.data.price} setPrice={setPrice} />
