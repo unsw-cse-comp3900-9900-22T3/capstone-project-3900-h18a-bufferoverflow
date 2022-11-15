@@ -110,7 +110,8 @@ const DefaultFeed: NextPage = () => {
       <SearchBar
         data={search}
         setData={setSearch}
-        distanceAllowed={false}
+        loggedIn={false}
+        hasAddress={false}
         onSearch={() => {
           setIsSearch(true);
           refetch({
