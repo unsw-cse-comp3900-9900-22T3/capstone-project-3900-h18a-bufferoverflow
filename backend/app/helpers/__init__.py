@@ -150,10 +150,19 @@ def change_db_categories_to_list(listing):
 
 def find_place_in_feed(trade_probability, click_probability, search_probability, n_listings,
     feed_len):
-    '''
+    """
     Finds the place in the feed that a listing should be placed given how likely 
     a user is to trade/click/search for that category.
-    '''
+
+    Args:
+        trade_probability: The probability that a user will trade for a listing
+        click_probability: The probability that a user will click on a listing
+        search_probability: The probability that a user will search for a listing
+        n_listings: The number of listings in the feed
+
+    Returns:
+        int: The index in the feed that the listing should be placed
+    """
     # if any one of these probabilities is greater than .95, we should 
     # have a decent chance of the item appearing high in the feed,
     # regardless of the other probabilities. 
