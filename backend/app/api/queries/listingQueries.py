@@ -1,7 +1,7 @@
 from app.database.models import Listing, User, SearchedListing, ClickedListing, \
     TradedListing
 from app.helpers import change_db_categories_to_list, generate_categories_dict, \
-    fill_categories_dict, generate_categories_probability
+    fill_categories_dict, generate_categories_probability, find_place_in_feed
 from manage import category_names, material_names
 from haversine import haversine
 
@@ -124,7 +124,7 @@ def userFeed_resolver(obj, info, user_email):
             else:
                 feed_listings.append(find_place_in_feed(
                     trade_probability, click_probability, search_probability,
-                    len(listings)), len(feed_listings))
+                    len(listings), len(feed_listings)))
 
         payload = {
             "success": True,

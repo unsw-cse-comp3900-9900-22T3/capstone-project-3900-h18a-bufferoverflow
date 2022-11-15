@@ -114,18 +114,16 @@ def find_place_in_feed(trade_probability, click_probability, search_probability,
     Finds the place in the feed that a listing should be placed given how likely 
     a user is to trade/click/search for that category.
     '''
-    # if all are 0, then simply insert at the end 
-    if trade_probability == 0 and click_probability == 0 and search_probability == 0:
-        return n_listings - 1
-
     # if any one of these probabilities is greater than .95, we should 
     # have a decent chance of the item appearing high in the feed,
     # regardless of the other probabilities. 
     if trade_probability >= .95 or click_probability >= .95 or search_category >= .95:
         rand = random()
-        if rand >= .5:
+        # 75% chance
+        if rand >= .25:
             # generate a random number somewhere in the first 33% of the feed 
             return randint(0, feed_len // 3)
 
+    # insert at the end of the feed
     return n_listings - 1
 
