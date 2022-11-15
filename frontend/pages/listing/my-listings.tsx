@@ -7,28 +7,7 @@ import { gql, useQuery } from "@apollo/client";
 import { useStore } from "../../store/store";
 import { GraphqlListing } from "../../@types/component.types";
 import { MyListingsGraphqlProps } from "../../@types/pages.types";
-
-/////////////////////////////////////////////////////////////////////////////
-// Queries
-/////////////////////////////////////////////////////////////////////////////
-
-const GET_USER_LISTINGS = gql`
-  query ($userEmail: String!) {
-    getListingsByUser(userEmail: $userEmail) {
-      listings {
-        title
-        address
-        price
-        image
-        user {
-          displayImg
-        }
-        isSellListing
-        id
-      }
-    }
-  }
-`;
+import { GET_USER_LISTINGS } from "../../utils/queries";
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
