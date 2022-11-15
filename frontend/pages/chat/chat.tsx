@@ -23,7 +23,7 @@ import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import styled from "@emotion/styled";
 import { GET_FOLLOW, FOLLOW, UNFOLLOW } from "../profile/visitor-profile";
-import { Message, MessageGraphqlProps, User } from "../../@types/pages.types";
+import { Message, MessageGraphqlProps, User, UserGraphqlProps } from "../../@types/pages.types";
 
 // todo
 // Messages should be marked as read when they are…read.
