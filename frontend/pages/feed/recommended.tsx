@@ -111,7 +111,7 @@ const RecommendedFeed: NextPage = () => {
     }
   }, [data, feed]);
 
-  const [user, setUser] = useState<User>({});
+  const [user, setUser] = useState<User>();
   const user_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
     variables: { email: auth?.email || "" },
   });
@@ -126,7 +126,8 @@ const RecommendedFeed: NextPage = () => {
       <SearchBar
         data={search}
         setData={setSearch}
-        distanceAllowed={auth && auth?.email != "" && user.address}
+        loggedIn={auth?.email !== ""}
+        hasAddress={user?.address !== ""}
         onSearch={() => {
           setIsSearch(true);
           refetch({
