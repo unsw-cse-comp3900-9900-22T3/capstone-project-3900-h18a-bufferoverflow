@@ -117,10 +117,9 @@ def find_place_in_feed(trade_probability, click_probability, search_probability,
     # if any one of these probabilities is greater than .95, we should 
     # have a decent chance of the item appearing high in the feed,
     # regardless of the other probabilities. 
-    if trade_probability >= .95 or click_probability >= .95 or search_category >= .95:
-        rand = random()
+    if trade_probability >= .95 or click_probability >= .95 or search_probability >= .95:
         # 75% chance
-        if rand >= .25:
+        if random() >= .25:
             # generate a random number somewhere in the first 33% of the feed 
             return randint(0, feed_len // 3)
 

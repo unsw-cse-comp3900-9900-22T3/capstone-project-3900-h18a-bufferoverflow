@@ -124,7 +124,7 @@ def userFeed_resolver(obj, info, user_email):
             else:
                 feed_listings.append(find_place_in_feed(
                     trade_probability, click_probability, search_probability,
-                    len(listings), len(feed_listings)))
+                    len(listings), len(feed_listings)), listing.to_json())
 
         payload = {
             "success": True,
