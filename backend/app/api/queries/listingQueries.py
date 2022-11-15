@@ -97,6 +97,7 @@ def userFeed_resolver(obj, info, user_email):
         # the list
         probability = 0
 
+        listings = Listing.query.all()
         for listing in Listing.query.all():
             probability = 0
             search_probability = generate_categories_probability(
@@ -117,10 +118,13 @@ def userFeed_resolver(obj, info, user_email):
 
             # generate a random number between 0-1 and check
             # if our probability is greater...if it is, goes to front of feed
+            # else, call a special function to generate the place in the feed
             if probability > random():
                 feed_listings.insert(0, listing.to_json())
             else:
-                feed_listings.append(listing.to_json())
+                feed_listings.append(find_place_in_feed(
+                    trade_probability, click_probability, search_probability,
+                    len(listings)), len(feed_listings))
 
         payload = {
             "success": True,
