@@ -3,6 +3,14 @@ from ariadne import convert_kwargs_to_snake_case
 
 
 def listUsers_resolver(obj, info):
+    """ Gets all users
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+    Returns:
+        dict: The response payload
+    """
     try:
         users = [user.to_json() for user in User.query.all()]
         payload = {
@@ -18,6 +26,15 @@ def listUsers_resolver(obj, info):
 
 
 def getUser_resolver(obj, info, email):
+    """ Gets a user by email
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        email: The email of the user
+    Returns:
+        dict: The response payload
+    """
     try:
         user = User.query.filter_by(email=email).first()
         payload = {
@@ -33,6 +50,16 @@ def getUser_resolver(obj, info, email):
 
 
 def create_user_resolver(obj, info, username, email):
+    """ Creates a user
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        username: The username of the user
+        email: The email of the user
+    Returns:
+        dict: The response payload
+    """
     try:
         user = User(email, username)
         user.save()
@@ -62,6 +89,23 @@ def update_user_resolver(
     latitude=None,
     longitude=None,
 ):
+    """ Updates a user
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        email: The email of the user
+        username: The username of the user
+        preferred_distance: The preferred distance of the user
+        bio: The bio of the user
+        display_img: The display image of the user
+        address: The address of the user
+        community: The community of the user
+        latitude: The latitude of the user
+        longitude: The longitude of the user
+    Returns:
+        dict: The response payload
+    """
     try:
         user = None
         try:
@@ -95,6 +139,15 @@ def update_user_resolver(
 
 
 def delete_user_resolver(obj, info, email):
+    """ Deletes a user
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        email: The email of the user
+    Returns:
+        dict: The response payload
+    """
     try:
         user = User.query.filter_by(email=email).first()
         user.delete()

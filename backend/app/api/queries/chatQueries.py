@@ -3,7 +3,19 @@ from ariadne import convert_kwargs_to_snake_case
 
 
 def create_message_resolver(obj, info, timestamp, text, author, conversation):
-    """ Creates a new message """
+    """ Creates a new message
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        timestamp: The timestamp of the message
+        text: The text of the message
+        author: The author of the message
+        conversation: The conversation the message belongs to
+
+    Returns:
+        dict: The response payload
+    """
     try:
         message = Message(timestamp, text, author, conversation)
         message.save()
@@ -20,7 +32,16 @@ def create_message_resolver(obj, info, timestamp, text, author, conversation):
 
 
 def getMessages_resolver(obj, info, conversation=None):
-    """ Gets all messages in a conversation """
+    """ Gets all messages in a conversation
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        conversation: The conversation to get messages from
+
+    Returns:
+        dict: The response payload
+    """
     try:
         if conversation is not None:
             messages = Message.query.filter_by(conversation=conversation)
@@ -42,7 +63,16 @@ def getMessages_resolver(obj, info, conversation=None):
 
 @convert_kwargs_to_snake_case
 def createConversation_resolver(obj, info, **kwargs):
-    """ Creates a new conversation """
+    """ Creates a new conversation
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        kwargs: The arguments for the conversation
+
+    Returns:
+        dict: The response payload
+    """
     try:
         conversation = Conversation(**kwargs)
         conversation.save()
@@ -60,7 +90,18 @@ def createConversation_resolver(obj, info, **kwargs):
 
 @convert_kwargs_to_snake_case
 def updateConversation_resolver(obj, info, conversation, last_read_first=None, last_read_second=None):
-    """ Updates a conversation """
+    """ Updates a conversation
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        conversation: The conversation to update
+        last_read_first: The last message read
+        last_read_second: The second last message read
+
+    Returns:
+        dict: The response payload
+    """
     try:
         conversation_object = Conversation.query.filter_by(conversation=conversation).first()
         print(f"updating conversation with {conversation} {last_read_first} {last_read_second} {conversation_object}")
@@ -84,7 +125,16 @@ def updateConversation_resolver(obj, info, conversation, last_read_first=None, l
 
 @convert_kwargs_to_snake_case
 def getConversations_resolver(obj, info, involving):
-    """ Gets all conversations involving a user """
+    """ Gets all conversations involving a user
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        involving: The user to get conversations for
+
+    Returns:
+        dict: The response payload
+    """
     try:
         # think this might be potentially fragile, but emails can't have more than 1 @ right?
         conversations = Conversation.query.filter(Conversation.conversation.contains(involving))
@@ -103,7 +153,16 @@ def getConversations_resolver(obj, info, involving):
 
 @convert_kwargs_to_snake_case
 def getConversationsForOverview_resolver(obj, info, involving):
-    """ Gets all conversations involving a user for overview """
+    """ Gets all conversations involving a user for overview
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        involving: The user to get conversations for
+
+    Returns:
+        dict: The response payload
+    """
     try:
         # think this might be potentially fragile, but emails can't have more than 1 @ right?
         conversations = Conversation.query.filter(Conversation.conversation.contains(involving))
@@ -144,7 +203,16 @@ def getConversationsForOverview_resolver(obj, info, involving):
 
 
 def countUnseenMessages_resolver(obj, info, email):
-    """ Counts the number of unseen messages for a user """
+    """ Counts the number of unseen messages for a user
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        email: The user email to count unseen messages for
+
+    Returns:
+        dict: The response payload
+    """
     try:
         conversations = Conversation.query.filter(Conversation.conversation.contains(email))
         count = 0
@@ -173,7 +241,16 @@ def countUnseenMessages_resolver(obj, info, email):
 
 
 def deleteConversation_resolver(obj, info, conversation):
-    """ Deletes a conversation """
+    """ Deletes a conversation
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        conversation: The conversation to delete
+
+    Returns:
+        dict: The response payload
+    """
     try:
         conversation_object = Conversation.query.filter_by(conversation=conversation).first()
         conversation_object.delete()

@@ -6,6 +6,15 @@ from datetime import datetime
 
 @convert_kwargs_to_snake_case
 def createTradeOffer_resolver(obj, info, **kwargs):
+    """ Creates a trade offer
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        kwargs: The arguments passed in the query
+    Returns:
+        dict: The response payload
+    """
     try:
         tradeOffer = TradeOffer(**kwargs)
         tradeOffer.save()
@@ -23,6 +32,16 @@ def createTradeOffer_resolver(obj, info, **kwargs):
 
 @convert_kwargs_to_snake_case
 def updateTradeOffer_resolver(obj, info, id, is_accepted):
+    """ Updates a trade offer
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        id: The id of the trade offer
+        is_accepted: The new value of is_accepted
+    Returns:
+        dict: The response payload
+    """
     try:
         tradeOffer = TradeOffer.query.get(id)
         if is_accepted:
@@ -84,6 +103,15 @@ def updateTradeOffer_resolver(obj, info, id, is_accepted):
 
 @convert_kwargs_to_snake_case
 def deleteTradeOffer_resolver(obj, info, id):
+    """ Deletes a trade offer
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        id: The id of the trade offer
+    Returns:
+        dict: The response payload
+    """
     try:
         tradeOffer = TradeOffer.query.get(id)
         tradeOffer.delete()
@@ -100,6 +128,15 @@ def deleteTradeOffer_resolver(obj, info, id):
 
 @convert_kwargs_to_snake_case
 def getTradeOffersByUser_resolver(obj, info, user_email):
+    """ Gets all trade offers for a user
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        user_email: The email of the user
+    Returns:
+        dict: The response payload
+    """
     try:
         result = []
 
@@ -130,6 +167,15 @@ def getTradeOffersByUser_resolver(obj, info, user_email):
 
 @convert_kwargs_to_snake_case
 def getListingsInTradeOffer_resolver(obj, info, trade_offer_id):
+    """ Gets all listings in a trade offer
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        trade_offer_id: The id of the trade offer
+    Returns:
+        dict: The response payload
+    """
     try:
         tradeOffer = TradeOffer.query.get(trade_offer_id)
         listing_one = Listing.query.get(tradeOffer.listing_one_id)
@@ -149,6 +195,15 @@ def getListingsInTradeOffer_resolver(obj, info, trade_offer_id):
 
 @convert_kwargs_to_snake_case
 def getUsersInTradeOffer_resolver(obj, info, trade_offer_id):
+    """ Gets all users in a trade offer
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        trade_offer_id: The id of the trade offer
+    Returns:
+        dict: The response payload
+    """
     try:
         tradeOffer = TradeOffer.query.get(trade_offer_id)
         listing_one = Listing.query.get(tradeOffer.listing_one_id)

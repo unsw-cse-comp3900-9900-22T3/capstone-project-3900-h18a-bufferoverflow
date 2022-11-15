@@ -11,6 +11,16 @@ from random import random
 
 @convert_kwargs_to_snake_case
 def getListing_resolver(obj, info, id, user_email=None):
+    """ Gets a listing by id, if user clicked on it, it will be added to the clicked listings table
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        id: The id of the listing
+        user_email: The email of the user who clicked on the listing
+    Returns:
+        dict: The response payload
+    """
     try:
         listing = Listing.query.get(id)
 
@@ -39,6 +49,15 @@ def getListing_resolver(obj, info, id, user_email=None):
 
 @convert_kwargs_to_snake_case
 def getListingsByUser_resolver(obj, info, user_email):
+    """ Gets all listings by user email
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        user_email: The email of the user
+    Returns:
+        dict: The response payload
+    """
     try:
         user_id = User.query.filter_by(email=user_email).first().id
         listings = [listing.to_json() for listing in Listing.query.all()
@@ -58,6 +77,14 @@ def getListingsByUser_resolver(obj, info, user_email):
 
 @convert_kwargs_to_snake_case
 def defaultFeed_resolver(obj, info):
+    """ Gets the default feed
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+    Returns:
+        dict: The response payload
+    """
     try:
         listings = [listing.to_json() for listing in Listing.query.all()]
         payload = {
@@ -74,6 +101,15 @@ def defaultFeed_resolver(obj, info):
 
 @convert_kwargs_to_snake_case
 def userFeed_resolver(obj, info, user_email):
+    """ Gets the user feed
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        user_email: The email of the user
+    Returns:
+        dict: The response payload
+    """
     try:
         user = User.query.filter_by(email=user_email).first()
         feed_listings = []
@@ -143,6 +179,20 @@ def searchListings_resolver(obi, info,
                             price_max=None,
                             user_email=None
                             ):
+    """ Searches listings by categories, distance, is_sell_listing, price_min, price_max
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        categories: The categories to search by
+        distance: The distance to search by
+        is_sell_listing: Whether the listing is a sell listing
+        price_min: The minimum price to search by
+        price_max: The maximum price to search by
+        user_email: The email of the user
+    Returns:
+        dict: The response payload
+    """
     try:
         result = [listing.to_json() for listing in Listing.query.all()]
         if price_min:
@@ -218,6 +268,32 @@ def create_listing_resolver(obj, info,
                             longitude,
                             image
                             ):
+    """ Creates a listing
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        user_email: The email of the user
+        title: The title of the listing
+        description: The description of the listing
+        is_sell_listing: Whether the listing is a sell listing
+        price: The price of the listing
+        can_trade: Whether the listing can be traded
+        can_pay_cash: Whether the listing can be paid with cash
+        can_pay_bank: Whether the listing can be paid with bank transfer
+        status: The status of the listing
+        categories: The categories of the listing
+        want_to_trade_for: The items the user wants to trade for
+        weight: The weight of the listing
+        volume: The volume of the listing
+        materials: The materials of the listing
+        address: The address of the listing
+        latitude: The latitude of the listing
+        longitude: The longitude of the listing
+        image: The image of the listing
+    Returns:
+        dict: The response payload
+    """
     try:
         listing = Listing(
             user_email,
@@ -273,6 +349,32 @@ def update_listing_resolver(obj, info,
                             latitude=None,
                             longitude=None
                             ):
+    """ Updates a listing
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        id: The id of the listing
+        title: The title of the listing
+        description: The description of the listing
+        is_sell_listing: Whether the listing is a sell listing
+        price: The price of the listing
+        can_trade: Whether the listing can be traded
+        can_pay_cash: Whether the listing can be paid with cash
+        can_pay_bank: Whether the listing can be paid with bank transfer
+        status: The status of the listing
+        categories: The categories of the listing
+        want_to_trade_for: The items the user wants to trade for
+        weight: The weight of the listing
+        volume: The volume of the listing
+        materials: The materials of the listing
+        address: The address of the listing
+        image: The image of the listing
+        latitude: The latitude of the listing
+        longitude: The longitude of the listing
+    Returns:
+        dict: The response payload
+    """
     try:
         listing = Listing.query.get(id)
         listing.title = title if title is not None else listing.title
@@ -307,6 +409,15 @@ def update_listing_resolver(obj, info,
 
 @ convert_kwargs_to_snake_case
 def delete_listing_resolver(obj, info, id):
+    """ Deletes a listing
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        id: The id of the listing
+    Returns:
+        dict: The response payload
+    """
     try:
         listing = Listing.query.get(id)
         listing.delete()
@@ -324,6 +435,14 @@ def delete_listing_resolver(obj, info, id):
 
 @ convert_kwargs_to_snake_case
 def getCategories_resolver(obj, info):
+    """ Gets all categories
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+    Returns:
+        dict: The response payload
+    """
     try:
         payload = {
             "success": True,
@@ -337,8 +456,16 @@ def getCategories_resolver(obj, info):
     return payload
 
 
-@ convert_kwargs_to_snake_case
+@convert_kwargs_to_snake_case
 def getMaterials_resolver(obj, info):
+    """ Gets all materials
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+    Returns:
+        dict: The response payload
+    """
     try:
         payload = {
             "success": True,

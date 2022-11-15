@@ -7,7 +7,17 @@ def followUser_resolver(obj, info,
     follower_email,
     followed_email
 ):
-    """ Follows a user """
+    """ Follows a user
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        follower_email: The email of the follower
+        followed_email: The email of the followed user
+
+    Returns:
+        dict: The response payload
+    """
     try:
         follower = User.query.filter_by(email=follower_email).first()
         followed = User.query.filter_by(email=followed_email).first()
@@ -28,7 +38,17 @@ def unfollowUser_resolver(obj, info,
     follower_email,
     followed_email
 ):
-    """ Unfollows a user """
+    """ Unfollows a user
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        follower_email: The email of the follower
+        followed_email: The email of the followed user
+
+    Returns:
+        dict: The response payload
+    """
     try:
         follower = User.query.filter_by(email=follower_email).first()
         followed = User.query.filter_by(email=followed_email).first()
@@ -46,7 +66,17 @@ def unfollowUser_resolver(obj, info,
 
 @convert_kwargs_to_snake_case
 def getFollowing_resolver(obj, info, user_email, check_follower_email):
-    """ Check if user is following another user """
+    """ Check if user is following another user
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        user_email: The email of the user
+        check_follower_email: The email of the user to check if they are following
+
+    Returns:
+        dict: The response payload
+    """
     try:
         user = User.query.filter_by(email=user_email).first()
         check_follower = User.query.filter_by(email=check_follower_email).first()
@@ -68,7 +98,16 @@ def getFollowing_resolver(obj, info, user_email, check_follower_email):
 
 @convert_kwargs_to_snake_case
 def getFollowingList_resolver(obj, info, user_email):
-    """ Gets all users that a user is following """
+    """ Gets all users that a user is following
+
+    Args:
+        obj: The parent object, which in this case is the root value
+        info (ResolveInfo): Information about the execution state of the query
+        user_email: The email of the user
+
+    Returns:
+        dict: The response payload
+    """
     try:
         user = User.query.filter_by(email=user_email).first()
         followed_users = [followed.to_json() for followed in user.following]
