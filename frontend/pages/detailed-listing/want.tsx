@@ -132,7 +132,8 @@ const DetailedWantListing: NextPage = () => {
   const mapRef = useRef();
 
   function scrollMap() {
-    mapRef.current.scrollIntoView({ behavior: "smooth" });
+    // @ts-ignore
+    mapRef.current?.scrollIntoView({ behavior: "smooth" });
   }
 
   return (
@@ -145,6 +146,8 @@ const DetailedWantListing: NextPage = () => {
             justifyContent: "center",
             alignItems: "center",
             gap: 40,
+            mt: 20,
+            mb: 10
           }}
         >
           {/** Item Image Section */}
@@ -248,10 +251,10 @@ const DetailedWantListing: NextPage = () => {
                 !auth
                   ? redirect
                   : () => {
-                      router.push(
-                        `/trade/propose?email=${itemPosessorEmail}&id=${id}`
-                      );
-                    }
+                    router.push(
+                      `/trade/propose?email=${itemPosessorEmail}&id=${id}`
+                    );
+                  }
               }
             >
               Propose Trade
@@ -264,8 +267,8 @@ const DetailedWantListing: NextPage = () => {
                   !auth
                     ? redirect
                     : () => {
-                        router.push(`/chat/chat?other=${itemPosessorEmail}`);
-                      }
+                      router.push(`/chat/chat?other=${itemPosessorEmail}`);
+                    }
                 }
               >
                 Message User
@@ -277,10 +280,10 @@ const DetailedWantListing: NextPage = () => {
                   !auth
                     ? redirect
                     : () => {
-                        router.push(
-                          `/profile/visitor-profile?email=${itemPosessorEmail}`
-                        );
-                      }
+                      router.push(
+                        `/profile/visitor-profile?email=${itemPosessorEmail}`
+                      );
+                    }
                 }
               >
                 View Trader Profile
@@ -288,7 +291,7 @@ const DetailedWantListing: NextPage = () => {
             </Box>
           </Box>
         </Box>
-        <Box ref={mapRef} sx={{ display: "flex", justifyContent: "center", marginBottom: 2}}>
+        <Box ref={mapRef} sx={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
           <Map width={800} height={600} position={position} />
         </Box>
       </Stack>
