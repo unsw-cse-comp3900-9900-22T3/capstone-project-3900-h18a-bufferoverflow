@@ -126,7 +126,7 @@ const RecommendedFeed: NextPage = () => {
       <SearchBar
         data={search}
         setData={setSearch}
-        distanceAllowed={auth !== null && auth?.email !== "" && user?.address !== ""}
+        distanceAllowed={(auth && auth?.email !== "" && user?.address !== "") ?? false}
         onSearch={() => {
           setIsSearch(true);
           refetch({
