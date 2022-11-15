@@ -47,11 +47,12 @@ def add_data():
 
 def add_users():
     # create users
-    franksAccount = User(email="z5231701@ad.unsw.edu.au", username="Frank")
     user2 = User(email="user2@gmail.com", username="Steven123")
     user3 = User(email="user3@gmail.com", username="Frankie")
     user4 = User(email="user4@gmail.com", username="Sally")
+    franksAccount = User(email="z5231701@ad.unsw.edu.au", username="Frank")
     cecesAccount = User(email="z3332330@ad.unsw.edu.au", username="Cece")
+    seansAccount = User(email="z5310199@ad.unsw.edu.au", username="Sean")
 
     # add diplay images
     user2.add_display_img("https://mui.com/static/images/avatar/1.jpg")
@@ -62,13 +63,15 @@ def add_users():
 
     user2.add_community("Randwick")
     cecesAccount.add_community("Randwick")
+    seansAccount.add_community("Randwick")
 
     # save users
-    franksAccount.save()
     user2.save()
     user3.save()
     user4.save()
+    franksAccount.save()
     cecesAccount.save()
+    seansAccount.save()
 
 
 def add_listings():
