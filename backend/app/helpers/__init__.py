@@ -1,4 +1,5 @@
 from app.database.models import *
+from random import random, randint
 
 material_co2_emission_per_kg = {
     'wood': 0.11,
@@ -146,4 +147,22 @@ def change_db_categories_to_list(listing):
     for category in listing.categories:
         categories_list.append(category.type)
     return categories_list
+
+def find_place_in_feed(trade_probability, click_probability, search_probability, n_listings,
+    feed_len):
+    '''
+    Finds the place in the feed that a listing should be placed given how likely 
+    a user is to trade/click/search for that category.
+    '''
+    # if any one of these probabilities is greater than .95, we should 
+    # have a decent chance of the item appearing high in the feed,
+    # regardless of the other probabilities. 
+    if trade_probability >= .95 or click_probability >= .95 or search_probability >= .95:
+        # 75% chance
+        if random() >= .25:
+            # generate a random number somewhere in the first 33% of the feed 
+            return randint(0, feed_len // 3)
+
+    # insert at the end of the feed
+    return n_listings - 1
 

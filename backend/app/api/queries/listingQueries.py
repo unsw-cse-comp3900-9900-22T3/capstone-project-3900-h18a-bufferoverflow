@@ -1,7 +1,7 @@
 from app.database.models import Listing, User, SearchedListing, ClickedListing, \
     TradedListing
 from app.helpers import change_db_categories_to_list, generate_categories_dict, \
-    fill_categories_dict, generate_categories_probability
+    fill_categories_dict, generate_categories_probability, find_place_in_feed
 from manage import category_names, material_names
 from haversine import haversine
 
@@ -133,6 +133,7 @@ def userFeed_resolver(obj, info, user_email):
         # the list
         probability = 0
 
+        listings = Listing.query.all()
         for listing in Listing.query.all():
             probability = 0
             search_probability = generate_categories_probability(
@@ -153,10 +154,13 @@ def userFeed_resolver(obj, info, user_email):
 
             # generate a random number between 0-1 and check
             # if our probability is greater...if it is, goes to front of feed
+            # else, call a special function to generate the place in the feed
             if probability > random():
                 feed_listings.insert(0, listing.to_json())
             else:
-                feed_listings.append(listing.to_json())
+                feed_listings.insert(find_place_in_feed(
+                    trade_probability, click_probability, search_probability,
+                    len(listings), len(feed_listings)), listing.to_json())
 
         payload = {
             "success": True,
