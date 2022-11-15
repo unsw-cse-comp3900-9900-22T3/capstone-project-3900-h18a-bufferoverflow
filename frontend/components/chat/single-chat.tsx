@@ -28,7 +28,7 @@ export const SingleChatOverview = (props: SingleChatOverviewProps
   });
 
   let time;
-  if (props.lastMessageTime == null) {
+  if (props.lastMessageTime === null) {
     time = "no messages";
   } else {
     const diff = props.lastMessageTime - Date.now();
@@ -49,7 +49,7 @@ export const SingleChatOverview = (props: SingleChatOverviewProps
 
   return (
     <div>
-    {exists == true && <Box
+    {exists === true && <Box
       sx={{
         display: "flex",
         alignItems: "center",

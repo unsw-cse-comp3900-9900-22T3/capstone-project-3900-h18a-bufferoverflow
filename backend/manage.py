@@ -8,6 +8,8 @@ from app import app
 cli = FlaskGroup(app)
 
 # helper functions
+
+
 def create_materials():
     """ Create materials """
     for material in material_names:
@@ -47,11 +49,12 @@ def add_data():
 def add_users():
     """ Add users data """
     # create users
-    franksAccount = User(email="z5231701@ad.unsw.edu.au", username="Frank")
     user2 = User(email="user2@gmail.com", username="Steven123")
     user3 = User(email="user3@gmail.com", username="Frankie")
     user4 = User(email="user4@gmail.com", username="Sally")
+    franksAccount = User(email="z5231701@ad.unsw.edu.au", username="Frank")
     cecesAccount = User(email="z3332330@ad.unsw.edu.au", username="Cece")
+    seansAccount = User(email="z5310199@ad.unsw.edu.au", username="Sean")
 
     # add diplay images
     user2.add_display_img("https://mui.com/static/images/avatar/1.jpg")
@@ -62,20 +65,22 @@ def add_users():
 
     user2.add_community("Randwick")
     cecesAccount.add_community("Randwick")
+    seansAccount.add_community("Randwick")
 
     # save users
-    franksAccount.save()
     user2.save()
     user3.save()
     user4.save()
+    franksAccount.save()
     cecesAccount.save()
+    seansAccount.save()
 
 
 def add_listings():
     """Add listings to database."""
     listing1 = Listing(
         user_email="user2@gmail.com",
-        title = "Hunger Games Trilogy",
+        title="Hunger Games Trilogy",
         description="The Hunger Games trilogy is a series of young adult dystopian novels written by American novelist Suzanne Collins.",
         is_sell_listing=True,
         price=100.0,
@@ -87,13 +92,15 @@ def add_listings():
         want_to_trade_for=["furniture", "electronics"],
         weight=5.0,
         volume=1.0,
+        address="Bathurst Library, Keppel Street, Bathurst, Bathurst Regional Council, New South Wales, 2795, Australia",
+        latitude=-33.4225722,
+        longitude=149.5795843,
         materials=["wood", "polyester"],
-        image = "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=873&q=80",
-        address = "9 Beagle St, Sydney, NSW 2039"
+        image="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=873&q=80",
     )
     listing2 = Listing(
         user_email="user3@gmail.com",
-        title = "Batman Figurine",
+        title="Batman Figurine",
         description="Batman is a fictional superhero appearing in American comic books published by DC Comics. The character was created by artist Bob Kane and writer Bill Finger, and first appeared in Detective Comics #27 (May 1939).",
         is_sell_listing=True,
         price=10.0,
@@ -101,16 +108,18 @@ def add_listings():
         can_pay_cash=False,
         can_pay_bank=True,
         status="active",
+        weight=.5,
+        volume=2.0,
+        address="Bathurst Library, Keppel Street, Bathurst, Bathurst Regional Council, New South Wales, 2795, Australia",
+        latitude=-33.4225722,
+        longitude=149.5795843,
         categories=["toys", "electronics"],
-        weight=1,
-        volume=0.5,
         materials=["plastic"],
-        image = "https://images.unsplash.com/photo-1531259683007-016a7b628fc3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YmF0bWFufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
-        address = "27 Main St, Australia, WA 6057"
+        image="https://images.unsplash.com/photo-1531259683007-016a7b628fc3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YmF0bWFufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60",
     )
     listing3 = Listing(
         user_email="user4@gmail.com",
-        title = "iPhone 12",
+        title="iPhone 12",
         description="Hi there, i would love to buy your iPhone 12 Pro Max. I am willing to pay $1000 cash. Please contact me if you are interested.",
         is_sell_listing=False,
         price=1000,
@@ -120,10 +129,12 @@ def add_listings():
         status="active",
         categories=["electronics"],
         weight=.75,
+        address="Bathurst Library, Keppel Street, Bathurst, Bathurst Regional Council, New South Wales, 2795, Australia",
+        latitude=-33.4225722,
+        longitude=149.5795843,
         volume=.2,
         materials=["plastic", "metal"],
-        image = "https://images.unsplash.com/photo-1495429391702-9cf0b245ba91?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1033&q=80",
-        address = "19 Penshurt St, Willoughby, NSW 2068"
+        image="https://images.unsplash.com/photo-1495429391702-9cf0b245ba91?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1033&q=80",
     )
 
     listing4 = Listing(
@@ -139,9 +150,11 @@ def add_listings():
         categories=["kitchen and dining"],
         weight=1.0,
         volume=1.0,
+        address="Bathurst Library, Keppel Street, Bathurst, Bathurst Regional Council, New South Wales, 2795, Australia",
+        latitude=-33.4225722,
+        longitude=149.5795843,
         materials=["metal"],
-        image = "https://images.unsplash.com/photo-1616740540792-3daec604777d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80",
-        address = "19 Coora St, Sale, NSW 1111"
+        image="https://images.unsplash.com/photo-1616740540792-3daec604777d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80",
     )
 
     listing5 = Listing(
@@ -154,12 +167,14 @@ def add_listings():
         can_pay_cash=True,
         can_trade=True,
         status="active",
+        address="Bathurst Library, Keppel Street, Bathurst, Bathurst Regional Council, New South Wales, 2795, Australia",
+        latitude=-33.4225722,
+        longitude=149.5795843,
         categories=["clothes"],
         weight=.2,
         volume=.1,
         materials=["plastic", "metal"],
-        image = "https://images.unsplash.com/photo-1599838082511-c3bad8d4a80d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
-        address = "39 Kuul St, Chatswood, NSW 1234"
+        image="https://images.unsplash.com/photo-1599838082511-c3bad8d4a80d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
     )
 
     listing6 = Listing(
@@ -172,12 +187,14 @@ def add_listings():
         can_pay_cash=True,
         can_trade=True,
         status="active",
+        address="Bathurst Library, Keppel Street, Bathurst, Bathurst Regional Council, New South Wales, 2795, Australia",
+        latitude=-33.4225722,
+        longitude=149.5795843,
         categories=["electronics"],
         weight=.2,
         volume=.2,
         materials=["plastic", "metal"],
-        image = "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=989&q=80",
-        address = "17 BigBoy Ave, Heaven, NSW 7777"
+        image="https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=989&q=80",
     )
 
     # save listings
@@ -191,19 +208,25 @@ def add_listings():
 
 def create_conversations():
     """Create conversations"""
-    message = Message(1664802000000, "Hi there, I would like to trade with you", 3, "z5231701@ad.unsw.edu.au-user3@gmail.com")
+
+    message = Message(1664802000000, "Hi there, I would like to trade with you",
+                      3, "z5231701@ad.unsw.edu.au-user3@gmail.com")
     message.save()
-    conversation = Conversation("z5231701@ad.unsw.edu.au-user3@gmail.com", None, None)
+    conversation = Conversation(
+        "z5231701@ad.unsw.edu.au-user3@gmail.com", None, None)
     conversation.latest = message.id
     conversation.last_read_first = message.id
     conversation.save()
 
-    inactiveConversation = Conversation("z5231701@ad.unsw.edu.au-user2@gmail.com", None, None)
+    inactiveConversation = Conversation(
+        "z5231701@ad.unsw.edu.au-user2@gmail.com", None, None)
     inactiveConversation.save()
 
-    messageTest = Message(1664820000000, "Hey Cece this is frank hows it going", 1, "z5231701@ad.unsw.edu.au-z3332330@ad.unsw.edu.au")
+    messageTest = Message(1664820000000, "Hey Cece this is frank hows it going",
+                          1, "z5231701@ad.unsw.edu.au-z3332330@ad.unsw.edu.au")
     messageTest.save()
-    conversationWithFrankAndCece = Conversation("z5231701@ad.unsw.edu.au-z3332330@ad.unsw.edu.au", None, None)
+    conversationWithFrankAndCece = Conversation(
+        "z5231701@ad.unsw.edu.au-z3332330@ad.unsw.edu.au", None, None)
     conversationWithFrankAndCece.latest = messageTest.id
     conversationWithFrankAndCece.last_read_first = messageTest.id
     conversationWithFrankAndCece.save()
@@ -213,31 +236,31 @@ def add_traded_listings_data():
     """Add traded listings data """
     # trades which have happend in 2022
     traded_listing1 = TradedListing(
-            traded_by=1,
-            traded_to=2,
-            weight=10,
-            volume=200,
-            materials=['wood', 'metal'],
-            categories=['toys'],
-            year_traded=2022
+        traded_by=1,
+        traded_to=2,
+        weight=10,
+        volume=200,
+        materials=['wood', 'metal'],
+        categories=['toys'],
+        year_traded=2022
     )
     traded_listing2 = TradedListing(
-            traded_by=1,
-            traded_to=2,
-            weight=10,
-            volume=200,
-            materials=['wood', 'metal'],
-            categories=['toys'],
-            year_traded=2022
+        traded_by=1,
+        traded_to=2,
+        weight=10,
+        volume=200,
+        materials=['wood', 'metal'],
+        categories=['toys'],
+        year_traded=2022
     )
     traded_listing3 = TradedListing(
-            traded_by=1,
-            traded_to=2,
-            weight=5,
-            volume=200,
-            materials=['metal', 'ceramic'],
-            categories=['toys'],
-            year_traded=2022
+        traded_by=1,
+        traded_to=2,
+        weight=5,
+        volume=200,
+        materials=['metal', 'ceramic'],
+        categories=['toys'],
+        year_traded=2022
     )
     traded_listing1.save()
     traded_listing2.save()
@@ -245,31 +268,31 @@ def add_traded_listings_data():
 
     # trades which have happend in 2021
     traded_listing4 = TradedListing(
-            traded_by=1,
-            traded_to=2,
-            weight=10,
-            volume=5,
-            materials=['wool', 'cotton'],
-            categories=['beauty'],
-            year_traded=2021
+        traded_by=1,
+        traded_to=2,
+        weight=10,
+        volume=5,
+        materials=['wool', 'cotton'],
+        categories=['beauty'],
+        year_traded=2021
     )
     traded_listing5 = TradedListing(
-            traded_by=1,
-            traded_to=2,
-            weight=10,
-            volume=200,
-            materials=['polyester', 'plastic'],
-            categories=['electronics'],
-            year_traded=2021
+        traded_by=1,
+        traded_to=2,
+        weight=10,
+        volume=200,
+        materials=['polyester', 'plastic'],
+        categories=['electronics'],
+        year_traded=2021
     )
     traded_listing6 = TradedListing(
-            traded_by=1,
-            traded_to=2,
-            weight=5,
-            volume=200,
-            materials=['wood'],
-            categories=['books'],
-            year_traded=2021
+        traded_by=1,
+        traded_to=2,
+        weight=5,
+        volume=200,
+        materials=['wood'],
+        categories=['books'],
+        year_traded=2021
     )
     traded_listing4.save()
     traded_listing5.save()
@@ -318,7 +341,7 @@ def create_db():
     """ Create database """
     # if no data in db, create default data
     try:
-        Material.query.all() # Raises an exception if no data in db
+        Material.query.all()  # Raises an exception if no data in db
     except:
         db.create_all()
         db.session.commit()

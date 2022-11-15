@@ -4,7 +4,15 @@ export type User = {
   username: string;
   displayImg: string;
   id: number;
+  address?: string;
 };
+export interface UserGraphqlProps {
+  getUser: {
+    success: boolean | null;
+    errors: string[] | null;
+    user: User | null;
+  };
+}
 
 export type Message = {
   id: number;
@@ -38,6 +46,14 @@ export interface ConversationGraphqlProps {
 
 export interface DefaultFeedGraphqlProps {
   defaultFeed: {
+    success: boolean | null;
+    errors: string[] | null;
+    listings: GraphqlListing[] | null;
+  };
+}
+
+export interface RecommendedFeedGraphqlProps {
+  userFeed: {
     success: boolean | null;
     errors: string[] | null;
     listings: GraphqlListing[] | null;

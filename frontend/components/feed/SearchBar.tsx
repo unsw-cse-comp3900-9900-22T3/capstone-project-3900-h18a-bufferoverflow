@@ -1,4 +1,14 @@
-import { Box, Button, Divider, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Tooltip,
+} from "@mui/material";
 import { useState } from "react";
 import { MAX_DISTANCE, MAX_PRICE } from "../../utils/globals";
 import { Toast } from "../generic/Toast";
@@ -9,12 +19,12 @@ import { useQuery, gql } from "@apollo/client";
 // Constants and Types
 /////////////////////////////////////////////////////////////////////////////
 
-type ListingType = 'have' | 'want'
+type ListingType = "have" | "want";
 
 type PriceType = {
   min: number;
   max: number;
-}
+};
 
 export interface SearchBarProps {
   categories: string[];
@@ -24,11 +34,11 @@ export interface SearchBarProps {
 }
 
 interface CategoriesGraphqlProps {
-    getCategories: {
-      success: boolean | null;
-      erorrs: string[] | null;
-      categories: string[] | undefined;
-  }
+  getCategories: {
+    success: boolean | null;
+    erorrs: string[] | null;
+    categories: string[] | undefined;
+  };
 }
 
 const GET_CATEGORIES = gql`
@@ -39,7 +49,6 @@ const GET_CATEGORIES = gql`
   }
 `;
 
-
 /////////////////////////////////////////////////////////////////////////////
 // Secondary Components
 /////////////////////////////////////////////////////////////////////////////
@@ -47,8 +56,10 @@ const GET_CATEGORIES = gql`
 const DistanceDropdown = (props: {
   distance: number;
   setDistance: (arg: number) => void;
+  loggedIn: boolean;
+  hasAddress: boolean
 }) => {
-  return (
+  const contents = (
     <FormControl fullWidth sx={{ width: 200, ml: 2 }}>
       <InputLabel id="demo-simple-select-label">Distance</InputLabel>
       <Select
@@ -56,7 +67,8 @@ const DistanceDropdown = (props: {
         id="demo-simple-select"
         value={props.distance}
         label="Distance"
-        onChange={e => props.setDistance(e.target.value as number)}
+        onChange={(e) => props.setDistance(e.target.value as number)}
+        disabled={!(props.loggedIn && props.hasAddress)}
       >
         <MenuItem value={10}>Within 10 km</MenuItem>
         <MenuItem value={25}>Within 25 km</MenuItem>
@@ -65,8 +77,15 @@ const DistanceDropdown = (props: {
         <MenuItem value={MAX_DISTANCE}>No Limit</MenuItem>
       </Select>
     </FormControl>
-  )
-}
+  );
+  if (!props.loggedIn) {
+    return <Tooltip title="Must be logged in to search by distance">{contents}</Tooltip>;
+  } else if (!props.hasAddress) {
+    return <Tooltip title="Must set an address to search by distance">{contents}</Tooltip>;
+  } else {
+    return contents
+  }
+};
 
 const ListingDropdown = (props: {
   listing: ListingType;
@@ -80,27 +99,26 @@ const ListingDropdown = (props: {
         id="demo-simple-select"
         value={props.listing}
         label="Listing Type"
-        onChange={e => props.setListing(e.target.value as ListingType)}
+        onChange={(e) => props.setListing(e.target.value as ListingType)}
       >
-        <MenuItem value={'want'}>Want</MenuItem>
-        <MenuItem value={'have'}>Have</MenuItem>
+        <MenuItem value={"want"}>Want</MenuItem>
+        <MenuItem value={"have"}>Have</MenuItem>
       </Select>
     </FormControl>
-  )
-}
+  );
+};
 
 const PriceDropdown = (props: {
   price: PriceType;
   setPrice: (arg: PriceType) => void;
 }) => {
-
-  const [errorToast, setErrorToast] = useState<string>('');
+  const [errorToast, setErrorToast] = useState<string>("");
   const [min, setMin] = useState<number>(props.price.min);
   const [max, setMax] = useState<number>(props.price.max);
 
   return (
     <FormControl fullWidth sx={{ width: 200, ml: 2, mr: 2 }}>
-      <Toast toast={errorToast} setToast={setErrorToast} type='warning' />
+      <Toast toast={errorToast} setToast={setErrorToast} type="warning" />
       <InputLabel id="demo-simple-select-label">Price</InputLabel>
       <Select
         labelId="demo-simple-select-label"
@@ -108,9 +126,11 @@ const PriceDropdown = (props: {
         label="Listing Type"
         value="price"
       >
-        <MenuItem value={'price'}>${props.price.min} - {props.price.max}</MenuItem>
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', width: 180 }}>
+        <MenuItem value={"price"}>
+          ${props.price.min} - {props.price.max}
+        </MenuItem>
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 1 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", width: 180 }}>
             <TextField
               id="outlined-basic"
               label="Min"
@@ -118,7 +138,7 @@ const PriceDropdown = (props: {
               type="number"
               value={min}
               sx={{ m: 0.5 }}
-              onChange={e => setMin(parseInt(e.target.value))}
+              onChange={(e) => setMin(parseInt(e.target.value))}
             />
             <TextField
               id="outlined-basic"
@@ -127,61 +147,89 @@ const PriceDropdown = (props: {
               type="number"
               value={max}
               sx={{ m: 0.5 }}
-              onChange={e => setMax(parseInt(e.target.value))}
+              onChange={(e) => setMax(parseInt(e.target.value))}
             />
-            <Button variant="outlined" sx={{ borderRadius: 30, m: 0.5 }} onClick={() => {
-              if (min > max) setErrorToast('Min price cannot be greater than max price')
-              else if (max > MAX_PRICE) setErrorToast('Max price cannot be greater than ' + MAX_PRICE)
-              else if (isNaN(min) || isNaN(max)) setErrorToast('Min and max prices must be non-empty')
-              else props.setPrice({ min, max })
-            }}>
+            <Button
+              variant="outlined"
+              sx={{ borderRadius: 30, m: 0.5 }}
+              onClick={() => {
+                if (min > max)
+                  setErrorToast("Min price cannot be greater than max price");
+                else if (max > MAX_PRICE)
+                  setErrorToast(
+                    "Max price cannot be greater than " + MAX_PRICE
+                  );
+                else if (isNaN(min) || isNaN(max))
+                  setErrorToast("Min and max prices must be non-empty");
+                else props.setPrice({ min, max });
+              }}
+            >
               Select
             </Button>
           </Box>
         </Box>
       </Select>
     </FormControl>
-  )
-}
+  );
+};
 
 /////////////////////////////////////////////////////////////////////////////
 // Primary Components
 /////////////////////////////////////////////////////////////////////////////
 
 export const SearchBar = (props: {
-  data: SearchBarProps
+  data: SearchBarProps;
   setData: (arg: SearchBarProps) => void;
   onSearch: () => void;
+  loggedIn: boolean;
+  hasAddress: boolean;
 }) => {
-  const validSearchCategories = useQuery<CategoriesGraphqlProps>(GET_CATEGORIES).data?.getCategories.categories;
+  const validSearchCategories =
+    useQuery<CategoriesGraphqlProps>(GET_CATEGORIES).data?.getCategories
+      .categories;
 
   const setCategories = (categories: string[]) => {
-    props.setData({ ...props.data, categories })
-  }
+    props.setData({ ...props.data, categories });
+  };
   const setDistance = (distance: number) => {
-    props.setData({ ...props.data, distance })
-  }
+    props.setData({ ...props.data, distance });
+  };
   const setListing = (listing: ListingType) => {
-    props.setData({ ...props.data, listing })
-  }
+    props.setData({ ...props.data, listing });
+  };
   const setPrice = (price: PriceType) => {
-    props.setData({ ...props.data, price })
-  }
+    props.setData({ ...props.data, price });
+  };
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', mt: 5 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '90vw' }}>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        mt: 5,
+      }}
+    >
+      <Box
+        sx={{ display: "flex", justifyContent: "space-between", width: "90vw" }}
+      >
         <CategorySearch
-          title='Categories'
+          title="Categories"
           setCategories={setCategories}
           onSearch={props.onSearch}
           validCategories={validSearchCategories}
-          width={'60vw'}
+          width={"60vw"}
         />
-        <DistanceDropdown distance={props.data.distance} setDistance={setDistance} />
+        <DistanceDropdown
+          distance={props.data.distance}
+          setDistance={setDistance}
+          loggedIn={props.loggedIn}
+          hasAddress={props.hasAddress}
+        />
         <ListingDropdown listing={props.data.listing} setListing={setListing} />
         <PriceDropdown price={props.data.price} setPrice={setPrice} />
       </Box>
-      <Divider sx={{ width: '95vw', mt: 5 }} />
+      <Divider sx={{ width: "95vw", mt: 5 }} />
     </Box>
-  )
-}
+  );
+};

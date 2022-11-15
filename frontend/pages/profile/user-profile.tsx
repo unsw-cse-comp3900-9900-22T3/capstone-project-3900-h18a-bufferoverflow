@@ -13,7 +13,6 @@ import { Toast } from '../../components/generic/Toast'
 import { getAuth, updateProfile } from 'firebase/auth'
 import { convertUserToAuthProps } from '../../store/utils'
 import { ProfileGraphqlProps } from '../../@types/pages.types'
-import dynamic from 'next/dynamic'
 import { AddressSearch } from '../../components/location/AddressSearch'
 
 /////////////////////////////////////////////////////////////////////////////
@@ -45,6 +44,8 @@ const UPDATE_USER_MUTATION = gql`
     $displayImg: String
     $address: String
     $community: String
+    $latitude: Float
+    $longitude: Float
   ) {
     updateUser(
       username: $username
@@ -53,6 +54,8 @@ const UPDATE_USER_MUTATION = gql`
       email: $email
       address: $address
       community: $community
+      latitude: $latitude 
+      longitude: $longitude
     ) {
       errors
       success
@@ -73,17 +76,13 @@ const UserProfile: NextPage = () => {
   const [address, setAddress] = useState<string>("");
   const [errorToast, setErrorToast] = useState<string>("");
   const [successToast, setSuccessToast] = useState<string>("");
-  const [position, setPosition] = useState<Array<number>>([-33.8651, 151.2099]);
+  const [position, setPosition] = useState<Array<number>>([]);
 
   // Utility Hooks
   const ref = createRef<any>();
   const router = useRouter();
   const { auth } = useStore();
   const setStore = useStoreUpdate();
-
-  const Map = dynamic(() => import("../../components/location/Map"), {
-    ssr: false,
-  });
 
   // Graphql Query
   const { data } = useQuery<ProfileGraphqlProps>(GET_USER_QUERY, {
@@ -165,14 +164,14 @@ const UserProfile: NextPage = () => {
             onChange={(e) => setUsername(e.target.value.trim())}
           />
           <Tooltip title="Community is set from your address">
-          <TextField
-            id="outlined-basic"
-            label="Community"
-            variant="outlined"
-            sx={{ mb: 1 }}
-            value={community}
-            disabled={true}
-          />
+            <TextField
+              id="outlined-basic"
+              label="Community"
+              variant="outlined"
+              sx={{ mb: 1 }}
+              value={community}
+              disabled={true}
+            />
           </Tooltip>
           <TextField
             placeholder="Bio"
@@ -188,6 +187,7 @@ const UserProfile: NextPage = () => {
             placeholder={"address"}
             setAddress={setAddress}
             setCommunity={setCommunity}
+            setPosition={setPosition}
             marginBottom={3}
             rows={4}
             multiline={true}
@@ -211,7 +211,13 @@ const UserProfile: NextPage = () => {
               }
               try {
                 const user = getAuth().currentUser!;
-                let res = await updateUserProfile({ variables: data });
+                let res = await updateUserProfile({
+                  variables: {
+                    ...data,
+                    latitude: position[0],
+                    longitude: position[1],
+                  },
+                });
                 if (!res.data.updateUser.success)
                   throw "username is already taken";
                 await updateProfile(user, { displayName: username });

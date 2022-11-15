@@ -43,16 +43,16 @@ import AddIcon from "@mui/icons-material/Add";
 
 type SideBarProps = { title: string; icon: Icon; href: string }[];
 
-const sideBarTop: SideBarProps = [
-  { title: "All Listings", icon: LocalOfferIcon, href: "/feed/default" },
+/**************** LOGGED IN *****************/
+
+const sideBarTopLoggedIn: SideBarProps = [
+  { title: "All Listings", icon: LocalOfferIcon, href: "/" },
   {
     title: "Methodology",
     icon: DescriptionIcon,
     href: "/environment/methodology",
   },
 ];
-
-/**************** LOGGED IN *****************/
 
 const sideBarBottomLoggedIn: SideBarProps = [
   { title: "Profile", icon: PersonIcon, href: "/profile/user-profile" },
@@ -67,6 +67,15 @@ const sideBarBottomLoggedIn: SideBarProps = [
 ];
 
 /*************** LOGGED OUT *****************/
+
+const sideBarTopLoggedOut: SideBarProps = [
+  { title: "All Listings", icon: LocalOfferIcon, href: "/feed/default" },
+  {
+    title: "Methodology",
+    icon: DescriptionIcon,
+    href: "/environment/methodology",
+  },
+];
 
 const sideBarBottomLoggedOut: SideBarProps = [
   { title: "Login", icon: LockIcon, href: "/auth/login" },
@@ -139,15 +148,15 @@ export const Template = (props: {
   }, [data]);
 
 
-  // scrollable means there's a scrollbar, so needs to disable the height restriction 
   // I tried doing this with styled components, but couldn't get it to work.
-
+  
   // very jank 
   const mainBoxStyles = {
     display: '',
     justifyContent: '',
     alignItems: '',
-    height: ''
+    height: '',
+    marginTop: 0,
   };
   if (props.center) {
     mainBoxStyles.display = 'flex';
@@ -155,7 +164,10 @@ export const Template = (props: {
     mainBoxStyles.alignItems = 'center';
   }
 
-  if (props.center && !props.scrollable) {
+  // scrollable means there's a scrollbar, so needs to disable the height restriction 
+  if (props.scrollable) {
+    mainBoxStyles.marginTop = 2
+  } else {
     mainBoxStyles.height = 'calc(100vh - 64px)';
   }
   
@@ -173,7 +185,7 @@ export const Template = (props: {
             aria-label="menu"
             sx={{ mr: 2, color: textColor }}
             onClick={() => setDrawer(true)}
-          >
+            >
             <MenuIcon />
           </IconButton>
 
@@ -204,12 +216,7 @@ export const Template = (props: {
       <ThemeProvider theme={theme}>
         {props.center ? (
           <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "calc(100vh - 64px)",
-            }}
+            sx={mainBoxStyles}
           >
             {props.children}
           </Box>
@@ -302,6 +309,7 @@ const SideBar = (props: {
   const { auth } = useStore();
   const setStore = useStoreUpdate();
   const router = useRouter();
+  const sideBarTop = auth ? sideBarTopLoggedIn : sideBarTopLoggedOut;
   const sideBarBottom = auth ? sideBarBottomLoggedIn : sideBarBottomLoggedOut;
 
   return (

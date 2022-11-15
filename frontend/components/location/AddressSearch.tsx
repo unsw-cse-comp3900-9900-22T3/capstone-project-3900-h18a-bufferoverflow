@@ -48,7 +48,6 @@ export const AddressSearch = (props: {
     fetch(nominatim)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (data.length > 0) {
           setResults(data);
         }

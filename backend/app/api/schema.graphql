@@ -66,6 +66,8 @@ type Listing {
   volume: Float!
   status: String!
   address: String!
+  latitude: Float!
+  longitude: Float!
   image: String
   materials: [Material]!
 }
@@ -251,6 +253,8 @@ type Mutation {
     displayImg: String
     address: String
     community: String
+    latitude: Float
+    longitude: Float
   ): UserResult!
   deleteUser(email: String!): UserResult!
   createListing(
@@ -270,6 +274,8 @@ type Mutation {
     materials: [String]!
     address: String!
     image: String!
+    longitude: Float
+    latitude: Float
   ): ListingResult!
   updateListing(
     id: ID!
@@ -288,6 +294,8 @@ type Mutation {
     materials: [String]
     address: String
     image: String
+    latitude: Float
+    longitude: Float
   ): ListingResult!
   deleteListing(id: ID!): ListingResult!
   createMessage(

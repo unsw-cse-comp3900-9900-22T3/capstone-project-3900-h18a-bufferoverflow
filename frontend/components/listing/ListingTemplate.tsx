@@ -45,6 +45,8 @@ const CREATE_LISTING = gql`
     $materials: [String]!
     $location: String!
     $image: String!
+    $latitude: Float
+    $longitude: Float
   ) {
     createListing(
       userEmail: $email
@@ -63,6 +65,8 @@ const CREATE_LISTING = gql`
       materials: $materials
       address: $location
       image: $image
+      latitude: $latitude
+      longitude: $longitude
     ) {
       errors
       success
@@ -119,6 +123,8 @@ const UPDATE_LISTING = gql`
     $materials: [String]
     $location: String
     $image: String
+    $latitude: Float
+    $longitude: Float
   ) {
     updateListing(
       id: $id
@@ -136,6 +142,8 @@ const UPDATE_LISTING = gql`
       materials: $materials
       address: $location
       image: $image
+      latitude: $latitude
+      longitude: $longitude
     ) {
       errors
       success
@@ -242,6 +250,7 @@ export const ListingTemplate = (props: {
   const [materials, setMaterials] = useState<string[]>([]);
   const [tradeCategories, setTradeCategories] = useState<string[]>([]);
   const [price, setPrice] = useState<number>(0);
+  const [position, setPosition] = useState<Array<number>>([]);
 
   const router = useRouter();
   const { id } = router.query;
@@ -251,7 +260,8 @@ export const ListingTemplate = (props: {
   const [updateListing, _2] = useMutation(UPDATE_LISTING);
   const [createListing, _3] = useMutation(CREATE_LISTING);
   const [getUserAddress, userResults] = useLazyQuery(GET_USER_ADDRESS);
-  const [hasSetLocationFromUser, setHasSetLocationFromUser] = useState<boolean>(false);
+  const [hasSetLocationFromUser, setHasSetLocationFromUser] =
+    useState<boolean>(false);
 
   useEffect(() => {
     if (id) {
@@ -283,16 +293,16 @@ export const ListingTemplate = (props: {
 
   useEffect(() => {
     // set the location from the user's location, when making a new listing
-    if (id == undefined && !hasSetLocationFromUser) {
-      const email = auth?.email ? auth.email : ""
-      getUserAddress({ variables: { email }})
-  
+    if (id === undefined && !hasSetLocationFromUser) {
+      const email = auth?.email ? auth.email : "";
+      getUserAddress({ variables: { email } });
+
       if (userResults?.data) {
-        setLocation(userResults.data.getUser.user.address)
-        setHasSetLocationFromUser(true)
+        setLocation(userResults.data.getUser.user.address);
+        setHasSetLocationFromUser(true);
       }
     }
-  }, [auth, userResults])
+  }, [auth, userResults]);
 
   const check = () => {
     return (
@@ -368,14 +378,15 @@ export const ListingTemplate = (props: {
           onChange={(e) => setDescription(e.target.value)}
         />
         <Typography sx={{ fontSize: 16, fontWeight: "bold", mb: 1.5, ml: 0.5 }}>
-          Location 
+          Location
         </Typography>
         <AddressSearch
-            address={location}
-            setAddress={setLocation}
-            placeholder={"location"}
-            marginBottom={1.5}
-          />
+          address={location}
+          setAddress={setLocation}
+          setPosition={setPosition}
+          placeholder={"location"}
+          marginBottom={1.5}
+        />
         <CategorySearch
           categories={categories || undefined}
           setCategories={setCategories}
@@ -523,6 +534,8 @@ export const ListingTemplate = (props: {
                     materials,
                     tradeCategories,
                     price,
+                    latitude: position.length === 2 ? position[0] : null,
+                    longitude: position.length === 2 ? position[1] : null,
                   },
                 })
                   .then(() => {
@@ -582,6 +595,8 @@ export const ListingTemplate = (props: {
                   materials,
                   tradeCategories,
                   price,
+                  latitude: position.length === 2 ? position[0] : null,
+                  longitude: position.length === 2 ? position[1] : null,
                 },
               })
                 .then(() => {

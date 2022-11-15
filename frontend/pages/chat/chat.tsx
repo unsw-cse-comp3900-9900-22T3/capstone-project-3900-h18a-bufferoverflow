@@ -23,7 +23,7 @@ import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import styled from "@emotion/styled";
 import { GET_FOLLOW, FOLLOW, UNFOLLOW } from "../profile/visitor-profile";
-import { Message, MessageGraphqlProps, User } from "../../@types/pages.types";
+import { Message, MessageGraphqlProps, User, UserGraphqlProps } from "../../@types/pages.types";
 
 // todo
 // Messages should be marked as read when they are…read.
@@ -47,14 +47,6 @@ const GET_CONVERSATION_MESSAGES_QUERY = gql`
     }
   }
 `;
-
-interface UserGraphqlProps {
-  getUser: {
-    success: boolean | null;
-    errors: string[] | null;
-    user: User | null;
-  };
-}
 
 const GET_USER_QUERY = gql`
   query getUserQuery($email: String!) {
@@ -270,7 +262,7 @@ const Chat: NextPage = () => {
             <Box
               sx={{
                 display: "grid",
-                justifyItems: message.author.id == us?.id ? "end" : "start",
+                justifyItems: message.author.id === us?.id ? "end" : "start",
                 padding: 0.5,
               }}
               key={message.timestamp}
@@ -283,7 +275,7 @@ const Chat: NextPage = () => {
                 }}
               >
                 <Stack direction="row">
-                  {!(message.author.id == us?.id) && (
+                  {!(message.author.id === us?.id) && (
                     <Link href={`/profile/visitor-profile?email=${other}`}>
                       <Tooltip title={them?.username}>
                         <Avatar src={them?.displayImg} alt={them?.username} />
@@ -343,7 +335,7 @@ const Chat: NextPage = () => {
             sx={{ width: 0.9 }}
             onChange={(e) => setText(e.target.value)}
             onKeyPress={(e) => {
-              if (e.key == "Enter") {
+              if (e.key === "Enter") {
                 sendMessage();
                 e.preventDefault();
               }

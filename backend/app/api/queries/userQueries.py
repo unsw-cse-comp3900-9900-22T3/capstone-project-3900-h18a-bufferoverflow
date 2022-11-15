@@ -50,16 +50,18 @@ def create_user_resolver(obj, info, username, email):
 
 @convert_kwargs_to_snake_case
 def update_user_resolver(
-        obj,
-        info,
-        email,
-        username=None,
-        preferred_distance=None,
-        bio=None,
-        display_img=None,
-        address=None,
-        community=None
-    ):
+    obj,
+    info,
+    email,
+    username=None,
+    preferred_distance=None,
+    bio=None,
+    display_img=None,
+    address=None,
+    community=None,
+    latitude=None,
+    longitude=None,
+):
     try:
         user = None
         try:
@@ -75,13 +77,14 @@ def update_user_resolver(
 
             user.address = address if address is not None else user.address
             user.community = community if community is not None else user.community
+            user.latitude = latitude if latitude is not None else user.latitude
+            user.longitude = longitude if longitude is not None else user.longitude
             user.save()
 
         payload = {
             "success": True,
             "user": user.to_json()
         }
-
 
     except Exception as e:
         payload = {
