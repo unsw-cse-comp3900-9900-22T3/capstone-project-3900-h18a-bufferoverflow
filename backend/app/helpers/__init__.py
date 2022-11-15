@@ -16,9 +16,15 @@ nitrogen_oxide_emission_factor = 0.025 * 1000
 co2_emission_per_delivery_kg = 0.019
 
 def get_user_co2_emission_saving(user, year):
-    '''
-    Returns the total number of trades, cubic metre saving and CO2 emission saving for a user in a given year
-    '''
+    """ Returns the user's stats for a given year
+
+    Args:
+        user: The user object
+        year: The year to get stats for
+
+    Returns:
+        tuple: The user's stats for a given year
+    """
 
     brick_and_mortar_delivery_co2_savings = 0.0
     landfill_co2_savings = 0.0
@@ -48,7 +54,15 @@ def get_user_co2_emission_saving(user, year):
     return user_trade_count, round(cubic_metres_landfill_savings), round(total_co2_savings)
 
 def get_community_co2_emission_saving(user, year):
-    """ Gets the community co2 emission saving for a given user and year """
+    """ Gets the community co2 emission saving for a given user and year
+
+    Args:
+        user: The user object
+        year: The year to get stats for
+
+    Returns:
+        tuple: The community co2 emission saving for a given user and year
+    """
     total_co2_savings = 0.0
     total_cube_metres_savings = 0.0
     total_trades = 0
@@ -61,10 +75,16 @@ def get_community_co2_emission_saving(user, year):
     return total_trades, round(total_cube_metres_savings), round(total_co2_savings)
 
 def generate_categories_dict(): 
-    '''
+    """
     Generates a dictionary with the keys being all item categories, with all 
     values initialised to 0
-    '''
+
+    Args:
+        None
+
+    Returns:
+        dict: A dictionary with the keys being all item categories, with all
+    """
     categories = {} 
     # it is important to track the total number of times each category appears
     categories["total"] = 0 
@@ -74,20 +94,34 @@ def generate_categories_dict():
     return categories
 
 def fill_categories_dict(categories_count, query_results):
-    '''
+    """
     Fills a pre-initialised dictionary with a count of how many times each 
     category appears in a given query
-    '''
+
+    Args:
+        categories_count: A dictionary with the keys being all item categories,
+        query_results: A list of listings
+
+    Returns:
+        dict: A dictionary with the keys being all item categories, with the
+    """
     for result in query_results:
         for category in result.categories:
             categories_count[category.type] += 1 
             categories_count["total"] += 1
 
 def generate_categories_probability(listing, categories_count): 
-    '''
+    """
     Generates the probability that a given category would be accessed 
     (could be searched, clicked, etc.) based on previous data...
-    '''
+
+    Args:
+        listing: A listing object
+        categories_count: A dictionary with the keys being all item categories,
+
+    Returns:
+        dict: A dictionary with the keys being all item categories, with the
+    """
     probability = 0
 
     # check for div by zero 
@@ -100,9 +134,15 @@ def generate_categories_probability(listing, categories_count):
     return probability
 
 def change_db_categories_to_list(listing):
-    '''
+    """
     Takes in a listing, and returns it's categories as a list of strings
-    '''
+
+    Args:
+        listing: A listing object
+
+    Returns:
+        list: A list of strings, where each string is a category
+    """
     categories_list = []
     for category in listing.categories:
         categories_list.append(category.type)
@@ -110,10 +150,19 @@ def change_db_categories_to_list(listing):
 
 def find_place_in_feed(trade_probability, click_probability, search_probability, n_listings,
     feed_len):
-    '''
+    """
     Finds the place in the feed that a listing should be placed given how likely 
     a user is to trade/click/search for that category.
-    '''
+
+    Args:
+        trade_probability: The probability that a user will trade for a listing
+        click_probability: The probability that a user will click on a listing
+        search_probability: The probability that a user will search for a listing
+        n_listings: The number of listings in the feed
+
+    Returns:
+        int: The index in the feed that the listing should be placed
+    """
     # if any one of these probabilities is greater than .95, we should 
     # have a decent chance of the item appearing high in the feed,
     # regardless of the other probabilities. 

@@ -5,26 +5,48 @@ from app.database.models import *
 from app.database import category_names, material_names
 from app import app
 
-
 cli = FlaskGroup(app)
 
 # helper functions
 
 
 def create_materials():
+    """ Create materials
 
+    Args:
+        None
+
+    Returns:
+        None
+    """
     for material in material_names:
         new_material = Material(material)
         new_material.save()
 
 
 def create_categories():
+    """ Create categories
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
     for category in category_names:
         new_category = Category(category)
         new_category.save()
 
 
 def add_data():
+    """ Add data to database
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
     # create materials and categories
     create_materials()
     create_categories()
@@ -46,6 +68,14 @@ def add_data():
 
 
 def add_users():
+    """ Add users data
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
     # create users
     user2 = User(email="user2@gmail.com", username="Steven123")
     user3 = User(email="user3@gmail.com", username="Frankie")
@@ -75,7 +105,14 @@ def add_users():
 
 
 def add_listings():
-    """Add listings to database."""
+    """Add listings to database
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
     listing1 = Listing(
         user_email="user2@gmail.com",
         title="Hunger Games Trilogy",
@@ -205,7 +242,14 @@ def add_listings():
 
 
 def create_conversations():
-    """Create conversations"""
+    """Create conversations
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
 
     message = Message(1664802000000, "Hi there, I would like to trade with you",
                       3, "z5231701@ad.unsw.edu.au-user3@gmail.com")
@@ -231,7 +275,14 @@ def create_conversations():
 
 
 def add_traded_listings_data():
-    """Add traded listings data """
+    """Add traded listings data
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
     # trades which have happend in 2022
     traded_listing1 = TradedListing(
         traded_by=1,
@@ -298,7 +349,14 @@ def add_traded_listings_data():
 
 
 def add_clicked_and_searched_listings_data():
-    """Add clicked and searched listings data """
+    """Add clicked and searched listings data
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
     # clicked listings
     clicked_listing1 = ClickedListing(
         user_id=1,
@@ -336,6 +394,14 @@ def add_clicked_and_searched_listings_data():
 
 @cli.command("create_db")
 def create_db():
+    """ Create database
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
     # if no data in db, create default data
     try:
         Material.query.all()  # Raises an exception if no data in db
@@ -343,6 +409,7 @@ def create_db():
         db.create_all()
         db.session.commit()
         add_data()
+
 
 if __name__ == "__main__":
     cli()

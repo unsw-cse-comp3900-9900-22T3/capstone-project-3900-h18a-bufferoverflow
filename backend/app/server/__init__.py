@@ -10,11 +10,27 @@ from app.database.models import *
 
 @app.route("/graphql", methods=["GET"])
 def graphql_playground():
+    """ Server GraphQL Playground
+
+    Args:
+        None
+
+    Returns:
+        str: The GraphQL Playground HTML
+    """
     return PLAYGROUND_HTML, 200
 
 
 @app.route("/graphql", methods=["POST"])
 def graphql_server():
+    """ Create GraphQL endpoint
+
+    Args:
+        None
+
+    Returns:
+        dict: The response payload
+    """
     data = request.get_json()
     success, result = graphql_sync(
         api.schema,
@@ -28,6 +44,14 @@ def graphql_server():
 
 @socketio.on('send_message')
 def send_message(data):
+    """ Send message to room
+
+    Args:
+        data (dict): The message data
+
+    Returns:
+        None
+    """
     if 'author' in data.keys():
         print(f'received message and sent back: {data}')
         message = models.Message(data['timestamp'], data['text'], data['author'], data['conversation'])
@@ -40,6 +64,14 @@ def send_message(data):
 
 @socketio.on('join')
 def on_join(data):
+    """ Join room
+
+    Args:
+        data (dict): The room data
+
+    Returns:
+        None
+    """
     conversation = data['conversation']
     print(f"joining room: [{conversation}]")
     if len(models.Conversation.query.filter_by(conversation=conversation).all()) == 0:

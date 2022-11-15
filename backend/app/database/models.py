@@ -2,6 +2,7 @@ from app.database import db, material_names, category_names
 
 
 class BaseDataModel():
+    """ Base data model for all objects """
 
     def save(self):
         """ Save the current instance to the database """
@@ -34,7 +35,6 @@ class User(BaseDataModel, db.Model):
         display_img (str): User display image
         address (str): User address
     """
-
 
     __tablename__ = "users"
 
@@ -591,6 +591,11 @@ class TradedListing(BaseDataModel, db.Model):
     year_traded = db.Column(db.Integer, nullable=False)
 
     def update_categories(self, categories):
+        """ Update categories
+
+        Args:
+            categories (list): Categories to update
+        """
         if categories is not None:
             # to successfully remove all previous want_to_trade_for
             for category_name in category_names:
@@ -606,6 +611,12 @@ class TradedListing(BaseDataModel, db.Model):
                 category.save()
 
     def update_materials(self, materials):
+        """ Update materials
+
+        Args:
+            materials (list): Materials to update
+
+        """
         if materials is not None:
             # to successfully remove all previous want_to_trade_for
             for material_name in material_names:
@@ -645,6 +656,11 @@ class SearchedListing(BaseDataModel, db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     def update_categories(self, categories):
+        """ Update categories
+
+        Args:
+            categories (list): Categories to update
+        """
         if categories is not None:
             # to successfully remove all previous want_to_trade_for
             for category_name in category_names:
@@ -680,6 +696,11 @@ class ClickedListing(BaseDataModel, db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     def update_categories(self, categories):
+        """ Update categories
+
+        Args:
+            categories (list): Categories to update
+        """
         if categories is not None:
             # to successfully remove all previous want_to_trade_for
             for category_name in category_names:
