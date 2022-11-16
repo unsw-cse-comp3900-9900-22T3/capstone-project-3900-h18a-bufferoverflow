@@ -101,6 +101,8 @@ type MessageResult {
   success: Boolean!
   errors: [String]
   messages: [Message]
+  us: User
+  them: User
 }
 
 type TradeOffer {
@@ -213,7 +215,8 @@ type Query {
   ): ListingsResult!
   getCategories: CategoryResult!
   getMessages(
-    conversation: String
+    conversation: String!
+    us_email: String!
   ): MessageResult!
   countUnseenMessages(email: String!): CountResult!
   getConversations(involving: String!): ConversationsResult!

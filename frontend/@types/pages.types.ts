@@ -26,6 +26,8 @@ export interface MessageGraphqlProps {
     success: boolean;
     errors: string[] | null;
     messages: Message[] | null;
+    us: User | null;
+    them: User | null;
   };
 }
 

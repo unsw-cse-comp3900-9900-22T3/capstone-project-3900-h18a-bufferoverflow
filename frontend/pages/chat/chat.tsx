@@ -23,7 +23,7 @@ import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import styled from "@emotion/styled";
 import { GET_FOLLOW, FOLLOW, UNFOLLOW } from "../profile/visitor-profile";
-import { Message, MessageGraphqlProps, User, UserGraphqlProps } from "../../@types/pages.types";
+import { Message, MessageGraphqlProps, User } from "../../@types/pages.types";
 
 // todo
 // Messages should be marked as read when they are…read.
@@ -33,8 +33,11 @@ import { Message, MessageGraphqlProps, User, UserGraphqlProps } from "../../@typ
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
 const GET_CONVERSATION_MESSAGES_QUERY = gql`
-  query getConversationMessagesQuery($conversation: String!) {
-    getMessages(conversation: $conversation) {
+  query getConversationMessagesQuery(
+    $conversation: String!
+    $us_email: String!
+  ) {
+    getMessages(conversation: $conversation, us_email: $us_email) {
       messages {
         id
         timestamp
@@ -44,16 +47,12 @@ const GET_CONVERSATION_MESSAGES_QUERY = gql`
         }
         conversation
       }
-    }
-  }
-`;
-
-const GET_USER_QUERY = gql`
-  query getUserQuery($email: String!) {
-    getUser(email: $email) {
-      errors
-      success
-      user {
+      us {
+        id
+        displayImg
+        username
+      }
+      them {
         id
         displayImg
         username
@@ -114,44 +113,16 @@ const Chat: NextPage = () => {
   const other = router.query.other;
 
   const [us, setUs] = useState<User>();
-  const us_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
-    variables: { email: author || "" },
-  });
-  useEffect(() => {
-    if (us_response.data?.getUser.user) {
-      const user = us_response.data?.getUser.user;
-      setUs({
-        username: user.username,
-        displayImg: user.displayImg,
-        id: user.id,
-      });
-    }
-  }, [us_response]);
-
   const [them, setThem] = useState<User>();
-  const them_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
-    variables: { email: other || "" },
-  });
-
-  useEffect(() => {
-    if (them_response.data?.getUser.user) {
-      const user = them_response.data?.getUser.user;
-      setThem({
-        username: user.username,
-        displayImg: user.displayImg,
-        id: user.id,
-      });
-    }
-  }, [them_response]);
 
   // ids start from 1.
   const [seen, setSeen] = useState<number>(-1);
   const [updateConversation, _] = useMutation(UPDATE_CONVERSATION_MUTATION);
 
-  const rendered = useRef(false);
+  const [rendered, setRendered] = useState(false);
   useEffect(() => {
     // since useEffect runs multiple times, but we only want to connect once
-    if (!rendered.current) {
+    if (!rendered) {
       socket = io(url);
       socket.on("connect", () => {
         console.log(socket.id);
@@ -166,7 +137,7 @@ const Chat: NextPage = () => {
       });
     }
 
-    rendered.current = true;
+    setRendered(true);
   });
 
   useEffect(() => {
@@ -202,7 +173,7 @@ const Chat: NextPage = () => {
 
   const { data } = useQuery<MessageGraphqlProps>(
     GET_CONVERSATION_MESSAGES_QUERY,
-    { variables: { conversation: conversation } }
+    { variables: { conversation: conversation, us_email: author } }
   );
   useEffect(() => {
     const messagesData = data?.getMessages.messages;
@@ -211,6 +182,22 @@ const Chat: NextPage = () => {
       if (messagesData.length > 0) {
         setSeen(messagesData[messagesData.length - 1].id);
       }
+    }
+    const usData = data?.getMessages.us;
+    if (usData) {
+      setUs({
+        username: usData.username,
+        displayImg: usData.displayImg,
+        id: usData.id,
+      });
+    }
+    const themData = data?.getMessages.us;
+    if (themData) {
+      setThem({
+        username: themData.username,
+        displayImg: themData.displayImg,
+        id: themData.id,
+      });
     }
   }, [data]);
 
@@ -262,7 +249,7 @@ const Chat: NextPage = () => {
             <Box
               sx={{
                 display: "grid",
-                justifyItems: message.author.id === us?.id ? "end" : "start",
+                justifyItems: message.author.id == us?.id ? "end" : "start",
                 padding: 0.5,
               }}
               key={message.timestamp}
@@ -275,7 +262,7 @@ const Chat: NextPage = () => {
                 }}
               >
                 <Stack direction="row">
-                  {!(message.author.id === us?.id) && (
+                  {!(message.author.id == us?.id) && (
                     <Link href={`/profile/visitor-profile?email=${other}`}>
                       <Tooltip title={them?.username}>
                         <Avatar src={them?.displayImg} alt={them?.username} />
@@ -331,7 +318,7 @@ const Chat: NextPage = () => {
           </Button>
           <TextField
             placeholder="Type something..."
-            disabled={!rendered.current}
+            disabled={!rendered}
             sx={{ width: 0.9 }}
             onChange={(e) => setText(e.target.value)}
             onKeyPress={(e) => {
