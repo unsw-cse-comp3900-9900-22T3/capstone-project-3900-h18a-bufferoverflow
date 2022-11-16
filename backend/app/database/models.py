@@ -477,11 +477,15 @@ class Message(BaseDataModel, db.Model):
         Returns:
             dict: Message as json
         """
+
+        # graphql actually expects ids as strings
+        user = User.query.get(self.author).to_json()
+        user['id'] = str(user['id'])
         return {
             "id": self.id,
             "timestamp": self.timestamp,
             "text": self.text,
-            "author": User.query.get(self.author).to_json(),
+            "author": user,
             "conversation": self.conversation
         }
 
