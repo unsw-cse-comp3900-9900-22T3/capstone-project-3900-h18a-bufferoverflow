@@ -92,7 +92,6 @@ const ChatDiv = styled.div`
   align-content: center | end;
   width: 100%;
   > div {
-    // wanted this to be % based but couldn't get working
     min-width: 800px;
     overflow: scroll;
   }
@@ -139,7 +138,7 @@ const Chat: NextPage = () => {
     }
   }, [them_response]);
 
-  // ids start from 1.
+  // ids start from 1, -1 is definitely unused
   const [seen, setSeen] = useState<number>(-1);
   const [updateConversation, _] = useMutation(UPDATE_CONVERSATION_MUTATION);
 
@@ -179,7 +178,6 @@ const Chat: NextPage = () => {
   const [position, setPosition] = useState<boolean>(false);
   useEffect(() => {
     if (author != undefined && other != undefined) {
-      // weird but I couldn't get setConversation to have the var set for the socket.emit
       const local_conversation = [author, other].sort().join("-");
       setConversation(local_conversation);
       setPosition(author < other);

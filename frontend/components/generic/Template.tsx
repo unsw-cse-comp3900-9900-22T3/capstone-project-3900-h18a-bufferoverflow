@@ -147,10 +147,6 @@ export const Template = (props: {
     }
   }, [data]);
 
-
-  // I tried doing this with styled components, but couldn't get it to work.
-  
-  // very jank 
   const mainBoxStyles = {
     display: '',
     justifyContent: '',
