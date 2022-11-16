@@ -82,7 +82,7 @@ export const AddressSearch = (props: {
                 props.setAddress(result.display_name);
 
                 // allows someone to either search for a
-                // suburb name or an actual address
+                // suburb name or an actual address, potentially fragile
                 if (result.type === "administrative") {
                   props.setCommunity?.(result.display_name.split(",")[0]);
                 } else {
