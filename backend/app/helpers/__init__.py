@@ -148,6 +148,21 @@ def change_db_categories_to_list(listing):
         categories_list.append(category.type)
     return categories_list
 
+def change_db_materials_to_list(listing):
+    """
+    Takes in a listing, and returns it's materials as a list of strings
+
+    Args:
+        listing: A listing object
+
+    Returns:
+        list: A list of strings, where each string is a material
+    """
+    materials_list = []
+    for material in listing.materials:
+        materials_list.append(material.type)
+    return materials_list
+
 def find_place_in_feed(trade_probability, click_probability, search_probability, n_listings,
     feed_len):
     """
