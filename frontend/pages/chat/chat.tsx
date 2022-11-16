@@ -153,9 +153,6 @@ const Chat: NextPage = () => {
     // since useEffect runs multiple times, but we only want to connect once
     if (!rendered.current) {
       socket = io(url);
-      socket.on("connect", () => {
-        console.log(socket.id);
-      });
 
       // not the best on slower connections, since your own message
       // will disappear whilst waiting for the server to reply
@@ -193,7 +190,6 @@ const Chat: NextPage = () => {
       setPosition(author < other);
 
       socket.emit("join", { conversation: local_conversation });
-      console.log(`joining [${local_conversation}]`);
     }
   }, [author, other]);
 
