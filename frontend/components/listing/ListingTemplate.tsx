@@ -322,7 +322,10 @@ export const ListingTemplate = (props: {
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
+        height: '100vh',
         gap: 40,
+        mt: 10,
+        mb: 10
       }}
     >
       <Toast toast={errorToast} setToast={setErrorToast} type="warning" />
