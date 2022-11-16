@@ -8,7 +8,7 @@ import { ListingTemplate } from "../../components/listing/ListingTemplate";
 
 const CreateHaveListing: NextPage = () => {
   return (
-    <Template title="Create Have Listing" center>
+    <Template title="Create Have Listing">
       <ListingTemplate have />
     </Template >
   );

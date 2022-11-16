@@ -43,7 +43,7 @@ const GET_OFFERS = gql`
 const OffersList: NextPage = () => {
 
   const { auth } = useStore()
-  const data = useQuery(GET_OFFERS, { variables: { email: auth?.email } }).data?.getTradeOffersByUser.tradeOffers
+  const data = useQuery(GET_OFFERS, { variables: { email: auth?.email || "" } }).data?.getTradeOffersByUser.tradeOffers
 
   return (
     <Template title="Offers List">
