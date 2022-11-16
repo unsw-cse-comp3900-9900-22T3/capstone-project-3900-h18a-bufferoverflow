@@ -48,12 +48,14 @@ def updateTradeOffer_resolver(obj, info, id, is_accepted):
             listing_one = Listing.query.get(tradeOffer.listing_one_id)
             listing_two = Listing.query.get(tradeOffer.listing_two_id)
 
-            # find complementary trade offers and delete them
+            # find trade offers with the same listings as this one and delete them
             tradeOffers = TradeOffer.query.all()
             for offer in tradeOffers:
-                if offer.listing_two_id == listing_one.id and offer.listing_one_id == listing_two.id:
+                if offer.listing_two_id == listing_one.id or \
+                offer.listing_one_id == listing_two.id or \
+                offer.listing_one_id == listing_one.id or \
+                offer.listing_two_id == listing_two.id:
                     offer.delete()
-                    break
             tradeOffer.delete()
 
             traded_listing_one_categories = change_db_categories_to_list(listing_one)
