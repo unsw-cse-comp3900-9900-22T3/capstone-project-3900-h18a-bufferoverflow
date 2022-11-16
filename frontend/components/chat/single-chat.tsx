@@ -20,7 +20,7 @@ export interface SingleChatOverviewProps {
 
 export const SingleChatOverview = (props: SingleChatOverviewProps
   ) => {
-  // finds the 
+  // converts to nicely readable time difference
   const rtf = new Intl.RelativeTimeFormat("en", {
     localeMatcher: "best fit",
     numeric: "always", 
