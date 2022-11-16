@@ -15,13 +15,15 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useRouter } from "next/router";
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { useStore } from "../../store/store";
 import {
   GET_DETAILED_LISTING,
   GET_USER_DETAILED_LISTING,
+  GET_USER_LISTINGS
 } from "../../utils/queries";
 import dynamic from "next/dynamic";
+import { MyListingsGraphqlProps } from "../../@types/pages.types";
 
 /////////////////////////////////////////////////////////////////////////////
 // Secondary Components
@@ -62,6 +64,11 @@ const DetailedWantListing: NextPage = () => {
   const [execQuery, { data }] = useLazyQuery(
     auth ? GET_USER_DETAILED_LISTING : GET_DETAILED_LISTING
   );
+  const listings = useQuery(GET_USER_LISTINGS, { variables: { userEmail: auth?.email || "" } }).data?.getListingsByUser.listings
+
+  listings?.forEach((ele: any) => {
+    if (ele.id === id) router.push(`/listing/edit-want-listing?id=${id}`)
+  });
 
   const [title, setTitle] = useState<string>("");
   const [image, setImage] = useState<string>("");
@@ -132,7 +139,8 @@ const DetailedWantListing: NextPage = () => {
   const mapRef = useRef();
 
   function scrollMap() {
-    mapRef.current.scrollIntoView({ behavior: "smooth" });
+    // @ts-ignore
+    mapRef.current?.scrollIntoView({ behavior: "smooth" });
   }
 
   return (
@@ -145,6 +153,8 @@ const DetailedWantListing: NextPage = () => {
             justifyContent: "center",
             alignItems: "center",
             gap: 40,
+            mt: 20,
+            mb: 10
           }}
         >
           {/** Item Image Section */}
@@ -248,10 +258,10 @@ const DetailedWantListing: NextPage = () => {
                 !auth
                   ? redirect
                   : () => {
-                      router.push(
-                        `/trade/propose?email=${itemPosessorEmail}&id=${id}`
-                      );
-                    }
+                    router.push(
+                      `/trade/propose?email=${itemPosessorEmail}&id=${id}`
+                    );
+                  }
               }
             >
               Propose Trade
@@ -264,8 +274,8 @@ const DetailedWantListing: NextPage = () => {
                   !auth
                     ? redirect
                     : () => {
-                        router.push(`/chat/chat?other=${itemPosessorEmail}`);
-                      }
+                      router.push(`/chat/chat?other=${itemPosessorEmail}`);
+                    }
                 }
               >
                 Message User
@@ -277,10 +287,10 @@ const DetailedWantListing: NextPage = () => {
                   !auth
                     ? redirect
                     : () => {
-                        router.push(
-                          `/profile/visitor-profile?email=${itemPosessorEmail}`
-                        );
-                      }
+                      router.push(
+                        `/profile/visitor-profile?email=${itemPosessorEmail}`
+                      );
+                    }
                 }
               >
                 View Trader Profile
@@ -288,7 +298,7 @@ const DetailedWantListing: NextPage = () => {
             </Box>
           </Box>
         </Box>
-        <Box ref={mapRef} sx={{ display: "flex", justifyContent: "center", marginBottom: 2}}>
+        <Box ref={mapRef} sx={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
           <Map width={800} height={600} position={position} />
         </Box>
       </Stack>

@@ -81,3 +81,21 @@ export const GET_USER_DETAILED_LISTING = gql`
     }
   }
 `;
+
+export const GET_USER_LISTINGS = gql`
+  query ($userEmail: String!) {
+    getListingsByUser(userEmail: $userEmail) {
+      listings {
+        title
+        address
+        price
+        image
+        user {
+          displayImg
+        }
+        isSellListing
+        id
+      }
+    }
+  }
+`;
