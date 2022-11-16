@@ -3,7 +3,6 @@ schema {
   mutation: Mutation
 }
 
-# TODO: is this all you need for this custom scalar?
 scalar Date
 
 type User {
@@ -29,7 +28,6 @@ type UsersResult {
   users: [User]
 }
 
-# TODO: category "valid" endpoint?
 type Category {
   type: String!
 }
@@ -196,7 +194,6 @@ type Query {
   listUsers: UsersResult!
   getUser(email: String!): UserResult!
   defaultFeed: ListingsResult!
-  # TODO: implement machine-learning resolver
   userFeed(userEmail: String!): ListingsResult!
   getListing(
     id: ID!

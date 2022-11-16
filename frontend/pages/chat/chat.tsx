@@ -22,13 +22,8 @@ import StarIcon from "@mui/icons-material/Star";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import styled from "@emotion/styled";
-import { GET_FOLLOW, FOLLOW, UNFOLLOW } from "../profile/visitor-profile";
+import { GET_FOLLOW, FOLLOW, UNFOLLOW } from "../../utils/queries";
 import { Message, MessageGraphqlProps, User, UserGraphqlProps } from "../../@types/pages.types";
-
-// todo
-// Messages should be marked as read when they are…read.
-// don't show to logged out users
-// stop socket breaking on hot reload
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
@@ -309,7 +304,6 @@ const Chat: NextPage = () => {
             backgroundColor: "white",
           }}
         >
-          {/* todo: make this change based on following state */}
           <Button
             onClick={async () => {
               if (following)
