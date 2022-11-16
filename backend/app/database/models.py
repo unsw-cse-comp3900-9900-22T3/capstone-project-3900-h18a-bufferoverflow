@@ -631,8 +631,9 @@ class TradedListing(BaseDataModel, db.Model):
                 material.traded_material_to.append(self)
                 material.save()
 
-    def __init__(self, traded_by, traded_to, weight, volume, materials, categories, year_traded):
+    def __init__(self, listing_id, traded_by, traded_to, weight, volume, materials, categories, year_traded):
         """ Initialize traded listing with traded_by, traded_to, weight, volume, materials, categories, year_traded """
+        self.id = listing_id
         self.traded_by = traded_by
         self.traded_to = traded_to
         self.weight = weight
