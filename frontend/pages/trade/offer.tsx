@@ -58,7 +58,7 @@ const Offer: NextPage = () => {
 
   return (
     <Template title="Offer" center>
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 20 }}>
         <Typography sx={{ fontWeight: 'bold', fontSize: 17, mb: 2 }}>Trade Offer</Typography>
         <Typography sx={{ mb: 4 }}>Please accept or decline the trade offer from</Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 7 }}>
@@ -70,7 +70,7 @@ const Offer: NextPage = () => {
           <SwapHorizIcon sx={{ fontSize: 70 }} />
           {data ? itemDataToItemCard(swappee) : <></>}
         </Box>
-        <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', mt: 5 }}>
+        <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between', mt: 5, mb: 5 }}>
           <Button
             variant="outlined"
             sx={{ borderRadius: 30, mr: 0.5, width: 300, height: 45 }}
