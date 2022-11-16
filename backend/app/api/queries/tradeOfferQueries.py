@@ -85,11 +85,6 @@ def updateTradeOffer_resolver(obj, info, id, is_accepted):
                 year_traded = datetime.now().year,
             )
 
-            print('hihhihi')
-            print(listing_one)
-            print(listing_two)
-            print(listing_one.id)
-            print(listing_two.id)
             listing_one.delete()
             listing_two.delete()
 
