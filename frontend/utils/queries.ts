@@ -99,3 +99,30 @@ export const GET_USER_LISTINGS = gql`
     }
   }
 `;
+
+export const GET_FOLLOW = gql`
+  query getFollowingQuery($email1: String!, $email2: String!) {
+    getFollowing(userEmail: $email1, checkFollowerEmail: $email2) {
+      success
+      errors
+    }
+  }
+`;
+
+export const UNFOLLOW = gql`
+  mutation UnfollowQuery($email1: String!, $email2: String!) {
+    unfollowUser(followerEmail: $email1, followedEmail: $email2) {
+      success
+      errors
+    }
+  }
+`;
+
+export const FOLLOW = gql`
+  mutation followQuery($email1: String!, $email2: String!) {
+    followUser(followerEmail: $email1, followedEmail: $email2) {
+      success
+      errors
+    }
+  }
+`;

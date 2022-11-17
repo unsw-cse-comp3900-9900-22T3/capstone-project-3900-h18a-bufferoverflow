@@ -22,13 +22,8 @@ import StarIcon from "@mui/icons-material/Star";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import styled from "@emotion/styled";
-import { GET_FOLLOW, FOLLOW, UNFOLLOW } from "../profile/visitor-profile";
-import { Message, MessageGraphqlProps, User } from "../../@types/pages.types";
-
-// todo
-// Messages should be marked as read when they are…read.
-// don't show to logged out users
-// stop socket breaking on hot reload
+import { GET_FOLLOW, FOLLOW, UNFOLLOW } from "../../utils/queries";
+import { Message, MessageGraphqlProps, User, UserGraphqlProps } from "../../@types/pages.types";
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
@@ -96,7 +91,6 @@ const ChatDiv = styled.div`
   align-content: center | end;
   width: 100%;
   > div {
-    // wanted this to be % based but couldn't get working
     min-width: 800px;
     overflow: scroll;
   }
@@ -118,8 +112,8 @@ const Chat: NextPage = () => {
   const [us, setUs] = useState<User>();
   const [them, setThem] = useState<User>();
 
-  // ids start from 1.
-  const [seen, setSeen] = useState("-1");
+  // ids start from 1, -1 is definitely unused
+  const [seen, setSeen] = useState<string>("-1");
   const [updateConversation, _] = useMutation(UPDATE_CONVERSATION_MUTATION);
 
   const [conversation, setConversation] = useState("");
@@ -182,9 +176,6 @@ const Chat: NextPage = () => {
       setPosition(author < other);
 
       socket = io(url);
-      socket.on("connect", () => {
-        console.log(socket.id);
-      });
 
       // not the best on slower connections, since your own message
       // will disappear whilst waiting for the server to reply

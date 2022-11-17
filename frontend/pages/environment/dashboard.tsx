@@ -142,7 +142,6 @@ const Dashboard: NextPage = () => {
               }
               return aWeight - bWeight;
             });
-            console.log(places);
             const place = places[0];
             setPosition([place.lat, place.lon]);
           }

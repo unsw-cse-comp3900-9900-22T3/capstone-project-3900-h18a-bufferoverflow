@@ -142,7 +142,7 @@ def getConversations_resolver(obj, info, involving):
         dict: The response payload
     """
     try:
-        # think this might be potentially fragile, but emails can't have more than 1 @ right?
+        #  valid since emails can't contain other emails
         conversations = Conversation.query.filter(
             Conversation.conversation.contains(involving))
 
@@ -171,7 +171,7 @@ def getConversationsForOverview_resolver(obj, info, involving):
         dict: The response payload
     """
     try:
-        # think this might be potentially fragile, but emails can't have more than 1 @ right?
+        #  valid since emails can't contain other emails
         conversations = Conversation.query.filter(
             Conversation.conversation.contains(involving))
         overview = []
