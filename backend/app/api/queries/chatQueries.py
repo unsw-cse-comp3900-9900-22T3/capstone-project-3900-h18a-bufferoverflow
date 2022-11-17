@@ -190,7 +190,6 @@ def getConversationsForOverview_resolver(obj, info, involving):
                 messages = [
                     message for message in messages if message.id > seen.id]
             unread = 1 if len(messages) > 0 else 0
-            print(user.display_img)
             overview.append({
                 "id": conversation.id,
                 "conversation": conversation.conversation,
