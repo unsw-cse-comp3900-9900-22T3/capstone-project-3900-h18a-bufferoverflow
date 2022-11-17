@@ -113,6 +113,29 @@ const Chat: NextPage = () => {
   const other = router.query.other;
   const [joined, setJoined] = useState<boolean>(false);
 
+  function updateJoined(joined: boolean) {
+    setJoined(joined || true);
+  }
+
+  function setupChat(joined: boolean) {
+    if (author != undefined && other != undefined) {
+      const local_conversation = [author, other].sort().join("-");
+      setConversation(local_conversation);
+      setPosition(author < other);
+
+      socket.emit("join", { conversation: local_conversation });
+      console.log(`joining [${local_conversation}] ${joined}`);
+      console.log(local_conversation, author);
+      getConversationMessages({
+        variables: { conversation: local_conversation, us_email: author },
+      });
+      getFollowing({
+        variables: { email1: auth?.email, email2: other },
+      });
+      updateJoined(joined);
+    }
+  }
+
   const [us, setUs] = useState<User>();
   const [them, setThem] = useState<User>();
 
@@ -127,11 +150,11 @@ const Chat: NextPage = () => {
   const [getFollowing, getFollowingResponse] = useLazyQuery(GET_FOLLOW);
   const [unfollow, _1] = useMutation(UNFOLLOW);
   const [follow, _2] = useMutation(FOLLOW);
-  
+
   const [rendered, setRendered] = useState(false);
   useEffect(() => {
     // since useEffect runs multiple times, but we only want to connect once
-    if (!rendered) {
+    if (!rendered && !joined) {
       socket = io(url);
       socket.on("connect", () => {
         console.log(socket.id);
@@ -147,7 +170,7 @@ const Chat: NextPage = () => {
 
       setRendered(true);
     }
-  }, [rendered, url]);
+  }, [joined, rendered, url]);
 
   useEffect(() => {
     if (seen != "-1") {
@@ -192,24 +215,11 @@ const Chat: NextPage = () => {
   }, [data]);
 
   useEffect(() => {
-    if (!joined && author != undefined && other != undefined) {
-      // weird but I couldn't get setConversation to have the var set for the socket.emit
-      const local_conversation = [author, other].sort().join("-");
-      setConversation(local_conversation);
-      setPosition(author < other);
-
-      socket.emit("join", { conversation: local_conversation });
-      console.log(`joining [${local_conversation}] ${joined}`);
-      console.log(local_conversation, author);
-      getConversationMessages({
-        variables: { conversation: local_conversation, us_email: author },
-      });
-      getFollowing({
-        variables: { email1: auth?.email, email2: other },
-      });
-      setJoined(true);
+    console.log(joined);
+    if (!joined) {
+      setupChat(joined);
     }
-  }, [auth?.email, author, getConversationMessages, getFollowing, joined, other]);
+  }, [author, joined, other, setupChat]);
 
   const [text, setText] = useState("");
   const [messages, setMessages] = useState<Array<Message>>([]);
@@ -219,6 +229,7 @@ const Chat: NextPage = () => {
   }, [end, messages]);
 
   const sendMessage = async () => {
+    console.log(text);
     if (text.trim() != "") {
       socket.emit("send_message", {
         timestamp: Date.now(),
@@ -241,7 +252,6 @@ const Chat: NextPage = () => {
       conversation: conversation,
     });
   }, [conversation, image, us?.id]);
-
 
   useEffect(() => {
     if (getFollowingResponse.data?.getFollowing.success) {
