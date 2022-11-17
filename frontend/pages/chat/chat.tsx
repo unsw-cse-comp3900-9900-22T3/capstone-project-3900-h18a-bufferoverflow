@@ -256,7 +256,7 @@ const Chat: NextPage = () => {
                 sx={{
                   backgroundColor: "#e6e6e6",
                   borderRadius: 1,
-                  width: 0.5,
+                  width: 0.9,
                 }}
               >
                 <Stack direction="row">
