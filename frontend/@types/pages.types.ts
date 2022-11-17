@@ -3,7 +3,7 @@ import { GraphqlListing } from "./component.types";
 export type User = {
   username: string;
   displayImg: string;
-  id: number;
+  id: string;
   address?: string;
 };
 export interface UserGraphqlProps {
@@ -15,7 +15,7 @@ export interface UserGraphqlProps {
 }
 
 export type Message = {
-  id: number;
+  id: string;
   text: string;
   author: User;
   timestamp: number;
@@ -26,11 +26,13 @@ export interface MessageGraphqlProps {
     success: boolean;
     errors: string[] | null;
     messages: Message[] | null;
+    us: User | null;
+    them: User | null;
   };
 }
 
 export type Conversation = {
-  id: number;
+  id: string;
   conversation: string;
   lastReadFirst: Message;
   lastReadSecond: Message;

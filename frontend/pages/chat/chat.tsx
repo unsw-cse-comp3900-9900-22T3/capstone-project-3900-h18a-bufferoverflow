@@ -2,8 +2,8 @@ import { Template } from "../../components/generic/Template";
 import { useStore } from "../../store/store";
 import { uploadFile } from "../../utils/utils";
 import { NextPage } from "next";
-import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { Router, useRouter } from "next/router";
+import { useEffect, createRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import {
   Avatar,
@@ -20,7 +20,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import SendIcon from "@mui/icons-material/Send";
 import StarIcon from "@mui/icons-material/Star";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import styled from "@emotion/styled";
 import { GET_FOLLOW, FOLLOW, UNFOLLOW } from "../../utils/queries";
 import { Message, MessageGraphqlProps, User, UserGraphqlProps } from "../../@types/pages.types";
@@ -28,8 +28,11 @@ import { Message, MessageGraphqlProps, User, UserGraphqlProps } from "../../@typ
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
 const GET_CONVERSATION_MESSAGES_QUERY = gql`
-  query getConversationMessagesQuery($conversation: String!) {
-    getMessages(conversation: $conversation) {
+  query getConversationMessagesQuery(
+    $conversation: String!
+    $us_email: String!
+  ) {
+    getMessages(conversation: $conversation, us_email: $us_email) {
       messages {
         id
         timestamp
@@ -39,16 +42,12 @@ const GET_CONVERSATION_MESSAGES_QUERY = gql`
         }
         conversation
       }
-    }
-  }
-`;
-
-const GET_USER_QUERY = gql`
-  query getUserQuery($email: String!) {
-    getUser(email: $email) {
-      errors
-      success
-      user {
+      us {
+        id
+        displayImg
+        username
+      }
+      them {
         id
         displayImg
         username
@@ -98,70 +97,37 @@ const ChatDiv = styled.div`
 `;
 
 const Chat: NextPage = () => {
+  
   const url = `http://localhost:${process.env.NEXT_PUBLIC_BACKEND_PORT}`;
-
-  const end = useRef(null);
-
+  
+  const end = createRef<HTMLDivElement>();
+  
   const { auth } = useStore();
   const router = useRouter();
+
   const author = auth?.email;
   const other = router.query.other;
+  let joined = false;
 
   const [us, setUs] = useState<User>();
-  const us_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
-    variables: { email: author || "" },
-  });
-  useEffect(() => {
-    if (us_response.data?.getUser.user) {
-      const user = us_response.data?.getUser.user;
-      setUs({
-        username: user.username,
-        displayImg: user.displayImg,
-        id: user.id,
-      });
-    }
-  }, [us_response]);
-
   const [them, setThem] = useState<User>();
-  const them_response = useQuery<UserGraphqlProps>(GET_USER_QUERY, {
-    variables: { email: other || "" },
-  });
-
-  useEffect(() => {
-    if (them_response.data?.getUser.user) {
-      const user = them_response.data?.getUser.user;
-      setThem({
-        username: user.username,
-        displayImg: user.displayImg,
-        id: user.id,
-      });
-    }
-  }, [them_response]);
 
   // ids start from 1, -1 is definitely unused
-  const [seen, setSeen] = useState<number>(-1);
+  const [seen, setSeen] = useState<string>("-1");
   const [updateConversation, _] = useMutation(UPDATE_CONVERSATION_MUTATION);
 
-  const rendered = useRef(false);
+  const [conversation, setConversation] = useState("");
+  const [position, setPosition] = useState<boolean>(false);
+
+  const [following, setFollowing] = useState<boolean>(false);
+  const [getFollowing, getFollowingResponse] = useLazyQuery(GET_FOLLOW);
+  const [unfollow, _1] = useMutation(UNFOLLOW);
+  const [follow, _2] = useMutation(FOLLOW);
+
+  const [rendered, setRendered] = useState(false);
+ 
   useEffect(() => {
-    // since useEffect runs multiple times, but we only want to connect once
-    if (!rendered.current) {
-      socket = io(url);
-
-      // not the best on slower connections, since your own message
-      // will disappear whilst waiting for the server to reply
-      // makes the logic easier though
-      socket.on("to_client", (message: Message) => {
-        setMessages((oldMessages) => [...oldMessages, message]);
-        setSeen(message.id);
-      });
-    }
-
-    rendered.current = true;
-  });
-
-  useEffect(() => {
-    if (seen != -1) {
+    if (seen != "-1") {
       if (position) {
         updateConversation({
           variables: { conversation: conversation, lastReadFirst: seen },
@@ -172,27 +138,10 @@ const Chat: NextPage = () => {
         });
       }
     }
-  }, [seen]);
+  }, [conversation, position, seen, updateConversation]);
 
-  const [conversation, setConversation] = useState("");
-  const [position, setPosition] = useState<boolean>(false);
-  useEffect(() => {
-    if (author != undefined && other != undefined) {
-      const local_conversation = [author, other].sort().join("-");
-      setConversation(local_conversation);
-      setPosition(author < other);
-
-      socket.emit("join", { conversation: local_conversation });
-    }
-  }, [author, other]);
-
-  const [text, setText] = useState("");
-  const [messages, setMessages] = useState<Array<Message>>([]);
-
-  const { data } = useQuery<MessageGraphqlProps>(
-    GET_CONVERSATION_MESSAGES_QUERY,
-    { variables: { conversation: conversation } }
-  );
+  const [getConversationMessages, { loading, error, data }] =
+    useLazyQuery<MessageGraphqlProps>(GET_CONVERSATION_MESSAGES_QUERY);
   useEffect(() => {
     const messagesData = data?.getMessages.messages;
     if (messagesData) {
@@ -201,15 +150,65 @@ const Chat: NextPage = () => {
         setSeen(messagesData[messagesData.length - 1].id);
       }
     }
+    const usData = data?.getMessages.us;
+    if (usData) {
+      setUs({
+        username: usData.username,
+        displayImg: usData.displayImg,
+        id: usData.id,
+      });
+    }
+    const themData = data?.getMessages.them;
+    if (themData) {
+      setThem({
+        username: themData.username,
+        displayImg: themData.displayImg,
+        id: themData.id,
+      });
+    }
   }, [data]);
 
   useEffect(() => {
-    // @ts-ignore
+    console.log(joined);
+    if (!joined && author != undefined && other != undefined) {
+      const local_conversation = [author, other].sort().join("-");
+      setConversation(local_conversation);
+      setPosition(author < other);
+
+      socket = io(url);
+
+      // not the best on slower connections, since your own message
+      // will disappear whilst waiting for the server to reply
+      // makes the logic easier though
+      socket.on("to_client", (message: Message) => {
+        setMessages((oldMessages) => [...oldMessages, message]);
+        setSeen(message.id);
+      });
+
+      socket.emit("join", { conversation: local_conversation });
+      console.log(`joining [${local_conversation}] ${joined}`);
+      console.log(local_conversation, author);
+      getConversationMessages({
+        variables: { conversation: local_conversation, us_email: author },
+      });
+      getFollowing({
+        variables: { email1: auth?.email, email2: other },
+      });
+      joined = true;
+      setRendered(true);
+    }
+  }, [author, joined, other]);
+
+  const [text, setText] = useState("");
+  const [messages, setMessages] = useState<Array<Message>>([]);
+
+  useEffect(() => {
     end.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [end, messages]);
 
   const sendMessage = async () => {
-    if (text.trim() != "") {
+    console.log(text);
+    if (text.trim() != "" && socket) {
       socket.emit("send_message", {
         timestamp: Date.now(),
         text: text.trim(),
@@ -220,28 +219,25 @@ const Chat: NextPage = () => {
     }
   };
 
-  const imageRef = useRef<any>(null);
+  const imageRef = createRef<HTMLInputElement>();
   const [image, setImage] = useState("");
 
   useEffect(() => {
-    socket.emit("send_message", {
-      timestamp: Date.now(),
-      text: image,
-      author: us?.id,
-      conversation: conversation,
-    });
-  }, [image]);
-
-  const [following, setFollowing] = useState<boolean>(false);
-  const response = useQuery(GET_FOLLOW, {
-    variables: { email1: auth?.email, email2: other },
-  }).data?.getFollowing.success;
-  const [unfollow, _1] = useMutation(UNFOLLOW);
-  const [follow, _2] = useMutation(FOLLOW);
+    if (image != "" && socket) {
+      socket.emit("send_message", {
+        timestamp: Date.now(),
+        text: image,
+        author: us?.id,
+        conversation: conversation,
+      });
+    }
+  }, [conversation, image, us?.id]);
 
   useEffect(() => {
-    if (response) setFollowing(response);
-  }, [response]);
+    if (getFollowingResponse.data?.getFollowing.success) {
+      setFollowing(getFollowingResponse.data?.getFollowing.success);
+    }
+  }, [getFollowingResponse]);
 
   return (
     <Template title="Chat">
@@ -251,7 +247,7 @@ const Chat: NextPage = () => {
             <Box
               sx={{
                 display: "grid",
-                justifyItems: message.author.id === us?.id ? "end" : "start",
+                justifyItems: message.author.id == us?.id ? "end" : "start",
                 padding: 0.5,
               }}
               key={message.timestamp}
@@ -264,7 +260,7 @@ const Chat: NextPage = () => {
                 }}
               >
                 <Stack direction="row">
-                  {!(message.author.id === us?.id) && (
+                  {!(message.author.id == us?.id) && (
                     <Link href={`/profile/visitor-profile?email=${other}`}>
                       <Tooltip title={them?.username}>
                         <Avatar src={them?.displayImg} alt={them?.username} />
@@ -319,7 +315,7 @@ const Chat: NextPage = () => {
           </Button>
           <TextField
             placeholder="Type something..."
-            disabled={!rendered.current}
+            disabled={!rendered}
             sx={{ width: 0.9 }}
             onChange={(e) => setText(e.target.value)}
             onKeyPress={(e) => {
@@ -338,7 +334,7 @@ const Chat: NextPage = () => {
               hidden
               accept="image/png, image/jpeg"
               onChange={async () => {
-                if (imageRef.current?.files[0]) {
+                if (imageRef?.current?.files[0]) {
                   setImage(await uploadFile(imageRef.current.files[0]));
                 }
               }}

@@ -1,4 +1,4 @@
-import { DocumentNode, gql, useLazyQuery, useMutation, useQuery } from "@apollo/client"
+import { gql, useMutation } from "@apollo/client"
 import { Box, Button, Divider, TextField } from "@mui/material"
 import { createUserWithEmailAndPassword, getAuth, updateProfile } from "firebase/auth"
 import { useRouter } from "next/router"

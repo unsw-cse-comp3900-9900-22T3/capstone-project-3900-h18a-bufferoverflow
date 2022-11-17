@@ -31,8 +31,8 @@ def create_message_resolver(obj, info, timestamp, text, author, conversation):
     return payload
 
 
-def getMessages_resolver(obj, info, conversation=None):
-    """ Gets all messages in a conversation
+def getMessages_resolver(obj, info, conversation, us_email):
+    """ Gets all messages in a conversation, and the participants
 
     Args:
         obj: The parent object, which in this case is the root value
@@ -43,14 +43,18 @@ def getMessages_resolver(obj, info, conversation=None):
         dict: The response payload
     """
     try:
-        if conversation is not None:
-            messages = Message.query.filter_by(conversation=conversation)
-        else:
-            messages = Message.query.all()
-        messages = [message.to_json() for message in messages]
+        messages = [message.to_json() for message in Message.query.filter_by(
+            conversation=conversation)]
+
+        us = User.query.filter_by(email=us_email).first()
+        them_email = conversation.replace(us_email, "").replace("-", "")
+        them = User.query.filter_by(email=them_email).first()
+
         payload = {
             "success": True,
-            "messages": messages
+            "messages": messages,
+            "us": us,
+            "them": them
         }
     except Exception as error:
         print(f"exception {str(error)}")
@@ -96,8 +100,8 @@ def updateConversation_resolver(obj, info, conversation, last_read_first=None, l
         obj: The parent object, which in this case is the root value
         info (ResolveInfo): Information about the execution state of the query
         conversation: The conversation to update
-        last_read_first: The last message read
-        last_read_second: The second last message read
+        last_read_first: the last message read for the first participant
+        last_read_second: the last message read for the second participant
 
     Returns:
         dict: The response payload
@@ -186,7 +190,6 @@ def getConversationsForOverview_resolver(obj, info, involving):
                 messages = [
                     message for message in messages if message.id > seen.id]
             unread = 1 if len(messages) > 0 else 0
-            print(user.display_img)
             overview.append({
                 "id": conversation.id,
                 "conversation": conversation.conversation,
