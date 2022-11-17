@@ -232,7 +232,7 @@ const Chat: NextPage = () => {
   const [image, setImage] = useState("");
 
   useEffect(() => {
-    if (socket) {
+    if (image != "" && socket) {
       socket.emit("send_message", {
         timestamp: Date.now(),
         text: image,
