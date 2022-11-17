@@ -2,7 +2,7 @@ import { Template } from "../../components/generic/Template";
 import { useStore } from "../../store/store";
 import { uploadFile } from "../../utils/utils";
 import { NextPage } from "next";
-import { useRouter } from "next/router";
+import { Router, useRouter } from "next/router";
 import { useEffect, createRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import {
@@ -20,7 +20,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import SendIcon from "@mui/icons-material/Send";
 import StarIcon from "@mui/icons-material/Star";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
-import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import styled from "@emotion/styled";
 import { GET_FOLLOW, FOLLOW, UNFOLLOW } from "../profile/visitor-profile";
 import { Message, MessageGraphqlProps, User } from "../../@types/pages.types";
@@ -103,19 +103,17 @@ const ChatDiv = styled.div`
 `;
 
 const Chat: NextPage = () => {
+  
   const url = `http://localhost:${process.env.NEXT_PUBLIC_BACKEND_PORT}`;
-
+  
   const end = createRef<HTMLDivElement>();
-
+  
   const { auth } = useStore();
   const router = useRouter();
+
   const author = auth?.email;
   const other = router.query.other;
-  const [joined, setJoined] = useState<boolean>(false);
-
-  function updateJoined(joined: boolean) {
-    setJoined(joined || true);
-  }
+  let joined = false;
 
   const [us, setUs] = useState<User>();
   const [them, setThem] = useState<User>();
@@ -133,26 +131,7 @@ const Chat: NextPage = () => {
   const [follow, _2] = useMutation(FOLLOW);
 
   const [rendered, setRendered] = useState(false);
-  useEffect(() => {
-    // since useEffect runs multiple times, but we only want to connect once
-    if (!rendered && !joined) {
-      socket = io(url);
-      socket.on("connect", () => {
-        console.log(socket.id);
-      });
-
-      // not the best on slower connections, since your own message
-      // will disappear whilst waiting for the server to reply
-      // makes the logic easier though
-      socket.on("to_client", (message: Message) => {
-        setMessages((oldMessages) => [...oldMessages, message]);
-        setSeen(message.id);
-      });
-
-      setRendered(true);
-    }
-  }, [joined, rendered, url]);
-
+ 
   useEffect(() => {
     if (seen != "-1") {
       if (position) {
@@ -202,6 +181,19 @@ const Chat: NextPage = () => {
       setConversation(local_conversation);
       setPosition(author < other);
 
+      socket = io(url);
+      socket.on("connect", () => {
+        console.log(socket.id);
+      });
+
+      // not the best on slower connections, since your own message
+      // will disappear whilst waiting for the server to reply
+      // makes the logic easier though
+      socket.on("to_client", (message: Message) => {
+        setMessages((oldMessages) => [...oldMessages, message]);
+        setSeen(message.id);
+      });
+
       socket.emit("join", { conversation: local_conversation });
       console.log(`joining [${local_conversation}] ${joined}`);
       console.log(local_conversation, author);
@@ -211,7 +203,8 @@ const Chat: NextPage = () => {
       getFollowing({
         variables: { email1: auth?.email, email2: other },
       });
-      updateJoined(joined);
+      joined = true;
+      setRendered(true);
     }
   }, [author, joined, other]);
 
@@ -224,7 +217,7 @@ const Chat: NextPage = () => {
 
   const sendMessage = async () => {
     console.log(text);
-    if (text.trim() != "") {
+    if (text.trim() != "" && socket) {
       socket.emit("send_message", {
         timestamp: Date.now(),
         text: text.trim(),
@@ -239,12 +232,14 @@ const Chat: NextPage = () => {
   const [image, setImage] = useState("");
 
   useEffect(() => {
-    socket.emit("send_message", {
-      timestamp: Date.now(),
-      text: image,
-      author: us?.id,
-      conversation: conversation,
-    });
+    if (socket) {
+      socket.emit("send_message", {
+        timestamp: Date.now(),
+        text: image,
+        author: us?.id,
+        conversation: conversation,
+      });
+    }
   }, [conversation, image, us?.id]);
 
   useEffect(() => {
@@ -312,7 +307,6 @@ const Chat: NextPage = () => {
             backgroundColor: "white",
           }}
         >
-          {/* todo: make this change based on following state */}
           <Button
             onClick={async () => {
               if (following)
