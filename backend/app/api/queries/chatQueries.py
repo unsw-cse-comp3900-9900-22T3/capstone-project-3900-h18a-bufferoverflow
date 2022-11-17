@@ -103,8 +103,10 @@ def updateConversation_resolver(obj, info, conversation, last_read_first=None, l
         dict: The response payload
     """
     try:
-        conversation_object = Conversation.query.filter_by(conversation=conversation).first()
-        print(f"updating conversation with {conversation} {last_read_first} {last_read_second} {conversation_object}")
+        conversation_object = Conversation.query.filter_by(
+            conversation=conversation).first()
+        print(
+            f"updating conversation with {conversation} {last_read_first} {last_read_second} {conversation_object}")
         if last_read_first is not None:
             conversation_object.last_read_first = last_read_first
         if last_read_second is not None:
@@ -136,8 +138,9 @@ def getConversations_resolver(obj, info, involving):
         dict: The response payload
     """
     try:
-        # think this might be potentially fragile, but emails can't have more than 1 @ right?
-        conversations = Conversation.query.filter(Conversation.conversation.contains(involving))
+        #  valid since emails can't contain other emails
+        conversations = Conversation.query.filter(
+            Conversation.conversation.contains(involving))
 
         payload = {
             "success": True,
@@ -164,20 +167,24 @@ def getConversationsForOverview_resolver(obj, info, involving):
         dict: The response payload
     """
     try:
-        # think this might be potentially fragile, but emails can't have more than 1 @ right?
-        conversations = Conversation.query.filter(Conversation.conversation.contains(involving))
+        #  valid since emails can't contain other emails
+        conversations = Conversation.query.filter(
+            Conversation.conversation.contains(involving))
         overview = []
         for conversation in conversations:
-            them = conversation.conversation.replace(involving, "").replace("-", "")
+            them = conversation.conversation.replace(
+                involving, "").replace("-", "")
             user = User.query.filter_by(email=them).first()
             seen = None
             if conversation.conversation.startswith(involving) and conversation.last_read_first != None:
                 seen = Message.query.get(conversation.last_read_first)
             elif conversation.last_read_second != None:
                 seen = Message.query.get(conversation.last_read_second)
-            messages = Message.query.filter_by(conversation=conversation.conversation).all()
+            messages = Message.query.filter_by(
+                conversation=conversation.conversation).all()
             if seen:
-                messages = [message for message in messages if message.id > seen.id]
+                messages = [
+                    message for message in messages if message.id > seen.id]
             unread = 1 if len(messages) > 0 else 0
             print(user.display_img)
             overview.append({
@@ -214,7 +221,8 @@ def countUnseenMessages_resolver(obj, info, email):
         dict: The response payload
     """
     try:
-        conversations = Conversation.query.filter(Conversation.conversation.contains(email))
+        conversations = Conversation.query.filter(
+            Conversation.conversation.contains(email))
         count = 0
         for conversation in conversations:
             seen = None
@@ -222,10 +230,12 @@ def countUnseenMessages_resolver(obj, info, email):
                 seen = Message.query.get(conversation.last_read_first)
             elif conversation.last_read_second != None:
                 seen = Message.query.get(conversation.last_read_second)
-            messages = Message.query.filter_by(conversation=conversation.conversation).all()
+            messages = Message.query.filter_by(
+                conversation=conversation.conversation).all()
 
             if seen:
-                messages = [message for message in messages if message.id > seen.id]
+                messages = [
+                    message for message in messages if message.id > seen.id]
             count += 1 if len(messages) > 0 else 0
         payload = {
             "success": True,
@@ -252,7 +262,8 @@ def deleteConversation_resolver(obj, info, conversation):
         dict: The response payload
     """
     try:
-        conversation_object = Conversation.query.filter_by(conversation=conversation).first()
+        conversation_object = Conversation.query.filter_by(
+            conversation=conversation).first()
         conversation_object.delete()
         messages = Message.query.filter_by(conversation=conversation).all()
         for message in messages:

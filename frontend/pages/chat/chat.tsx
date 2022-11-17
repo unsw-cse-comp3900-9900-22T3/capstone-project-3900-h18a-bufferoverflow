@@ -22,13 +22,8 @@ import StarIcon from "@mui/icons-material/Star";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import styled from "@emotion/styled";
-import { GET_FOLLOW, FOLLOW, UNFOLLOW } from "../profile/visitor-profile";
+import { GET_FOLLOW, FOLLOW, UNFOLLOW } from "../../utils/queries";
 import { Message, MessageGraphqlProps, User, UserGraphqlProps } from "../../@types/pages.types";
-
-// todo
-// Messages should be marked as read when they are…read.
-// don't show to logged out users
-// stop socket breaking on hot reload
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
@@ -97,7 +92,6 @@ const ChatDiv = styled.div`
   align-content: center | end;
   width: 100%;
   > div {
-    // wanted this to be % based but couldn't get working
     min-width: 800px;
     overflow: scroll;
   }
@@ -144,7 +138,7 @@ const Chat: NextPage = () => {
     }
   }, [them_response]);
 
-  // ids start from 1.
+  // ids start from 1, -1 is definitely unused
   const [seen, setSeen] = useState<number>(-1);
   const [updateConversation, _] = useMutation(UPDATE_CONVERSATION_MUTATION);
 
@@ -153,9 +147,6 @@ const Chat: NextPage = () => {
     // since useEffect runs multiple times, but we only want to connect once
     if (!rendered.current) {
       socket = io(url);
-      socket.on("connect", () => {
-        console.log(socket.id);
-      });
 
       // not the best on slower connections, since your own message
       // will disappear whilst waiting for the server to reply
@@ -187,13 +178,11 @@ const Chat: NextPage = () => {
   const [position, setPosition] = useState<boolean>(false);
   useEffect(() => {
     if (author != undefined && other != undefined) {
-      // weird but I couldn't get setConversation to have the var set for the socket.emit
       const local_conversation = [author, other].sort().join("-");
       setConversation(local_conversation);
       setPosition(author < other);
 
       socket.emit("join", { conversation: local_conversation });
-      console.log(`joining [${local_conversation}]`);
     }
   }, [author, other]);
 
@@ -313,7 +302,6 @@ const Chat: NextPage = () => {
             backgroundColor: "white",
           }}
         >
-          {/* todo: make this change based on following state */}
           <Button
             onClick={async () => {
               if (following)

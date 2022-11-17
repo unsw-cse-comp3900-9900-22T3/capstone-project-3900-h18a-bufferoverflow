@@ -3,7 +3,6 @@ schema {
   mutation: Mutation
 }
 
-# TODO: is this all you need for this custom scalar?
 scalar Date
 
 type User {
@@ -29,7 +28,6 @@ type UsersResult {
   users: [User]
 }
 
-# TODO: category "valid" endpoint?
 type Category {
   type: String!
 }
@@ -87,11 +85,6 @@ type ListingsResult {
 type Message {
   id: ID!
   text: String! 
-  # made these 2 fields nullable because getConversations uses these fields
-  # and can have null messages
-  # probably a few ways to avoid this:
-  #   some graphql feature I'm not aware of
-  #   making it so that a chat is only created if there's actually messages there (changes functionality)
   timestamp: Date
   author: User
   conversation: String!
@@ -196,7 +189,6 @@ type Query {
   listUsers: UsersResult!
   getUser(email: String!): UserResult!
   defaultFeed: ListingsResult!
-  # TODO: implement machine-learning resolver
   userFeed(userEmail: String!): ListingsResult!
   getListing(
     id: ID!

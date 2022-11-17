@@ -20,7 +20,7 @@ export interface SingleChatOverviewProps {
 
 export const SingleChatOverview = (props: SingleChatOverviewProps
   ) => {
-  // writing time code myself, I know gross
+  // converts to nicely readable time difference
   const rtf = new Intl.RelativeTimeFormat("en", {
     localeMatcher: "best fit",
     numeric: "always", 
@@ -44,7 +44,6 @@ export const SingleChatOverview = (props: SingleChatOverviewProps
     }
   }
 
-  // not the nicest solution - should really pass this up to the overview component
   const [exists, setExists] = useState(true);
 
   return (

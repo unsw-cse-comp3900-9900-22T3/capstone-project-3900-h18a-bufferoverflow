@@ -44,7 +44,6 @@ export const AddressSearch = (props: {
     // only get addresses inside Australia, limited to 5
     const nominatim = `https://nominatim.openstreetmap.org/search?format=json&q=${address}&countrycodes=au&limit=5`;
 
-    // can maybe add something with controller.abort() to stop waiting for existing fetches
     fetch(nominatim)
       .then((response) => response.json())
       .then((data) => {
@@ -52,7 +51,6 @@ export const AddressSearch = (props: {
           setResults(data);
         }
       })
-      .catch((err) => console.log(err))
       .finally(() => setLoading(false));
   }
 
@@ -67,7 +65,6 @@ export const AddressSearch = (props: {
         placeholder={props.placeholder}
         label={props.placeholder}
         multiline={props.multiline}
-        //   might have to make the next few lines to be passed in from context
         rows={props.rows != undefined ? props.rows : 1}
         value={props.address}
         onChange={(e) => {
@@ -84,8 +81,8 @@ export const AddressSearch = (props: {
               onClick={() => {
                 props.setAddress(result.display_name);
 
-                // kinda jank - but allows someone to either search for a
-                // suburb name or an actual address
+                // allows someone to either search for a
+                // suburb name or an actual address, potentially fragile
                 if (result.type === "administrative") {
                   props.setCommunity?.(result.display_name.split(",")[0]);
                 } else {
