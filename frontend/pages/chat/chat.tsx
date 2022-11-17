@@ -117,25 +117,6 @@ const Chat: NextPage = () => {
     setJoined(joined || true);
   }
 
-  function setupChat(joined: boolean) {
-    if (author != undefined && other != undefined) {
-      const local_conversation = [author, other].sort().join("-");
-      setConversation(local_conversation);
-      setPosition(author < other);
-
-      socket.emit("join", { conversation: local_conversation });
-      console.log(`joining [${local_conversation}] ${joined}`);
-      console.log(local_conversation, author);
-      getConversationMessages({
-        variables: { conversation: local_conversation, us_email: author },
-      });
-      getFollowing({
-        variables: { email1: auth?.email, email2: other },
-      });
-      updateJoined(joined);
-    }
-  }
-
   const [us, setUs] = useState<User>();
   const [them, setThem] = useState<User>();
 
@@ -204,7 +185,7 @@ const Chat: NextPage = () => {
         id: usData.id,
       });
     }
-    const themData = data?.getMessages.us;
+    const themData = data?.getMessages.them;
     if (themData) {
       setThem({
         username: themData.username,
@@ -216,10 +197,23 @@ const Chat: NextPage = () => {
 
   useEffect(() => {
     console.log(joined);
-    if (!joined) {
-      setupChat(joined);
+    if (!joined && author != undefined && other != undefined) {
+      const local_conversation = [author, other].sort().join("-");
+      setConversation(local_conversation);
+      setPosition(author < other);
+
+      socket.emit("join", { conversation: local_conversation });
+      console.log(`joining [${local_conversation}] ${joined}`);
+      console.log(local_conversation, author);
+      getConversationMessages({
+        variables: { conversation: local_conversation, us_email: author },
+      });
+      getFollowing({
+        variables: { email1: auth?.email, email2: other },
+      });
+      updateJoined(joined);
     }
-  }, [author, joined, other, setupChat]);
+  }, [author, joined, other]);
 
   const [text, setText] = useState("");
   const [messages, setMessages] = useState<Array<Message>>([]);
