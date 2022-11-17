@@ -23,7 +23,7 @@ import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import styled from "@emotion/styled";
 import { GET_FOLLOW, FOLLOW, UNFOLLOW } from "../../utils/queries";
-import { Message, MessageGraphqlProps, User, UserGraphqlProps } from "../../@types/pages.types";
+import { Message, MessageGraphqlProps, User } from "../../@types/pages.types";
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
@@ -97,11 +97,10 @@ const ChatDiv = styled.div`
 `;
 
 const Chat: NextPage = () => {
-  
   const url = `http://localhost:${process.env.NEXT_PUBLIC_BACKEND_PORT}`;
-  
+
   const end = createRef<HTMLDivElement>();
-  
+
   const { auth } = useStore();
   const router = useRouter();
 
@@ -125,7 +124,7 @@ const Chat: NextPage = () => {
   const [follow, _2] = useMutation(FOLLOW);
 
   const [rendered, setRendered] = useState(false);
- 
+
   useEffect(() => {
     if (seen != "-1") {
       if (position) {
