@@ -92,6 +92,8 @@ const GET_LISTING = gql`
         image
         description
         address
+        latitude
+        longitude
         status
         price
         canTrade
@@ -182,6 +184,8 @@ const GET_USER_ADDRESS = gql`
       success
       user {
         address
+        latitude
+        longitude
       }
     }
   }
@@ -272,6 +276,7 @@ export const ListingTemplate = (props: {
       setImage(data.getListing.listing.image);
       setDescription(data.getListing.listing.description);
       setLocation(data.getListing.listing.address);
+      setPosition([data.getListing.listing.latitude, data.getListing.listing.longitude]);
       setCategories(
         data.getListing.listing.categories.map((item: any) => item.type)
       );
@@ -299,6 +304,7 @@ export const ListingTemplate = (props: {
 
       if (userResults?.data) {
         setLocation(userResults.data.getUser.user.address);
+        setPosition([userResults.data.getUser.user.latitude, userResults.data.getUser.user.longitude])
         setHasSetLocationFromUser(true);
       }
     }

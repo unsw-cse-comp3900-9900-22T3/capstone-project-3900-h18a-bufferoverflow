@@ -13,6 +13,8 @@ type User {
   bio: String!
   displayImg: String!
   address: String
+  latitude: Float
+  longitude: Float
   community: String
 }
 
