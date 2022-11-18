@@ -285,6 +285,7 @@ def add_traded_listings_data():
     """
     # trades which have happend in 2022
     traded_listing1 = TradedListing(
+        listing_id=-1,
         traded_by=1,
         traded_to=2,
         weight=10,
@@ -294,6 +295,7 @@ def add_traded_listings_data():
         year_traded=2022
     )
     traded_listing2 = TradedListing(
+        listing_id=-2,
         traded_by=1,
         traded_to=2,
         weight=10,
@@ -303,6 +305,7 @@ def add_traded_listings_data():
         year_traded=2022
     )
     traded_listing3 = TradedListing(
+        listing_id=-3,
         traded_by=1,
         traded_to=2,
         weight=5,
@@ -317,6 +320,7 @@ def add_traded_listings_data():
 
     # trades which have happend in 2021
     traded_listing4 = TradedListing(
+        listing_id=-4,
         traded_by=1,
         traded_to=2,
         weight=10,
@@ -326,6 +330,7 @@ def add_traded_listings_data():
         year_traded=2021
     )
     traded_listing5 = TradedListing(
+        listing_id=-5,
         traded_by=1,
         traded_to=2,
         weight=10,
@@ -335,6 +340,7 @@ def add_traded_listings_data():
         year_traded=2021
     )
     traded_listing6 = TradedListing(
+        listing_id=-6,
         traded_by=1,
         traded_to=2,
         weight=5,
