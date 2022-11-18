@@ -28,7 +28,7 @@ export const SingleChatOverview = (props: SingleChatOverviewProps
   });
 
   let time;
-  if (props.lastMessageTime === null) {
+  if (props.lastMessageTime == null) {
     time = "no messages";
   } else {
     const diff = props.lastMessageTime - Date.now();
